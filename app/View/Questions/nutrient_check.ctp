@@ -17,7 +17,8 @@
 						<?php
 							for($i = 0; $i<=3; $i++){
 								?>
-									<input required type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $i; ?>" value="<?php echo $i; ?>">
+									<input class="css-checkbox" required type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+									<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
 								<?php
 							}
 						?>

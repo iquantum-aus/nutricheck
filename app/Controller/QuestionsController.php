@@ -34,6 +34,7 @@ class QuestionsController extends AppController {
 	
 	public function nutrient_check() {
 		$this->Question->recursive = 0;
+		$this->layout = "public";
 		
 		$this->Paginator->settings = array(
 			'limit' => 200
