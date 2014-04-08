@@ -11,15 +11,15 @@
 	</tr>
 	<?php foreach ($userGroups as $userGroup): ?>
 	<tr>
-		<td><?php echo h($userGroup['UserGroup']['id']); ?>&nbsp;</td>
-		<td><?php echo h($userGroup['UserGroup']['name']); ?>&nbsp;</td>
-		<td><?php echo h($userGroup['UserGroup']['created']); ?>&nbsp;</td>
-		<td><?php echo h($userGroup['UserGroup']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($userGroup['UserGroup']['status']); ?>&nbsp;</td>
+		<td><?php echo h($userGroup['Group']['id']); ?>&nbsp;</td>
+		<td><?php echo h($userGroup['Group']['name']); ?>&nbsp;</td>
+		<td><?php echo h($userGroup['Group']['created']); ?>&nbsp;</td>
+		<td><?php echo h($userGroup['Group']['modified']); ?>&nbsp;</td>
+		<td><?php echo h($userGroup['Group']['status']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $userGroup['UserGroup']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $userGroup['UserGroup']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $userGroup['UserGroup']['id']), null, __('Are you sure you want to delete # %s?', $userGroup['UserGroup']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $userGroup['Group']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $userGroup['Group']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $userGroup['Group']['id']), null, __('Are you sure you want to delete # %s?', $userGroup['Group']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

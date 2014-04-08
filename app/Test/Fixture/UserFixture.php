@@ -15,7 +15,7 @@ class UserFixture extends CakeTestFixture {
 		'username' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'password' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'email' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
-		'user_groups_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 255),
+		'groups_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 255),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'status' => array('type' => 'boolean', 'null' => false, 'default' => '1'),
@@ -36,7 +36,7 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'Lorem ipsum dolor sit amet',
 			'password' => 'Lorem ipsum dolor sit amet',
 			'email' => 'Lorem ipsum dolor sit amet',
-			'user_groups_id' => 1,
+			'groups_id' => 1,
 			'created' => '2013-12-21 13:25:52',
 			'modified' => '2013-12-21 13:25:52',
 			'status' => 1

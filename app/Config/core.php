@@ -4,6 +4,8 @@
  *
  * Use it to configure core behavior of Cake.
  *
+ * PHP 5
+ *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -43,7 +45,7 @@
  * - `handler` - callback - The callback to handle errors. You can set this to any callable type,
  *   including anonymous functions.
  *   Make sure you add App::uses('MyHandler', 'Error'); when using a custom handler class
- * - `level` - integer - The level of errors you are interested in capturing.
+ * - `level` - int - The level of errors you are interested in capturing.
  * - `trace` - boolean - Include stack traces for errors in log files.
  *
  * @see ErrorHandler for more information on error handling and configuration.
@@ -95,8 +97,8 @@
  * /app/webroot/.htaccess
  *
  * And uncomment the App.baseUrl below. But keep in mind
- * that plugin assets such as images, CSS and JavaScript files
- * will not work without URL rewriting!
+ * that plugin assets such as images, CSS and Javascript files
+ * will not work without url rewriting!
  * To work around this issue you should either symlink or copy
  * the plugin assets into you app's webroot directory. This is
  * recommended even when you are using mod_rewrite. Handling static
@@ -149,7 +151,7 @@
  *	`manager_index()` and `/manager/controller/index`
  *
  */
-	//Configure::write('Routing.prefixes', array('admin'));
+	Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
@@ -222,12 +224,12 @@
 /**
  * A random string used in security hashing methods.
  */
-	Configure::write('Security.salt', 'DY0fheIrh102Ixfs2guVoUubWwvniR2G0FgaC9mi');
+	Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mittt');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-	Configure::write('Security.cipherSeed', '76859301029363542496749683645');
+	Configure::write('Security.cipherSeed', '76859309657453542496749683645111');
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
@@ -252,7 +254,7 @@
  * Plug in your own custom JavaScript compressor by dropping a script in your webroot to handle the
  * output, and setting the config below to the name of the script.
  *
- * To use, prefix your JavaScript link URLs with '/cjs/' instead of '/js/' or use JsHelper::link().
+ * To use, prefix your JavaScript link URLs with '/cjs/' instead of '/js/' or use JavaScriptHelper::link().
  */
 	//Configure::write('Asset.filter.js', 'custom_javascript_output_filter.php');
 

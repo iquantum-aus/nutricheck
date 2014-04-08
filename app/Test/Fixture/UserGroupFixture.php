@@ -1,9 +1,9 @@
 <?php
 /**
- * UserGroupFixture
+ * GroupFixture
  *
  */
-class UserGroupFixture extends CakeTestFixture {
+class GroupFixture extends CakeTestFixture {
 
 /**
  * Fields

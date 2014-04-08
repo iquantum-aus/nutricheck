@@ -21,6 +21,16 @@
 	padding:0;
 }
 
+h1.siteName {
+	font-size: 20px;
+	background: transparent;
+	margin: 0;
+}
+
+h4.slogan {
+	font-size: 13px;
+	margin: -8px 0 10px; 
+}
 
 
 
@@ -29,8 +39,9 @@
 
 
 
-
-
+.active {
+	display: block !important;
+}
 
 input[type=radio].css-checkbox {
 							display:none;
@@ -84,11 +95,12 @@ body {
 	font-family:'lucida grande',verdana,helvetica,arial,sans-serif;
 	font-size:90%;
 	margin: 0;
+	font-family: 'Open Sans', sans-serif;
 }
 a {
 	color: #003d4c;
-	text-decoration: underline;
-	font-weight: bold;
+	text-decoration: none;
+	font-weight: normal;
 }
 a:hover {
 	color: #367889;
@@ -109,7 +121,6 @@ h1 {
 h2 {
 	background:#fff;
 	color: #e32;
-	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
 	font-size: 190%;
 }
 h3 {
@@ -131,6 +142,8 @@ p {
 /** Layout **/
 #container {
 	text-align: left;
+	float: left;
+	width: 85%;
 }
 
 #header{
@@ -177,8 +190,9 @@ p {
 	background: #fff;
 	clear: both;
 	color: #333;
-	padding: 10px 20px 40px 20px;
 	overflow: auto;
+	float: left;
+	width: 100%;
 }
 #footer {
 	clear: both;
@@ -816,3 +830,269 @@ pre {
 #url-rewriting-warning {
 	display:none;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ----------------------------------------------------------- SIDEBAR -------------------------------------------------- */
+
+#logoHolder {
+	padding-top: 20px;
+	width: 115px;
+	margin: auto;
+}
+
+#sidebar-main-menu {
+	width: 80%;
+	margin: auto;
+	margin-top: 40px;
+}
+
+.sb-menu li {
+	box-shadow: 0px 1px #fff;
+	position: relative;
+	cursor: pointer;
+}
+
+.sb-menu li:last-child {
+	box-shadow: none;
+}
+
+.sb-menu li a {
+	font-weight: normal;
+	font-size: 12px;
+}
+
+.navbar-inverse .navbar-inner {
+	background-color: #fff;
+	background-image: -moz-linear-gradient(top,#fff,#fff);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#fff));
+	background-image: -webkit-linear-gradient(top,#fff,#fff);
+	background-image: -o-linear-gradient(top,#fff,#fff);
+	background-image: linear-gradient(to bottom,#fff,#fff);
+}
+
+.navbar-inverse .navbar-inner {
+	border-color: #d2d2d2;
+}
+
+.navbar-fixed-top .navbar-inner, .navbar-static-top .navbar-inner {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.navbar-inverse .brand, .navbar-inverse .nav>li>a {
+	text-shadow: none;
+}
+
+.navbar-inverse .brand:hover, .navbar-inverse .nav>li>a:hover {
+	color: #444;
+}
+
+.navbar .sb-toggle-left {
+	width: 58px;
+	float: left;
+	padding: 10px;
+}
+
+.navicon-line {
+	background-color: #444;
+}
+
+#sb-site {
+	box-shadow: none;
+}
+
+.sb-slidebar {
+	background-color: #efefef;
+	color: #595959;
+	float: left;
+}
+
+.active-sidebar-menu {
+	background: url(../img/active-dashboard.png) no-repeat;
+	position: absolute;
+	width: 15px;
+	height: 28px;
+	left: 0;
+	top: 0;
+	margin-left: 170px;
+	margin-top: 10px;
+	display:none;
+}
+
+.sb-menu li a {
+	padding: 10px 15px;
+}
+
+.sb-menu li a:hover {
+	border-left: none !important;
+	color:#2598c8 !important;
+	background: none !important;
+}
+
+/* ----------------------------------------------------------- SIDEBAR -------------------------------------------------- */
+
+.blue { color: #2598c8; }
+.green { color: #7bac00; }
+.textBelow { width: 80%; margin: auto; line-height: 35px; margin-top: 5px; }
+.item { width: 25%; background: #f2f2f2; margin: 15px; font-family: 'Raleway', sans-serif; text-align: center; font-size: 35px; border: 1px solid #dadada; }
+.item.w2 { width: 50%; }
+
+#mainContentWrapper { float: left; width: 85%; }
+
+
+/* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */
+
+.dashboardLink {
+	margin-top: 20px;
+	float: left;
+	width: 100%;
+}
+
+.sectionTitle {
+	font-weight: bold;
+	font-style: italic;
+	color: #2598c8;
+	font-size: 20px;
+	margin-left: 15px;
+	text-align: left;
+}
+
+.topYellowOccupier {
+	float: left;
+	width: 100%;
+	background: #ff8e00;
+	height: 155px;
+	color: #fff;
+	padding-left: 15px;
+	text-align: left;
+	line-height: 35px;
+	padding-top: 20px;
+}
+
+.topYellowOccupier span {
+	font-weight: bold;
+}
+
+.item .content {
+	font-size: 12px;
+	text-align: left !important;
+	float: left;
+	width: 100%;
+	padding: 15px;
+}
+
+#ligthtIco {
+	position: absolute;
+	right: 0;
+	margin-top: 200px;
+	margin-right: 20px;
+}
+
+.biColumn_Container {
+	float: left;
+	width: 100%;
+}
+
+.half {
+	float: left;
+	width: 50%;
+	text-align: center;
+	position: relative;
+}
+
+.widget {
+	color: #000;
+	font-style: normal;
+}
+
+h1.sectionHeader {
+	background: transparent;
+	color: #7bac00;
+	font-size: 40px;
+	margin-bottom: 30px;
+	float: left;
+	width: 100%;
+	text-align: center;
+}
+
+.item h2 {
+	background: transparent;
+	font-size: 30px;
+	color: #000;
+}
+
+.greenFill { background: #7bac00;  }
+.blueFill { background: #2598c8; }
+.orangeFill { background: #ff8e00; }
+.greyFill { background: #959595; }
+
+ul.barGraph {
+	height: 165px;
+	margin: 0;
+}
+
+ul.barGraph li { 
+	width: 13px;
+	float: left;
+	bottom: 0;
+	list-style: none;
+	display: inline-block;
+	margin: 0;
+	position: relative;
+	height: 100%;
+}
+
+#barGraph_Holder {
+	height: 165px;
+	width: 228px;
+	margin: 30px auto 0px;
+}
+
+.graphItem { position: absolute; bottom: 0; width: 13px; }
+
+.percentageCount { 
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	writing-mode: tb-rl;
+	color: #fff;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-size: 10px;
+	margin: 3px 2px 18px 0px;
+}
+
+.sideIco {
+	background: url(../img/sidebar-icon.png) no-repeat;
+	width: 30px;
+	height: 25px;
+	float: left;
+	background-position: 0px -6px;
+	margin-right: 15px;
+}
+
+#dashboardIco { background-position: 0px -6px; }
+#widgetsIco { background-position: -80px -6px; }
+#questionsIco { background-position: -108px -6px; }
+#reportsIco { background-position: -53px -6px; }
+#usersIco { background-position: -137px -6px; }
+#settingsIco { background-position: -27px -6px; }
+
+
+#dashboardIco.active { background-position: 0px -42px; }
+#widgetsIco.active { background-position: -80px -42px; }
+#questionsIco.active { background-position: -108px -42px; }
+#reportsIco.active { background-position: -53px -42px; }
+#usersIco.active { background-position: -137px -42px; }
+#settingsIco.active { background-position: -27px -42px; }

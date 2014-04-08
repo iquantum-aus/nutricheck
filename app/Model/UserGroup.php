@@ -1,10 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * UserGroup Model
+ * Group Model
  *
  */
-class UserGroup extends AppModel {
+class Group extends AppModel {
 
 /**
  * Validation rules

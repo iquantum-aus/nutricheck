@@ -1,6 +1,7 @@
 <?php
 /**
  *
+ * PHP 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -40,7 +41,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
-			<?php echo $this->element('main-nav'); ?>
 		</div>
 		<div id="content">
 
@@ -57,6 +57,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			?>
 		</div>
 	</div>
-	<?php // echo $this->element('sql_dump'); ?>
+	<?php echo $this->element('sql_dump'); ?>
 </body>
 </html>

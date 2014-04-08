@@ -5,6 +5,8 @@
  * This file is application-wide controller file. You can put all
  * application-wide controller-related methods here.
  *
+ * PHP 5
+ *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -30,25 +32,32 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-	//...
-    public $components = array(
+	public $theme = "Bootstrap";
+	public $components = array(
         'Acl',
         'Auth' => array(
+            'authenticate' => array(
+                'Form' => array(
+                    'fields' => array('username' => 'email'),
+                    'scope'  => array('User.status' => 1)
+                )
+            ),
             'authorize' => array(
                 'Actions' => array('actionPath' => 'controllers')
             )
         ),
         'Session'
     );
-	
-    public $helpers = array('Html', 'Form', 'Session');
 
-    public function beforeFilter() {
-        $this->Auth->loginAction = array('controller' => 'users', 'action' => 'login');
-        $this->Auth->logoutRedirect = array('controller' => 'users', 'action' => 'login');
-		
-		$this->Auth->actionPath = 'controllers';
-		$this->Auth->allow('display');
-    }
-    //...
+	public function beforeFilter() {
+     parent::beforeFilter();
+      
+     // $this->Auth->allow();//must comment after generate action
+ 
+     //Configure AuthComponent
+     $this->Auth->loginAction = '/users/login';
+     $this->Auth->logoutRedirect = '/users/login';
+     $this->Auth->loginRedirect = array('plugin'=>false,
+            'controller' => 'posts', 'action' => 'index');  
+ }
 }

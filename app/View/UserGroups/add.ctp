@@ -1,5 +1,5 @@
 <div class="userGroups form">
-<?php echo $this->Form->create('UserGroup'); ?>
+<?php echo $this->Form->create('Group'); ?>
 	<fieldset>
 		<legend><?php echo __('Add User Group'); ?></legend>
 	<?php

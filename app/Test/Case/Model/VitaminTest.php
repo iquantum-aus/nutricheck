@@ -15,7 +15,7 @@ class VitaminTest extends CakeTestCase {
 	public $fixtures = array(
 		'app.vitamin',
 		'app.user',
-		'app.user_groups',
+		'app.groups',
 		'app.users_vitamin'
 	);
 

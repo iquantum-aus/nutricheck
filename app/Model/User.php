@@ -3,7 +3,7 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property UserGroups $UserGroups
+ * @property Groups $Groups
  * @property Vitamin $Vitamin
  */
 class User extends AppModel {
@@ -42,7 +42,7 @@ class User extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'user_groups_id' => array(
+		'groups_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -72,9 +72,9 @@ class User extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'UserGroup' => array(
-			'className' => 'UserGroup',
-			'foreignKey' => 'user_groups_id',
+		'Group' => array(
+			'className' => 'Group',
+			'foreignKey' => 'groups_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -108,26 +108,4 @@ class User extends AppModel {
         );
         return true;
     }
-	
-    public $actsAs = array('Acl' => array('type' => 'requester'));
-
-    function parentNode() {
-        if (!$this->id && empty($this->data)) {
-            return null;
-        }
-        if (isset($this->data['User']['user_groups_id'])) {
-			$groupId = $this->data['User']['user_groups_id'];
-        } else {
-            $groupId = $this->field('user_groups_id');
-        }
-        if (!$groupId) {
-			return null;
-        } else {
-            return array('UserGroup' => array('id' => $groupId));
-        }
-    }
-	
-	function bindNode($user) {
-		return array('model' => 'UserGroup', 'foreign_key' => $user['User']['user_groups_id']);
-	}
 }

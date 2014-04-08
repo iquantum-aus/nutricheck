@@ -85,7 +85,7 @@
 			<td><?php echo $user['username']; ?></td>
 			<td><?php echo $user['password']; ?></td>
 			<td><?php echo $user['email']; ?></td>
-			<td><?php echo $user['user_groups_id']; ?></td>
+			<td><?php echo $user['groups_id']; ?></td>
 			<td><?php echo $user['created']; ?></td>
 			<td><?php echo $user['modified']; ?></td>
 			<td><?php echo $user['status']; ?></td>

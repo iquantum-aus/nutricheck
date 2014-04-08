@@ -61,7 +61,7 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
 		}
-		$userGroups = $this->User->UserGroup->find('list');
+		$userGroups = $this->User->Group->find('list');
 		$vitamins = $this->User->Vitamin->find('list');
 		$this->set(compact('userGroups', 'vitamins'));
 	}
@@ -88,7 +88,7 @@ class UsersController extends AppController {
 			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
 			$this->request->data = $this->User->find('first', $options);
 		}
-		$userGroups = $this->User->UserGroup->find('list');
+		$userGroups = $this->User->Group->find('list');
 		$vitamins = $this->User->Vitamin->find('list');
 		$this->set(compact('userGroups', 'vitamins'));
 	}
@@ -125,6 +125,10 @@ class UsersController extends AppController {
 
 	public function logout() {
 		return $this->redirect($this->Auth->logout());
+	}
+	
+	public function dashboard() {
+		$this->layout = 'admin_dashboard';
 	}
 	
 }

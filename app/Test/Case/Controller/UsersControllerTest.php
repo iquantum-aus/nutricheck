@@ -14,7 +14,7 @@ class UsersControllerTest extends ControllerTestCase {
  */
 	public $fixtures = array(
 		'app.user',
-		'app.user_groups',
+		'app.groups',
 		'app.vitamin',
 		'app.users_vitamin'
 	);

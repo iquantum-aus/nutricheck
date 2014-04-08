@@ -6,7 +6,7 @@
 			<th><?php echo $this->Paginator->sort('username'); ?></th>
 			<th><?php echo $this->Paginator->sort('password'); ?></th>
 			<th><?php echo $this->Paginator->sort('email'); ?></th>
-			<th><?php echo $this->Paginator->sort('user_groups_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('groups_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th><?php echo $this->Paginator->sort('status'); ?></th>
@@ -19,7 +19,7 @@
 		<td><?php echo h($user['User']['password']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['email']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($user['UserGroup']['name'], array('controller' => 'user_groups', 'action' => 'view', $user['UserGroup']['id'])); ?>
+			<?php echo $this->Html->link($user['Group']['name'], array('controller' => 'groups', 'action' => 'view', $user['Group']['id'])); ?>
 		</td>
 		<td><?php echo h($user['User']['created']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['modified']); ?>&nbsp;</td>
@@ -50,8 +50,8 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New User'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List User Groups'), array('controller' => 'user_groups', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User Groups'), array('controller' => 'user_groups', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List User Groups'), array('controller' => 'groups', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New User Groups'), array('controller' => 'groups', 'action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Vitamins'), array('controller' => 'vitamins', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Vitamin'), array('controller' => 'vitamins', 'action' => 'add')); ?> </li>
 	</ul>
