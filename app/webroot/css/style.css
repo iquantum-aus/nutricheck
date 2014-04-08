@@ -926,7 +926,7 @@ pre {
 	height: 28px;
 	left: 0;
 	top: 0;
-	margin-left: 170px;
+	margin-left: 106%;
 	margin-top: 10px;
 	display:none;
 }
@@ -949,7 +949,7 @@ pre {
 .item { width: 25%; background: #f2f2f2; margin: 15px; font-family: 'Raleway', sans-serif; text-align: center; font-size: 35px; border: 1px solid #dadada; }
 .item.w2 { width: 50%; }
 
-#mainContentWrapper { float: left; width: 85%; }
+#mainContentWrapper { float: left; width: 85%; max-width: 1280px; }
 
 
 /* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */

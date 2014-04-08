@@ -87,20 +87,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			$.slidebars();
 			
 			var $container = $('#mainContentWrapper');
-			
-			// initialize
-			$container.masonry({
-				columnWidth: 20,
-				itemSelector: '.item'
-			});
-			
-			var pieData = [
-				{ value : 46, color : "#d9d9d9" },
-				{ value: 54, color:"#7bac00" }
-			];
 
-			var myPie = new Chart(document.getElementById("canvas").getContext("2d")).Pie(pieData);	
-		
+			
 			$('#sidebar-main-menu li a').bind({
 				mouseenter: function() {
 					$(this).children('.sideIco').toggleClass('active');
@@ -112,24 +100,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				}
 			});
 
-			$container.masonry( 'on', 'layoutComplete', function( msnryInstance, laidOutItems ) { 
-				var minimum_height = $('#content').height();
-				minimum_height = minimum_height+65;
-				$('#sb-site').css('min-height', minimum_height);
-			});
-			
 			
 			var minimum_height = $('#content').height();
 			minimum_height = minimum_height+65;
 			$('#sb-site').css('min-height', minimum_height);
 			
 		});
-		
-		$(window).resize( function () {
-			var minimum_height = $('#content').height();
-			minimum_height = minimum_height+65;
-			$('#sb-site').css('min-height', minimum_height);		
-		});
+
 		
 	}) (jQuery);
 </script>
