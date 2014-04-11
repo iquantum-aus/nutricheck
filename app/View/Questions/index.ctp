@@ -14,20 +14,12 @@
 	<tr>
 		<td><?php echo h($question['Question']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($question['User']['username'], array('controller' => 'users', 'action' => 'view', $question['User']['id'])); ?>
+			<?php echo $this->Html->link($question['User']['name'], array('controller' => 'users', 'action' => 'view', $question['User']['id'])); ?>
 		</td>
 		<td><?php echo h($question['Question']['question']); ?>&nbsp;</td>
 		<td><?php echo h($question['Question']['created']); ?>&nbsp;</td>
 		<td><?php echo h($question['Question']['modified']); ?>&nbsp;</td>
-		<td>
-			<?php 
-				if($question['Question']['status'] == 1) {
-					echo "Active";
-				} else {
-					echo "Inactive";
-				}
-			?>
-		&nbsp;</td>
+		<td><?php echo h($question['Question']['status']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $question['Question']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $question['Question']['id'])); ?>
@@ -53,8 +45,8 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Question'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List User'), array('controller' => 'users', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Question'), array('controller' => 'FactorsQuestions', 'action' => 'question_add')); ?></li>
+		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

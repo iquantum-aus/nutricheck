@@ -17,7 +17,7 @@
 		<td><?php echo h($factor['Factor']['name']); ?>&nbsp;</td>
 		<td><?php echo h($factor['Factor']['description']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($factor['User']['id'], array('controller' => 'users', 'action' => 'view', $factor['User']['id'])); ?>
+			<?php echo $this->Html->link($factor['User']['name'], array('controller' => 'users', 'action' => 'view', $factor['User']['id'])); ?>
 		</td>
 		<td><?php echo h($factor['Factor']['created']); ?>&nbsp;</td>
 		<td><?php echo h($factor['Factor']['modified']); ?>&nbsp;</td>
@@ -49,6 +49,6 @@
 	<ul>
 		<li><?php echo $this->Html->link(__('New Factor'), array('action' => 'add')); ?></li>
 		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Users'), array('controller' => 'users', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

@@ -14,7 +14,10 @@ class FactorsControllerTest extends ControllerTestCase {
  */
 	public $fixtures = array(
 		'app.factor',
-		'app.users'
+		'app.user',
+		'app.group',
+		'app.vitamin',
+		'app.users_vitamin'
 	);
 
 /**

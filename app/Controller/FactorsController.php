@@ -47,9 +47,6 @@ class FactorsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			
-			$this->request->data['Factor']['users_id'] = $this->Session->read('Auth.User.id');
-			
 			$this->Factor->create();
 			if ($this->Factor->save($this->request->data)) {
 				$this->Session->setFlash(__('The factor has been saved.'));
@@ -59,7 +56,8 @@ class FactorsController extends AppController {
 			}
 		}
 		$users = $this->Factor->User->find('list');
-		$this->set(compact('users'));
+		$questions = $this->Factor->Question->find('list');
+		$this->set(compact('users', 'questions'));
 	}
 
 /**
@@ -85,7 +83,8 @@ class FactorsController extends AppController {
 			$this->request->data = $this->Factor->find('first', $options);
 		}
 		$users = $this->Factor->User->find('list');
-		$this->set(compact('users'));
+		$questions = $this->Factor->Question->find('list');
+		$this->set(compact('users', 'questions'));
 	}
 
 /**

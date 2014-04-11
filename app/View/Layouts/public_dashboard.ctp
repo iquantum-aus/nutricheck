@@ -42,6 +42,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('style');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
+		
+		echo $this->Html->script('libs/jquery');
 	?>
 
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
@@ -66,7 +68,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
-		echo $this->Html->script('libs/jquery');
 		echo $this->Html->script('libs/modernizr.min');
 		echo $this->Html->script('libs/bootstrap.min');
 		echo $this->Html->script('slidebars.min');
@@ -78,35 +79,28 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 </html>
 
 <script>
-	(function($) {
-		$(document).ready(function() {
+	$(document).ready(function() {
+	
+		var document_height = $(document).height();
 		
-			var document_height = $(document).height();
-			
-			var sidebar_appear = 0;
-			$.slidebars();
-			
-			var $container = $('#mainContentWrapper');
+		var sidebar_appear = 0;
+		$.slidebars();
+		
+		var $container = $('#mainContentWrapper');
 
-			
-			$('#sidebar-main-menu li a').bind({
-				mouseenter: function() {
-					$(this).children('.sideIco').toggleClass('active');
-					$(this).children('.active-sidebar-menu').toggleClass('active');
-				},
-				mouseleave: function() {
-					$(this).children('.sideIco').toggleClass('active');
-					$(this).children('.active-sidebar-menu').toggleClass('active');
-				}
-			});
-
-			
-			var minimum_height = $('#content').height();
-			minimum_height = minimum_height+65;
-			$('#sb-site').css('min-height', minimum_height);
-			
+		$('#sidebar-main-menu li a').bind({
+			mouseenter: function() {
+				$(this).children('.sideIco').toggleClass('active');
+				$(this).children('.active-sidebar-menu').toggleClass('active');
+			},
+			mouseleave: function() {
+				$(this).children('.sideIco').toggleClass('active');
+				$(this).children('.active-sidebar-menu').toggleClass('active');
+			}
 		});
-
 		
-	}) (jQuery);
+		var minimum_height = $('#content').height();
+		minimum_height = minimum_height+65;
+		$('#sb-site').css('min-height', minimum_height);
+	});		
 </script>

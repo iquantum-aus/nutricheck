@@ -14,13 +14,6 @@ class QuestionsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator');
-	
-	public function beforeFilter() {
-		parent::beforeFilter();
-
-		// For CakePHP 2.1 and up
-		$this->Auth->allow('nutrient_check');
-	}
 
 /**
  * index method
@@ -29,22 +22,6 @@ class QuestionsController extends AppController {
  */
 	public function index() {
 		$this->Question->recursive = 0;
-		$this->set('questions', $this->Paginator->paginate());
-	}
-	
-	public function nutrient_check() {
-		$this->Question->recursive = 0;
-		$this->layout = "public_dashboard";
-		
-		$this->Paginator->settings = array(
-			'limit' => 200
-		);
-		
-		if ($this->request->is('post')) {
-			pr($this->request->data);
-			exit();
-		}
-		
 		$this->set('questions', $this->Paginator->paginate());
 	}
 
@@ -72,6 +49,7 @@ class QuestionsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Question->create();
 			if ($this->Question->save($this->request->data)) {
+				
 				$this->Session->setFlash(__('The question has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -79,7 +57,8 @@ class QuestionsController extends AppController {
 			}
 		}
 		$users = $this->Question->User->find('list');
-		$this->set(compact('users'));
+		$factors = $this->Question->Factor->find('list');
+		$this->set(compact('users', 'factors'));
 	}
 
 /**
@@ -95,6 +74,7 @@ class QuestionsController extends AppController {
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Question->save($this->request->data)) {
+				
 				$this->Session->setFlash(__('The question has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -105,7 +85,8 @@ class QuestionsController extends AppController {
 			$this->request->data = $this->Question->find('first', $options);
 		}
 		$users = $this->Question->User->find('list');
-		$this->set(compact('users'));
+		$factors = $this->Question->Factor->find('list');
+		$this->set(compact('users', 'factors'));
 	}
 
 /**
@@ -127,4 +108,23 @@ class QuestionsController extends AppController {
 			$this->Session->setFlash(__('The question could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+	
+	
+	public function nutrient_check() {
+		$this->Question->recursive = 0;
+		$this->layout = "public_dashboard";
+
+		$this->Paginator->settings = array(
+			'limit' => 200
+		);
+
+		if ($this->request->is('post')) {
+			pr($this->request->data);
+			exit();
+		}
+
+		$this->set('questions', $this->Paginator->paginate());
+	}
+	
+}

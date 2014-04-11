@@ -4,9 +4,10 @@ App::uses('AppModel', 'Model');
  * Question Model
  *
  * @property Users $Users
+ * @property Factor $Factor
  */
 class Question extends AppModel {
-
+	var $displayField = 'question';
 /**
  * Validation rules
  *
@@ -51,4 +52,26 @@ class Question extends AppModel {
 			'order' => ''
 		)
 	);
+
+/**
+ * hasAndBelongsToMany associations
+ *
+ * @var array
+ */
+	public $hasAndBelongsToMany = array(
+		'Factor' => array(
+			'className' => 'Factor',
+			'joinTable' => 'factors_questions',
+			'foreignKey' => 'questions_id',
+			'associationForeignKey' => 'factors_id',
+			'unique' => 'keepExisting',
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'finderQuery' => '',
+		)
+	);
+
 }

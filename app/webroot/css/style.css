@@ -19,6 +19,7 @@
 * {
 	margin:0;
 	padding:0;
+	outline: none;
 }
 
 h1.siteName {
@@ -63,15 +64,16 @@ input[type=radio].css-checkbox {
 						input[type=radio].css-checkbox:checked + label.css-label {
 							background-position: 0 -32px;
 						}
+						
 						label.css-label {
-				background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_93bec040755bad4027655d91279dc2f5.png);
-				-webkit-touch-callout: none;
-				-webkit-user-select: none;
-				-khtml-user-select: none;
-				-moz-user-select: none;
-				-ms-user-select: none;
-				user-select: none;
-			}
+							background-image:url(../img/checkboxes.png);
+							-webkit-touch-callout: none;
+							-webkit-user-select: none;
+							-khtml-user-select: none;
+							-moz-user-select: none;
+							-ms-user-select: none;
+							user-select: none;
+						}
 
 
 
@@ -207,10 +209,10 @@ p {
 div.form,
 div.index,
 div.view {
-	float:right;
-	width:76%;
-	border-left:1px solid #666;
-	padding:10px 2%;
+	float: left;
+	width: 76%;
+	/* border-left: 1px solid #666; */
+	padding: 10px 2%;
 }
 div.actions {
 	float:left;
@@ -233,7 +235,7 @@ table {
 }
 th {
 	border:0;
-	border-bottom:2px solid #555;
+	border-bottom:2px solid #2598c8;
 	text-align: left;
 	padding:4px;
 }
@@ -252,10 +254,15 @@ table tr td {
 	padding: 6px;
 	text-align: left;
 	vertical-align: top;
-	border-bottom:1px solid #ddd;
+	border-bottom:1px solid #2598c8;
 }
+
+table tr:last-child td {
+	border-bottom : 2px solid #2598c8;
+}
+
 table tr:nth-child(even) {
-	background: #f9f9f9;
+	/* background: #f9f9f9; */
 }
 td.actions {
 	text-align: center;
@@ -951,6 +958,20 @@ pre {
 
 #mainContentWrapper { float: left; width: 85%; max-width: 1280px; }
 
+#dashboardIco { background-position: 0px -6px; }
+#widgetsIco { background-position: -80px -6px; }
+#questionsIco { background-position: -108px -6px; }
+#reportsIco { background-position: -53px -6px; }
+#usersIco { background-position: -137px -6px; }
+#settingsIco { background-position: -27px -6px; }
+
+#dashboardIco.active { background-position: 0px -42px; }
+#widgetsIco.active { background-position: -80px -42px; }
+#questionsIco.active { background-position: -108px -42px; }
+#reportsIco.active { background-position: -53px -42px; }
+#usersIco.active { background-position: -137px -42px; }
+#settingsIco.active { background-position: -27px -42px; }
+
 
 /* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */
 
@@ -1082,17 +1103,43 @@ ul.barGraph li {
 	margin-right: 15px;
 }
 
-#dashboardIco { background-position: 0px -6px; }
-#widgetsIco { background-position: -80px -6px; }
-#questionsIco { background-position: -108px -6px; }
-#reportsIco { background-position: -53px -6px; }
-#usersIco { background-position: -137px -6px; }
-#settingsIco { background-position: -27px -6px; }
+/* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */
 
 
-#dashboardIco.active { background-position: 0px -42px; }
-#widgetsIco.active { background-position: -80px -42px; }
-#questionsIco.active { background-position: -108px -42px; }
-#reportsIco.active { background-position: -53px -42px; }
-#usersIco.active { background-position: -137px -42px; }
-#settingsIco.active { background-position: -27px -42px; }
+/* ------------------------------------------------------- QUESTIONNAIRE LINK ----------------------------------------- */
+
+.questions {
+	background: #f2f2f2;
+}
+
+.actions .actionItem:first-child {
+	margin-left: 10px;
+}
+
+.actions .actionItem {
+	float: left;
+	clear: none;
+	margin-left: 5px;
+	margin-right: 13px;
+}
+
+.questionModules:first-child {
+	display:block;
+}
+
+.questionModules {
+	display:none;
+}
+
+.paginatorSelector {
+	clear: none;
+	float: left !important;
+	margin-right: 15px !important;
+}
+
+.paginatorButton {
+	float: left;
+	margin-right: 15px;
+}
+
+/* ------------------------------------------------------- QUESTIONNAIRE LINK ----------------------------------------- */

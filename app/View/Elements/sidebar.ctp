@@ -8,11 +8,11 @@
 	
 	<nav>
 		<ul id="sidebar-main-menu" class="sb-menu">
-			<li class="active-sidebar-item"><a><div class="sideIco" id="dashboardIco"></div>Dashboard<div class="active-sidebar-menu"></div></a></li>
+			<li class="active-sidebar-item"><a href="../users/dashboard"><div class="sideIco" id="dashboardIco"></div>Dashboard<div class="active-sidebar-menu"></div></a></li>
 			<li><a><div class="sideIco" id="widgetsIco"></div>Widgets<div class="active-sidebar-menu"></div></a></li>
-			<li><a><div class="sideIco" id="questionsIco"></div>Questions<div class="active-sidebar-menu"></div></a></li>
+			<li><a href="../questions/nutrient_check"><div class="sideIco" id="questionsIco"></div>Questions<div class="active-sidebar-menu"></div></a></li>
 			<li><a><div class="sideIco" id="reportsIco"></div>Reports<div class="active-sidebar-menu"></div></a></li>
-			<li><a><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div></a></li>
+			<li><a href="../users"><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div></a></li>
 			<li><a><div class="sideIco" id="settingsIco"></div>Settings<div class="active-sidebar-menu"></div></a></li>
 		</ul>
 	</nav>

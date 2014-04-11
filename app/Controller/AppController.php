@@ -58,6 +58,6 @@ class AppController extends Controller {
      $this->Auth->loginAction = '/users/login';
      $this->Auth->logoutRedirect = '/users/login';
      $this->Auth->loginRedirect = array('plugin'=>false,
-            'controller' => 'posts', 'action' => 'index');  
+            'controller' => 'users', 'action' => 'dashboard');  
  }
 }
