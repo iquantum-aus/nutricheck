@@ -40,6 +40,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('slidebars.min');
 		echo $this->Html->css('slidebars-theme');
 		echo $this->Html->css('style');
+		echo $this->Html->css('chosen');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		
@@ -73,6 +74,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('slidebars.min');
 		echo $this->Html->script('masonry.pkgd.min');
 		echo $this->Html->script('Chart.min');
+		echo $this->Html->script('chosen.jquery.min');
 		echo $this->fetch('script');
  	?>
 </body>
@@ -80,11 +82,11 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 <script>
 	$(document).ready(function() {
-	
+		
+		$.slidebars();
 		var document_height = $(document).height();
 		
-		var sidebar_appear = 0;
-		$.slidebars();
+		$('#sb-site').css('height', document_height+"px");
 		
 		var $container = $('#mainContentWrapper');
 
@@ -102,5 +104,30 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		var minimum_height = $('#content').height();
 		minimum_height = minimum_height+65;
 		$('#sb-site').css('min-height', minimum_height);
+		
+		var config = {
+		  '.chosen-select'           : {},
+		  '.chosen-select-deselect'  : {allow_single_deselect:true},
+		  '.chosen-select-no-single' : {disable_search_threshold:10},
+		  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+		  '.chosen-select-width'     : {width:"95%"}
+		}
+		
+		for (var selector in config) {
+		  $(selector).chosen(config[selector]);
+		}
+		
+		// Slidebars Submenus
+		$('.sb-toggle-submenu').off('click').on('click', function() {
+			$submenu = $(this).parent().children('.sb-submenu');
+			$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+			
+			if ($submenu.hasClass('sb-submenu-active')) {
+				$submenu.slideDown(200);
+			} else {
+				$submenu.slideUp(200);
+			}
+		});
+		
 	});		
 </script>

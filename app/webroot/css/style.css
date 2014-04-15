@@ -22,6 +22,10 @@
 	outline: none;
 }
 
+input {
+	min-height: 35px;
+}
+
 h1.siteName {
 	font-size: 20px;
 	background: transparent;
@@ -92,7 +96,7 @@ input[type=radio].css-checkbox {
 
 /** General Style Info **/
 body {
-	background: #003d4c;
+	background: #fff;
 	color: #fff;
 	font-family:'lucida grande',verdana,helvetica,arial,sans-serif;
 	font-size:90%;
@@ -116,12 +120,12 @@ h1, h2, h3, h4 {
 	margin-bottom:0.5em;
 }
 h1 {
-	background:#fff;
+	background: transparent;
 	color: #003d4c;
 	font-size: 100%;
 }
 h2 {
-	background:#fff;
+	background: transparent;
 	color: #e32;
 	font-size: 190%;
 }
@@ -195,6 +199,7 @@ p {
 	overflow: auto;
 	float: left;
 	width: 100%;
+	height: 100%;
 }
 #footer {
 	clear: both;
@@ -219,6 +224,13 @@ div.actions {
 	width:16%;
 	padding:10px 1.5%;
 }
+
+th.actions {
+	text-align: center;
+	font-weight: normal;
+	font-size: 20px;
+}
+
 div.actions h3 {
 	padding-top:0;
 	color:#777;
@@ -250,6 +262,11 @@ th a.asc:after {
 th a.desc:after {
 	content: ' ?';
 }
+
+table tr td.column_label {
+	font-weight: bold;
+}
+
 table tr td {
 	padding: 6px;
 	text-align: left;
@@ -384,13 +401,19 @@ fieldset fieldset div {
 }
 form div {
 	clear: both;
-	margin-bottom: 1em;
-	padding: .5em;
+	/* margin-bottom: 1em; */
+	/* padding: .5em; */
 	vertical-align: text-top;
 }
+
 form .input {
 	color: #444;
 }
+
+div.input {
+	margin-bottom: 30px;
+}
+
 form .required {
 	font-weight: bold;
 }
@@ -453,6 +476,7 @@ input[type=submit] {
 	font-size: 110%;
 	width: auto;
 }
+
 form .submit input[type=submit] {
 	background:#62af56;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#76BF6B), to(#3B8230));
@@ -463,9 +487,11 @@ form .submit input[type=submit] {
 	text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0px;
 	padding: 8px 10px;
 }
+
 form .submit input[type=submit]:hover {
 	background: #5BA150;
 }
+
 /* Form errors */
 form .error {
 	background: #FFDACC;
@@ -604,7 +630,7 @@ p.error em {
 }
 
 /* Buttons and button links */
-input[type=submit],
+/* input[type=submit], */
 .actions ul li a,
 .actions a {
 	font-weight:normal;
@@ -636,7 +662,7 @@ input[type=submit],
 	border-color: #acacac;
 	text-decoration: none;
 }
-input[type=submit]:active,
+/* input[type=submit]:active, */
 .actions ul li a:active,
 .actions a:active {
 	background: #eee;
@@ -924,6 +950,7 @@ pre {
 	background-color: #efefef;
 	color: #595959;
 	float: left;
+	overflow-x: hidden;
 }
 
 .active-sidebar-menu {
@@ -1109,18 +1136,19 @@ ul.barGraph li {
 /* ------------------------------------------------------- QUESTIONNAIRE LINK ----------------------------------------- */
 
 .questions {
-	background: #f2f2f2;
+	/* background: #f2f2f2; */
 }
 
 .actions .actionItem:first-child {
-	margin-left: 10px;
+	margin-left: 20px;
 }
 
 .actions .actionItem {
 	float: left;
 	clear: none;
-	margin-left: 5px;
+	margin-left: 16px;
 	margin-right: 13px;
+	font-size: 20px;
 }
 
 .questionModules:first-child {
@@ -1143,3 +1171,7 @@ ul.barGraph li {
 }
 
 /* ------------------------------------------------------- QUESTIONNAIRE LINK ----------------------------------------- */
+
+#FactorsQuestionMultiplier {
+	width: 50px;
+}

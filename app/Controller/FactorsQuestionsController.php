@@ -21,6 +21,7 @@ class FactorsQuestionsController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->FactorsQuestion->recursive = 0;
 		$this->set('factorsQuestions', $this->Paginator->paginate());
 	}
@@ -33,6 +34,7 @@ class FactorsQuestionsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->FactorsQuestion->exists($id)) {
 			throw new NotFoundException(__('Invalid factors question'));
 		}
@@ -46,13 +48,24 @@ class FactorsQuestionsController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
-			$this->FactorsQuestion->create();
-			if ($this->FactorsQuestion->save($this->request->data)) {
-				$this->Session->setFlash(__('The factors question has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+			
+			$question_id = $this->request->data['FactorsQuestion']['questions_id'];
+			$factor_id = $this->request->data['FactorsQuestion']['factors_id'];
+			
+			$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factors_id' => $factor_id, 'questions_id' => $question_id)));
+			
+			if($existing) {
+				$this->Session->setFlash(__('Invalid Association. This already exists.'));
+			}  else {			
+				$this->FactorsQuestion->create();
+				if ($this->FactorsQuestion->save($this->request->data)) {
+					$this->Session->setFlash(__('The factors question has been saved.'));
+					return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+				}
 			}
 		}
 		$factors = $this->FactorsQuestion->Factor->find('list');
@@ -66,6 +79,7 @@ class FactorsQuestionsController extends AppController {
  * @return void
  */
 	public function question_add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			
 			$user_id = $this->Session->read('Auth.User.id');
@@ -95,15 +109,26 @@ class FactorsQuestionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->FactorsQuestion->exists($id)) {
 			throw new NotFoundException(__('Invalid factors question'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			if ($this->FactorsQuestion->save($this->request->data)) {
-				$this->Session->setFlash(__('The factors question has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+			
+			$question_id = $this->request->data['FactorsQuestion']['questions_id'];
+			$factor_id = $this->request->data['FactorsQuestion']['factors_id'];
+			
+			$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factors_id' => $factor_id, 'questions_id' => $question_id)));
+			
+			if($existing) {
+				$this->Session->setFlash(__('Invalid Association. This already exists.'));
+			}  else {		
+				if ($this->FactorsQuestion->save($this->request->data)) {
+					$this->Session->setFlash(__('The factors question has been saved.'));
+					return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+				}
 			}
 		} else {
 			$options = array('conditions' => array('FactorsQuestion.' . $this->FactorsQuestion->primaryKey => $id));
@@ -123,6 +148,7 @@ class FactorsQuestionsController extends AppController {
  * @return void
  */
 	public function question_edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->FactorsQuestion->exists($id)) {
 			throw new NotFoundException(__('Invalid factors question'));
 		}
@@ -162,4 +188,33 @@ class FactorsQuestionsController extends AppController {
 			$this->Session->setFlash(__('The factors question could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+	
+	
+	
+	
+	public function nutrient_check() {
+		$this->FactorsQuestion->recursive = 0;
+		$this->layout = "public_dashboard";
+
+		$this->Paginator->settings = array(
+			'limit' => 200
+		);
+		
+		if($this->request->is('post')) {
+			$answers = $this->request->data;
+			
+			foreach($answers as $answer) {
+				$this->FactorsQuestion->Question->Answer->create();
+				$this->FactorsQuestion->Question->Answer->save($answer);
+			}
+			
+			$this->Session->setFlash(__('You successfully saved your answers'));
+			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+		}
+		
+		$paginate_data = $this->Paginator->paginate();
+		$this->set('questions', $paginate_data);
+	}
+	
+}

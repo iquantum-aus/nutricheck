@@ -1,44 +1,45 @@
 <div class="questions index">
 	<div style="margin: 0;" class="sectionTitle">Questions</div>
 	
-	<form method="POST">
-		
+	<form style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
 		<?php
 			$question_data = array_chunk($questions, 10);
 			foreach($question_data as $key => $questions) {
 		?>
 	
-			<table class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
-				<tr>
-					<th width="15%"><span class="blue">Quest. #</span></th>
-					<th>Question</th>
-					<th width="22%" class="actions">
-						<div class="actionItem"><span class="blue">0</span></div>
-						<div class="actionItem"><span class="blue">1</span></div>
-						<div class="actionItem"><span class="blue">2</span></div>
-						<div class="actionItem"><span class="blue">3</span></div>
-					</th>
-				</tr>
-				
-				<?php foreach ($questions as $question) { ?>
-					<tr>
-						<td width="15%" style="text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
-						<td><?php echo h($question['Question']['question']); ?>&nbsp;</td>
-						<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-						<td width = "22%" class="actions">
+			<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
+				<tbody style="float:left; width: 100%;">	
+					<tr style="width: 100%; float: left;">
+						<th style="float: left; width: 15%;"><span class="blue">Quest. #</span></th>
+						<th style="float: left; width: 65%;">Question</th>
+						<th style="width: 5%;" class="actions"><span class="blue">1</span></th>
+						<th style="width: 5%;" class="actions"><span class="blue">2</span></th>
+						<th style="width: 5%;" class="actions"><span class="blue">3</span></th>
+						<th style="width: 5%;" class="actions"><span class="blue">4</span></th>
+					</tr>
+					
+					<?php foreach ($questions as $question) { ?>
+						<tr style="width:100%; float: left;">
+							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
+							<td style="height: 50px;  width: 65%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
 							<?php
-								for($i = 0; $i<=3; $i++){
+								for($i = 1; $i<=4; $i++) {
 									?>
-										<input class="css-checkbox" required type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-										<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+										<td style="height: 50px; width:5%;  float: left;" class="actions">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][users_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+											<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+										</td>
 									<?php
 								}
 							?>
-						</td>
-					</tr>
-				<?php } ?>
+						</tr>
+					<?php } ?>
+				</tbody>
 			</table>
 		<?php } ?>
+		<input type="submit" value="SUBMIT" class="btn btn-danger">
 	</form>
 		
 	<div id="array_paginator">
@@ -54,7 +55,6 @@
 					}
 				?>
 			<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
-			
 		</form>
 	</div>
 	

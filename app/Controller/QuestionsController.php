@@ -21,6 +21,7 @@ class QuestionsController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->Question->recursive = 0;
 		$this->set('questions', $this->Paginator->paginate());
 	}
@@ -33,6 +34,7 @@ class QuestionsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Question->exists($id)) {
 			throw new NotFoundException(__('Invalid question'));
 		}
@@ -46,6 +48,7 @@ class QuestionsController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->Question->create();
 			if ($this->Question->save($this->request->data)) {
@@ -69,6 +72,7 @@ class QuestionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Question->exists($id)) {
 			throw new NotFoundException(__('Invalid question'));
 		}
@@ -119,12 +123,21 @@ class QuestionsController extends AppController {
 			'limit' => 200
 		);
 
-		if ($this->request->is('post')) {
-			pr($this->request->data);
-			exit();
+		if($this->request->is('post')) {
+			$answers = $this->request->data;
+			
+			foreach($answers as $answer) {
+				$this->Question->Answer->create();
+				$this->Question->Answer->save($answer);
+			}
+			
+			$this->Session->setFlash(__('You successfully saved your answers'));
+			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 		}
-
-		$this->set('questions', $this->Paginator->paginate());
+		
+		$questions = $this->Paginator->paginate();
+		
+		$this->set('questions', $questions);
 	}
 	
 }

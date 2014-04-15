@@ -33,6 +33,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
 
+		echo $this->Html->script('libs/jquery');
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
 		// docs.css is only for this exapmple, remove for app dev
@@ -66,7 +67,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
-		echo $this->Html->script('libs/jquery');
 		echo $this->Html->script('libs/modernizr.min');
 		echo $this->Html->script('libs/bootstrap.min');
 		echo $this->Html->script('slidebars.min');
@@ -80,11 +80,22 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <script>
 	(function($) {
 		$(document).ready(function() {
-		
-			var document_height = $(document).height();
 			
-			var sidebar_appear = 0;
 			$.slidebars();
+			
+			// Slidebars Submenus
+			$('.sb-toggle-submenu').off('click').on('click', function() {
+				$submenu = $(this).parent().children('.sb-submenu');
+				$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+				
+				if ($submenu.hasClass('sb-submenu-active')) {
+					$submenu.slideDown(200);
+				} else {
+					$submenu.slideUp(200);
+				}
+			});
+			
+			var document_height = $(document).height();
 			
 			var $container = $('#mainContentWrapper');
 			

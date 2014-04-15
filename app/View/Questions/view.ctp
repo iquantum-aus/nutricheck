@@ -1,37 +1,27 @@
 <div class="questions view">
 <h2><?php echo __('Question'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($question['Question']['id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('User'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($question['User']['name'], array('controller' => 'users', 'action' => 'view', $question['User']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Question'); ?></dt>
-		<dd>
-			<?php echo h($question['Question']['question']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($question['Question']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($question['Question']['modified']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Status'); ?></dt>
-		<dd>
-			<?php echo h($question['Question']['status']); ?>
-			&nbsp;
-		</dd>
-	</dl>
+	<table>
+		<tr>
+			<td class="column_label">Question</td>
+			<td>
+				<?php echo h($question['Question']['question']); ?><?php echo h($question['Question']['question']); ?>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="column_label">Created</td>
+			<td>
+				<?php echo h($question['Question']['created']); ?>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="column_label">Modified</td>
+			<td>
+				<?php echo h($question['Question']['modified']); ?>
+			</td>
+		</tr>
+	</table>
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>

@@ -5,10 +5,6 @@
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
 			<th><?php echo $this->Paginator->sort('description'); ?></th>
-			<th><?php echo $this->Paginator->sort('users_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th><?php echo $this->Paginator->sort('status'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($factors as $factor): ?>
@@ -16,12 +12,6 @@
 		<td><?php echo h($factor['Factor']['id']); ?>&nbsp;</td>
 		<td><?php echo h($factor['Factor']['name']); ?>&nbsp;</td>
 		<td><?php echo h($factor['Factor']['description']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($factor['User']['name'], array('controller' => 'users', 'action' => 'view', $factor['User']['id'])); ?>
-		</td>
-		<td><?php echo h($factor['Factor']['created']); ?>&nbsp;</td>
-		<td><?php echo h($factor['Factor']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($factor['Factor']['status']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $factor['Factor']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $factor['Factor']['id'])); ?>
@@ -48,6 +38,7 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Factor'), array('action' => 'add')); ?></li>
+		<li><?php echo $this->Html->link(__('Associate Factor'), array('controller' => 'FactorsQuestions', 'action' => 'add')); ?></li>
 		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>

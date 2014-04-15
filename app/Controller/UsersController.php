@@ -26,6 +26,7 @@ class UsersController extends AppController {
  * @return void
  */
 	public function index() {		
+		$this->layout = "public_dashboard";
 		$this->User->recursive = 0;
 		$this->set('users', $this->Paginator->paginate());
 	}
@@ -38,6 +39,7 @@ class UsersController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
@@ -51,6 +53,7 @@ class UsersController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			
 			$this->User->create();
@@ -61,7 +64,7 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
 		}
-		$userGroups = $this->User->Group->find('list');
+		$userGroups = $this->User->Group->find('list');		
 		$vitamins = $this->User->Vitamin->find('list');
 		$this->set(compact('userGroups', 'vitamins'));
 	}
@@ -74,6 +77,7 @@ class UsersController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}

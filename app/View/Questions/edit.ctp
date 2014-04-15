@@ -5,9 +5,6 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('question');
-		echo $this->Form->input('users_id');
-		echo $this->Form->input('Factor.Factor');
-		echo $this->Form->input('Factor.Factor.multiplier');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

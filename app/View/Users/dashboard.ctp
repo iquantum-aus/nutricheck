@@ -5,7 +5,7 @@
 		
 		
 		<div style="height: 374px; width: 327px;" class="item green">
-			<a class="dashboardLink" href="/users/dashboard"><img src="../img/tick.png"></a>
+			<a class="dashboardLink" href="/FactorsQuestions/nutrient_check"><img src="../img/tick.png"></a>
 			<div class="textBelow">Start Questionaire</div>
 		</div>
 		

@@ -4,8 +4,6 @@
 		<legend><?php echo __('Add Question'); ?></legend>
 	<?php
 		echo $this->Form->input('question');
-		echo $this->Form->input('users_id');
-		echo $this->Form->input('Factor.Factor');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

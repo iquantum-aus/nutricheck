@@ -3,10 +3,9 @@
 	<fieldset>
 		<legend><?php echo __('Add User'); ?></legend>
 	<?php
-		echo $this->Form->input('username');
-		echo $this->Form->input('password');
 		echo $this->Form->input('email');
-		echo $this->Form->input('groups_id');
+		echo $this->Form->input('password');
+		echo $this->Form->input('group_id', array('options' => $userGroups));
 		// echo $this->Form->input('status');
 		// echo $this->Form->input('Vitamin');
 	?>

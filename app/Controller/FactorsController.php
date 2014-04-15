@@ -21,6 +21,7 @@ class FactorsController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->Factor->recursive = 0;
 		$this->set('factors', $this->Paginator->paginate());
 	}
@@ -33,6 +34,7 @@ class FactorsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Factor->exists($id)) {
 			throw new NotFoundException(__('Invalid factor'));
 		}
@@ -46,9 +48,11 @@ class FactorsController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->Factor->create();
 			if ($this->Factor->save($this->request->data)) {
+				$this->request->data['Factor']['users_id'] = $this->Session->read('Auth.User.id');
 				$this->Session->setFlash(__('The factor has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -68,6 +72,7 @@ class FactorsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Factor->exists($id)) {
 			throw new NotFoundException(__('Invalid factor'));
 		}

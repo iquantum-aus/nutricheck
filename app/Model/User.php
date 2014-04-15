@@ -42,7 +42,7 @@ class User extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'groups_id' => array(
+		'group_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -74,7 +74,7 @@ class User extends AppModel {
 	public $belongsTo = array(
 		'Group' => array(
 			'className' => 'Group',
-			'foreignKey' => 'groups_id',
+			'foreignKey' => 'group_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -90,8 +90,8 @@ class User extends AppModel {
 		'Vitamin' => array(
 			'className' => 'Vitamin',
 			'joinTable' => 'users_vitamins',
-			'foreignKey' => 'user_id',
-			'associationForeignKey' => 'vitamin_id',
+			'foreignKey' => 'users_id',
+			'associationForeignKey' => 'vitamins_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',
 			'fields' => '',

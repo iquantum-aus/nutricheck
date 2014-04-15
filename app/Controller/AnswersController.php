@@ -7,6 +7,8 @@ App::uses('AppController', 'Controller');
  * @property PaginatorComponent $Paginator
  */
 class AnswersController extends AppController {
+	
+	var $uses = array('Answer', 'FactorsQuestion');
 
 /**
  * Components
@@ -108,4 +110,43 @@ class AnswersController extends AppController {
 			$this->Session->setFlash(__('The answer could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+	
+/**
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function report() {
+		$user_id = $this->Session->read('Auth.User.id');
+		$this->Answer->unbindModelAll();
+		$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.users_id' => $user_id)));
+		
+		$reports_per_factor = array();
+		$previous_factor = 0;
+		$current_factor = 0;
+		$inc = 0;
+		
+		foreach($answers as $key => $answer) {
+			$question_id = $answer['Answer']['questions_id'];
+			
+			$this->FactorsQuestion->unbindModelAll();
+			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('questions_id' => $question_id)));
+			
+			foreach($associations as $association) {
+				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
+				
+				$factor_id = $answer['FactorsQuestion']['factors_id'];
+				$inc++;
+				
+				$reports_per_factor[$factor_id][$inc] = $answer;
+			}
+		}
+		
+		ksort($reports_per_factor);
+		
+		$this->set('reports_per_factor', $reports_per_factor);
+	}
+	
+}
