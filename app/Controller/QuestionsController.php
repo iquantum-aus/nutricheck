@@ -115,7 +115,7 @@ class QuestionsController extends AppController {
 	}
 	
 	
-	public function nutrient_check() {
+	public function nutrient_check( $method = null ) {
 		$this->Question->recursive = 0;
 		$this->layout = "public_dashboard";
 
@@ -124,20 +124,46 @@ class QuestionsController extends AppController {
 		);
 
 		if($this->request->is('post')) {
-			$answers = $this->request->data;
 			
-			foreach($answers as $answer) {
-				$this->Question->Answer->create();
-				$this->Question->Answer->save($answer);
+			if(isset($this->request->data['Factors']['submit'])) {
+				
+				$factors_ids = implode(",", $this->request->data['Factors']['factors']);
+				
+				$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.questions_id WHERE factors_id IN ($factors_ids)";
+				$question_ids = $this->Question->query($sql);
+				$flatten_qid = array();
+				
+				foreach($question_ids as $key => $question_id) {
+					$flatten_qid[$key] = $question_id['Question']['id'];
+				}
+				
+				 $this->Paginator->settings = array(
+					'conditions' => array('Question.id IN' => $flatten_qid)
+				);
+				
+			} else {			
+				$answers = $this->request->data;
+				
+				foreach($answers as $answer) {
+					$this->Question->Answer->create();
+					$this->Question->Answer->save($answer);
+				}
+				
+				$this->Session->setFlash(__('You successfully saved your answers'));
+				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
-			
-			$this->Session->setFlash(__('You successfully saved your answers'));
-			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 		}
 		
-		$questions = $this->Paginator->paginate();
+		if(empty($method)) {
+			$questions = $this->Paginator->paginate();
+		} else {
+			$questions = $this->Paginator->paginate();
+			$factors = $this->Question->Factor->find('list');
+			$this->set('factors', $factors);
+		}
 		
+		$this->set('method', $method);
 		$this->set('questions', $questions);
-	}
+	}	
 	
 }

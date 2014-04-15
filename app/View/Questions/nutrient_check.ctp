@@ -1,4 +1,15 @@
 <div class="questions index">
+	
+	<form method="POST">
+		<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Factors:</label>
+		<select class="chosen-select" multiple style="width: 350px;" data-placeholder="select factors here..." name="data[Factors][factors][]">
+			<?php foreach($factors as $key => $factor) { ?>
+				<option value="<?php echo $key; ?>"><?php echo $factor; ?></option>
+			<?php } ?>
+		</select>
+		<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
+	</form>
+	
 	<div style="margin: 0;" class="sectionTitle">Questions</div>
 	
 	<form style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
