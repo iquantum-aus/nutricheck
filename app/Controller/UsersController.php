@@ -135,4 +135,46 @@ class UsersController extends AppController {
 		$this->layout = 'admin_dashboard';
 	}
 	
+	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
+	
+	public function remote_login() {
+		$this->layout = "iframe-layout";
+		if ($this->request->is('post')) {
+			if ($this->Auth->login()) {
+				return $this->redirect($this->Auth->redirect());
+			}
+			$this->Session->setFlash(__('Invalid username or password, try again'));
+		}
+	}
+	
+	public function remote_register() {
+		$this->layout = "iframe-layout";
+		if ($this->request->is('post')) {
+			
+			if($this->request->data['User']['password'] == $this->request->data['User']['repeat_password']) {
+				
+				$this->request->data['User']['group_id'] = 2;
+				$this->request->data['User']['status'] = 1;
+				
+				$this->User->create();
+				if($this->User->save($this->request->data)) {
+					$user_id = $this->User->id;
+					$this->request->data['UserProfile']['users_id'] = $user_id;
+					
+					$this->User->UserProfile->create();
+					if($this->User->UserProfile->save($this->request->data)) {
+						$user = $this->User->findById($user_id);
+						$user = $user['User'];
+						if($this->Auth->login($user)) {
+							$this->redirect(array('controller' => 'questions', 'action' => 'save_remote_nutrient_check'));
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
+	
 }

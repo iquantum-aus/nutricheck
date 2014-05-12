@@ -1,0 +1,54 @@
+#panelToggle {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
+	
+	color: #fff;
+	background: #e18728;
+	padding: 10px;
+	position: absolute;
+	font-weight: bold;
+	text-decoration: none;
+	
+	top: 50px;
+	left: -50px;
+	width: 120px;
+	text-align: center;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+	
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	
+	position: absolute;
+	background: #e18728;
+}
+
+#closeButton {
+	width: 29px;
+	height: 29px;
+	background: url('http://nutricheck.iquantum.com.au/img/stop.png');
+	position: absolute;
+	right: -15px;
+	top: -10px;
+	z-index: 9;
+	cursor: pointer;
+	display: none;
+}
+
+#leftbar {
+	position: absolute;
+	left: 0px;
+}
+
+#panelContentHolder {
+	border: solid 2px #999;
+	background: #e8feea;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+	float: left;
+	width: 100%;
+}
+</style>

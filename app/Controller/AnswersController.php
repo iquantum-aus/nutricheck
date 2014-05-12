@@ -9,6 +9,11 @@ App::uses('AppController', 'Controller');
 class AnswersController extends AppController {
 	
 	var $uses = array('Answer', 'FactorsQuestion');
+	
+	function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allow('report');
+	}
 
 /**
  * Components
@@ -119,14 +124,27 @@ class AnswersController extends AppController {
  * @return void
  */
 	public function report() {
+		$this->layout = "iframe-layout";
 		$user_id = $this->Session->read('Auth.User.id');
-		$this->Answer->unbindModelAll();
-		$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.users_id' => $user_id)));
+		
+		$factors = $this->Answer->Question->Factor->find('list');
+		
+		$latest_answer_date = $this->Answer->find('first', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));
 		
 		$reports_per_factor = array();
 		$previous_factor = 0;
 		$current_factor = 0;
 		$inc = 0;
+		
+		$temp_answer = $this->Session->read('temp_answers');
+		
+		if(empty($user_id) && !empty($temp_answer)) {
+			unset($temp_answer['TempAnswer']);
+			$answers = $temp_answer;
+		} else {
+			$this->Answer->unbindModelAll();
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.users_id' => $user_id, 'Answer.created <=' => $latest_answer_date['Answer']['created'], 'Answer.created >=' => $latest_answer_date['Answer']['created'])));
+		}
 		
 		foreach($answers as $key => $answer) {
 			$question_id = $answer['Answer']['questions_id'];
@@ -146,7 +164,7 @@ class AnswersController extends AppController {
 		
 		ksort($reports_per_factor);
 		
+		$this->set('factors', $factors);
 		$this->set('reports_per_factor', $reports_per_factor);
 	}
-	
 }

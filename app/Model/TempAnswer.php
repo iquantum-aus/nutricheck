@@ -1,14 +1,13 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Answer Model
+ * TempAnswer Model
  *
- * @property Users $Users
  * @property Questions $Questions
- * @property PerformedChecks $PerformedChecks
+ * @property Factors $Factors
  * @property Choice $Choice
  */
-class Answer extends AppModel {
+class TempAnswer extends AppModel {
 
 /**
  * Validation rules
@@ -16,6 +15,16 @@ class Answer extends AppModel {
  * @var array
  */
 	public $validate = array(
+		'ip_address' => array(
+			'notEmpty' => array(
+				'rule' => array('notEmpty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 		'status' => array(
 			'boolean' => array(
 				'rule' => array('boolean'),
@@ -36,13 +45,6 @@ class Answer extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'User' => array(
-			'className' => 'User',
-			'foreignKey' => 'users_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
 		'Question' => array(
 			'className' => 'Question',
 			'foreignKey' => 'questions_id',
@@ -50,13 +52,13 @@ class Answer extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-/* 		'PerformedCheck' => array(
-			'className' => 'PerformedCheck',
-			'foreignKey' => 'performed_checks_id',
+		'Factor' => array(
+			'className' => 'Factor',
+			'foreignKey' => 'factors_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		), */
+		),
 		'Choice' => array(
 			'className' => 'Choice',
 			'foreignKey' => 'choice_id',
@@ -65,26 +67,4 @@ class Answer extends AppModel {
 			'order' => ''
 		)
 	);
-	
-	function unbindModelAll($to_all = true) { 
-		$unbind = array(); 
-		foreach ($this->belongsTo as $model=>$info) 
-		{ 
-		$unbind['belongsTo'][] = $model; 
-		} 
-		foreach ($this->hasOne as $model=>$info) 
-		{ 
-		$unbind['hasOne'][] = $model; 
-		} 
-		foreach ($this->hasMany as $model=>$info) 
-		{ 
-		$unbind['hasMany'][] = $model; 
-		} 
-		foreach ($this->hasAndBelongsToMany as $model=>$info) 
-		{ 
-		$unbind['hasAndBelongsToMany'][] = $model; 
-		} 
-		parent::unbindModel($unbind, $to_all); 
-	}
-	
 }

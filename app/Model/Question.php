@@ -61,6 +61,14 @@ class Question extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		
+		'TempAnswer' => array(
+			'className' => 'TempAnswer',
+			'foreignKey' => 'questions_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 	

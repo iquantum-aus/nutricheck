@@ -80,6 +80,16 @@ class User extends AppModel {
 			'order' => ''
 		)
 	);
+	
+	public $hasOne = array(
+		'UserProfile' => array(
+			'className' => 'UserProfile',
+			'foreignKey' => 'users_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 
 /**
  * hasAndBelongsToMany associations

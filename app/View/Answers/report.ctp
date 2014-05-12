@@ -16,7 +16,36 @@
 
 
 <?php
-	pr($total_score);
+/* 	pr($total_score);
 	pr($raw_score);
-	pr($percentage);
+	pr($percentage); */
 ?>
+
+<canvas id="canvas" height="450" width="900"></canvas>
+
+<?php 
+	foreach($factors as $key => $factor) {
+		$factors[$key] = '"'.$factor.'"';
+	}
+	
+	$flatten_percentage = implode(",", $percentage);
+	$flatten_factors = implode(",", $factors);
+?>
+
+<script>
+	$(document).ready( function () {
+		var barChartData = {
+			labels : [<?php echo $flatten_factors; ?>],
+			datasets : [
+				{
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,1)",
+					data : [<?php echo $flatten_percentage; ?>]
+				}
+			]
+			
+		}
+
+		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
+	});	
+</script>

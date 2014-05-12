@@ -40,7 +40,11 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 	?>
-
+	
+	<style>
+		body { padding-top: 50px; }
+	</style>
+	
 </head>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 

@@ -35,10 +35,10 @@
 								for($i = 1; $i<=4; $i++) {
 									?>
 										<td style="height: 50px; width:5%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][users_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
-											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-											<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][questions_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][users_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+											<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
 										</td>
 									<?php
 								}
@@ -48,6 +48,7 @@
 				</tbody>
 			</table>
 		<?php } ?>
+		<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
 		<input type="submit" value="SUBMIT" class="btn btn-danger">
 	</form>
 		
@@ -66,7 +67,6 @@
 			<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
 		</form>
 	</div>
-	
 </div>
 
 
@@ -146,4 +146,10 @@
 			return false;
 		});
 	});
+	
+	$(window).ready( function () {
+		var url = (window.location != window.parent.location) ? document.referrer: document.location;	
+		$('#remoteLink').val(url);
+	});
 </script>
+
