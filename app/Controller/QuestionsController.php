@@ -10,7 +10,7 @@ class QuestionsController extends AppController {
 	
 	function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('remote_nutrient_check');
+		$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
 	}
 	
 /**
@@ -220,7 +220,7 @@ class QuestionsController extends AppController {
 				$this->Session->write('temp_answers', $temp_answer_array);
 				$temp_answer = $this->Session->read('temp_answers');
 				
-				$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=temp'));
+				$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=temp&action=login'));
 			}
 		}
 		
@@ -233,19 +233,19 @@ class QuestionsController extends AppController {
 	
 	public function save_remote_nutrient_check() {
 		
+		$user_id = $this->Session->read('Auth.User.id');
 		$temp_answer_array = array();
 		$temp_answer = $this->Session->read('temp_answers');
-		unset($temp_answer['TempAnswer']);
+		
+		unset($temp_answer['TempAnswer']);		
 		$answers = $temp_answer;
 		
 		foreach($answers as $answer) {
-			$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
-			$answer['Answer']['link'] = $answers['TempAnswer']['remoteLink'];
-			
+			$answer['Answer']['users_id'] = $user_id;
 			$this->Question->Answer->create();
 			$this->Question->Answer->save($answer);
 		}
-				
+
 		$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
 	}
 }

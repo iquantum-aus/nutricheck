@@ -61,10 +61,49 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			padding: 10px 10px 10px 10px;
 			height: 40px;
 			width: 300px;
+			margin-bottom: 10px;
 		}
 		
 		body { background: transparent; }
 		#content { background: transparent; }
+		
+		#registerWidget_holder, #loginWidget_holder {
+			width: 350px; 
+			float: left;
+			margin-top: 80px;
+		}
+		
+		div.form,
+		div.index,
+		div.view {
+			width: 1160px;
+			border-right: 4px solid #e6e6e6;
+			margin-right: 25px;
+		}
+		
+		.controls {
+			margin: 10px 0px !important;
+		}
+		
+		.control-group {
+			margin: 0 !important;
+		}
+		
+		.form-actions {
+			float: left;
+			width: 100%;
+			padding: 20px 0px !important;
+			background-color: transparent;
+		}
+		
+		.form-horizontal {
+			margin: 0 !important;
+			width: auto;
+		}
+		
+		fieldset legend {
+			color: #2598c8;
+		}
 	</style>
 	
 </head>
@@ -74,50 +113,69 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->Session->flash('auth'); ?>
 		<?php echo $this->fetch('content'); ?>
 		
-		<?php if($_GET['action'] == "login") { ?>
-			<div class="users form">
-				<?php echo $this->Form->create('User'); ?>
-					<fieldset>
-						<legend>
-							<?php echo __('Please enter your username and password'); ?>
-						</legend>
-						<?php echo $this->Form->input('username', array('div' => false, 'autocomplete' => 'off'));
-						echo $this->Form->input('password', array('div' => false, 'autocomplete' => 'off'));
+		<?php
+			$user_id = $this->Session->read('Auth.User.id');
+		?>
+		
+		<?php
+			if(empty($user_id)) {
+			if(!isset($_GET['action'])) { $_GET['action'] = "login"; }
+		?>
+		
+			<?php if($_GET['action'] == "login") { ?>
+				
+				<div id="loginWidget_holder">
+					<?php
+						echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal'));
+							?>
+							<fieldset>
+								<legend><?php echo __('Login'); ?></legend>
+								<?php echo $this->Form->input('email', array('div' => false, 'label' => false, 'placeholder' => "Email")); ?>
+								<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
+								
+								<div class="control-group"><div class="controls"><a href="<?php echo $this->Html->url('/users/remote_register?action=register');?>">Sign Up</a></div></div>
+								<div class="form-actions">
+									<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
+									<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
+								</div>
+							</fieldset>
+							<?php
+						echo $this->Form->end();
 					?>
-					</fieldset>
-					
-					<a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/remote_register">Signup</a>
-					
-				<?php echo $this->Form->end(__('Login')); ?>
-			</div>
-		<?php } else if($_GET['action'] == "register"){ ?>
-			<div class="userProfiles form">
-				<?php echo $this->Form->create('Users', array('action' => '/remote_register?answered=true&status=temp')); ?>
-					<fieldset>
-						<legend><?php echo __('Sign Up'); ?></legend>
-						
-						
-						<div class="left span12"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
-						<div class="left span12"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
-						<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Username')); ?></div>
-						<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
-						<div class="left span12"><?php echo $this->Form->input('User.repeat_password', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
-					
-					
-					</fieldset>
-					<input type="submit" class="btn btn-success">
-				<?php echo $this->Form->end(); ?>
 				</div>
 
-				<script>
-					$(document).ready( function () {
-						$( "#UserProfileBirthday" ).datepicker({
-							dateFormat : 'yy-mm-dd',
-							changeMonth : true,
-							changeYear : true
+				
+			<?php } else if($_GET['action'] == "register") { ?>
+				
+				<div id="registerWidget_holder">
+					<?php echo $this->Form->create('Users', array('action' => '/remote_register?answered=true&status=temp')); ?>
+						<fieldset>
+							<legend><?php echo __('Sign Up'); ?></legend>
+							
+							<div class="left span12"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
+							<div class="left span12"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
+							<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Username')); ?></div>
+							<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
+							<div class="left span12"><?php echo $this->Form->input('User.repeat_password', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
+						
+							<div class="form-actions">
+								<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
+								<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
+							</div>
+						</fieldset>
+					<?php echo $this->Form->end(); ?>
+					</div>
+
+					<script>
+						$(document).ready( function () {
+							$( "#UserProfileBirthday" ).datepicker({
+								dateFormat : 'yy-mm-dd',
+								changeMonth : true,
+								changeYear : true
+							});
 						});
-					});
-				</script>
+					</script>
+			<?php } ?>
 		<?php } ?>
 		
 	</div>

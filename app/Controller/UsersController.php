@@ -1,4 +1,4 @@
-<?php
+.<?php
 App::uses('AppController', 'Controller');
 /**
  * Users Controller
@@ -119,11 +119,23 @@ class UsersController extends AppController {
 	}	
 
 	public function login() {
+		
+		echo $_GET['source'];
+		exit();
+		
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
-				return $this->redirect($this->Auth->redirect());
+				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
+					return $this->redirect(array('controller' => 'questions', 'action' => 'save_remote_nutrient_check'));
+				} else {
+					return $this->redirect($this->Auth->redirect());
+				}
 			}
+			
 			$this->Session->setFlash(__('Invalid username or password, try again'));
+			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
+				$this->redirect($this->redirect($this->referer()));
+			}
 		}
 	}
 
@@ -133,19 +145,11 @@ class UsersController extends AppController {
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
+		
+		pr($this->Session->read('Auth'));
 	}
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
-	
-	public function remote_login() {
-		$this->layout = "iframe-layout";
-		if ($this->request->is('post')) {
-			if ($this->Auth->login()) {
-				return $this->redirect($this->Auth->redirect());
-			}
-			$this->Session->setFlash(__('Invalid username or password, try again'));
-		}
-	}
 	
 	public function remote_register() {
 		$this->layout = "iframe-layout";

@@ -127,6 +127,8 @@ class AnswersController extends AppController {
 		$this->layout = "iframe-layout";
 		$user_id = $this->Session->read('Auth.User.id');
 		
+		echo "user_id - ".$user_id;
+		
 		$factors = $this->Answer->Question->Factor->find('list');
 		
 		$latest_answer_date = $this->Answer->find('first', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));

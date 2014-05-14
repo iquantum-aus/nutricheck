@@ -53,15 +53,23 @@ class UsersController extends AclManagementAppController {
      *
      * @return void
      */
-    function login() {
-        if ($this->request->is('post')) {
-            if ($this->Auth->login()) {
-                $this->redirect($this->Auth->redirect());
-            } else {
-                $this->Session->setFlash('Your username or password was incorrect.', 'alert/error');
-            }
-        }
-    }
+	public function login() {
+		
+		if ($this->request->is('post')) {
+			if ($this->Auth->login()) {
+				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
+					return $this->redirect('/questions/save_remote_nutrient_check');
+				} else {
+					return $this->redirect($this->Auth->redirect());
+				}
+			}
+			
+			$this->Session->setFlash(__('Invalid username or password, try again'));
+			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
+				$this->redirect($this->redirect($this->referer()));
+			}
+		}
+	}
     /**
      * logout method
      *
