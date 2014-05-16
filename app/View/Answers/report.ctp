@@ -21,7 +21,9 @@
 	pr($percentage); */
 ?>
 
-<canvas id="canvas" height="450" width="900"></canvas>
+<div class="index">
+	<canvas id="canvas" height="450" width="900"></canvas>
+</div>
 
 <?php 
 	foreach($factors as $key => $factor) {

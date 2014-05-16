@@ -28,7 +28,19 @@ class QuestionsController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->Question->recursive = 0;
+		
+		$qgroups = $this->Question->Qgroup->find('list');
 		$this->set('questions', $this->Paginator->paginate());
+		
+		$selected_questions = $this->Session->read('selected_questions');
+		$selected_qgroup = $this->Session->read('selected_qgroup');
+		
+		if(!empty($selected_qgroup)) {
+			$selected_group_details = $this->Question->Qgroup->findById($selected_qgroup);
+			$this->set('selected_group_details', $selected_group_details);
+		}
+		
+		$this->set(compact('qgroups', 'selected_questions', 'selected_qgroup'));
 	}
 
 /**
@@ -247,5 +259,36 @@ class QuestionsController extends AppController {
 		}
 
 		$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
+	}
+	
+	public function qgroup_cart($question_id = null, $qgroup_id = null) {
+		$append = array();
+
+		$selected_question = $this->Session->read('selected_questions');
+		$selected_question[$question_id] = $question_id;
+		
+		$append = $selected_question;
+		$this->Session->write('selected_questions', $append);
+		$this->Session->write('selected_qgroup', $qgroup_id);
+		
+		$selected_question = $this->Session->read('selected_questions');
+		
+		echo count($selected_question);
+		exit();
+	}
+	
+	public function qgroup_cart_remove($question_id = null) {
+		$append = array();
+
+		$selected_question = $this->Session->read('selected_questions');
+		unset($selected_question[$question_id]);
+		
+		$append = $selected_question;
+		$this->Session->write('selected_questions', $append);
+		
+		$selected_question = $this->Session->read('selected_questions');
+		
+		echo 1;
+		exit();
 	}
 }

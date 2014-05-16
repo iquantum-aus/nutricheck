@@ -91,6 +91,20 @@ class Question extends AppModel {
 			'limit' => '',
 			'offset' => '',
 			'finderQuery' => '',
+		),
+		
+		'Qgroup' => array(
+			'className' => 'Qgroup',
+			'joinTable' => 'questions_qgroups',
+			'foreignKey' => 'question_id',
+			'associationForeignKey' => 'qgroup_id',
+			'unique' => 'keepExisting',
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'finderQuery' => '',
 		)
 	);
 	

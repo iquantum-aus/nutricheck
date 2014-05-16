@@ -41,12 +41,15 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('slidebars-theme');
 		echo $this->Html->css('style');
 		echo $this->Html->css('chosen');
+		echo $this->Html->css('jquery.fancybox');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		
-		echo $this->Html->script('libs/jquery');
+		// echo $this->Html->script('libs/jquery');
 	?>
 
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	
@@ -75,6 +78,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('masonry.pkgd.min');
 		echo $this->Html->script('Chart.min');
 		echo $this->Html->script('chosen.jquery.min');
+		echo $this->Html->script('jquery.fancybox');
 		echo $this->fetch('script');
  	?>
 </body>
