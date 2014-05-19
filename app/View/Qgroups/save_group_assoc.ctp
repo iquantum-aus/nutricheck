@@ -45,8 +45,9 @@
 					if(data) {
 						$("#cart_item_"+bare_id[1]).remove();
 						var selected_question_count = $('.selectedQuestion_instance').length;			
-						var html_content = "<div style='font-size: 12px; margin-bottom: 10px;'>You currently have "+selected_question_count+" question(s) added to the group <i>\"<?php echo $selected_group_details['Qgroup']['name']; ?>\"</i></div><a  class='fancybox fancybox.iframe' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation' class='btn btn-success'>Save Association</a>";
+						var html_content = "<div style='font-size: 12px; margin-bottom: 10px;'>You currently have "+selected_question_count+" question(s) added to the group <i>\"<?php echo $selected_group_details['Qgroup']['name']; ?>\"</i></div><a  class='fancybox fancybox.iframe btn btn-info' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation'>Save Association</a>";
 						parent.jQuery('#replaceContent').html(html_content);
+						parent.jQuery('#addToGroup_'+bare_id[1]).removeClass('hidden');
 						alert('Associated question was succesfully saved');
 					}
 				},

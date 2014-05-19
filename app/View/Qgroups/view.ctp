@@ -1,8 +1,8 @@
 <div class="qgroups view">
-<h2><?php echo __('Qgroup'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
+<h2><?php echo __('Question Group'); ?></h2>
+	<dl class="left">
+		<dt  class="left"><?php echo __('Id'); ?></dt>
+		<dd  class="left">
 			<?php echo h($qgroup['Qgroup']['id']); ?>
 			&nbsp;
 		</dd>
@@ -31,12 +31,12 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Qgroup'), array('action' => 'edit', $qgroup['Qgroup']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Qgroup'), array('action' => 'delete', $qgroup['Qgroup']['id']), null, __('Are you sure you want to delete # %s?', $qgroup['Qgroup']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Qgroups'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Qgroup'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Questions'), array('controller' => 'questions', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Question'), array('controller' => 'questions', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Edit Qgroup'), array('action' => 'edit', $qgroup['Qgroup']['id']), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Form->postLink(__('Delete Qgroup'), array('action' => 'delete', $qgroup['Qgroup']['id']), array('class' => 'btn btn-primary'), __('Are you sure you want to delete # %s?', $qgroup['Qgroup']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('List Qgroups'), array('action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Qgroup'), array('action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Questions'), array('controller' => 'questions', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Question'), array('controller' => 'questions', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>
 <div class="related">

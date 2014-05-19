@@ -9,7 +9,7 @@
 			</div>
 			
 			<a href="#qgroup_creator_holder" class="fancybox btn btn-primary">Create</a>
-			<a href="#qgroup_editor_holder" class="fancybox btn btn-warning">Edit</a>
+			<a id="qgroup_edit" href="#qgroup_editor_holder" class="fancybox btn btn-warning">Edit</a>
 		</form>
 	</div>
 	
@@ -36,7 +36,17 @@
 					array('action' => 'delete', $question['Question']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete this record?')
 				); 
 			?>
-			<input type="button" id="addToGroup_<?php echo $question['Question']['id']; ?>" value="Add to Group" class="addToGroup btn btn-success">
+			
+			<?php
+				$additional_class = "";
+				if(!empty($selected_questions)) {
+					if(in_array($question['Question']['id'], $selected_questions)) {
+						$additional_class = "hidden";
+					}
+				}
+			?>
+			<input type="button" id="addToGroup_<?php echo $question['Question']['id']; ?>" value="Add to Group" class="<?php echo $additional_class; ?> addToGroup btn btn-success">
+			
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -82,7 +92,7 @@
 		<form id="group_creator">
 			<h3>Create Question Group</h3>
 			<label class="left">Question Group:</label>&nbsp;
-			<input class="left" type="text" name="" style="width: 255px;">
+			<input id="add_qgroup_name" class="left" type="text" name="data[Qgroup][name]" style="width: 255px;">
 			<input type="submit" value="Save Group" class="right btn btn-primary">
 		</form>
 	</div>
@@ -91,7 +101,8 @@
 		<form id="group_editor">
 			<h3>Update Question Group</h3>
 			<label class="left">Question Group:</label>&nbsp;
-			<input class="left" type="text" name="" style="width: 255px;">
+			<input id="edit_qgroup_id" class="left" type="hidden" name="data[Qgroup][id]" style="width: 255px;">
+			<input id="edit_qgroup_name" class="left" type="text" name="data[Qgroup][name]" style="width: 255px;">
 			<input type="submit" value="Save Group" class="right btn btn-info">
 		</form>
 	</div>
@@ -115,7 +126,10 @@
 				dataType:'html',
 				success:function (data, textStatus) {
 					var select_group_text = $("#QgroupId option:selected").text();
-					var html_content = "<div style='font-size: 12px; margin-bottom: 10px;'>You currently have "+data+" question(s) added to the group <i>\""+select_group_text+"\"</i></div><a  class='btn btn-info fancybox fancybox.iframe' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation' class='btn btn-success'>Save Association</a>";
+					var html_content = "<div style='font-size: 12px; margin-bottom: 10px;'>You currently have "+data+" question(s) added to the group <i>\""+select_group_text+"\"</i></div><a  class='btn btn-info fancybox fancybox.iframe' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation' class='btn btn-info'>Save Association</a>";
+					
+					$('#addToGroup_'+bare_id[1]).addClass("hidden");
+					alert('Succesfully added to group');
 					$('#replaceContent').html(html_content);
 				},
 				type:'post',
@@ -123,6 +137,58 @@
 			});
 			
 			return false;
-		});		
+		});
+
+		$('#qgroup_edit').click( function () {
+			var qgroup_id = $('#QgroupId option:selected').val();
+			var qgroup_text = $('#QgroupId option:selected').text();
+			
+			$('#edit_qgroup_id').val(qgroup_id);
+			$('#edit_qgroup_name').val(qgroup_text);
+		});
+		
+		$('#group_editor').submit( function () {
+			$.ajax({
+				async:true,
+				dataType:'html',
+				data:$(this).serialize(),
+				success:function (data, textStatus) {					
+					if(data) {
+						var updated_name = $('#edit_qgroup_name').val();
+						var qgroup_text = $('#QgroupId option:selected').text(updated_name);
+						$.fancybox.close();
+						alert('Question group was succesfully updated');
+					}
+				},
+				type:'post',
+				url:"/qgroups/ajax_update/"
+			});
+			
+			return false;
+		});
+		
+		$('#group_creator').submit( function () {
+			$.ajax({
+				async:true,
+				dataType:'html',
+				data:$(this).serialize(),
+				success:function (data, textStatus) {					
+					if(data) {
+						var add_qgroup_name = $('#add_qgroup_name').val();
+						var append_option = "<option value="+data+">"+add_qgroup_name+"</option>";
+						$('#QgroupId').append(append_option);
+						
+						$("#QgroupId option[value='"+data+"']").attr('selected', 'selected');
+						
+						$.fancybox.close();
+						alert('Question group was succesfully created');
+					}
+				},
+				type:'post',
+				url:"/qgroups/ajax_create/"
+			});
+			
+			return false;
+		});
 	});
 </script>

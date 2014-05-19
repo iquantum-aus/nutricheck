@@ -33,11 +33,11 @@ class QgroupsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Qgroup->exists($id)) {
 			throw new NotFoundException(__('Invalid qgroup'));
 		}
 		$options = array('conditions' => array('Qgroup.' . $this->Qgroup->primaryKey => $id));
-		
 		$this->set('qgroup', $this->Qgroup->find('first', $options));
 	}
 
@@ -129,5 +129,26 @@ class QgroupsController extends AppController {
 		
 		$selected_group_details = $this->Qgroup->findById($selected_qgroup) ;
 		$this->set(compact('questions', 'selected_question_ids', 'selected_questions','selected_qgroup', 'selected_group_details'));
+	}
+	
+	public function ajax_update() {
+		if ($this->request->is(array('post', 'put'))) {
+			if($this->Qgroup->save($this->request->data)) {
+				echo "1";
+			}
+		}
+		
+		exit();
+	}
+	
+	public function ajax_create() {
+		if ($this->request->is(array('post', 'put'))) {
+			$this->Qgroup->create();
+			if($this->Qgroup->save($this->request->data)) {
+				echo $this->Qgroup->id;
+			}
+		}
+		
+		exit();
 	}
 }
