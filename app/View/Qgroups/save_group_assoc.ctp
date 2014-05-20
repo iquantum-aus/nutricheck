@@ -17,6 +17,7 @@
 				<th class="actions"></th>
 		</tr>
 		<?php foreach ($selected_questions as $key => $question): ?>
+			<input type="hidden" name="data[Question][Question][]" value="<?php echo $key; ?>">
 			<tr class="selectedQuestion_instance" id="cart_item_<?php echo $key; ?>">
 				<td><?php echo h($question); ?>&nbsp;</td>
 				<td>

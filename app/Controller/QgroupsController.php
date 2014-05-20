@@ -117,6 +117,8 @@ class QgroupsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Session->read('selected_questions');
 			if($this->Qgroup->save($this->request->data)) {
+				$selected_questions = array();
+				$this->Session->write('selected_questions', $selected_questions);
 				echo 1;
 				exit();
 			}

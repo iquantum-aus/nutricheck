@@ -32,15 +32,39 @@ class QuestionsController extends AppController {
 		$qgroups = $this->Question->Qgroup->find('list');
 		$this->set('questions', $this->Paginator->paginate());
 		
-		$selected_questions = $this->Session->read('selected_questions');
+		/* $selected_questions = $this->Session->read('selected_questions');
 		$selected_qgroup = $this->Session->read('selected_qgroup');
 		
 		if(!empty($selected_qgroup)) {
 			$selected_group_details = $this->Question->Qgroup->findById($selected_qgroup);
 			$this->set('selected_group_details', $selected_group_details);
+		} */
+		
+		
+		$selected_qgroup = $this->Session->read('selected_qgroup');
+		$selected_questions = array();
+		
+		if ($this->request->is('post')) {
+			$questions_from_group = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' => $this->request->data['Qgroup']['id'])));
+			
+			if(!empty($this->request->data['Qgroup']['id'])) {
+				$qgroup_id = $this->request->data['Qgroup']['id'];
+				$this->Session->write('selected_qgroup', $qgroup_id);
+				$this->redirect(array('action' => 'index'));
+			}	
 		}
 		
-		$this->set(compact('qgroups', 'selected_questions', 'selected_qgroup'));
+		if (!empty($selected_qgroup)) {
+			$questions_from_group = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' => $selected_qgroup)));
+		}
+		
+		if(isset($questions_from_group)) {
+			foreach($questions_from_group[0]['Question'] as $key => $question) {
+				$selected_questions[$key] = $question['id'];
+			}
+		}
+		
+		$this->set(compact('selected_qgroup', 'qgroups', 'selected_questions', 'selected_qgroup'));
 	}
 
 /**
@@ -278,17 +302,32 @@ class QuestionsController extends AppController {
 	}
 	
 	public function qgroup_cart_remove($question_id = null) {
+		
 		$append = array();
-
-		$selected_question = $this->Session->read('selected_questions');
-		unset($selected_question[$question_id]);
+		$selected_qgroup = $this->Session->read('selected_qgroup');
 		
-		$append = $selected_question;
-		$this->Session->write('selected_questions', $append);
+		$qgroup_associations = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' =>$selected_qgroup)));
 		
-		$selected_question = $this->Session->read('selected_questions');
+		$question_ids = array();
+		foreach($qgroup_associations[0]['Question'] as $key => $question) {
+			$question_ids[$key] = $question['id'];
+		}
 		
-		echo 1;
+		$final_association = $this->array_delete($question_ids, $question_id); // returns [312, 1599, 3]
+		
+		$to_save = array();
+		$to_save['Qgroup']['id'] = $selected_qgroup;
+		$to_save['Question']['Question'] = $final_association;
+		
+		if($this->Question->Qgroup->save($to_save)) {
+			echo 1;
+		}
+		
 		exit();
 	}
+	
+	function array_delete($array, $element) {
+		return array_diff($array, [$element]);
+	}
+
 }

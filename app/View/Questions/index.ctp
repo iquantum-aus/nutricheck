@@ -2,10 +2,10 @@
 	<h2><?php echo __('Questions'); ?></h2>
 	
 	<div id="qgroup_holder">
-		<form name="qgroup_selector">
+		<form id="qgroup_selector" method="POST">
 			<label class="left">Select Group:</label>
 			<div class = "left">
-				<?php echo $this->Form->input('Qgroup.id', array('options' => $qgroups, 'div' => false, 'label' => false)); ?>
+				<?php echo $this->Form->input('Qgroup.id', array('options' => $qgroups, 'selected' => $selected_qgroup, 'empty' => 'Select a question list', 'div' => false, 'label' => false)); ?>
 			</div>
 			
 			<a href="#qgroup_creator_holder" class="fancybox btn btn-primary">Create</a>
@@ -38,14 +38,27 @@
 			?>
 			
 			<?php
-				$additional_class = "";
-				if(!empty($selected_questions)) {
-					if(in_array($question['Question']['id'], $selected_questions)) {
-						$additional_class = "hidden";
+				if(!empty($selected_qgroup)) {
+					if(!empty($selected_questions)) {
+						if(in_array($question['Question']['id'], $selected_questions)) {
+							?>
+								<a style="width: 170px; text-align: center;" type="button" id="addToGroup_<?php echo $question['Question']['id']; ?>" class="hidden addToGroup btn btn-success">Add to Group</a>
+								<a style="width: 170px; text-align: center;" type="button" id="removeFromGroup_<?php echo $question['Question']['id']; ?>" class="removeFromGroup btn btn-info">Remove from Group</a>
+							<?php
+						} else {
+							?>
+								<a style="width: 170px; text-align: center;" type="button" id="addToGroup_<?php echo $question['Question']['id']; ?>" class="addToGroup btn btn-success">Add to Group</a>
+								<a style="width: 170px; text-align: center;" type="button" id="removeFromGroup_<?php echo $question['Question']['id']; ?>" class="hidden removeFromGroup btn btn-info">Remove from Group</a>
+							<?php
+						}
+					} else {
+						?>
+							<a style="width: 170px; text-align: center;" type="button" id="addToGroup_<?php echo $question['Question']['id']; ?>" class="addToGroup btn btn-success">Add to Group</a>
+							<a style="width: 170px; text-align: center;" type="button" id="removeFromGroup_<?php echo $question['Question']['id']; ?>" class="hidden removeFromGroup btn btn-info">Remove from Group</a>
+						<?php
 					}
 				}
 			?>
-			<input type="button" id="addToGroup_<?php echo $question['Question']['id']; ?>" value="Add to Group" class="<?php echo $additional_class; ?> addToGroup btn btn-success">
 			
 		</td>
 	</tr>
@@ -74,7 +87,8 @@
 		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 	
-	<div class="left" id="qgroup_cart_holder">
+	<?php
+	/* <div class="left" id="qgroup_cart_holder">
 		<div id="replaceContent">
 			<?php
 				if(!empty($selected_questions)) {
@@ -84,7 +98,8 @@
 				}
 			?>
 		</div>
-	</div>
+	</div> */
+	?>
 </div>
 
 <div style="display: none;">
@@ -115,7 +130,8 @@
 			}
 		});
 		
-		$('.addToGroup').click( function () {
+		$(".addToGroup").on("click", function () {
+			
 			var id = $(this).attr('id');
 			
 			var bare_id = id.split('_');
@@ -125,12 +141,8 @@
 				async:true,
 				dataType:'html',
 				success:function (data, textStatus) {
-					var select_group_text = $("#QgroupId option:selected").text();
-					var html_content = "<div style='font-size: 12px; margin-bottom: 10px;'>You currently have "+data+" question(s) added to the group <i>\""+select_group_text+"\"</i></div><a  class='btn btn-info fancybox fancybox.iframe' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation' class='btn btn-info'>Save Association</a>";
-					
-					$('#addToGroup_'+bare_id[1]).addClass("hidden");
-					alert('Succesfully added to group');
-					$('#replaceContent').html(html_content);
+					$('#'+id).addClass('hidden');
+					$('#removeFromGroup_'+bare_id[1]).removeClass('hidden');
 				},
 				type:'post',
 				url:"/questions/qgroup_cart/"+bare_id[1]+"/"+select_group_id
@@ -186,6 +198,30 @@
 				},
 				type:'post',
 				url:"/qgroups/ajax_create/"
+			});
+			
+			return false;
+		});
+		
+		$('#QgroupId').change( function () {
+			$('form#qgroup_selector').submit();
+		});
+		
+		$(".removeFromGroup").click( function () {
+			var id = $(this).attr('id');
+			var bare_id = id.split('_');
+			
+			$.ajax({
+				async:true,
+				dataType:'html',
+				success:function (data, textStatus) {
+					if(data) {
+						$('#'+id).addClass('hidden');
+						$('#addToGroup_'+bare_id[1]).removeClass('hidden');
+					}
+				},
+				type:'post',
+				url:"/questions/qgroup_cart_remove/"+bare_id[1]+"/"
 			});
 			
 			return false;
