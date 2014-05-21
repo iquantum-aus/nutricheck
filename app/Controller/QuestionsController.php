@@ -30,7 +30,7 @@ class QuestionsController extends AppController {
 		$this->Question->recursive = 0;
 		
 		$qgroups = $this->Question->Qgroup->find('list');
-		$this->set('questions', $this->Paginator->paginate());
+		$this->set('questions', $this->Paginator->paginate(array('Question.status' => 1)));
 		
 		/* $selected_questions = $this->Session->read('selected_questions');
 		$selected_qgroup = $this->Session->read('selected_qgroup');
@@ -147,7 +147,11 @@ class QuestionsController extends AppController {
 			throw new NotFoundException(__('Invalid question'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->Question->delete()) {
+		
+		$this->request->data['Question']['id'] = $id;
+		$this->request->data['Question']['status'] = 0;
+		
+		if ($this->Question->save($this->request->data)) {
 			$this->Session->setFlash(__('The question has been deleted.'));
 		} else {
 			$this->Session->setFlash(__('The question could not be deleted. Please, try again.'));
@@ -285,25 +289,37 @@ class QuestionsController extends AppController {
 		$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
 	}
 	
-	public function qgroup_cart($question_id = null, $qgroup_id = null) {
+	public function qgroup_cart($question_id = null) {
+		
 		$append = array();
-
-		$selected_question = $this->Session->read('selected_questions');
-		$selected_question[$question_id] = $question_id;
+		$selected_qgroup = $this->Session->read('selected_qgroup');
 		
-		$append = $selected_question;
-		$this->Session->write('selected_questions', $append);
-		$this->Session->write('selected_qgroup', $qgroup_id);
+		$qgroup_associations = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' =>$selected_qgroup)));
 		
-		$selected_question = $this->Session->read('selected_questions');
+		$question_ids = array();
+		foreach($qgroup_associations[0]['Question'] as $key => $question) {
+			if(isset($question['id'])) {
+				$question_ids[$key] = $question['id'];
+			}
+		}		
 		
-		echo count($selected_question);
+		array_push($question_ids, $question_id);
+		
+		$to_save = array();
+		$to_save['Qgroup']['id'] = $selected_qgroup;
+		$to_save['Question']['Question'] = $question_ids;
+		
+		if($this->Question->Qgroup->save($to_save)) {
+			echo 1;
+		}
+		
 		exit();
 	}
 	
 	public function qgroup_cart_remove($question_id = null) {
 		
 		$append = array();
+		$final_association = array();
 		$selected_qgroup = $this->Session->read('selected_qgroup');
 		
 		$qgroup_associations = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' =>$selected_qgroup)));
@@ -327,7 +343,9 @@ class QuestionsController extends AppController {
 	}
 	
 	function array_delete($array, $element) {
-		return array_diff($array, [$element]);
+		$to_remove = array();
+		array_push($to_remove, $element);
+		return array_diff($array, $to_remove);
 	}
 
 }

@@ -120,9 +120,6 @@ class UsersController extends AppController {
 
 	public function login() {
 		
-		echo $_GET['source'];
-		exit();
-		
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
@@ -130,11 +127,12 @@ class UsersController extends AppController {
 				} else {
 					return $this->redirect($this->Auth->redirect());
 				}
-			}
-			
-			$this->Session->setFlash(__('Invalid username or password, try again'));
-			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-				$this->redirect($this->redirect($this->referer()));
+			} else {			
+				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
+					$this->redirect($this->redirect($this->referer()));
+				} else {
+					$this->Session->setFlash(__('Invalid username or password, try again'));
+				}
 			}
 		}
 	}

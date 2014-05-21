@@ -7,7 +7,12 @@ App::uses('AppController', 'Controller');
  * @property PaginatorComponent $Paginator
  */
 class QgroupsController extends AppController {
-
+	
+	function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allow('load_questions');
+	}
+	
 /**
  * Components
  *
@@ -21,8 +26,9 @@ class QgroupsController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->Qgroup->recursive = 0;
-		$this->set('qgroups', $this->Paginator->paginate());
+		$this->set('qgroups', $this->Paginator->paginate(array('status' => 1)));
 	}
 
 /**
@@ -47,6 +53,7 @@ class QgroupsController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {		
 			$this->Qgroup->create();
 			if ($this->Qgroup->save($this->request->data)) {
@@ -68,6 +75,7 @@ class QgroupsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Qgroup->exists($id)) {
 			throw new NotFoundException(__('Invalid qgroup'));
 		}
@@ -99,7 +107,11 @@ class QgroupsController extends AppController {
 			throw new NotFoundException(__('Invalid qgroup'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->Qgroup->delete()) {
+		
+		$this->request->data['Qgroup']['id'] = $id;
+		$this->request->data['Qgroup']['status'] = 0;
+		
+		if ($this->Qgroup->save($this->request->data)) {
 			$this->Session->setFlash(__('The qgroup has been deleted.'));
 		} else {
 			$this->Session->setFlash(__('The qgroup could not be deleted. Please, try again.'));
@@ -153,4 +165,18 @@ class QgroupsController extends AppController {
 		
 		exit();
 	}
+	
+	public function load_questions($id = null) {
+		$this->layout = "iframe-layout";
+		
+		$group_association = $this->Qgroup->find('all', array('conditions' => array('id' => $id)));
+		
+		$questions = array();
+		foreach($group_association[0]['Question'] as $key => $question) {
+			$questions[$key]['Question'] = $question;
+		}
+		
+		$this->set('questions', $questions);
+	}
+	
 }

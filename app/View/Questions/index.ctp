@@ -145,7 +145,7 @@
 					$('#removeFromGroup_'+bare_id[1]).removeClass('hidden');
 				},
 				type:'post',
-				url:"/questions/qgroup_cart/"+bare_id[1]+"/"+select_group_id
+				url:"/questions/qgroup_cart/"+bare_id[1]
 			});
 			
 			return false;

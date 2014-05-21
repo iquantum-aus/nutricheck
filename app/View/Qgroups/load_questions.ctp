@@ -10,7 +10,7 @@
 	
 	<div style="margin: 0;" class="sectionTitle">Questions</div>
 	
-	<form style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
+	<form action = "/questions/remote_nutrient_check" style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
 		<?php
 			$raw_questions = $questions;
 			$question_data = array_chunk($questions, 10);
