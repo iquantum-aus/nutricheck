@@ -63,6 +63,17 @@ class Factor extends AppModel {
 		)
 	);
 
+	
+	public $hasMany = array(
+		'Prescription' => array(
+			'className' => 'Prescription',
+			'foreignKey' => 'factor_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
+
 /**
  * hasAndBelongsToMany associations
  *

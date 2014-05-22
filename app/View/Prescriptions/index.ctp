@@ -1,6 +1,6 @@
 <div class="prescriptions index">
 	<h2><?php echo __('Prescriptions'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+	<table class="full table table-striped table-bordered">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('factor_id'); ?></th>

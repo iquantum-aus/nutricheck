@@ -129,7 +129,7 @@ class AnswersController extends AppController {
 		
 		echo "user_id - ".$user_id;
 		
-		$factors = $this->Answer->Question->Factor->find('list');
+		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
 		
 		$latest_answer_date = $this->Answer->find('first', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));
 		
@@ -166,7 +166,30 @@ class AnswersController extends AppController {
 		
 		ksort($reports_per_factor);
 		
+		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 1)));
+		
+		$this->Answer->Question->Factor->Prescription->unbindModelAll();
+		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		
+		// pr($factors);
+		// pr($prescriptions);
+		
+		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
+		
+		$grouped_prescriptions = array();
+		
+		foreach($prescriptions as $key => $prescription) {
+			if(!empty($prescription['Prescription']['factor_id'])) {
+				$grouped_prescriptions[$prescription['Prescription']['factor_id']][$key] = $prescription;
+			}
+		}
+		
+		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
+		
+		// pr($grouped_prescriptions);
+		
 		$this->set('factors', $factors);
+		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
 	}
 }
