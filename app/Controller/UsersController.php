@@ -123,13 +123,17 @@ class UsersController extends AppController {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-					return $this->redirect(array('controller' => 'questions', 'action' => 'save_remote_nutrient_check'));
+					// return $this->redirect(array('controller' => 'questions', 'action' => 'save_remote_nutrient_check'));
+					echo "authenticated";
+					exit();
 				} else {
 					return $this->redirect($this->Auth->redirect());
 				}
 			} else {			
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-					$this->redirect($this->redirect($this->referer()));
+					// $this->redirect($this->redirect($this->referer()));
+					echo "not authenticated";
+					exit();
 				} else {
 					$this->Session->setFlash(__('Invalid username or password, try again'));
 				}
@@ -143,8 +147,14 @@ class UsersController extends AppController {
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
-		
-		pr($this->Session->read('Auth'));
+	}
+	
+	public function nutricheck_activity() {
+		$this->layout = 'admin_dashboard';
+		$user_id = $this->Session->read('Auth.User.id');
+		$this->User->Answer->unbindModelAll();
+		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));
+		$this->set('answers_per_date', $answers_per_date);
 	}
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
@@ -175,7 +185,6 @@ class UsersController extends AppController {
 			}
 		}
 	}
-	
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
 	

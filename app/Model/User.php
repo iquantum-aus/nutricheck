@@ -90,6 +90,16 @@ class User extends AppModel {
 			'order' => ''
 		)
 	);
+	
+	public $hasMany = array(
+		'Answer' => array(
+			'className' => 'Answer',
+			'foreignKey' => 'users_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 
 /**
  * hasAndBelongsToMany associations

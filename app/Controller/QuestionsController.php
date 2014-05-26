@@ -233,12 +233,20 @@ class QuestionsController extends AppController {
 			
 			if(!empty($user_id)) {
 				
+				$answers_remote_link = $answers['TempAnswer']['remoteLink'];
+				unset($answers['TempAnswer']['remoteLink']);
+				
 				foreach($answers as $answer) {
-					$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
-					$answer['Answer']['link'] = $answers['TempAnswer']['remoteLink'];
-					
-					$this->Question->Answer->create();
-					$this->Question->Answer->save($answer);
+					if(!empty($answer['TempAnswer'])) {
+						$answer['Answer'] = $answer['TempAnswer'];
+						$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
+						$answer['Answer']['link'] = $answers_remote_link;
+						
+						unset($answers['TempAnswer']['remoteLink']);
+						
+						$this->Question->Answer->create();
+						$this->Question->Answer->save($answer);
+					}
 				}
 				
 				$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));

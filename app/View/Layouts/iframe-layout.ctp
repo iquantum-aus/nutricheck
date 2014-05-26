@@ -126,7 +126,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				
 				<div id="loginWidget_holder">
 					<?php
-						echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal'));
+						echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal', "id" => "UserLogin"));
 							?>
 							<fieldset>
 								<legend><?php echo __('Login'); ?></legend>
@@ -191,6 +191,9 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('Chart.min');
 		echo $this->fetch('script');
  	?>
+	
+	<div id="test"></div>
+	
 </body>
 </html>
 
@@ -198,7 +201,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	$(document).ready(function() {
 		
 		var document_height = $(document).height();
-		
 		var $container = $('#mainContentWrapper');
 		
 		// Slidebars Submenus
@@ -213,5 +215,18 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			}
 		});
 		
+		$('#UserLogin').submit( function () {
+			$.ajax({
+				async:true,
+				data:$(this).serialize(),
+				dataType:'html',
+				success:function (data, textStatus) {
+					alert(data);
+				},
+				type:'post',
+				url:"/users/login?source=remote"
+			});
+			return false;
+		});
 	});		
 </script>

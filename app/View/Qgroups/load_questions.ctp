@@ -15,6 +15,7 @@
 			$raw_questions = $questions;
 			$question_data = array_chunk($questions, 10);
 			$q_inc = 1;
+			
 			foreach($question_data as $key => $questions) {
 		?>
 	
@@ -30,22 +31,24 @@
 					</tr>
 					
 					<?php foreach ($questions as $question) { ?>
-						<tr style="width:100%; float: left;">
-							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo $q_inc++; ?>&nbsp;</span></td>
-							<td style="height: 50px;  width: 65%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
-							<?php
-								for($i = 1; $i<=4; $i++) {
-									?>
-										<td style="height: 50px; width:5%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][questions_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][users_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
-											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-											<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
-										</td>
-									<?php
-								}
-							?>
-						</tr>
+						<?php if(!empty($question)) { ?>
+							<tr style="width:100%; float: left;">
+								<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo $q_inc++; ?>&nbsp;</span></td>
+								<td style="height: 50px;  width: 65%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
+								<?php
+									for($i = 1; $i<=4; $i++) {
+										?>
+											<td style="height: 50px; width:5%;  float: left;" class="actions">
+												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][questions_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][users_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+												<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+												<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+											</td>
+										<?php
+									}
+								?>
+							</tr>
+						<?php } ?>
 					<?php } ?>
 				</tbody>
 			</table>
