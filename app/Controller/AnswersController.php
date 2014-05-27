@@ -28,8 +28,9 @@ class AnswersController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->Answer->recursive = 0;
-		$this->set('answers', $this->Paginator->paginate());
+		$this->set('answers', $this->Paginator->paginate(array('Answer.status' => 1)));
 	}
 
 /**
@@ -40,6 +41,7 @@ class AnswersController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Answer->exists($id)) {
 			throw new NotFoundException(__('Invalid answer'));
 		}
@@ -53,6 +55,7 @@ class AnswersController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->Answer->create();
 			if ($this->Answer->save($this->request->data)) {
@@ -76,6 +79,7 @@ class AnswersController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->Answer->exists($id)) {
 			throw new NotFoundException(__('Invalid answer'));
 		}
@@ -109,7 +113,11 @@ class AnswersController extends AppController {
 			throw new NotFoundException(__('Invalid answer'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->Answer->delete()) {
+		
+		$this->request->data['Answer']['id'] = $id;
+		$this->request->data['Answer']['status'] = 0;
+		
+		if ($this->Answer->save($this->request->data)) {
 			$this->Session->setFlash(__('The answer has been deleted.'));
 		} else {
 			$this->Session->setFlash(__('The answer could not be deleted. Please, try again.'));
@@ -195,7 +203,7 @@ class AnswersController extends AppController {
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
 	public function load_date_report($date) {
-		$this->layout = "ajax";
+		$this->layout = "ajax_plus_scripts";
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));

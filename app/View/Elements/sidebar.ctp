@@ -1,4 +1,4 @@
-<div class="sb-slidebar sb-left sb-active">
+<div class="sb-slidebar sb-left">
 	
 	<div id="logoHolder">
 		<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">

@@ -67,6 +67,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->element('sidebar'); ?>
 		<?php echo $this->fetch('content'); ?>
 	</div>
+	<?php echo $this->element("flat-global-menu"); ?>
 	<footer class="container"></footer><!-- /container -->
 
 

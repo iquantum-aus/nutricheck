@@ -150,7 +150,7 @@ class UsersController extends AppController {
 	}
 	
 	public function nutricheck_activity() {
-		$this->layout = 'admin_dashboard';
+		$this->layout = 'public_dashboard';
 		$user_id = $this->Session->read('Auth.User.id');
 		$this->User->Answer->unbindModelAll();
 		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));

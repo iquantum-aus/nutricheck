@@ -13,7 +13,7 @@
 		</form>
 	</div>
 	
-	<table cellpadding="0" cellspacing="0">
+	<table class="table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('question'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
@@ -78,13 +78,11 @@
 	?>
 	</div>
 </div>
-<div class="actions">
+<div class="actions hidden">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Question'), array('action' => 'add'), array('class' => 'btn btn-primary')); ?></li>
-		<li><?php echo $this->Html->link(__('Associate Questions'), array('controller' => 'FactorsQuestions'), array('class' => 'btn btn-primary')); ?></li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('Associate Factors'), array('controller' => 'FactorsQuestions'), array('class' => 'btn btn-primary')); ?></li>
+		<li><?php echo $this->Html->link(__('Create Question'), array('action' => 'add'), array('class' => 'btn btn-primary')); ?></li>
 	</ul>
 	
 	<?php

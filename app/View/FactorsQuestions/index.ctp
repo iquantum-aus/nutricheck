@@ -1,12 +1,12 @@
 <div class="factorsQuestions index">
 	<h2><?php echo __('Questions'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+	<table class="full table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('factors_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('questions_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('multiplier'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+			<th><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($factorsQuestions as $factorsQuestion): ?>
 	<tr>
@@ -20,10 +20,10 @@
 			<?php echo $this->Html->link($factorsQuestion['Question']['question'], array('controller' => 'questions', 'action' => 'view', $factorsQuestion['Question']['id'])); ?>
 		</td>
 		<td style="text-align:center;"><?php echo h($factorsQuestion['FactorsQuestion']['multiplier']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $factorsQuestion['FactorsQuestion']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $factorsQuestion['FactorsQuestion']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $factorsQuestion['FactorsQuestion']['id']), null, __('Are you sure you want to delete this record?')); ?>
+		<td>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $factorsQuestion['FactorsQuestion']['id']), array('class' => 'btn btn-primary')); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $factorsQuestion['FactorsQuestion']['id']), array('class' => 'btn btn-warning')); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $factorsQuestion['FactorsQuestion']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete this record?')); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -45,11 +45,11 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Association'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('New Question'), array('controller' => 'questions', 'action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Questions'), array('controller' => 'questions', 'action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Factors'), array('controller' => 'factors', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Factors'), array('controller' => 'factors', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nutrient Check'), array('action' => 'nutrient_check')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Association'), array('action' => 'add'), array('class' => 'btn btn-primary')); ?></li>
+		<li><?php echo $this->Html->link(__('New Question'), array('controller' => 'questions', 'action' => 'add'), array('class' => 'btn btn-primary')); ?></li>
+		<li><?php echo $this->Html->link(__('List Questions'), array('controller' => 'questions', 'action' => 'index'), array('class' => 'btn btn-primary')); ?></li>
+		<li><?php echo $this->Html->link(__('List Factors'), array('controller' => 'factors', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Factors'), array('controller' => 'factors', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('Nutrient Check'), array('action' => 'nutrient_check'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>

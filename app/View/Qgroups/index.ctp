@@ -2,7 +2,7 @@
 
 <div class="qgroups index">
 	<h2><?php echo __('Question Groups'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+	<table class="table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
@@ -25,7 +25,7 @@
 			</p>
 			<p id="target-to-copy-text" style="display:none;">Text Copied.</p>
 		</td>
-		<td>
+		<td width="33%">
 			
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $qgroup['Qgroup']['id']), array('class' => 'btn btn-primary')); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $qgroup['Qgroup']['id']), array('class' => 'btn btn-warning')); ?>

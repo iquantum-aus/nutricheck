@@ -1,6 +1,6 @@
 <div class="users index">
 	<h2><?php echo __('Users'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+	<table class="table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('email'); ?></th>
 			<th><?php echo $this->Paginator->sort('password'); ?></th>
@@ -14,10 +14,10 @@
 		<td>
 			<?php echo $this->Html->link($user['Group']['name'], array('controller' => 'groups', 'action' => 'view', $user['Group']['id'])); ?>
 		</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $user['User']['id']), null, __('Are you sure you want to delete # %s?', $user['User']['id'])); ?>
+		<td>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id']), array('class' => 'btn btn-primary')); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id']), array('class' => 'btn btn-warning')); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $user['User']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $user['User']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -39,10 +39,10 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New User'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List User Groups'), array('controller' => 'groups', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User Groups'), array('controller' => 'groups', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Vitamins'), array('controller' => 'vitamins', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Vitamin'), array('controller' => 'vitamins', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('New User'), array('action' => 'add'), array('class' => 'btn btn-primary')); ?></li>
+		<li><?php echo $this->Html->link(__('List User Groups'), array('controller' => 'groups', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('New User Groups'), array('controller' => 'groups', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Vitamins'), array('controller' => 'vitamins', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Vitamin'), array('controller' => 'vitamins', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>

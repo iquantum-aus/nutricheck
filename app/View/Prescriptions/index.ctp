@@ -1,15 +1,15 @@
 <div class="prescriptions index">
 	<h2><?php echo __('Prescriptions'); ?></h2>
-	<table class="full table table-striped table-bordered">
+	<table class="full table table-striped table">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('factor_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('functional_disturbance'); ?></th>
-			<th><?php echo $this->Paginator->sort('1_20'); ?></th>
-			<th><?php echo $this->Paginator->sort('21_40'); ?></th>
-			<th><?php echo $this->Paginator->sort('41_60'); ?></th>
-			<th><?php echo $this->Paginator->sort('61_80'); ?></th>
-			<th><?php echo $this->Paginator->sort('81_100'); ?></th>
+			<th><?php echo $this->Paginator->sort('1_20', '1 - 20'); ?></th>
+			<th><?php echo $this->Paginator->sort('21_40', '21 - 40'); ?></th>
+			<th><?php echo $this->Paginator->sort('41_60', '41 - 60'); ?></th>
+			<th><?php echo $this->Paginator->sort('61_80', '61 - 80'); ?></th>
+			<th><?php echo $this->Paginator->sort('81_100', '81 - 100'); ?></th>
 			<th><?php echo $this->Paginator->sort('maximum_dosage'); ?></th>
 			<th><?php echo __('Actions'); ?></th>
 	</tr>
