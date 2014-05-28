@@ -64,6 +64,7 @@ class QgroupsController extends AppController {
 			}
 		}
 		$questions = $this->Qgroup->Question->find('list');
+		$questions[0] = "All 110 Questions";
 		$this->set(compact('questions'));
 	}
 
@@ -91,6 +92,7 @@ class QgroupsController extends AppController {
 			$this->request->data = $this->Qgroup->find('first', $options);
 		}
 		$questions = $this->Qgroup->Question->find('list');
+		$questions[0] = "All 110 Questions";
 		$this->set(compact('questions'));
 	}
 
@@ -171,9 +173,14 @@ class QgroupsController extends AppController {
 		
 		$group_association = $this->Qgroup->find('all', array('conditions' => array('id' => $id)));
 		
-		$questions = array();
-		foreach($group_association[0]['Question'] as $key => $question) {
-			$questions[$key]['Question'] = $question;
+		if(empty($group_association[0]['Question'])) {
+			$this->Qgroup->Question->unbindModelAll();
+			$questions = $this->Qgroup->Question->find('all', array('conditions' => array('Question.status' => 1)));
+		} else {		
+			$questions = array();
+			foreach($group_association[0]['Question'] as $key => $question) {
+				$questions[$key]['Question'] = $question;
+			}
 		}
 		
 		$this->set('questions', $questions);

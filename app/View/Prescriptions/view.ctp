@@ -47,8 +47,8 @@
 			<td><?php echo h($prescription['Prescription']['modified']); ?></td>
 		</tr>
 	</table>
-
 </div>
+<?php /*
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -58,3 +58,4 @@
 		<li><?php echo $this->Html->link(__('New Prescription'), array('action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>
+*/ ?>

@@ -16,6 +16,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+Configure::load('general');
 $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 ?>
 <!doctype html>
@@ -70,7 +71,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		#registerWidget_holder, #loginWidget_holder {
 			width: 350px; 
 			float: left;
-			margin-top: 80px;
 		}
 		
 		div.form,
@@ -104,6 +104,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		fieldset legend {
 			color: #2598c8;
 		}
+		
+		#selectedWidget_holder {
+			float: left;
+			margin-top: 25px;
+		}
+		
+		ul, li { margin: 0; }
 	</style>
 	
 </head>
@@ -121,63 +128,69 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			if(empty($user_id)) {
 			if(!isset($_GET['action'])) { $_GET['action'] = "login"; }
 		?>
-		
-			<?php if($_GET['action'] == "login") { ?>
 				
-				<div id="loginWidget_holder">
-					<?php
-						echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal', "id" => "UserLogin"));
-							?>
-							<fieldset>
-								<legend><?php echo __('Login'); ?></legend>
-								<?php echo $this->Form->input('email', array('div' => false, 'label' => false, 'placeholder' => "Email")); ?>
-								<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
-								
-								<div class="control-group"><div class="controls"><a href="<?php echo $this->Html->url('/users/remote_register?action=register');?>">Sign Up</a></div></div>
-								<div class="form-actions">
-									<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
-									<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
-								</div>
-							</fieldset>
+			<div id="selectedWidget_holder">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs">
+				  <li class="active"><a href="#home" data-toggle="tab">Login</a></li>
+				  <li><a href="#profile" data-toggle="tab">Sign Up</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active" id="home">
+						<div id="loginWidget_holder">
 							<?php
-						echo $this->Form->end();
-					?>
-				</div>
-
-				
-			<?php } else if($_GET['action'] == "register") { ?>
-				
-				<div id="registerWidget_holder">
-					<?php echo $this->Form->create('Users', array('action' => '/remote_register?answered=true&status=temp')); ?>
-						<fieldset>
-							<legend><?php echo __('Sign Up'); ?></legend>
-							
-							<div class="left span12"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
-							<div class="left span12"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
-							<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Username')); ?></div>
-							<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
-							<div class="left span12"><?php echo $this->Form->input('User.repeat_password', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
-						
-							<div class="form-actions">
-								<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
-								<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
-							</div>
-						</fieldset>
-					<?php echo $this->Form->end(); ?>
+								echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal', "id" => "UserLogin"));
+									?>
+									<fieldset>
+										<legend><?php echo __('Login'); ?></legend>
+										<?php echo $this->Form->input('email', array('div' => false, 'label' => false, 'placeholder' => "Email")); ?>
+										<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
+										
+										<div class="form-actions">
+											<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
+											<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
+										</div>
+									</fieldset>
+									<?php
+								echo $this->Form->end();
+							?>
+						</div>
 					</div>
+				  
+					<div class="tab-pane" id="profile">
+						<div id="registerWidget_holder">
+							<?php echo $this->Form->create('Users', array('id' => 'resgisterForm', 'action' => '/remote_register?answered=true&status=temp')); ?>
+								<fieldset>
+									<legend><?php echo __('Sign Up'); ?></legend>
+									
+									<div class="left span12"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
+									<div class="left span12"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
+									<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Email')); ?></div>
+									<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
+									<div class="left span12"><?php echo $this->Form->input('User.repeat_password', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
+									
+									<div class="form-actions">
+										<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
+										<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
+									</div>
+								</fieldset>
+							<?php echo $this->Form->end(); ?>
+						</div>
+					</div>
+				</div>
+			</div>
 
-					<script>
-						$(document).ready( function () {
-							$( "#UserProfileBirthday" ).datepicker({
-								dateFormat : 'yy-mm-dd',
-								changeMonth : true,
-								changeYear : true
-							});
-						});
-					</script>
-			<?php } ?>
-		<?php } ?>
-		
+		<?php } else { ?>
+			
+			<div id="selectedWidget_holder">
+				<?php echo Configure::read('Authenticated.default_message'); ?>
+			</div>
+				
+		<?php
+			}
+		?>
 	</div>
 	<footer class="container"></footer><!-- /container -->
 
@@ -193,7 +206,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
  	?>
 	
 	<div id="test"></div>
-	
+
+
 </body>
 </html>
 
@@ -221,11 +235,47 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				data:$(this).serialize(),
 				dataType:'html',
 				success:function (data, textStatus) {
-					alert(data);
+					if(data == 1) {
+						$('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
+					} else {
+						alert('Authentication Failed');
+					}
 				},
 				type:'post',
 				url:"/users/login?source=remote"
 			});
+			return false;
+		});
+		
+		$(document).on('submit', '#resgisterForm', function () {
+			$.ajax({
+				async:true,
+				data:$(this).serialize(),
+				dataType:'html',
+				success:function (data, textStatus) {
+					if(data == 1) {
+						$('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
+					} else {
+						alert('Registration Failed');
+					}
+				},
+				type:'post',
+				url:"/users/remote_register"
+			});
+			return false;
+		});
+		
+		$(document).on('click', '.signup_link', function () {
+			var target_content = $('#registerWidget_contentHolder').html();
+			$('#selectedWidget_holder').html(target_content);
+			
+			return false;
+		});
+		
+		$(document).on('click', '.login_link', function () {
+			var target_content = $('#loginWidget_contentHolder').html();
+			$('#selectedWidget_holder').html(target_content);
+			
 			return false;
 		});
 	});		

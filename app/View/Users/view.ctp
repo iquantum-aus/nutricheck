@@ -43,6 +43,8 @@
 		</dd>
 	</dl>
 </div>
+
+<?php /*
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -56,6 +58,8 @@
 		<li><?php echo $this->Html->link(__('New Vitamin'), array('controller' => 'vitamins', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
+*/ ?>
+
 <div class="related">
 	<h3><?php echo __('Related Vitamins'); ?></h3>
 	<?php if (!empty($user['Vitamin'])): ?>

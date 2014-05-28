@@ -1,7 +1,7 @@
 <script src="/js/ZeroClipboard.js"></script>
 
 <div class="qgroups index">
-	<h2><?php echo __('Question Groups'); ?></h2>
+	<h2><?php echo __('Widgets'); ?></h2>
 	<table class="table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -49,6 +49,7 @@
 	?>
 	</div>
 </div>
+<?php /*
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -57,7 +58,7 @@
 		<li><?php echo $this->Html->link(__('New Question'), array('controller' => 'questions', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>
-
+*/ ?>
 <script>
 	$(document).ready( function () {
 		

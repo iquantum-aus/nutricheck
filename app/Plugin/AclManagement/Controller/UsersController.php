@@ -58,7 +58,7 @@ class UsersController extends AclManagementAppController {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-					echo "remote authenticated";
+					echo "1";
 					exit();
 				} else {
 					return $this->redirect($this->Auth->redirect());
@@ -66,8 +66,7 @@ class UsersController extends AclManagementAppController {
 			}
 			
 			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-				echo "remote unauthenticated";
-				exit();
+				echo "0";
 			} else {
 				$this->Session->setFlash(__('Invalid username or password, try again'));
 			}

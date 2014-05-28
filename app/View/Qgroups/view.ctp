@@ -19,8 +19,9 @@
 		</tbody>
 	</table>
 </dl>
-	
 </div>
+
+<?php /*
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -31,6 +32,7 @@
 		<li><?php echo $this->Html->link(__('List Questions'), array('controller' => 'questions', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>
+*/ ?>
 <div class="related">
 	<h3><?php echo __('Related Questions'); ?></h3>
 	<?php if (!empty($qgroup['Question'])): ?>

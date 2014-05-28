@@ -13,7 +13,7 @@
 	}
 	
 	ul.sub-items li a {
-		background: #2598c8;
+		background: #16A085;
 		color: #fff;
 		text-shadow: 0px 0px 1px #000;
 		text-shadow:0 -1px 0 rgba(0,0,0,0.25);
@@ -25,11 +25,11 @@
 	}
 	
 	ul.sub-items a:hover {
-		background: #45b6e5;
+		background: #1ABC9C;
 	}
 	
 	.parent-link {
-		background: #0b84b6;
+		background: #1ABC9C;
 		color: #fff;
 		text-shadow: 0px 0px 1px #000;
 		text-shadow:0 -1px 0 rgba(0,0,0,0.25);
@@ -37,7 +37,7 @@
 	
 	.parent-link:hover {
 		color: #fff;
-		background: #45b6e5;
+		background: #16A085;
 	}
 	
 	ul#global-menu li {
@@ -74,10 +74,10 @@
 			<a class="parent-link">Questions</a>
 			<ul class="sub-items">
 				<li>
-					<a href="">List Questions</a>
+					<a href="/questions">List Questions</a>
 				</li>
 				<li>
-					<a href="">Create Question</a>
+					<a href="/questions/add">Create Question</a>
 				</li>
 			</ul>
 		</li>
@@ -86,10 +86,10 @@
 			<a class="parent-link">Factors</a>
 			<ul class="sub-items">
 				<li>
-					<a href="">List Factors</a>
+					<a href="/factors">List Factors</a>
 				</li>
 				<li>
-					<a href="">Create Factor</a>
+					<a href="/factors/add">Create Factor</a>
 				</li>
 			</ul>
 		</li>
@@ -98,10 +98,16 @@
 			<a class="parent-link">Associations</a>
 			<ul class="sub-items">
 				<li>
-					<a>Question Factor Association</a>
+					<a a href="/FactorsQuestions/">List Question-Factor</a>
 				</li>
 				<li>
-					<a>Factor Prescription Associatioin</a>
+					<a a href="/FactorsQuestions/add">Create Question-Factor</a>
+				</li>
+				<li>
+					<a href="/prescriptions/">List Factor-Prescription</a>
+				</li>
+				<li>
+					<a href="/prescriptions/add">Create Factor-Prescription</a>
 				</li>
 			</ul>
 		</li>

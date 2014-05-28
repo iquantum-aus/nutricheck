@@ -78,6 +78,7 @@
 	?>
 	</div>
 </div>
+<?php /*
 <div class="actions hidden">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -86,19 +87,20 @@
 	</ul>
 	
 	<?php
-	/* <div class="left" id="qgroup_cart_holder">
-		<div id="replaceContent">
-			<?php
-				if(!empty($selected_questions)) {
-					?>
-						<div style='font-size: 12px; margin-bottom: 10px;'>You currently have <?php echo count($selected_questions); ?> question(s) added to the group <i>"<?php echo $selected_group_details['Qgroup']['name']; ?>"</i></div><a  class='btn btn-info fancybox fancybox.iframe' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation'>Save Association</a>
-					<?php
-				}
-			?>
-		</div>
-	</div> */
+	// <div class="left" id="qgroup_cart_holder">
+		// <div id="replaceContent">
+			// <?php
+				// if(!empty($selected_questions)) {
+					// ?>
+						// <div style='font-size: 12px; margin-bottom: 10px;'>You currently have <?php echo count($selected_questions); ?> question(s) added to the group <i>"<?php echo $selected_group_details['Qgroup']['name']; ?>"</i></div><a  class='btn btn-info fancybox fancybox.iframe' href='http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/save_group_assoc' id='saveGroupAssociation'>Save Association</a>
+					// <?php
+				// }
+			// ?>
+		// </div>
+	// </div>
 	?>
 </div>
+/* ?>
 
 <div style="display: none;">
 	<div id="qgroup_creator_holder" style="width: 420px;">

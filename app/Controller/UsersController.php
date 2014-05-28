@@ -165,6 +165,7 @@ class UsersController extends AppController {
 			
 			if($this->request->data['User']['password'] == $this->request->data['User']['repeat_password']) {
 				
+				$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
 				$this->request->data['User']['group_id'] = 2;
 				$this->request->data['User']['status'] = 1;
 				
@@ -178,10 +179,14 @@ class UsersController extends AppController {
 						$user = $this->User->findById($user_id);
 						$user = $user['User'];
 						if($this->Auth->login($user)) {
-							$this->redirect(array('controller' => 'questions', 'action' => 'save_remote_nutrient_check'));
+							echo "1";
+						} else {
+							echo "0";
 						}
 					}
 				}
+			} else {
+				echo "0";
 			}
 		}
 	}
