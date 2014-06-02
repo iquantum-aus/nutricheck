@@ -15,8 +15,14 @@ class UsersController extends AclManagementAppController {
         parent::beforeFilter();
 
         $this->layout = "admin";
-
-        $this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update');
+		
+		$user_id = $this->Session->read('Auth.User.id');
+		
+		if(empty($user_id)) {
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update');
+		} else {
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile');
+		}
 
         $this->User->bindModel(array('belongsTo'=>array(
             'Group' => array(
@@ -57,9 +63,16 @@ class UsersController extends AclManagementAppController {
 		
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
-				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-					echo "1";
-					exit();
+				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {					
+					$temp_answer = $this->Session->read('temp_answers');
+					if(!empty($temp_answer)) {
+						// 2 means to redirect to answer's controller to save the session based answer
+						echo "2";
+						exit();
+					} else {					
+						echo "1";
+						exit();
+					}
 				} else {
 					return $this->redirect($this->Auth->redirect());
 				}
@@ -203,12 +216,18 @@ class UsersController extends AclManagementAppController {
         if ($this->request->is('post')) {
             $this->loadModel('AclManagement.User');
             $this->User->create();
+			
+			$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
+			
             $this->request->data['User']['group_id']    = 2;//member
-            $this->request->data['User']['status']      = 0;//active user
+            $this->request->data['User']['status']      = 1;//active user
+			
             $token = md5(time());
             $this->request->data['User']['token']         = $token;//key
+			
             if ($this->User->save($this->request->data)) {
-                $ident = $this->User->getLastInsertID();
+               
+/* 			   $ident = $this->User->getLastInsertID();
                 $comfirm_link = Router::url("/acl_management/users/confirm_register/$ident/$token", true);
 
                 $cake_email = new CakeEmail();
@@ -223,7 +242,24 @@ class UsersController extends AclManagementAppController {
 
                 $this->Session->setFlash(__('Thank you for sign up! Please check your email to complete registration.'), 'alert/success');
                 $this->request->data = null;
-                $this->redirect(array('action' => 'login'));
+                $this->redirect(array('action' => 'login')); */
+				
+				$user_id = $this->User->id;
+				$this->request->data['UserProfile']['users_id'] = $user_id;
+				
+				$this->User->UserProfile->create();
+				if($this->User->UserProfile->save($this->request->data)) {
+					$user = $this->User->findById($user_id);
+					
+					$user = $user['User'];
+					if($this->Auth->login($user)) {
+						$this->redirect('/users/nutricheck_activity');
+					} else {
+						$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
+					}
+				}
+				
+				
             } else {
                 $this->Session->setFlash(__('Register could not be completed. Please, try again.'), 'alert/error');
                 $this->redirect(array('action' => 'login'));

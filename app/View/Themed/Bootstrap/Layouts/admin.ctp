@@ -43,12 +43,30 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	
 	<style>
 		body { padding-top: 50px; }
+		
+		input[type=text], input[type=password], input[type=email] {
+			border-radius: 4px;
+			padding: 10px 10px 10px 10px;
+			width: 300px;
+			margin-bottom: 10px;
+		}
+		
+		.form-horizontal .controls {
+			float: left;
+			margin: 0;
+		}
+		
+		.left {
+			float: left;
+		}
+		
+		.span12 { margin-left: 0; }
 	</style>
 	
 </head>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 
-	<?php echo $this->element('menu/admin_top_menu'); ?>
+	<?php // echo $this->element('menu/admin_top_menu'); ?>
 	<div class="container-fluid">
 		<div id="content">
 			<?php echo $this->Session->flash(); ?>
@@ -63,8 +81,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 	</footer><!-- /container -->
 
-
-	<?php echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
 		echo $this->Html->script('libs/jquery');
 		echo $this->Html->script('libs/modernizr.min');

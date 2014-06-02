@@ -61,6 +61,16 @@ class User extends AclManagementAppModel {
             )
         )
     );
+	
+	public $hasOne = array(
+		'UserProfile' => array(
+			'className' => 'UserProfile',
+			'foreignKey' => 'users_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 
     function parentNode() {
         if (!$this->id && empty($this->data)) {

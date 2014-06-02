@@ -1,4 +1,7 @@
 <?php
+	$group_id = $this->Session->read('Auth.User.group_id');
+?>
+<?php
 /**
  *
  * PHP 5
@@ -67,9 +70,14 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->element('sidebar'); ?>
 		<?php echo $this->fetch('content'); ?>
 	</div>
-	<?php echo $this->element("flat-global-menu"); ?>
+	
+	<?php 
+		if($group_id == 1) {
+			// echo $this->element("flat-global-menu");
+		}
+	?>
+	
 	<footer class="container"></footer><!-- /container -->
-
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php

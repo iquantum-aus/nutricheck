@@ -100,7 +100,7 @@
 	// </div>
 	?>
 </div>
-/* ?>
+*/ ?>
 
 <div style="display: none;">
 	<div id="qgroup_creator_holder" style="width: 420px;">

@@ -186,4 +186,22 @@ class QgroupsController extends AppController {
 		$this->set('questions', $questions);
 	}
 	
+	public function load_preview($id = null) {
+		$this->layout = "ajax_plus_scripts";
+		
+		$group_association = $this->Qgroup->find('all', array('conditions' => array('id' => $id)));
+		
+		if(empty($group_association[0]['Question'])) {
+			$this->Qgroup->Question->unbindModelAll();
+			$questions = $this->Qgroup->Question->find('all', array('conditions' => array('Question.status' => 1)));
+		} else {		
+			$questions = array();
+			foreach($group_association[0]['Question'] as $key => $question) {
+				$questions[$key]['Question'] = $question;
+			}
+		}
+		
+		$this->set('questions', $questions);
+	}
+	
 }

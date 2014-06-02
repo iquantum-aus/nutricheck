@@ -10,7 +10,14 @@ class QuestionsController extends AppController {
 	
 	function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
+		
+		
+		$user_id = $this->Session->read('Auth.User.id');
+		if(empty($user_id)) {
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
+		} else {
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check');
+		}
 	}
 	
 /**
@@ -198,7 +205,7 @@ class QuestionsController extends AppController {
 				}
 				
 				$this->Session->setFlash(__('You successfully saved your answers'));
-				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+				return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
 			}
 		}
 		
@@ -241,6 +248,8 @@ class QuestionsController extends AppController {
 						$answer['Answer'] = $answer['TempAnswer'];
 						$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
 						$answer['Answer']['link'] = $answers_remote_link;
+						
+						$answer['Answer']['users_id'] = $user_id;
 						
 						unset($answers['TempAnswer']['remoteLink']);
 						
@@ -294,6 +303,7 @@ class QuestionsController extends AppController {
 			$this->Question->Answer->save($answer);
 		}
 
+		$this->Session->delete('temp_answers');
 		$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
 	}
 	
