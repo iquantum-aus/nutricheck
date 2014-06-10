@@ -10,7 +10,7 @@ class QgroupsController extends AppController {
 	
 	function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('load_questions');
+		$this->Auth->allow('load_questions', 'load_preview');
 	}
 	
 /**
@@ -26,9 +26,10 @@ class QgroupsController extends AppController {
  * @return void
  */
 	public function index() {
+		$user_info = $this->Session->read('Auth.User');
 		$this->layout = "public_dashboard";
 		$this->Qgroup->recursive = 0;
-		$this->set('qgroups', $this->Paginator->paginate(array('status' => 1)));
+		$this->set('qgroups', $this->Paginator->paginate(array('status' => 1, 'user_id' => $user_info['id'])));
 	}
 
 /**
@@ -53,8 +54,12 @@ class QgroupsController extends AppController {
  * @return void
  */
 	public function add() {
+		$user_info = $this->Session->read('Auth.User');
 		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {		
+			
+			$this->request->data['Qgroup']['user_id'] = $user_info['id'];
+			
 			$this->Qgroup->create();
 			if ($this->Qgroup->save($this->request->data)) {
 				$this->Session->setFlash(__('The qgroup has been saved.'));
@@ -170,6 +175,24 @@ class QgroupsController extends AppController {
 	
 	public function load_questions($id = null) {
 		$this->layout = "iframe-layout";
+		
+		$group_association = $this->Qgroup->find('all', array('conditions' => array('id' => $id)));
+		
+		if(empty($group_association[0]['Question'])) {
+			$this->Qgroup->Question->unbindModelAll();
+			$questions = $this->Qgroup->Question->find('all', array('conditions' => array('Question.status' => 1)));
+		} else {		
+			$questions = array();
+			foreach($group_association[0]['Question'] as $key => $question) {
+				$questions[$key]['Question'] = $question;
+			}
+		}
+		
+		$this->set('questions', $questions);
+	}
+	
+	public function load_preview($id = null) {
+		$this->layout = "ajax_plus_scripts";
 		
 		$group_association = $this->Qgroup->find('all', array('conditions' => array('id' => $id)));
 		

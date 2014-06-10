@@ -27,7 +27,7 @@ class User extends AclManagementAppModel {
 //                'message' => 'Username already in use.'
 //            )
 //        ),
-        'name' => array(
+       /*  'name' => array(
             'required' => true,
             'allowEmpty' => false,
             'rule' => 'notEmpty',
@@ -59,8 +59,18 @@ class User extends AclManagementAppModel {
                 'rule' => 'comparePwd',
                 'message' => 'Password mismatch or less than 6 characters.'
             )
-        )
+        ) */
     );
+	
+	public $hasOne = array(
+		'UserProfile' => array(
+			'className' => 'UserProfile',
+			'foreignKey' => 'users_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 
     function parentNode() {
         if (!$this->id && empty($this->data)) {

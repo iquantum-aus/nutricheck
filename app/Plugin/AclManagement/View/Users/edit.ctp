@@ -1,3 +1,7 @@
+<?php
+	$user_info = $this->Session->read('Auth.User');
+?>
+
 <div class="users form">
 <ul class="breadcrumb">
     <li><?php echo $this->Html->link('User', array('action'=>'index'));?><span class="divider">/</span></li>
@@ -33,9 +37,14 @@
             echo $this->Form->input('group_id', array('div'=>'control-group',
                 'before'=>'<label class="control-label">'.__('Group').'</label><div class="controls">',
                 'after'=>'</div>','label'=>false, 'class'=>'input-xlarge'));
-            echo $this->Form->input('status', array('div'=>'control-group',
-                'before'=>'<label class="control-label">'.__('Status').'</label><div class="controls">',
-                'after'=>'</div>','label'=>false, 'class'=>''));
+				
+			if($user_info['group_id'] == 1) {
+				echo $this->Form->input('group_id', array('div'=>'control-group',
+                'before'=>'<label class="control-label">'.__('Group').'</label><div class="controls">',
+                'after'=>'</div>','label'=>false, 'class'=>'input-xlarge'));
+			} else {
+				echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
+			}
         ?>
         <div class="form-actions">
             <?php 

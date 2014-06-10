@@ -76,7 +76,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		div.form,
 		div.index,
 		div.view {
-			width: 1160px;
+			width: 1140px;
 			border-right: 4px solid #e6e6e6;
 			margin-right: 25px;
 		}
@@ -130,6 +130,10 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		?>
 				
 			<div id="selectedWidget_holder">
+			
+				<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
+				<br /><br /><br />
+				
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs">
 				  <li class="active"><a href="#home" data-toggle="tab">Login</a></li>
@@ -185,7 +189,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php } else { ?>
 			
 			<div id="selectedWidget_holder">
+				<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
+				<br /><br /><br />
+				
 				<?php echo Configure::read('Authenticated.default_message'); ?>
+				
+				<br />
+				<a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>">Go to Site</a>
 			</div>
 				
 		<?php
@@ -238,8 +248,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 					if(data == 1) {
 						$('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
 					} else {
-						alert('Authentication Failed');
+						if(data == 2) {
+							window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/save_remote_nutrient_check";
+						} else {
+							alert('Authentication Failed');
+						}
 					}
+					
 				},
 				type:'post',
 				url:"/users/login?source=remote"
@@ -253,29 +268,22 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				data:$(this).serialize(),
 				dataType:'html',
 				success:function (data, textStatus) {
-					if(data == 1) {
+					
+					console.log(data);
+					
+					if(data == "1" || data == ".1") {
 						$('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
 					} else {
-						alert('Registration Failed');
+						if(data == "2" || data == ".2") {
+							window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/save_remote_nutrient_check";
+						} else {
+							alert('Registration Failed');
+						}
 					}
 				},
 				type:'post',
 				url:"/users/remote_register"
 			});
-			return false;
-		});
-		
-		$(document).on('click', '.signup_link', function () {
-			var target_content = $('#registerWidget_contentHolder').html();
-			$('#selectedWidget_holder').html(target_content);
-			
-			return false;
-		});
-		
-		$(document).on('click', '.login_link', function () {
-			var target_content = $('#loginWidget_contentHolder').html();
-			$('#selectedWidget_holder').html(target_content);
-			
 			return false;
 		});
 	});		

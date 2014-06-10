@@ -30,7 +30,7 @@
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $qgroup['Qgroup']['id']), array('class' => 'btn btn-primary')); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $qgroup['Qgroup']['id']), array('class' => 'btn btn-warning')); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $qgroup['Qgroup']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $qgroup['Qgroup']['id'])); ?>
-			<a data-width="1080" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_questions/<?php echo $qgroup['Qgroup']['id']; ?>" class="fancybox fancybox.iframe btn btn-success">Preview</a>
+			<a data-width="1080" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_preview/<?php echo $qgroup['Qgroup']['id']; ?>" class="fancybox fancybox.iframe btn btn-success">Preview</a>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -79,7 +79,7 @@
 		
 		$("a.fancybox").fancybox({
 			afterLoad: function(){
-				this.width = 1150;
+				this.width = 1100;
 			}
 		 }); // fancybox
 	});

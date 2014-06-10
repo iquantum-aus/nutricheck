@@ -1,3 +1,7 @@
+<?php
+	$user_info = $this->Session->read('Auth.User');
+?>
+
 <div class="users form">
 <?php echo $this->Form->create('User'); ?>
 	<fieldset>
@@ -6,7 +10,13 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('email');
 		echo $this->Form->input('password');
-		echo $this->Form->input('group_id', array('options' => $userGroups));
+		
+		if($user_info['group_id'] == 1) {
+			echo $this->Form->input('group_id', array('options' => $userGroups));
+		} else {
+			echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
+		}
+		
 		// echo $this->Form->input('status');
 		// echo $this->Form->input('Vitamin');
 	?>

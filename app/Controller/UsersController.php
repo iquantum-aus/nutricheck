@@ -1,4 +1,4 @@
-.<?php
+<?php
 App::uses('AppController', 'Controller');
 /**
  * Users Controller
@@ -11,8 +11,13 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 
-		// For CakePHP 2.1 and up
-		$this->Auth->allow();
+		$user_id = $this->Session->read('Auth.User.id');
+		
+		if(empty($user_id)) {
+			$this->Auth->allow('register', 'remote_register', 'login', 'logout');
+		} else {
+			$this->Auth->allow('register', 'remote_register', 'login', 'logout', 'dashboard', 'nutricheck_activity');
+		}
 	}
 /**
  * Components
@@ -26,9 +31,18 @@ class UsersController extends AppController {
  * @return void
  */
 	public function index() {		
+		$user_info = $this->Session->read('Auth.User');
+		
 		$this->layout = "public_dashboard";
 		$this->User->recursive = 0;
-		$this->set('users', $this->Paginator->paginate());
+		
+		$condition = array();
+		// if not admin then will filter the viewing of users
+		if($user_info['group_id'] != 1) {
+			$condition = array('User.parent_id' => $user_info['id']);
+		}
+		
+		$this->set('users', $this->Paginator->paginate($condition));
 	}
 
 /**
@@ -54,7 +68,15 @@ class UsersController extends AppController {
  */
 	public function add() {
 		$this->layout = "public_dashboard";
+		
+		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
+			$this->loadModel('AclManagement.User');
+			
+			if($user_info['group_id'] != 1)  {
+				$this->request->data['User']['status'] = 1;
+				$this->request->data['User']['group_id'] = 3;
+			}
 			
 			$this->User->create();
 			if ($this->User->save($this->request->data)) {
@@ -64,6 +86,7 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
 		}
+		
 		$userGroups = $this->User->Group->find('list');		
 		$vitamins = $this->User->Vitamin->find('list');
 		$this->set(compact('userGroups', 'vitamins'));
@@ -77,11 +100,20 @@ class UsersController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$user_info = $this->Session->read('Auth.User');
+		
 		$this->layout = "public_dashboard";
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
+		
+		if($user_info['group_id'] != 1)  {
+			$this->request->data['User']['status'] = 1;
+			$this->request->data['User']['group_id'] = 3;
+		}
+		
 		if ($this->request->is(array('post', 'put'))) {
+			 $this->loadModel('AclManagement.User');
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('The user has been saved.'));
 				return $this->redirect(array('action' => 'index'));
@@ -160,13 +192,16 @@ class UsersController extends AppController {
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
 	
 	public function remote_register() {
-		$this->layout = "iframe-layout";
+		$this->layout = "ajax";
 		if ($this->request->is('post')) {
-			
+			$this->loadModel('AclManagement.User');
 			if($this->request->data['User']['password'] == $this->request->data['User']['repeat_password']) {
 				
+				$token = md5(time());
+				$this->request->data['User']['token'] = $token;//key
+				
 				$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
-				$this->request->data['User']['group_id'] = 2;
+				$this->request->data['User']['group_id'] = 3;
 				$this->request->data['User']['status'] = 1;
 				
 				$this->User->create();
@@ -179,7 +214,15 @@ class UsersController extends AppController {
 						$user = $this->User->findById($user_id);
 						$user = $user['User'];
 						if($this->Auth->login($user)) {
-							echo "1";
+							$temp_answer = $this->Session->read('temp_answers');
+							if(!empty($temp_answer)) {
+								// 2 means to redirect to answer's controller to save the session based answer
+								echo "2";
+								exit();
+							} else {					
+								echo "1";
+								exit();
+							}
 						} else {
 							echo "0";
 						}
@@ -189,6 +232,7 @@ class UsersController extends AppController {
 				echo "0";
 			}
 		}
+		exit();
 	}
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/

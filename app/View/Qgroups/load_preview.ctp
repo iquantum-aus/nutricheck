@@ -10,12 +10,13 @@
 	
 	<div style="margin: 0;" class="sectionTitle">Questions</div>
 	
-	<form style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
+	<form action = "/questions/remote_nutrient_check" style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
 		<?php
 			$raw_questions = $questions;
 			$question_data = array_chunk($questions, 10);
 			$question_data_count = count($question_data);
 			$q_inc = 1;
+			
 			foreach($question_data as $key => $questions) {
 		?>
 	
@@ -31,41 +32,41 @@
 					</tr>
 					
 					<?php foreach ($questions as $question) { ?>
-						<tr class="rankHolder" style="width:100%; float: left;">
-							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo $q_inc++; ?>&nbsp;</span></td>
-							<td style="height: 50px;  width: 65%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
-							<?php
-								for($i = 1; $i<=4; $i++) {
-									?>
-										<td style="height: 50px; width:5%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][questions_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][users_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
-											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-											<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
-										</td>
-									<?php
-								}
-							?>
-						</tr>
+						<?php if(!empty($question)) { ?>
+							<tr class="rankHolder" style="width:100%; float: left;">
+								<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo $q_inc++; ?>&nbsp;</span></td>
+								<td style="height: 50px;  width: 65%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
+								<?php
+									for($i = 1; $i<=4; $i++) {
+										?>
+											<td style="height: 50px; width:5%;  float: left;" class="actions">
+												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][questions_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][users_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+												<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+												<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+											</td>
+										<?php
+									}
+								?>
+							</tr>
+						<?php } ?>
 					<?php } ?>
 				</tbody>
 			</table>
 		<?php } ?>
 		<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
-		<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 	</form>
 		
 	<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
-		<?php $question_data_count = count($question_data); ?>
 		<form id="paginator_form">
 			<input id="currentPaginatorstate" type="hidden" value="0">
 			<a href="#" id="paginatorPrev" class="paginatorButton btn btn-primary disabled">PREV</a>
 				<?php 
-					for($i=0; $i<$question_data_count; $i++) {
+					/* for($i=0; $i<$question_data_count; $i++) {
 						?>
 							<input name="pageSelected" id="pageSelection_<?php echo $i; ?>" class="paginatorSelector" type="radio" value="<?php echo $i; ?>">
 						<?php
-					}
+					} */
 				?>
 			<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
 		</form>
@@ -116,7 +117,7 @@
 		});
 		
 		$(document).on("click", '#paginatorNext', function () {
-			
+		
 			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
 			
 			var question_module_id = "";
@@ -159,7 +160,7 @@
 			}
 			
 			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
-			
+		
 			var currentPaginatorstate = $('#currentPaginatorstate').val();
 			currentPaginatorstate = parseInt(currentPaginatorstate);
 			
@@ -220,4 +221,3 @@
 		$('#remoteLink').val(url);
 	});
 </script>
-

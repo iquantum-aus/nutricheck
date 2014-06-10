@@ -50,14 +50,14 @@ class AppController extends Controller {
     );
 
 	public function beforeFilter() {
-     parent::beforeFilter();
+		parent::beforeFilter();
       
-     // $this->Auth->allow();//must comment after generate action
+		// $this->Auth->allow();//must comment after generate action
  
-     //Configure AuthComponent
-     $this->Auth->loginAction = '/users/login';
-     $this->Auth->logoutRedirect = '/users/login';
-     $this->Auth->loginRedirect = array('plugin'=>false,
-            'controller' => 'users', 'action' => 'dashboard');  
- }
+		//Configure AuthComponent
+		$this->Auth->loginAction = '/users/login';
+		$this->Auth->logoutRedirect = '/users/login';
+		$this->Auth->loginRedirect = array('plugin'=>false,
+		'controller' => 'users', 'action' => 'dashboard');  
+	}
 }
