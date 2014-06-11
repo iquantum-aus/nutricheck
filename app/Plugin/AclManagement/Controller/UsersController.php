@@ -21,11 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update');
 		} else {
-<<<<<<< HEAD
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer');
-=======
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile');
->>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -274,11 +270,7 @@ class UsersController extends AclManagementAppController {
 			
 			$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
 			
-<<<<<<< HEAD
             $this->request->data['User']['group_id']    = 3;//member
-=======
-            $this->request->data['User']['group_id']    = 2;//member
->>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
             $this->request->data['User']['status']      = 1;//active user
 			
             $token = md5(time());

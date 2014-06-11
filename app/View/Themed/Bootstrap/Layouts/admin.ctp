@@ -61,10 +61,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		}
 		
 		.span12 { margin-left: 0; }
-<<<<<<< HEAD
 		.span12 select { margin-bottom: 10px; }
-=======
->>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 	</style>
 	
 </head>
