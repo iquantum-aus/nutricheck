@@ -38,8 +38,8 @@
 				<li>
 					<a class="sb-toggle-submenu"><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 					<ul class="sb-submenu">
-						<li><a href="/users">List Users</a></li>
-						<li><a href="/users/add">New Users</a></li>
+						<li><a href="/admin/users">List Users</a></li>
+						<li><a href="/admin/users/add">New Users</a></li>
 					</ul>
 				</li>
 				<li>

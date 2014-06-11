@@ -21,7 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -220,6 +220,40 @@ class UsersController extends AclManagementAppController {
         $this->set(compact('user_id', 'status'));
         if ($user_id) {
             $data['User'] = array('id'=>$user_id, 'status'=>$status);
+            $allowed = $this->User->saveAll($data["User"], array('validate'=>false));
+        }
+    }
+	
+	 /* CUSTOM CODE for allowing/disallwing users to answer the nutrient check */
+    public function toggle_can_answer($user_id, $can_answer) {
+        Configure::load('general');
+		
+		$this->layout = "ajax";
+        $can_answer = ($can_answer) ? 0 : 1;
+        $this->set(compact('user_id', 'can_answer'));
+		
+		if($can_answer == 1) {
+			$user_info = $this->User->findById($user_id);
+			$email_message = Configure::read('User.nutricheck_activated_message');
+			
+			$to = $user_info['email'];
+
+			$subject = 'Reactivation of Nutrient Check';
+
+			$headers = "From: email@email.com\r\n";
+			$headers .= "Reply-To: noreply@email.com\r\n";
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+			
+			$message = '<html><body>';
+			$message .= $email_message;
+			$message .= '</body></html>';
+			
+			mail($to, $subject, $message, $headers);
+		}
+		
+        if ($user_id) {
+            $data['User'] = array('id'=>$user_id, 'can_answer'=>$can_answer);
             $allowed = $this->User->saveAll($data["User"], array('validate'=>false));
         }
     }

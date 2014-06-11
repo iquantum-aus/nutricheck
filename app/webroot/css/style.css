@@ -62,7 +62,7 @@ input[type=radio].css-checkbox {
 							font-size:32px;
 							vertical-align:middle;
 							cursor:pointer;
-
+							margin: 0;
 						}
 
 						input[type=radio].css-checkbox:checked + label.css-label {
@@ -228,7 +228,8 @@ div.actions {
 th.actions {
 	text-align: center;
 	font-weight: normal;
-	font-size: 20px;
+	font-size: 13px;
+	line-height: 15px;
 }
 
 div.actions h3 {
@@ -247,10 +248,16 @@ table {
 }
 th {
 	border:0;
-	border-bottom:2px solid #2598c8;
 	text-align: left;
 	padding:4px;
 }
+
+.headerHolder {
+	border-bottom:2px solid #2598c8;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+}
+
 th a {
 	display: block;
 	padding: 2px 4px;
@@ -441,11 +448,17 @@ input, textarea {
 	padding: 1%;
 	width:98%;
 }
+
+.span12 select {
+	margin-bottom: 10px !important;
+}
+
 select {
 	clear: both;
 	font-size: 120%;
 	vertical-align: text-bottom;
 }
+
 select[multiple=multiple] {
 	width: 100%;
 }

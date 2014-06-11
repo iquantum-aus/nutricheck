@@ -20,23 +20,23 @@
 	
 			<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
 				<tbody style="float:left; width: 100%;">	
-					<tr style="width: 100%; float: left;">
+					<tr class="headerHolder" style="width: 100%; float: left;">
 						<th style="float: left; width: 15%;"><span class="blue">Quest. #</span></th>
-						<th style="float: left; width: 65%;">Question</th>
-						<th style="width: 5%;" class="actions"><span class="blue">1</span></th>
-						<th style="width: 5%;" class="actions"><span class="blue">2</span></th>
-						<th style="width: 5%;" class="actions"><span class="blue">3</span></th>
-						<th style="width: 5%;" class="actions"><span class="blue">4</span></th>
+						<th style="float: left; width: 53%;">Question</th>
+						<th style="float: left; width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
+						<th style="float: left; width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
+						<th style="float: left; width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
+						<th style="float: left; width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
 					</tr>
 					
 					<?php foreach ($questions as $question) { ?>
 						<tr class="rankHolder" style="width:100%; float: left;">
 							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
-							<td style="height: 50px;  width: 65%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
+							<td style="height: 50px;  width: 53%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
 							<?php
-								for($i = 1; $i<=4; $i++) {
+								for($i = 0; $i<=3; $i++) {
 									?>
-										<td style="height: 50px; width:5%;  float: left;" class="actions">
+										<td style="height: 50px; width:8%;  float: left;" class="actions">
 											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
 											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][users_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
 											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">

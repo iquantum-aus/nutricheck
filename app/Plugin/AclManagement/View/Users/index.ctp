@@ -5,6 +5,7 @@
         <th class="header"><?php echo $this->Paginator->sort('email');?></th>
         <th class="header"><?php echo $this->Paginator->sort('group_id');?></th>
         <th class="header"><?php echo $this->Paginator->sort('created');?></th>
+        <th class="header"><?php echo $this->Paginator->sort('can_answer');?></th>
         <th class="header"><?php echo $this->Paginator->sort('status');?></th>
         <th class="header center"><?php echo __('Actions');?></th>
     </tr>
@@ -16,6 +17,21 @@
             <td><?php echo h($user['Group']['name']); ?>&nbsp;</td>
             <td><?php echo h($user['User']['created']); ?>&nbsp;</td>
             <td>
+                    <?php
+                    $adminRoleName = array('admin', 'administrator');
+                    if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin
+                        echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
+                    }else{
+                        echo '<span style="cursor: pointer">';
+                        echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['status']) . '.png',
+                            array('onclick' => 'published.toggle("status-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
+                                  'id' => 'status-'.$user['User']['id']
+                                ));
+                        echo '</span>&nbsp;';
+                    }
+                    ?>
+            </td>
+			<td>
                     <?php
                     $adminRoleName = array('admin', 'administrator');
                     if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin

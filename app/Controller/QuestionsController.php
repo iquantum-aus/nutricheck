@@ -167,7 +167,17 @@ class QuestionsController extends AppController {
 	}
 	
 	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function nutrient_check( $method = null ) {
+		
+		$user_info = $this->Session->read('Auth.User');
+		
+		if($user_info['can_answer'] != 1) {
+			$this->Session->setFlash(__('Please wait for the notification through email that you can answer again.'));
+			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+		}
+		
 		$this->Question->recursive = 0;
 		$this->layout = "public_dashboard";
 		$selected_factors = array();
@@ -204,6 +214,9 @@ class QuestionsController extends AppController {
 					$this->Question->Answer->save($answer);
 				}
 				
+				// to disallow user from answering again, not unless reactivated by the pharmacist
+				$this->deactivate_user_answer();
+				
 				$this->Session->setFlash(__('You successfully saved your answers'));
 				return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
 			}
@@ -221,6 +234,10 @@ class QuestionsController extends AppController {
 		$this->set('method', $method);
 		$this->set('questions', $questions);
 	}
+	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	
 	public function remote_nutrient_check() {
 		
@@ -258,6 +275,7 @@ class QuestionsController extends AppController {
 					}
 				}
 				
+				$this->deactivate_user_answer();
 				$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
 				
 			} else {
@@ -288,6 +306,9 @@ class QuestionsController extends AppController {
 	}
 	
 	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	public function save_remote_nutrient_check() {
 		
 		$user_id = $this->Session->read('Auth.User.id');
@@ -306,6 +327,10 @@ class QuestionsController extends AppController {
 		$this->Session->delete('temp_answers');
 		$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
 	}
+	
+
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	
 	public function qgroup_cart($question_id = null) {
 		
@@ -334,6 +359,10 @@ class QuestionsController extends AppController {
 		exit();
 	}
 	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	public function qgroup_cart_remove($question_id = null) {
 		
 		$append = array();
@@ -360,10 +389,44 @@ class QuestionsController extends AppController {
 		exit();
 	}
 	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	function array_delete($array, $element) {
 		$to_remove = array();
 		array_push($to_remove, $element);
 		return array_diff($array, $to_remove);
+	}
+	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
+	function deactivate_user_answer() {
+		$user_info = $this->Session->read('Auth.User');
+		
+		$this->Session->write('Auth.User.can_answer', 0);
+		
+		$user_data = array();
+		$user_data['User']['can_answer'] = 0;
+		$user_data['User']['id'] = $user_info['id'];
+		$this->Question->User->save($user_data);
+	}
+	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
+	function activate_user_answer() {
+		$user_info = $this->Session->read('Auth.User');
+		
+		$this->Session->write('Auth.User.can_answer', 1);
+		
+		$user_data = array();
+		$user_data['User']['can_answer'] = 1;
+		$user_data['User']['id'] = $user_info['id'];
+		$this->Question->User->save($user_data);
 	}
 
 }
