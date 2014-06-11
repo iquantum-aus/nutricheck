@@ -54,10 +54,17 @@ class AppController extends Controller {
       
 		// $this->Auth->allow();//must comment after generate action
  
+<<<<<<< HEAD
 		//Configure AuthComponent
 		$this->Auth->loginAction = '/users/login';
 		$this->Auth->logoutRedirect = '/users/login';
 		$this->Auth->loginRedirect = array('plugin'=>false,
+=======
+     //Configure AuthComponent
+     $this->Auth->loginAction = '/users/login';
+     $this->Auth->logoutRedirect = '/users/login';
+     $this->Auth->loginRedirect = array('plugin'=>false,
+>>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 		'controller' => 'users', 'action' => 'dashboard');  
 	}
 }

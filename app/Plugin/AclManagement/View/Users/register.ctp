@@ -33,6 +33,7 @@
 				
 				<div class="left span12"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
 				<div class="left span12"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
+<<<<<<< HEAD
 				
 				<div class="left span12"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Age')); ?></div>
 				<div class="left span12"><?php echo $this->Form->input('UserProfile.gender', array('div' => false, 'label' => false, 'empty' => 'Gender', 'options' => array('male' => 'Male', 'female', 'Female'))); ?></div>
@@ -41,6 +42,11 @@
 				<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Email')); ?></div>
 				<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
 				<div class="left span12"><?php echo $this->Form->input('User.password2', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
+=======
+				<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Email')); ?></div>
+				<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
+				<div class="left span12"><?php echo $this->Form->input('User.repeat_password', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
+>>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 				
 				<div class="control-group"><div class="controls"><a href="<?php echo $this->Html->url('/users/login');?>">Login</a> | <a href="<?php echo $this->Html->url('/users/forgot_password');?>">Forget password?</a></div></div>
 				<div class="form-actions left">

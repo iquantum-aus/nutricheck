@@ -31,15 +31,23 @@
 						<li><a href="/questions/add">New Question</a></li>
 						<li><a href="/FactorsQuestions">Associate Questions</a></li>
 						<li><a href="/questions/nutrient_check">Nutrient Check</a></li>
+<<<<<<< HEAD
 						<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
+=======
+>>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 					</ul>
 				</li>
 				<li><a a href="/users/nutricheck_activity"><div class="sideIco" id="reportsIco"></div>Reports<div class="active-sidebar-menu"></div></a></li>
 				<li>
 					<a class="sb-toggle-submenu"><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 					<ul class="sb-submenu">
+<<<<<<< HEAD
 						<li><a href="/admin/users">List Users</a></li>
 						<li><a href="/admin/users/add">New Users</a></li>
+=======
+						<li><a href="/users">List Users</a></li>
+						<li><a href="/users/add">New Users</a></li>
+>>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 					</ul>
 				</li>
 				<li>
@@ -55,6 +63,7 @@
 		<nav>
 			<ul id="sidebar-main-menu" class="sb-menu">
 				<li class="active-sidebar-item"><a href="/users/dashboard"><div class="sideIco" id="dashboardIco"></div>Dashboard<div class="active-sidebar-menu"></div></a></li>
+<<<<<<< HEAD
 				
 				<?php if($group_id == 2) { ?>
 				<li>
@@ -73,12 +82,18 @@
 					</ul>
 				</li>
 				<?php } ?>
+=======
+			
+>>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 				
 				<li>
 					<a class="sb-toggle-submenu"><div class="sideIco" id="questionsIco"></div>Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 					<ul class="sb-submenu">
 						<li><a href="/questions/nutrient_check">Nutrient Check</a></li>
+<<<<<<< HEAD
 						<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
+=======
+>>>>>>> b1a4c5748bc4114d76c4aeece57b573f516afd2d
 					</ul>
 				</li>
 				<li><a a href="/users/nutricheck_activity"><div class="sideIco" id="reportsIco"></div>Reports<div class="active-sidebar-menu"></div></a></li>
