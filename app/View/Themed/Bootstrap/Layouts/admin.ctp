@@ -33,60 +33,114 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
 
+		echo $this->Html->script('libs/jquery');
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
 		// docs.css is only for this exapmple, remove for app dev
 		echo $this->Html->css('backend');
+		echo $this->Html->css('slidebars.min');
+		echo $this->Html->css('slidebars-theme');
+		echo $this->Html->css('style');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 	?>
+
+	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	
-	<style>
-		body { padding-top: 50px; }
-		
-		input[type=text], input[type=password], input[type=email] {
-			border-radius: 4px;
-			padding: 10px 10px 10px 10px;
-			width: 300px;
-			margin-bottom: 10px;
-		}
-		
-		.form-horizontal .controls {
-			float: left;
-			margin: 0;
-		}
-		
-		.left {
-			float: left;
-		}
-		
-		.span12 { margin-left: 0; }
-		.span12 select { margin-bottom: 10px; }
-	</style>
+	<link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
+	<script src="//vjs.zencdn.net/4.5/video.js"></script>
 	
 </head>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
-
-	<?php // echo $this->element('menu/admin_top_menu'); ?>
-	<div class="container-fluid">
-		<div id="content">
-			<?php echo $this->Session->flash(); ?>
-
-			<?php echo $this->Session->flash('auth'); ?>
-
-			<?php echo $this->fetch('content'); ?>
-		</div>
+	<header>
+		<?php echo $this->element("menu/admin_top_menu"); ?>
+	</header>
+	<div id="content">
+		<?php echo $this->Session->flash(); ?>
+		<?php echo $this->Session->flash('auth'); ?>
+		<?php echo $this->element('sidebar'); ?>
+		<?php echo $this->fetch('content'); ?>
 	</div>
+	<footer class="container"></footer><!-- /container -->
 
-	<footer class="container">
 
-	</footer><!-- /container -->
-
+	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
-		echo $this->Html->script('libs/jquery');
 		echo $this->Html->script('libs/modernizr.min');
 		echo $this->Html->script('libs/bootstrap.min');
+		echo $this->Html->script('slidebars.min');
+		echo $this->Html->script('masonry.pkgd.min');
+		echo $this->Html->script('Chart.min');
 		echo $this->fetch('script');
  	?>
 </body>
 </html>
+
+<script>
+	(function($) {
+		$(document).ready(function() {
+			
+			$.slidebars();
+			
+			// Slidebars Submenus
+			$('.sb-toggle-submenu').off('click').on('click', function() {
+				$submenu = $(this).parent().children('.sb-submenu');
+				$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+				
+				if ($submenu.hasClass('sb-submenu-active')) {
+					$submenu.slideDown(200);
+				} else {
+					$submenu.slideUp(200);
+				}
+			});
+			
+			var document_height = $(document).height();
+			
+			var $container = $('#mainContentWrapper');
+			
+			// initialize
+			$container.masonry({
+				columnWidth: 20,
+				itemSelector: '.item'
+			});
+			
+			var pieData = [
+				{ value : 46, color : "#d9d9d9" },
+				{ value: 54, color:"#7bac00" }
+			];
+
+			var myPie = new Chart(document.getElementById("canvas").getContext("2d")).Pie(pieData);	
+		
+			$('#sidebar-main-menu li a').bind({
+				mouseenter: function() {
+					$(this).children('.sideIco').toggleClass('active');
+					$(this).children('.active-sidebar-menu').toggleClass('active');
+				},
+				mouseleave: function() {
+					$(this).children('.sideIco').toggleClass('active');
+					$(this).children('.active-sidebar-menu').toggleClass('active');
+				}
+			});
+
+			$container.masonry( 'on', 'layoutComplete', function( msnryInstance, laidOutItems ) { 
+				var minimum_height = $('#content').height();
+				minimum_height = minimum_height+65;
+				$('#sb-site').css('min-height', minimum_height);
+			});
+			
+			
+			var minimum_height = $('#content').height();
+			minimum_height = minimum_height+65;
+			$('#sb-site').css('min-height', minimum_height);
+			
+		});
+		
+		$(window).resize( function () {
+			var minimum_height = $('#content').height();
+			minimum_height = minimum_height+65;
+			$('#sb-site').css('min-height', minimum_height);		
+		});
+		
+	}) (jQuery);
+</script>

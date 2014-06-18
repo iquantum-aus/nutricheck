@@ -14,12 +14,12 @@ class UsersController extends AclManagementAppController {
     function beforeFilter() {
         parent::beforeFilter();
 
-        $this->layout = "admin";
+        $this->layout = "public_dashboard";
 		
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		if(empty($user_id)) {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile');
 		} else {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer');
 		}
@@ -60,6 +60,8 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
 	public function login() {
+		
+		$this->layout = "public_dashboard";
 		
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
@@ -140,7 +142,10 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
     public function add() {
-        $user_info = $this->Session->read('Auth.User');
+		
+		$this->layout = "public_dashboard";
+		
+		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
             $this->loadModel('AclManagement.User');
             
@@ -149,8 +154,36 @@ class UsersController extends AclManagementAppController {
 				$this->request->data['User']['group_id'] = 3;
 			}
 			
+			$to_hash = time();
+			$this->request->data['User']['hash_value'] = $this->Auth->password($to_hash);
+			
 			$this->User->create();
             if ($this->User->save($this->request->data)) {
+				
+				$to = $this->request->data['User']['email'];
+				
+				$subject = "Youve been added to the system";
+
+				$headers = "From: nomail@nutricheck.com";
+				$headers .= "Reply-To: noreoky@nutricheck.com";
+				$headers .= "MIME-Version: 1.0\r\n";
+				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+				
+				$message = '<html><body>';
+				
+				$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+				$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url ."''>here</a>";
+				
+				$message .= "</body></html>";
+				
+				mail($to, $subject, $message, $headers);
+				
+				$user_id = $this->User->id;
+				$this->request->data['UserProfile']['user_id'] = $user_id;
+				
+				$this->User->UserProfile->create();
+				$this->User->UserProfile->save($this->request->data);
+				
                 $this->Session->setFlash(__('The user has been saved'), 'alert/success');
                 $this->redirect(array('action' => 'index'));
             } else {
@@ -226,7 +259,9 @@ class UsersController extends AclManagementAppController {
 	
 	 /* CUSTOM CODE for allowing/disallwing users to answer the nutrient check */
     public function toggle_can_answer($user_id, $can_answer) {
-        Configure::load('general');
+        
+		
+		Configure::load('general');
 		
 		$this->layout = "ajax";
         $can_answer = ($can_answer) ? 0 : 1;
@@ -256,6 +291,11 @@ class UsersController extends AclManagementAppController {
             $data['User'] = array('id'=>$user_id, 'can_answer'=>$can_answer);
             $allowed = $this->User->saveAll($data["User"], array('validate'=>false));
         }
+		
+		if(isset($_GET['source'])) {
+			echo "1";
+			exit();
+		}
     }
 
     /**
@@ -391,6 +431,22 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
     public function edit_profile() {
+		
+		$hash = "";
+		
+		if(isset($_GET['hash_value'])) {
+			$hash = $_GET['hash_value'];	
+		}		
+		
+		if(!empty($hash)) {
+			$user_info = $this->User->findByHashValue($hash);		
+
+			$user = $user_info['User'];
+			if(!$this->Auth->login($user)) {
+				$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
+			}
+		}
+		
         if ($this->request->is('post') || $this->request->is('put')) {
             if(!empty($this->request->data['User']['password']) || !empty($this->request->data['User']['password2'])){
                 //do nothing
@@ -423,7 +479,8 @@ class UsersController extends AclManagementAppController {
 
                 $this->request->data['User']['id'] = $this->Session->read('Auth.User.id');
                 if($this->User->saveAll($this->request->data['User'], array('validate'=>false))){
-                    $this->Session->setFlash(__('Congrats! Your profile has been updated successfully'), 'alert/success');
+					$this->User->UserProfile->save($this->request->data);
+					$this->Session->setFlash(__('Congrats! Your profile has been updated successfully'), 'alert/success');
                     $this->redirect(array('action' => 'edit_profile',));
                 }
             }else{

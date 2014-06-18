@@ -65,6 +65,16 @@ class User extends AclManagementAppModel {
 	public $hasOne = array(
 		'UserProfile' => array(
 			'className' => 'UserProfile',
+			'foreignKey' => 'user_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
+	
+	public $hasMany = array(
+		'Answer' => array(
+			'className' => 'Answer',
 			'foreignKey' => 'users_id',
 			'conditions' => '',
 			'fields' => '',

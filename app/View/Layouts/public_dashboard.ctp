@@ -62,12 +62,21 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 </head>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<header>
-		<?php echo $this->element("menu/admin_top_menu"); ?>
+		<?php  
+			if(!empty($group_id)) {
+				echo $this->element("menu/admin_top_menu"); 
+			}
+		?>
 	</header>
+	
 	<div id="content">
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $this->Session->flash('auth'); ?>
-		<?php echo $this->element('sidebar'); ?>
+		<?php 
+			if($this->Session->read('Auth.User.id')) {
+				echo $this->element('sidebar'); 
+			}
+		?>
 		<?php echo $this->fetch('content'); ?>
 	</div>
 	

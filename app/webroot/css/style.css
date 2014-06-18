@@ -26,6 +26,10 @@ input {
 	min-height: 35px;
 }
 
+.inputHolder {
+	margin-bottom: 10px;
+}
+
 h1.siteName {
 	font-size: 20px;
 	background: transparent;
@@ -108,6 +112,12 @@ a {
 	text-decoration: none;
 	font-weight: normal;
 }
+
+.enableChecking {
+	float: right;
+	margin-top: -25px;
+}
+
 a:hover {
 	color: #367889;
 	text-decoration:none;
@@ -1081,6 +1091,10 @@ pre {
 	position: relative;
 }
 
+#loginWidget_holder {
+	max-width: 500px;
+}
+
 .widget {
 	color: #000;
 	font-style: normal;
@@ -1309,7 +1323,8 @@ margin-bottom:0;
 }
 
 .panel-group {
-margin-bottom:20px;
+	margin-bottom:20px;
+	border-top: 1px solid #aaa;
 }
 
 .panel-group .panel {

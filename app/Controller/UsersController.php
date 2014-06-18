@@ -181,12 +181,32 @@ class UsersController extends AppController {
 		$this->layout = 'admin_dashboard';
 	}
 	
-	public function nutricheck_activity() {
+	public function nutricheck_activity($user_id = null) {
 		$this->layout = 'public_dashboard';
-		$user_id = $this->Session->read('Auth.User.id');
+		
+		$user_info = $this->Session->read('Auth.User');
+		
+		// if admin/client
+		if($user_info['group_id'] != 3) {
+			
+			// if user_id parameter is not set
+			if(empty($user_id)) {
+				$user_id = $this->Session->read('Auth.User.id');
+			} else {
+				$user_data = $this->User->findById($user_id);
+				$user_info = $user_data['User'];
+				$user_info['UserProfile'] = $user_data['UserProfile'];
+			}
+			
+		// if ordinary user(member)
+		} else {
+			$user_id = $this->Session->read('Auth.User.id');
+		}
+	
 		$this->User->Answer->unbindModelAll();
 		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));
 		$this->set('answers_per_date', $answers_per_date);
+		$this->set('user_info', $user_info);
 	}
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
