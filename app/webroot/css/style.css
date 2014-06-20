@@ -1030,6 +1030,10 @@ pre {
 #usersIco.active { background-position: -137px -42px; }
 #settingsIco.active { background-position: -27px -42px; }
 
+.homeLink:hover {
+	text-decoration: none !important;
+}
+
 
 /* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */
 

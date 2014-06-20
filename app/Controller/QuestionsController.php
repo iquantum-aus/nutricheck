@@ -218,7 +218,8 @@ class QuestionsController extends AppController {
 				$this->deactivate_user_answer();
 				
 				$this->Session->setFlash(__('You successfully saved your answers'));
-				return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
+				// return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
+				return $this->redirect(array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'dashboard'));
 			}
 		}
 		

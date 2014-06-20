@@ -4,10 +4,13 @@
 
 <div class="sb-slidebar sb-left">
 	
+	
 	<div id="logoHolder">
-		<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
-		<h1 class="siteName">NutriCheck</h1>
-		<h4 class="slogan">Slogan Here</h4>
+		<a class="homeLink" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/dashboard">
+			<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
+			<h1 class="siteName">NutriCheck</h1>
+			<h4 class="slogan">Slogan Here</h4>
+		</a>
 	</div>
 	
 	<?php if($group_id == 1) { ?>
@@ -81,7 +84,10 @@
 						<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
 					</ul>
 				</li>
-				<li><a a href="/users/nutricheck_activity"><div class="sideIco" id="reportsIco"></div>Reports<div class="active-sidebar-menu"></div></a></li>
+				
+				<?php if($group_id == 2) { ?>
+					<li><a a href="/users/nutricheck_activity"><div class="sideIco" id="reportsIco"></div>Reports<div class="active-sidebar-menu"></div></a></li>
+				<?php } ?>
 			</ul>
 		</nav>
 	<?php } ?>

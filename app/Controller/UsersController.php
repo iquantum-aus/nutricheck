@@ -61,73 +61,8 @@ class UsersController extends AppController {
 		$this->set('user', $this->User->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
-	public function add() {
-		$this->layout = "public_dashboard";
-		
-		$user_info = $this->Session->read('Auth.User');
-		if ($this->request->is('post')) {
-			$this->loadModel('AclManagement.User');
-			
-			if($user_info['group_id'] != 1)  {
-				$this->request->data['User']['status'] = 1;
-				$this->request->data['User']['group_id'] = 3;
-			}
-			
-			$this->User->create();
-			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-			}
-		}
-		
-		$userGroups = $this->User->Group->find('list');		
-		$vitamins = $this->User->Vitamin->find('list');
-		$this->set(compact('userGroups', 'vitamins'));
-	}
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		$user_info = $this->Session->read('Auth.User');
-		
-		$this->layout = "public_dashboard";
-		if (!$this->User->exists($id)) {
-			throw new NotFoundException(__('Invalid user'));
-		}
-		
-		if($user_info['group_id'] != 1)  {
-			$this->request->data['User']['status'] = 1;
-			$this->request->data['User']['group_id'] = 3;
-		}
-		
-		if ($this->request->is(array('post', 'put'))) {
-			 $this->loadModel('AclManagement.User');
-			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-			}
-		} else {
-			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
-			$this->request->data = $this->User->find('first', $options);
-		}
-		$userGroups = $this->User->Group->find('list');
-		$vitamins = $this->User->Vitamin->find('list');
-		$this->set(compact('userGroups', 'vitamins'));
-	}
+
 
 /**
  * delete method
@@ -149,33 +84,6 @@ class UsersController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}	
-
-	public function login() {
-		
-		if ($this->request->is('post')) {
-			if ($this->Auth->login()) {
-				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-					// return $this->redirect(array('controller' => 'questions', 'action' => 'save_remote_nutrient_check'));
-					echo "authenticated";
-					exit();
-				} else {
-					return $this->redirect($this->Auth->redirect());
-				}
-			} else {			
-				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-					// $this->redirect($this->redirect($this->referer()));
-					echo "not authenticated";
-					exit();
-				} else {
-					$this->Session->setFlash(__('Invalid username or password, try again'));
-				}
-			}
-		}
-	}
-
-	public function logout() {
-		return $this->redirect($this->Auth->logout());
-	}
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
