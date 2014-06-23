@@ -432,8 +432,9 @@ div.input {
 }
 
 form .required {
-	font-weight: bold;
+	border-color: red;
 }
+
 form .required label:after {
 	color: #e32;
 	content: '*';

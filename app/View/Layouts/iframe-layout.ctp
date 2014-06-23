@@ -137,7 +137,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs">
 				  <li class="active"><a href="#home" data-toggle="tab">Login</a></li>
-				  <li><a href="#profile" data-toggle="tab">Sign Up</a></li>
+				  <?php /* <li><a href="#profile" data-toggle="tab">Sign Up</a></li> */ ?>
 				</ul>
 
 				<!-- Tab panes -->
@@ -163,6 +163,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 						</div>
 					</div>
 				  
+				  <?php /*
 					<div class="tab-pane" id="profile">
 						<div id="registerWidget_holder">
 							<?php echo $this->Form->create('Users', array('id' => 'resgisterForm', 'action' => '/remote_register?answered=true&status=temp')); ?>
@@ -187,6 +188,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 							<?php echo $this->Form->end(); ?>
 						</div>
 					</div>
+					<?php */ ?>
 				</div>
 			</div>
 

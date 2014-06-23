@@ -469,6 +469,12 @@ class UsersController extends AclManagementAppController {
 		
 		if(isset($_GET['hash_value'])) {
 			$hash = $_GET['hash_value'];	
+		} else {
+			// if hash vale is empty and the not logged in (you're unauthorized)
+			if(empty($user_id)) {
+				$this->Session->setFlash(__("You're not allowed to access that location"), 'alert/error');
+				$this->redirect(array('action' => 'login'));
+			}
 		}		
 		
 		if(!empty($hash)) {

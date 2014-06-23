@@ -84,7 +84,7 @@ class User extends AppModel {
 	public $hasOne = array(
 		'UserProfile' => array(
 			'className' => 'UserProfile',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

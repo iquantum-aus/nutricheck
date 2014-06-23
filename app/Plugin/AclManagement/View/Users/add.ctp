@@ -7,9 +7,20 @@
 	<fieldset>
 		<legend><?php echo __('New User'); ?></legend>
 		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('required' => true, 'div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('email', array('required' => true, 'div' => false, 'label' => false, 'placeholder' => 'Email')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'label' => false, 'placeholder' => 'Middlename')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
+
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Age')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.nationality', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Nationality')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Zip')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Address')); ?></div>
+		
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.gender', array('div' => false, 'label' => false, 'empty' => 'Gender', 'options' => array('male' => 'Male', 'female', 'Female'))); ?></div>
+								
+		<br /><br />
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Email')); ?></div>
+		
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('password', array('readonly' => true, 'div' => false, 'label' => false, 'placeholder' => 'Password', 'value' => time())); ?></div>
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('password2', array('value' => time(), 'type' => 'hidden')); ?></div>
 		
