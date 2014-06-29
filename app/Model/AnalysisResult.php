@@ -53,7 +53,7 @@ class AnalysisResult extends AppModel {
 		),
 		'Users' => array(
 			'className' => 'Users',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

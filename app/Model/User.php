@@ -84,7 +84,7 @@ class User extends AppModel {
 	public $hasOne = array(
 		'UserProfile' => array(
 			'className' => 'UserProfile',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -94,9 +94,9 @@ class User extends AppModel {
 	public $hasMany = array(
 		'Answer' => array(
 			'className' => 'Answer',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
-			'fields' => '',
+			'fields' => array('questions_id', 'rank'),
 			'order' => ''
 		)
 	);
@@ -110,7 +110,7 @@ class User extends AppModel {
 		'Vitamin' => array(
 			'className' => 'Vitamin',
 			'joinTable' => 'users_vitamins',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'associationForeignKey' => 'vitamins_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',

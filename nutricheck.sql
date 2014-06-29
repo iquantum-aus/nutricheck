@@ -110,7 +110,7 @@ INSERT INTO `acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `
 (67, 64, NULL, NULL, 'add', 131, 132),
 (68, 64, NULL, NULL, 'edit', 133, 134),
 (69, 64, NULL, NULL, 'delete', 135, 136),
-(70, 1, NULL, NULL, 'Users', 138, 153),
+(70, 1, NULL, NULL, 'users', 138, 153),
 (71, 70, NULL, NULL, 'index', 139, 140),
 (72, 70, NULL, NULL, 'view', 141, 142),
 (73, 70, NULL, NULL, 'add', 143, 144),

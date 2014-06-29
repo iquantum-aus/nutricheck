@@ -83,7 +83,7 @@ class FactorsQuestionsController extends AppController {
 		if ($this->request->is('post')) {
 			
 			$user_id = $this->Session->read('Auth.User.id');
-			$this->request->data['Question']['users_id'] = $user_id;
+			$this->request->data['Question']['user_id'] = $user_id;
 			
 			$this->FactorsQuestion->Question->create();
 			$this->FactorsQuestion->Question->save($this->request->data);

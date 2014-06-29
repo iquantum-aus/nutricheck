@@ -75,7 +75,7 @@ class User extends AclManagementAppModel {
 	public $hasMany = array(
 		'Answer' => array(
 			'className' => 'Answer',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

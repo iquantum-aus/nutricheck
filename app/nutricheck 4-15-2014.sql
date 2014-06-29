@@ -118,7 +118,7 @@ INSERT INTO `acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `
 (74, 71, NULL, NULL, 'add', 147, 148),
 (75, 71, NULL, NULL, 'edit', 149, 150),
 (76, 71, NULL, NULL, 'delete', 151, 152),
-(77, 1, NULL, NULL, 'Users', 154, 171),
+(77, 1, NULL, NULL, 'users', 154, 171),
 (78, 77, NULL, NULL, 'index', 155, 156),
 (79, 77, NULL, NULL, 'view', 157, 158),
 (80, 77, NULL, NULL, 'add', 159, 160),
@@ -144,7 +144,7 @@ INSERT INTO `acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `
 (100, 98, NULL, NULL, 'sync', 200, 201),
 (101, 98, NULL, NULL, 'edit', 202, 203),
 (102, 98, NULL, NULL, 'toggle', 204, 205),
-(103, 91, NULL, NULL, 'Users', 207, 224),
+(103, 91, NULL, NULL, 'users', 207, 224),
 (104, 103, NULL, NULL, 'index', 208, 209),
 (105, 103, NULL, NULL, 'view', 210, 211),
 (106, 103, NULL, NULL, 'add', 212, 213),
@@ -186,7 +186,7 @@ INSERT INTO `acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `
 CREATE TABLE IF NOT EXISTS `analysis_results` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `factors_id` bigint(20) NOT NULL,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `score` int(10) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `analysis_results` (
 
 CREATE TABLE IF NOT EXISTS `answers` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `questions_id` bigint(20) NOT NULL,
   `factors_id` bigint(20) DEFAULT NULL,
   `choice_id` bigint(20) DEFAULT NULL,
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
 -- Dumping data for table `answers`
 --
 
-INSERT INTO `answers` (`id`, `users_id`, `questions_id`, `factors_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
+INSERT INTO `answers` (`id`, `user_id`, `questions_id`, `factors_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
 (1, 1, 1, NULL, NULL, 1, NULL, '2014-04-15 23:21:30', '2014-04-15 23:21:30', 1),
 (2, 1, 2, NULL, NULL, 2, NULL, '2014-04-15 23:21:30', '2014-04-15 23:21:30', 1),
 (3, 1, 3, NULL, NULL, 3, NULL, '2014-04-15 23:21:30', '2014-04-15 23:21:30', 1),
@@ -408,7 +408,7 @@ CREATE TABLE IF NOT EXISTS `contents` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(150) NOT NULL,
   `description` text NOT NULL,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
@@ -425,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `factors` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `description` text NOT NULL,
-  `users_id` bigint(20) NOT NULL COMMENT 'creator id',
+  `user_id` bigint(20) NOT NULL COMMENT 'creator id',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
@@ -436,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `factors` (
 -- Dumping data for table `factors`
 --
 
-INSERT INTO `factors` (`id`, `name`, `description`, `users_id`, `created`, `modified`, `status`) VALUES
+INSERT INTO `factors` (`id`, `name`, `description`, `user_id`, `created`, `modified`, `status`) VALUES
 (1, 'Allergy', 'Allergy', 1, '2013-12-23 09:44:20', '2014-04-11 18:31:24', 1),
 (2, 'Hypoglyc.', 'Hypoglyc.', 1, '2013-12-23 09:45:09', '2013-12-23 09:45:09', 1),
 (3, 'Digestion', 'Digestion', 1, '2013-12-23 09:45:58', '2013-12-23 09:45:58', 1),
@@ -886,7 +886,7 @@ INSERT INTO `groups` (`id`, `name`, `created`, `modified`) VALUES
 
 CREATE TABLE IF NOT EXISTS `histories` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `diagnostics` text NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -904,7 +904,7 @@ CREATE TABLE IF NOT EXISTS `nutritional_guides` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(60) NOT NULL,
   `description` text NOT NULL,
-  `users_id` bigint(20) NOT NULL COMMENT 'creator id',
+  `user_id` bigint(20) NOT NULL COMMENT 'creator id',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
@@ -934,7 +934,7 @@ CREATE TABLE IF NOT EXISTS `performed_checks` (
 
 CREATE TABLE IF NOT EXISTS `questions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `question` text NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -946,7 +946,7 @@ CREATE TABLE IF NOT EXISTS `questions` (
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`id`, `users_id`, `question`, `created`, `modified`, `status`) VALUES
+INSERT INTO `questions` (`id`, `user_id`, `question`, `created`, `modified`, `status`) VALUES
 (1, 1, 'Does your hair tend to fall out or break easily?', '2013-12-21 15:17:03', '2014-04-11 18:27:34', 1),
 (2, 1, 'Have you been on a strict weight loss diet in the last 2 years?', '2013-12-21 15:17:29', '2013-12-21 15:17:29', 1),
 (3, 1, 'Is your vision at dusk or at nighttime poorer now than before?', '2013-12-21 15:18:35', '2013-12-21 15:18:35', 1),
@@ -1109,7 +1109,7 @@ INSERT INTO `users` (`id`, `group_id`, `username`, `name`, `password`, `email`, 
 
 CREATE TABLE IF NOT EXISTS `users_vitamins` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `vitamins_id` bigint(20) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -1124,7 +1124,7 @@ CREATE TABLE IF NOT EXISTS `users_vitamins` (
 
 CREATE TABLE IF NOT EXISTS `user_access_logs` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `ip_address` varchar(20) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -1140,7 +1140,7 @@ CREATE TABLE IF NOT EXISTS `user_access_logs` (
 
 CREATE TABLE IF NOT EXISTS `user_profiles` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `users_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `first_name` varchar(60) NOT NULL,
   `middle_name` varchar(60) NOT NULL,
   `last_name` varchar(60) NOT NULL,

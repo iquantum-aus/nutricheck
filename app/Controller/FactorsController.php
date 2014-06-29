@@ -52,7 +52,7 @@ class FactorsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Factor->create();
 			if ($this->Factor->save($this->request->data)) {
-				$this->request->data['Factor']['users_id'] = $this->Session->read('Auth.User.id');
+				$this->request->data['Factor']['user_id'] = $this->Session->read('Auth.User.id');
 				$this->Session->setFlash(__('The factor has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {

@@ -6,7 +6,7 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('title');
 		echo $this->Form->input('description');
-		echo $this->Form->input('users_id');
+		echo $this->Form->input('user_id');
 		echo $this->Form->input('status');
 	?>
 	</fieldset>

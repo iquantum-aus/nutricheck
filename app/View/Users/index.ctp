@@ -16,6 +16,7 @@
 		</td>
 		<td>
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id']), array('class' => 'btn btn-primary')); ?>
+			<?php echo $this->Html->link(__('Report'), array('action' => 'nutricheck_activity', $user['User']['id']), array('class' => 'btn btn-warning')); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id']), array('class' => 'btn btn-warning')); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $user['User']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $user['User']['id'])); ?>
 		</td>

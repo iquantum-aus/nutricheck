@@ -210,15 +210,44 @@ class QuestionsController extends AppController {
 				$answers = $this->request->data;
 				
 				foreach($answers as $answer) {
+					$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
 					$this->Question->Answer->create();
 					$this->Question->Answer->save($answer);
 				}
 				
-				// to disallow user from answering again, not unless reactivated by the pharmacist
-				$this->deactivate_user_answer();
+				if($user_info['group_id'] == 3) {
+					
+					$parent_id = $user_info['parent_id'];
+					$parent_information = $this->Question->User->findById($parent_id);
+					$to = $parent_information['User']['email'];
+					
+					/* ------------------------------------------------------ Emailing the pharmacist if ever a patient performed nutricheck ------------------------------------------------- */
+						
+						$subject = "A patient just performed nutrient check";
+
+						$headers = "From: nomail@nutricheck.com";
+						$headers .= "Reply-To: noreply@nutricheck.com";
+						$headers .= "MIME-Version: 1.0\r\n";
+						$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+						
+						$message = '<html><body>';
+						
+						$message .= "The user with email address ".$user_info['email']." that has the ID# ".$user_info['id']." performed nutricheck.";
+						
+						$message .= "</body></html>";
+						
+						mail($to, $subject, $message, $headers);
+						
+					/* ------------------------------------------------------ Emailing the pharmacist if ever a patient performed nutricheck ------------------------------------------------- */
+
+					// to disallow user from answering again, not unless reactivated by the pharmacist
+					$this->deactivate_user_answer();
+				}
+				
 				
 				$this->Session->setFlash(__('You successfully saved your answers'));
-				return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
+				// return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
+				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}
 		
@@ -266,7 +295,7 @@ class QuestionsController extends AppController {
 						$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
 						$answer['Answer']['link'] = $answers_remote_link;
 						
-						$answer['Answer']['users_id'] = $user_id;
+						$answer['Answer']['user_id'] = $user_id;
 						
 						unset($answers['TempAnswer']['remoteLink']);
 						
@@ -319,7 +348,7 @@ class QuestionsController extends AppController {
 		$answers = $temp_answer;
 		
 		foreach($answers as $answer) {
-			$answer['Answer']['users_id'] = $user_id;
+			$answer['Answer']['user_id'] = $user_id;
 			$this->Question->Answer->create();
 			$this->Question->Answer->save($answer);
 		}

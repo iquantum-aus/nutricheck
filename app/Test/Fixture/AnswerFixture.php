@@ -12,7 +12,7 @@ class AnswerFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'users_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'questions_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'choice_id' => array('type' => 'biginteger', 'null' => true, 'default' => null),
 		'rank' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 5),
@@ -34,7 +34,7 @@ class AnswerFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'users_id' => '',
+			'user_id' => '',
 			'questions_id' => '',
 			'choice_id' => '',
 			'rank' => 1,

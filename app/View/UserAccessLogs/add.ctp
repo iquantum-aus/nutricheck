@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add User Access Log'); ?></legend>
 	<?php
-		echo $this->Form->input('users_id');
+		echo $this->Form->input('user_id');
 		echo $this->Form->input('ip_address');
 		echo $this->Form->input('status');
 	?>

@@ -56,7 +56,7 @@ class Factor extends AppModel {
 	public $belongsTo = array(
 		'User' => array(
 			'className' => 'User',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -87,7 +87,7 @@ class Factor extends AppModel {
 			'associationForeignKey' => 'questions_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',
-			'fields' => '',
+			'fields' => array('id', 'question'),
 			'order' => '',
 			'limit' => '',
 			'offset' => '',

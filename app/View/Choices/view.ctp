@@ -65,7 +65,7 @@
 	<?php foreach ($choice['Answer'] as $answer): ?>
 		<tr>
 			<td><?php echo $answer['id']; ?></td>
-			<td><?php echo $answer['users_id']; ?></td>
+			<td><?php echo $answer['user_id']; ?></td>
 			<td><?php echo $answer['questions_id']; ?></td>
 			<td><?php echo $answer['choice_id']; ?></td>
 			<td><?php echo $answer['rank']; ?></td>

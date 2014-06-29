@@ -38,7 +38,7 @@
 									?>
 										<td style="height: 50px; width:8%;  float: left;" class="actions">
 											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][users_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
 											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
 											<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
 										</td>

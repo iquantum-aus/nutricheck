@@ -4,7 +4,7 @@
 		<legend><?php echo __('Edit Answer'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('users_id');
+		echo $this->Form->input('user_id');
 		echo $this->Form->input('questions_id');
 		echo $this->Form->input('rank');
 		echo $this->Form->input('answer');

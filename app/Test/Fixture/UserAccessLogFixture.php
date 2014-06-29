@@ -12,7 +12,7 @@ class UserAccessLogFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'users_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'ip_address' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -31,7 +31,7 @@ class UserAccessLogFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'users_id' => '',
+			'user_id' => '',
 			'ip_address' => 'Lorem ipsum dolor ',
 			'created' => '2013-12-21 13:26:59',
 			'modified' => '2013-12-21 13:26:59',

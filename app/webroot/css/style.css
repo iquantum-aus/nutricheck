@@ -432,8 +432,9 @@ div.input {
 }
 
 form .required {
-	font-weight: bold;
+	border-color: red;
 }
+
 form .required label:after {
 	color: #e32;
 	content: '*';
@@ -1029,6 +1030,10 @@ pre {
 #reportsIco.active { background-position: -53px -42px; }
 #usersIco.active { background-position: -137px -42px; }
 #settingsIco.active { background-position: -27px -42px; }
+
+.homeLink:hover {
+	text-decoration: none !important;
+}
 
 
 /* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */

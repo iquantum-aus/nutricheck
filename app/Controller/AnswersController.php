@@ -148,7 +148,7 @@ class AnswersController extends AppController {
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
-		$latest_answer_date = $this->Answer->find('first', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.users_id' => $user_id)));
+		$latest_answer_date = $this->Answer->find('first', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $user_id)));
 		
 		$reports_per_factor = array();
 		$previous_factor = 0;
@@ -162,7 +162,7 @@ class AnswersController extends AppController {
 			unset($temp_answer['TempAnswer']);
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.users_id' => $user_id, 'Answer.created <=' => $latest_answer_date['Answer']['created'], 'Answer.created >=' => $latest_answer_date['Answer']['created'])));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date['Answer']['created'], 'Answer.created >=' => $latest_answer_date['Answer']['created'])));
 		}
 		
 		foreach($answers as $key => $answer) {
@@ -231,7 +231,7 @@ class AnswersController extends AppController {
 			$answers = $temp_answer;
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.users_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
 		}
 		
 		foreach($answers as $key => $answer) {

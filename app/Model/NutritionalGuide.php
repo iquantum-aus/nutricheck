@@ -55,7 +55,7 @@ class NutritionalGuide extends AppModel {
 	public $belongsTo = array(
 		'Users' => array(
 			'className' => 'Users',
-			'foreignKey' => 'users_id',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

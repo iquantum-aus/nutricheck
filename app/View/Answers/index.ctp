@@ -3,7 +3,7 @@
 	<table class="table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('users_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('questions_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('rank'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>

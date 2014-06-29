@@ -12,7 +12,7 @@ class UserProfileFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'users_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'first_name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'middle_name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'last_name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
@@ -36,7 +36,7 @@ class UserProfileFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'users_id' => '',
+			'user_id' => '',
 			'first_name' => 'Lorem ipsum dolor sit amet',
 			'middle_name' => 'Lorem ipsum dolor sit amet',
 			'last_name' => 'Lorem ipsum dolor sit amet',

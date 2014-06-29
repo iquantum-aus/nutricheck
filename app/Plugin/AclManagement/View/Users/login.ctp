@@ -11,7 +11,7 @@
 					
 					<div class="control-group span12 left">
 						<div class="left">
-							<a href="<?php echo $this->Html->url('/users/register');?>">Sign Up</a> | <a href="<?php echo $this->Html->url('/users/forgot_password');?>">Forget password?</a>
+							<a href="<?php echo $this->Html->url('/users/forgot_password');?>">Forget password?</a>
 						</div>
 					</div>
 					

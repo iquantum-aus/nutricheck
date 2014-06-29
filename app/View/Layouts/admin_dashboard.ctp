@@ -104,13 +104,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				columnWidth: 20,
 				itemSelector: '.item'
 			});
-			
-			var pieData = [
-				{ value : 46, color : "#d9d9d9" },
-				{ value: 54, color:"#7bac00" }
-			];
-
-			var myPie = new Chart(document.getElementById("canvas").getContext("2d")).Pie(pieData);	
 		
 			$('#sidebar-main-menu li a').bind({
 				mouseenter: function() {
