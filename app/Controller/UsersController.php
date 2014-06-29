@@ -86,6 +86,7 @@ class UsersController extends AppController {
 	}	
 	
 	public function dashboard() {
+		$this->layout = 'admin_dashboard';
 		
 		$users = $this->Session->read('Auth.User.id');
 		
@@ -167,7 +168,6 @@ class UsersController extends AppController {
 		$genders['males'] = $males;
 		$genders['females'] = $females;
 		
-		$this->layout = 'admin_dashboard';
 		$this->set('genders', $genders);
 	}
 	

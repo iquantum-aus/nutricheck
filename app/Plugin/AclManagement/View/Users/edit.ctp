@@ -12,6 +12,7 @@
 
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Age')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.birthday', array('type' => 'text', 'div' => false, 'label' => false, 'class' => 'hasDatepicker', 'id' => 'datepicker', 'placeholder' => 'Birthday')); ?></div>
+
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.nationality', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Nationality')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Zip')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Address')); ?></div>
