@@ -173,6 +173,8 @@ class QuestionsController extends AppController {
 		
 		$user_info = $this->Session->read('Auth.User');
 		
+		$behalfUserId = $this->Session->read('behalfUserId');
+		
 		if($user_info['can_answer'] != 1) {
 			$this->Session->setFlash(__('Please wait for the notification through email that you can answer again.'));
 			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -181,6 +183,12 @@ class QuestionsController extends AppController {
 		$this->Question->recursive = 0;
 		$this->layout = "public_dashboard";
 		$selected_factors = array();
+		
+		if($user_info['group_id'] != 1) {
+			$condition = array('User.parent_id' => $user_info['id']);
+		}
+		
+		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => array('User.status' => 1, 'User.parent_id' => $user_info['id'])));		
 		
 		$this->Paginator->settings = array(
 			'limit' => 200
@@ -206,7 +214,10 @@ class QuestionsController extends AppController {
 					'conditions' => array('Question.id IN' => $flatten_qid)
 				);
 				
-			} else {			
+			} else if(isset($this->request->data['User']['submit'])) {				
+				$this->Session->write('behalfUserId', $this->request->data['User']['id']);
+			} else {
+				
 				$answers = $this->request->data;
 				
 				foreach($answers as $answer) {
@@ -261,6 +272,7 @@ class QuestionsController extends AppController {
 		
 		$this->set('selected_factors', $selected_factors);
 		$this->set('method', $method);
+		$this->set('users_list', $users_list);
 		$this->set('questions', $questions);
 	}
 	

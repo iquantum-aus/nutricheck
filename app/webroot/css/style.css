@@ -1132,7 +1132,7 @@ ul.barGraph {
 }
 
 ul.barGraph li { 
-	width: 13px;
+	width: 22px;
 	float: left;
 	bottom: 0;
 	list-style: none;
@@ -1148,7 +1148,7 @@ ul.barGraph li {
 	margin: 30px auto 0px;
 }
 
-.graphItem { position: absolute; bottom: 0; width: 13px; }
+.graphItem { position: absolute; bottom: 0; width: 90%; }
 
 .percentageCount { 
 	-webkit-transform: rotate(90deg);
@@ -1158,7 +1158,12 @@ ul.barGraph li {
 	color: #fff;
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 	font-size: 10px;
-	margin: 3px 2px 18px 0px;
+	margin: 60px 2px 2px -70px;
+	width: 160px;
+	float: left;
+	z-index: 1;
+	position: relative;
+	text-align: right;
 }
 
 .sideIco {

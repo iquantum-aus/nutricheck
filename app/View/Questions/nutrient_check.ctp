@@ -1,5 +1,12 @@
 <div class="questions index">
 	
+	<form method="POST">
+		<div id="userSelection_header"><strong>Perform As:</strong></div>
+		<br />
+		<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+		<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+	</form>
+	
 	<?php if(!empty($method)) { ?>
 		<form method="POST">
 			<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Factors:</label>			

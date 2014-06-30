@@ -88,7 +88,7 @@ class UsersController extends AppController {
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
 		
-		$users = $this->Session->read('Auth.User.id');
+		$user_id = $this->Session->read('Auth.User.id');
 		
 		// remove the unnecessary model from user so that it will be lighter for the query
 		$this->User->unBindModel(
@@ -98,7 +98,7 @@ class UsersController extends AppController {
 		);
 		
 		// gell all users that belong to your domain
-		$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $users)));
+		$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
 		
 		$questions_answers = array();
 		
@@ -138,9 +138,15 @@ class UsersController extends AppController {
 		// get all factors
 		$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('status' => 1)));
 		
+		// pr($factors);
+		
 		// group questions by factor
 		$questions_per_factors = array();
+		$factors_list = array();
 		foreach($factors as $factor_key => $factor) {
+			
+			$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
+			
 			foreach($factor['Question'] as $question_key => $question) {
 				$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
 			}
@@ -160,14 +166,14 @@ class UsersController extends AppController {
 		}
 		
 		arsort($factor_per_percentage);
-		// array_splice($factor_per_percentage, 12);
-		pr($factor_per_percentage);
-		exit();
+		// array_splice($factor_per_percentage, 16);
 		
 		$genders = array();
 		$genders['males'] = $males;
 		$genders['females'] = $females;
 		
+		$this->set("factors_list", $factors_list);
+		$this->set("factor_per_percentage", $factor_per_percentage);
 		$this->set('genders', $genders);
 	}
 	

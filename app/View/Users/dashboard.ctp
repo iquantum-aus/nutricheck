@@ -22,14 +22,20 @@
 						
 						<?php
 							$gender_total = $genders['males'] + $genders['females'];
-							$male_percentage = ($genders['males'] / $gender_total) * 100;
-							$female_percentage =  ($genders['females'] / $gender_total) * 100;
+							
+							if($gender_total > 0) {
+								$male_percentage = ($genders['males'] / $gender_total) * 100;
+								$female_percentage =  ($genders['females'] / $gender_total) * 100;
+							} else {
+								$male_percentage = 0;
+								$female_percentage =  0;
+							}
 						?>
 						
 						<canvas id="canvas" height="200" width="200"></canvas>
 						
-						<div style="color: #fff; position: absolute; font-weight: bold; font-size: 15px; top: 0; left: 0; margin-left: 100px; margin-top: 90px;" class="graphLabel">Male<br>(<?php echo $male_percentage; ?>%)</div>
-						<div style="color: #fff; position: absolute; font-weight: bold; font-size: 15px; top: 0; left: 0; margin-left: 190px; margin-top: 90px;" class="graphLabel">Female<br>(<?php echo $male_percentage; ?>%)</div>
+						<div style="text-shadow: 1px 1px 1px #000; color: #fff; position: absolute; font-weight: bold; font-size: 15px; top: 0; left: 0; margin-left: 100px; margin-top: 90px;" class="graphLabel">Male<br>(<?php echo $male_percentage; ?>%)</div>
+						<div style="text-shadow: 1px 1px 1px #000;  color: #fff; position: absolute; font-weight: bold; font-size: 15px; top: 0; left: 0; margin-left: 190px; margin-top: 90px;" class="graphLabel">Female<br>(<?php echo $male_percentage; ?>%)</div>
 						
 						<h2>User Gender</h2>
 					</div>
@@ -39,25 +45,55 @@
 							
 							<ul class="barGraph">
 								
-								<li><div style="height: 98%;"  class="graphItem greenFill"><div class="percentageCount">98%</div></div></li>
-								<li><div style="height: 78%;"  class="graphItem blueFill"><div class="percentageCount">78%</div></div></li>
-								<li><div style="height: 48%;"  class="graphItem orangeFill"><div class="percentageCount">48%</div></div></li>
-								<li><div style="height: 69%;"  class="graphItem greyFill"><div class="percentageCount">69%</div></div></li>
-								
-								<li><div style="height: 35%;"  class="graphItem greenFill"><div class="percentageCount">35%</div></div></li>
-								<li><div style="height: 57%;"  class="graphItem blueFill"><div class="percentageCount">57%</div></div></li>
-								<li><div style="height: 79%;"  class="graphItem orangeFill"><div class="percentageCount">79%</div></div></li>
-								<li><div style="height: 32%;"  class="graphItem greyFill"><div class="percentageCount">32%</div></div></li>
-								
-								<li><div style="height: 75%;"  class="graphItem greenFill"><div class="percentageCount">75%</div></div></li>
-								<li><div style="height: 80%;"  class="graphItem blueFill"><div class="percentageCount">80%</div></div></li>
-								<li><div style="height: 74%;"  class="graphItem orangeFill"><div class="percentageCount">74%</div></div></li>
-								<li><div style="height: 82%;"  class="graphItem greyFill"><div class="percentageCount">82%</div></div></li>
-								
-								<li><div style="height: 61%;"  class="graphItem greenFill"><div class="percentageCount">31%</div></div></li>
-								<li><div style="height: 78%;"  class="graphItem blueFill"><div class="percentageCount">78%</div></div></li>
-								<li><div style="height: 40%;"  class="graphItem orangeFill"><div class="percentageCount">40%</div></div></li>
-								<li><div style="height: 96%;"  class="graphItem greyFill"><div class="percentageCount">96%</div></div></li>
+								<?php 
+									$color_identifier = 0;
+									$color_class = "";
+									$limit = 10;
+									$current_count = 0;									
+									$value_displacement = 0;
+									
+									foreach($factor_per_percentage as $factor_key => $top_factors) {
+										
+										if($value_displacement == 0) {
+											$value_displacement = (100 - $top_factors);
+										}
+										
+										if($current_count < $limit) {
+											
+											switch($color_identifier) {
+												case 0:
+												$color_class = "greenFill";
+												break;
+												
+												case 1:
+												$color_class = "blueFill";
+												break;
+												
+												case 2:
+												$color_class = "orangeFill";
+												break;
+												
+												case 3:
+												$color_class = "greyFill";
+												break;
+											}
+											
+											?>
+												<li>
+													<div title="<?php echo $factors_list[$factor_key]; ?> (<?php echo round($top_factors); ?>%)" style="cursor: pointer; height: <?php echo round(($top_factors + $value_displacement)); ?>%;"  class="<?php echo $color_identifier; ?> graphItem <?php echo $color_class; ?>">
+														<div class="percentageCount"><?php echo $factors_list[$factor_key]; ?> (<?php echo round($top_factors); ?>%)</div>
+													</div>
+												</li>
+											<?php
+											
+											$color_identifier++;
+											$current_count++;
+											if($color_identifier >= 3) {
+												$color_identifier = 0;
+											}
+										}
+									}
+								?>
 								
 							</ul>
 						</div>
