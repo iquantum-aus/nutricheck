@@ -172,7 +172,6 @@ class QuestionsController extends AppController {
 	public function nutrient_check( $method = null ) {
 		
 		$user_info = $this->Session->read('Auth.User');
-		
 		$behalfUserId = $this->Session->read('behalfUserId');
 		
 		if($user_info['can_answer'] != 1) {
@@ -200,21 +199,25 @@ class QuestionsController extends AppController {
 			
 			if(isset($this->request->data['Factors']['submit'])) {
 				
-				$factors_ids = implode(",", $this->request->data['Factors']['factors']);
-				$selected_factors = $this->request->data['Factors']['factors'];
-				$this->set('selected_factors', $selected_factors);
-				
-				$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.questions_id WHERE factors_id IN ($factors_ids)";
-				$question_ids = $this->Question->query($sql);
-				$flatten_qid = array();
-				
-				foreach($question_ids as $key => $question_id) {
-					$flatten_qid[$key] = $question_id['Question']['id'];
+				if(empty($this->request->data['Factors']['factors'])) {
+					$this->Session->setFlash(__("You didn't select a functional disturbance"));
+				} else {				
+					$factors_ids = implode(",", $this->request->data['Factors']['factors']);
+					$selected_factors = $this->request->data['Factors']['factors'];
+					$this->set('selected_factors', $selected_factors);
+					
+					$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.questions_id WHERE factors_id IN ($factors_ids)";
+					$question_ids = $this->Question->query($sql);
+					$flatten_qid = array();
+					
+					foreach($question_ids as $key => $question_id) {
+						$flatten_qid[$key] = $question_id['Question']['id'];
+					}
+					
+					 $this->Paginator->settings = array(
+						'conditions' => array('Question.id IN' => $flatten_qid)
+					);
 				}
-				
-				 $this->Paginator->settings = array(
-					'conditions' => array('Question.id IN' => $flatten_qid)
-				);
 				
 			} else if(isset($this->request->data['User']['submit'])) {				
 				$this->Session->write('behalfUserId', $this->request->data['User']['id']);
@@ -262,10 +265,21 @@ class QuestionsController extends AppController {
 					// to disallow user from answering again, not unless reactivated by the pharmacist
 					$this->deactivate_user_answer($behalfUserId);
 				}
-				
+
+						
+				// means if the current user is a pharmacist - client
+				if($user_info['group_id'] == 2) {
+					if(!empty($behalfUserId)) {
+						$latest_answer_date = $this->Question->Answer->find('first', array('fields' => array('Answer.created'), 'group' => array('Answer.created'), 'limit' => 1, 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $behalfUserId)));
+						$latest_answer_date = strtotime($latest_answer_date['Answer']['created']);
+						
+						$this->Session->setFlash(__('You successfully saved your answers'));
+						$params = $latest_answer_date."/".$behalfUserId;
+						return $this->redirect('../answers/load_date_report/'.$params);
+					}
+				}
 				
 				$this->Session->setFlash(__('You successfully saved your answers'));
-				// return $this->redirect(array('controller' => 'answers', 'action' => 'report/system'));
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}

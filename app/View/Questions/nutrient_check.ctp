@@ -1,28 +1,30 @@
 <div class="questions index">
 	
-	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
-		<div class="left">
-			<form style="min-width: 420px;" method="POST">
-				<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
-				<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
-				<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
-			</form>
-		</div>
-	<?php } ?>
+	<div style="margin: 0;" class="span12">
+		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+			<div class="left">
+				<form style="min-width: 420px;" method="POST">
+					<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
+					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+					<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+				</form>
+			</div>
+		<?php } ?>
+		
+		<?php if(!empty($method)) { ?>
+			<div class="left">
+				<form style="min-width: 680px;" method="POST">
+					<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>			
+					<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
+					<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
+				</form>
+			</div>
+		<?php } ?>
+	</div>
 	
-	<?php if(!empty($method)) { ?>
-		<div class="left">
-			<form style="min-width: 550px;" method="POST">
-				<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Factors:</label>			
-				<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
-				<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
-			</form>
-		</div>
-	<?php } ?>
+	<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
 	
-	<div style="margin: 0;" class="sectionTitle">Questions</div>
-	
-	<form style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
+	<form style="height: 600px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
 		<?php
 			$raw_questions = $questions;
 			$question_data = array_chunk($questions, 10);
