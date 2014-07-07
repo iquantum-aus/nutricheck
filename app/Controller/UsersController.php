@@ -161,6 +161,7 @@ class UsersController extends AppController {
 			
 			$perfect_score = 0;
 			$perfect_score = (3 * $factor_value_count) * count($users_list);
+	
 			
 			$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
 		}
@@ -172,6 +173,7 @@ class UsersController extends AppController {
 		$genders['males'] = $males;
 		$genders['females'] = $females;
 		
+		$this->set("users_list", $users_list);
 		$this->set("factors_list", $factors_list);
 		$this->set("factor_per_percentage", $factor_per_percentage);
 		$this->set('genders', $genders);
@@ -203,6 +205,7 @@ class UsersController extends AppController {
 		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $user_id)));
 		$this->set('answers_per_date', $answers_per_date);
 		$this->set('user_info', $user_info);
+		$this->set('user_id', $user_id);
 	}
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/

@@ -118,7 +118,13 @@ class FactorsQuestionsController extends AppController {
 			$question_id = $this->request->data['FactorsQuestion']['questions_id'];
 			$factor_id = $this->request->data['FactorsQuestion']['factors_id'];
 			
-			$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factors_id' => $factor_id, 'questions_id' => $question_id)));
+			$original_info = $this->FactorsQuestion->findById($id);
+			
+			if(($original_info['FactorsQuestion']['factors_id'] != $factor_id) && $original_info['FactorsQuestion']['questions_id'] != $question_id) {
+				$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factors_id' => $factor_id, 'questions_id' => $question_id)));
+			} else {
+				$existing = 0;
+			}
 			
 			if($existing) {
 				$this->Session->setFlash(__('Invalid Association. This already exists.'));

@@ -212,9 +212,9 @@ class AnswersController extends AppController {
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
-	public function load_date_report($date) {
+	public function load_date_report($date, $user_id) {
 		$this->layout = "ajax_plus_scripts";
-		$user_id = $this->Session->read('Auth.User.id');
+		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
 		$latest_answer_date = date('Y-m-d H:i:s', $date);

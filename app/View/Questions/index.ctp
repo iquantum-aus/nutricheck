@@ -15,11 +15,13 @@
 	
 	<table class="table table-striped">
 	<tr>
+			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('question'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($questions as $question): ?>
 	<tr>
+		<td><?php echo $question['Question']['id']; ?></td>
 		<td>
 			<?php 
 				echo substr($question['Question']['question'], 0, 85); 

@@ -49,8 +49,8 @@
 			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
 				<tbody>
 					<tr>
-						<th>Factor</th>
 						<th>Functional Disturbance</th>
+						<th>Nutrients</th>
 						<th>Score</th>
 						<th>Prescription</th>
 						<th>Maximum Daily Dose</th>

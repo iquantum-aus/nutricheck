@@ -1,18 +1,23 @@
 <div class="questions index">
 	
-	<form method="POST">
-		<div id="userSelection_header"><strong>Perform As:</strong></div>
-		<br />
-		<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
-		<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
-	</form>
+	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+		<div class="left">
+			<form style="min-width: 420px;" method="POST">
+				<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
+				<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+				<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+			</form>
+		</div>
+	<?php } ?>
 	
 	<?php if(!empty($method)) { ?>
-		<form method="POST">
-			<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Factors:</label>			
-			<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
-			<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
-		</form>
+		<div class="left">
+			<form style="min-width: 550px;" method="POST">
+				<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Factors:</label>			
+				<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
+				<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
+			</form>
+		</div>
 	<?php } ?>
 	
 	<div style="margin: 0;" class="sectionTitle">Questions</div>

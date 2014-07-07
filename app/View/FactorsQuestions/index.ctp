@@ -19,7 +19,7 @@
 		<td>
 			<?php echo $this->Html->link($factorsQuestion['Question']['question'], array('controller' => 'questions', 'action' => 'view', $factorsQuestion['Question']['id'])); ?>
 		</td>
-		<td style="text-align:center;"><?php echo h($factorsQuestion['FactorsQuestion']['multiplier']); ?>&nbsp;</td>
+		<td style="text-align:center;">#<?php echo $factorsQuestion['Question']['id']." - ".$factorsQuestion['FactorsQuestion']['multiplier']; ?>&nbsp;</td>
 		<td>
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $factorsQuestion['FactorsQuestion']['id']), array('class' => 'btn btn-primary')); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $factorsQuestion['FactorsQuestion']['id']), array('class' => 'btn btn-warning')); ?>

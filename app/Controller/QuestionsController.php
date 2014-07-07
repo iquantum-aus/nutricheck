@@ -185,10 +185,12 @@ class QuestionsController extends AppController {
 		$selected_factors = array();
 		
 		if($user_info['group_id'] != 1) {
-			$condition = array('User.parent_id' => $user_info['id']);
+			$condition = array('User.parent_id' => $user_info['id'], 'User.status' => 1, 'User.parent_id' => $user_info['id']);
+		} else {
+			$condition = array('User.status' => 1, 'User.parent_id' => $user_info['id']);
 		}
 		
-		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => array('User.status' => 1, 'User.parent_id' => $user_info['id'])));		
+		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => $condition));
 		
 		$this->Paginator->settings = array(
 			'limit' => 200
@@ -219,8 +221,14 @@ class QuestionsController extends AppController {
 			} else {
 				
 				$answers = $this->request->data;
+				$behalfUserId = $this->Session->read('behalfUserId');
 				
 				foreach($answers as $answer) {
+					
+					if(!empty($behalfUserId)) {
+						$answer['Answer']['user_id'] = $behalfUserId;
+					}
+					
 					$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
 					$this->Question->Answer->create();
 					$this->Question->Answer->save($answer);
@@ -252,7 +260,7 @@ class QuestionsController extends AppController {
 					/* ------------------------------------------------------ Emailing the pharmacist if ever a patient performed nutricheck ------------------------------------------------- */
 
 					// to disallow user from answering again, not unless reactivated by the pharmacist
-					$this->deactivate_user_answer();
+					$this->deactivate_user_answer($behalfUserId);
 				}
 				
 				
@@ -444,14 +452,20 @@ class QuestionsController extends AppController {
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
 	
-	function deactivate_user_answer() {
+	function deactivate_user_answer($user_id) {
 		$user_info = $this->Session->read('Auth.User');
 		
 		$this->Session->write('Auth.User.can_answer', 0);
 		
 		$user_data = array();
 		$user_data['User']['can_answer'] = 0;
-		$user_data['User']['id'] = $user_info['id'];
+		
+		if(!empty($user_id)) {
+			$user_data['User']['id'] = $user_id;
+		} else {
+			$user_data['User']['id'] = $user_info['id'];
+		}
+		
 		$this->Question->User->save($user_data);
 	}
 	

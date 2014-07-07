@@ -3,8 +3,8 @@
 	<table class="full table table-striped table">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('factor_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('functional_disturbance'); ?></th>
+			<th><?php echo $this->Paginator->sort('factor_id', 'Functional Disturbances'); ?></th>
+			<th><?php echo $this->Paginator->sort('functional_disturbance', 'Nutrients'); ?></th>
 			<th><?php echo $this->Paginator->sort('1_20', '1 - 20'); ?></th>
 			<th><?php echo $this->Paginator->sort('21_40', '21 - 40'); ?></th>
 			<th><?php echo $this->Paginator->sort('41_60', '41 - 60'); ?></th>

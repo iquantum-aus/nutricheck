@@ -2,23 +2,33 @@
 	$total_score = array();
 	$raw_score = array();
 	$percentage = array();
+	
 	foreach($reports_per_factor as $factor_key => $report_per_factor) {
 		$total_score[$factor_key] = 0;
 		$raw_score[$factor_key] = 0;
 		$percentage[$factor_key] = 0;
+		$highest_score = 3;
+		$question_per_disturbance = 0;
 		
 		foreach($report_per_factor as $answer) {
-			$total_score[$factor_key] += (4*$answer['FactorsQuestion']['multiplier']);
+			$total_score[$factor_key] += ($highest_score*$answer['FactorsQuestion']['multiplier']);
+			$question_count[$factor_key] = count($reports_per_factor[$factor_key]);
 			$raw_score[$factor_key] += ($answer['Answer']['rank'] * $answer['FactorsQuestion']['multiplier']);
+			
 			$percentage[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
+			$second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * 3);
 		}
+		
+		// echo $raw_score[$factor_key]." - ".$question_count[$factor_key];
+		// echo "<br />";
+		
 	}
 ?>
 
 
 <?php	
 	$final_prescription_values = array();
-	foreach($percentage as $key => $percentage_final_score) {
+	foreach($second_percentage_value as $key => $percentage_final_score) {
 		$factor_id = $key;
 		$percentage_final_score = round($percentage_final_score);
 		
@@ -35,7 +45,7 @@
 			$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
 			$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
 			$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
-		}
+		}		
 	}
 ?>
 
@@ -47,8 +57,8 @@
 			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
 				<tbody>
 					<tr>
-						<th>Factor</th>
 						<th>Functional Disturbance</th>
+						<th>Nutrients</th>
 						<th>Score</th>
 						<th>Prescription</th>
 						<th>Maximum Daily Dose</th>
@@ -74,7 +84,7 @@
 		$factors[$key] = '"'.$factor.'"';
 	}
 	
-	$flatten_percentage = implode(",", $percentage);
+	$flatten_percentage = implode(",", $second_percentage_value);
 	$flatten_factors = implode(",", $factors);
 ?>
 
