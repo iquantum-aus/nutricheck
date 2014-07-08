@@ -21,7 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'is_authorized_action');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -147,50 +147,60 @@ class UsersController extends AclManagementAppController {
 		
 		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
-            $this->loadModel('AclManagement.User');
             
-			if($user_info['group_id'] != 1)  {
-				$this->request->data['User']['status'] = 0;
-				$this->request->data['User']['group_id'] = 3;
-			}
+			$email = $this->request->data['User']['email'];
+			$this->User->unbindModelAll();
+			$user_existence = $this->User->findAllByEmail($email);
 			
-			$to_hash = time();
-			$this->request->data['User']['hash_value'] = $this->Auth->password($to_hash);
+			if(count($user_existence) > 0) {
+				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
+			} else {
 			
-			$raw_password = $this->request->data['User']['password'];
-			
-			$this->User->create();
-            if ($this->User->save($this->request->data)) {
+				$this->loadModel('AclManagement.User');
 				
-				$to = $this->request->data['User']['email'];
+				if($user_info['group_id'] != 1)  {
+					$this->request->data['User']['status'] = 0;
+					$this->request->data['User']['group_id'] = 3;
+				}
 				
-				$subject = "You've been added to the system";
+				$to_hash = time();
+				$this->request->data['User']['hash_value'] = $this->Auth->password($to_hash);
+				
+				$raw_password = $this->request->data['User']['password'];
+				
+				$this->User->create();
+				if ($this->User->save($this->request->data)) {
+					
+					$to = $this->request->data['User']['email'];
+					
+					$subject = "You've been added to the system";
 
-				$headers = "From: nomail@nutricheck.com";
-				$headers .= "Reply-To: noreply@nutricheck.com";
-				$headers .= "MIME-Version: 1.0\r\n";
-				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-				
-				$message = '<html><body>';
-				
-				$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-				$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url ."''>here</a><br><br><strong>Password:</strong> ".$raw_password;
-				
-				$message .= "</body></html>";
-				
-				mail($to, $subject, $message, $headers);
-				
-				$user_id = $this->User->id;
-				$this->request->data['UserProfile']['user_id'] = $user_id;
-				
-				$this->User->UserProfile->create();
-				$this->User->UserProfile->save($this->request->data);
-				
-                $this->Session->setFlash(__('The user has been saved'), 'alert/success');
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
-            }
+					$headers = "From: nomail@nutricheck.com";
+					$headers .= "Reply-To: noreply@nutricheck.com";
+					$headers .= "MIME-Version: 1.0\r\n";
+					$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+					
+					$message = '<html><body>';
+					
+					$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+					$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url ."''>here</a><br><br><strong>Password:</strong> ".$raw_password;
+					
+					$message .= "</body></html>";
+					
+					mail($to, $subject, $message, $headers);
+					
+					$user_id = $this->User->id;
+					$this->request->data['UserProfile']['user_id'] = $user_id;
+					
+					$this->User->UserProfile->create();
+					$this->User->UserProfile->save($this->request->data);
+					
+					$this->Session->setFlash(__('The user has been saved'), 'alert/success');
+					$this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
+				}
+			}
         }
 		
         $groups = $this->User->Group->find('list');
@@ -315,7 +325,7 @@ class UsersController extends AclManagementAppController {
 			$user_info = $this->User->findById($user_id);
 			$email_message = Configure::read('User.nutricheck_activated_message');
 			
-			$to = $user_info['email'];
+			$to = $user_info['User']['email'];
 
 			$subject = 'Reactivation of Nutrient Check';
 

@@ -23,9 +23,9 @@
                         echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
                     }else{
                         echo '<span style="cursor: pointer">';
-                        echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['status']) . '.png',
-                            array('onclick' => 'published.toggle("status-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
-                                  'id' => 'status-'.$user['User']['id']
+                        echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['can_answer']) . '.png',
+                            array('onclick' => 'published.toggle("can_answer-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
+                                  'id' => 'can_answer-'.$user['User']['id']
                                 ));
                         echo '</span>&nbsp;';
                     }
