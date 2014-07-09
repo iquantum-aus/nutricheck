@@ -129,13 +129,23 @@
 		</div>
 </div>
 
+<div class="hidden">
+	<a class="fancybox" href="#aboutNutricheck">Go</a>
+	<div id="aboutNutricheck" style="width: 500px;">
+		Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
+	</div>
+</div>
+
 <script>				
 	$(document).ready(function() {
-		var pieData = [
-			{ value : <?php echo $female_percentage; ?>, color : "#d9d9d9" },
-			{ value: <?php echo $male_percentage; ?>, color:"#7bac00" }
-		];
-
-		var myPie = new Chart(document.getElementById("canvas").getContext("2d")).Pie(pieData);	
+		
+		<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) { ?>
+			var pieData = [
+				{ value : <?php echo $female_percentage; ?>, color : "#d9d9d9" },
+				{ value: <?php echo $male_percentage; ?>, color:"#7bac00" }
+			];
+			
+			var myPie = new Chart(document.getElementById("canvas").getContext("2d")).Pie(pieData);
+		<?php } ?>
 	});
 </script>

@@ -175,8 +175,8 @@ class UsersController extends AclManagementAppController {
 					
 					$subject = "You've been added to the system";
 
-					$headers = "From: nomail@nutricheck.com";
-					$headers .= "Reply-To: noreply@nutricheck.com";
+					$headers = "From: nomail@nutricheck.com\r\n";
+					$headers .= "Reply-To: noreply@nutricheck.com\r\n";
 					$headers .= "MIME-Version: 1.0\r\n";
 					$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 					
@@ -254,7 +254,7 @@ class UsersController extends AclManagementAppController {
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->User->save($this->request->data)) {
 			
-				$this->request->data['UserProfile']['users'] = $this->request->data['User']['id'];
+				$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
 				
 				if(empty($this->request->data['UserProfile']['id'])) {
 					$this->User->UserProfile->create();
@@ -262,8 +262,8 @@ class UsersController extends AclManagementAppController {
 				
 				$this->User->UserProfile->save($this->request->data);
 				
-                $this->Session->setFlash(__('The user has been saved'), 'alert/success');
-                $this->redirect(array('action' => 'index'));
+                $this->Session->setFlash(__('The user has been updated'), 'alert/success');
+                // $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
             }
@@ -326,11 +326,11 @@ class UsersController extends AclManagementAppController {
 			$email_message = Configure::read('User.nutricheck_activated_message');
 			
 			$to = $user_info['User']['email'];
+			
+			$subject = 'Reactivation of Nutrient Check ';
 
-			$subject = 'Reactivation of Nutrient Check';
-
-			$headers = "From: email@email.com\r\n";
-			$headers .= "Reply-To: noreply@email.com\r\n";
+			$headers = "From: glenn@iquantum.com.au\r\n";
+			$headers .= "Reply-To: noreply@iquantum.com.au\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 			
@@ -507,6 +507,14 @@ class UsersController extends AclManagementAppController {
 				$user_info['User']['status'] = 1;
 				$this->User->save($user_info);
 				
+				$this->request->data['UserProfile']['user_id'] = $user_id;
+				
+				if(empty($this->request->data['UserProfile']['id'])) {
+					$this->User->UserProfile->create();
+				}
+				
+				$this->User->UserProfile->save();
+				
 				$user = $user_info['User'];
 				if(!$this->Auth->login($user)) {
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
@@ -555,7 +563,7 @@ class UsersController extends AclManagementAppController {
                 if($this->User->saveAll($this->request->data['User'], array('validate'=>false))){
 					
 					if(empty($this->request->data['UserProfile']['id'])) {
-						$this->request->data['UserProfile']['users'] = $this->User->id;
+						$this->request->data['UserProfile']['user_id'] = $this->User->id;
 						$this->User->UserProfile->create();
 					}
 					

@@ -29,7 +29,6 @@
 					</li>
 					-->
 					
-					
 					<li>
 						<a class="sb-toggle-submenu"><div class="sideIco" id="questionsIco"></div>Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 						<ul class="sb-submenu">
@@ -45,6 +44,7 @@
 						<ul class="sb-submenu">
 							<li><a href="/admin/users">List Users</a></li>
 							<li><a href="/admin/users/add">New Users</a></li>
+							<li><a href="/admin/user_permissions">User Permissions</a></li>
 						</ul>
 					</li>
 					<li>
@@ -62,21 +62,29 @@
 					<li class="active-sidebar-item"><a href="/users/dashboard"><div class="sideIco" id="dashboardIco"></div>Dashboard<div class="active-sidebar-menu"></div></a></li>
 					
 					<?php if($group_id == 2) { ?>
-					<li>
-						<a class="sb-toggle-submenu"><div class="sideIco" id="widgetsIco"></div>Widgets<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
-						<ul class="sb-submenu">
-							<li><a href="/qgroups">List Widgets</a></li>
-							<li><a href="/qgroups/add">Create Widgets</a></li>
-						</ul>
-					</li>
-					
-					<li>
-						<a class="sb-toggle-submenu"><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
-						<ul class="sb-submenu">
-							<li><a href="/admin/users">List Users</a></li>
-							<li><a href="/admin/users/add">Create Users</a></li>
-						</ul>
-					</li>
+						<li>
+							<a class="sb-toggle-submenu"><div class="sideIco" id="widgetsIco"></div>Widgets<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/qgroups">List Widgets</a></li>
+								<li><a href="/qgroups/add">Create Widgets</a></li>
+							</ul>
+						</li>
+						
+						<li>
+							<a class="sb-toggle-submenu"><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/admin/users">List Users</a></li>
+								<li><a href="/admin/users/add">Create Users</a></li>
+							</ul>
+						</li>
+						
+						<li>
+							<a class="sb-toggle-submenu"><div class="sideIco" id="widgetsIco"></div>Nutritional Guides<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/nutritional_guides">List Nutritional Guides</a></li>
+								<li><a href="/nutritional_guides/add">Create Nutritional Guide</a></li>
+							</ul>
+						</li>
 					<?php } ?>
 					
 					<li>

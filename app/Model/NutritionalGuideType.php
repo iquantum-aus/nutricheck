@@ -1,12 +1,12 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * NutritionalGuide Model
+ * NutritionalGuideType Model
  *
  * @property User $User
- * @property NutritionalGuideType $NutritionalGuideType
+ * @property NutritionalGuide $NutritionalGuide
  */
-class NutritionalGuide extends AppModel {
+class NutritionalGuideType extends AppModel {
 
 /**
  * Validation rules
@@ -14,26 +14,6 @@ class NutritionalGuide extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'title' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'description' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
 		'status' => array(
 			'boolean' => array(
 				'rule' => array('boolean'),
@@ -60,13 +40,28 @@ class NutritionalGuide extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'NutritionalGuideType' => array(
-			'className' => 'NutritionalGuideType',
-			'foreignKey' => 'nutritional_guide_type_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
 		)
 	);
+
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
+	public $hasMany = array(
+		'NutritionalGuide' => array(
+			'className' => 'NutritionalGuide',
+			'foreignKey' => 'nutritional_guide_type_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
+
 }

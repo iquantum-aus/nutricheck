@@ -9,6 +9,23 @@ class User extends AclManagementAppModel {
     public $useTable = "users";
     public $actsAs = array('Acl' => array('type' => 'requester'));
     public $validate = array(
+		
+		'email' => array(
+            'email' => array(
+                'required' => true,
+                'allowEmpty' => false,
+                'rule' => 'email',
+                'message' => 'Invalid email.',
+                'last' => true
+            ),
+            'unique' => array(
+                'required' => true,
+                'allowEmpty' => false,
+                'rule' => 'isUnique',
+                'message' => 'Email already in use.'
+            )
+        )
+		
 //        'username' => array(
 //            'alphanumeric' => array(
 //                'rule' => 'alphaNumeric',

@@ -21,6 +21,7 @@ class NutritionalGuidesController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->NutritionalGuide->recursive = 0;
 		$this->set('nutritionalGuides', $this->Paginator->paginate());
 	}
@@ -33,6 +34,7 @@ class NutritionalGuidesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->NutritionalGuide->exists($id)) {
 			throw new NotFoundException(__('Invalid nutritional guide'));
 		}
@@ -46,6 +48,7 @@ class NutritionalGuidesController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->NutritionalGuide->create();
 			if ($this->NutritionalGuide->save($this->request->data)) {
@@ -56,7 +59,8 @@ class NutritionalGuidesController extends AppController {
 			}
 		}
 		$users = $this->NutritionalGuide->User->find('list');
-		$this->set(compact('users'));
+		$nutritional_guide_types = $this->NutritionalGuide->NutritionalGuideType->find('list', array('fields' => array('id', 'type')));
+		$this->set(compact('users', 'nutritional_guide_types'));
 	}
 
 /**
@@ -67,6 +71,7 @@ class NutritionalGuidesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->NutritionalGuide->exists($id)) {
 			throw new NotFoundException(__('Invalid nutritional guide'));
 		}

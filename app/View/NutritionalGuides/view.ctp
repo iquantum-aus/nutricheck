@@ -18,7 +18,12 @@
 		</dd>
 		<dt><?php echo __('Users'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($nutritionalGuide['Users']['id'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['Users']['id'])); ?>
+			<?php echo $this->Html->link($nutritionalGuide['Users']['name'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['Users']['id'])); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Nutritional Guide Type Id'); ?></dt>
+		<dd>
+			<?php echo h($nutritionalGuide['NutritionalGuide']['nutritional_guide_type_id']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>

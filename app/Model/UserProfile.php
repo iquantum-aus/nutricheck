@@ -46,24 +46,14 @@ class UserProfile extends AppModel {
 		'birthday' => array(
 			'date' => array(
 				'rule' => array('date'),
+				'required' => true,
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
-				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'address' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'nationality' => array(
+		'contact' => array(
 			'notEmpty' => array(
 				'rule' => array('notEmpty'),
 				//'message' => 'Your custom message here',

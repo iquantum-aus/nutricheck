@@ -6,6 +6,7 @@
 			<th><?php echo $this->Paginator->sort('title'); ?></th>
 			<th><?php echo $this->Paginator->sort('description'); ?></th>
 			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('nutritional_guide_type_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th><?php echo $this->Paginator->sort('status'); ?></th>
@@ -17,8 +18,9 @@
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['description']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($nutritionalGuide['Users']['id'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['Users']['id'])); ?>
+			<?php echo $this->Html->link($nutritionalGuide['Users']['name'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['Users']['id'])); ?>
 		</td>
+		<td><?php echo h($nutritionalGuide['NutritionalGuide']['nutritional_guide_type_id']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['created']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['modified']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['status']); ?>&nbsp;</td>
@@ -44,6 +46,8 @@
 	?>
 	</div>
 </div>
+
+<?php /*
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -52,3 +56,4 @@
 		<li><?php echo $this->Html->link(__('New Users'), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
+*/ ?>

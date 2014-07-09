@@ -32,6 +32,9 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $cakeDescription ?>:
 		<?php echo $title_for_layout; ?>
 	</title>
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
 	<?php
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
@@ -50,7 +53,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		
-		echo $this->Html->script('jquery');
+		// echo $this->Html->script('jquery');
 	?>
 
 	<?php  ?>
@@ -109,6 +112,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	$(document).ready(function() {
 		
 		$.slidebars();
+		$('.fancybox').fancybox();
+		
 		var document_height = $(document).height();
 		
 		$('#sb-site').css('height', document_height+"px");

@@ -89,6 +89,22 @@ class UsersController extends AppController {
 		$this->layout = 'admin_dashboard';
 		
 		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$this->User->unBindModel(
+			array(
+				'hasMany' => array('Answer'),
+				'hasAndBelongsToMany' => array('Vitamin')
+			)
+		);
+		
+		$user_info = $this->User->findById($user_id);
+		if($group_id != 1) {
+			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['middle_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
+				$this->Session->setFlash('Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
+			}
+		}
+		
 		
 		// remove the unnecessary model from user so that it will be lighter for the query
 		$this->User->unBindModel(
@@ -98,7 +114,11 @@ class UsersController extends AppController {
 		);
 		
 		// gell all users that belong to your domain
+		if($group_id != 2) {
 		$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
+		} else {
+			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3)));
+		}
 		
 		$questions_answers = array();
 		
@@ -135,48 +155,51 @@ class UsersController extends AppController {
 			)
 		);
 		
-		// get all factors
-		$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('status' => 1)));
-		
-		// pr($factors);
-		
-		// group questions by factor
-		$questions_per_factors = array();
-		$factors_list = array();
-		foreach($factors as $factor_key => $factor) {
+		if($group_id != 3) {
+			// get all factors
+			$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('status' => 1)));
 			
-			$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
+			// pr($factors);
 			
-			foreach($factor['Question'] as $question_key => $question) {
-				$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
+			// group questions by factor
+			$questions_per_factors = array();
+			$factors_list = array();
+			foreach($factors as $factor_key => $factor) {
+				
+				$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
+				
+				foreach($factor['Question'] as $question_key => $question) {
+					$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
+				}
 			}
-		}
-		
-		// add scores per factor and also get total scores of all factors (will be used for its percentage)
-		$factor_per_percentage = array();
-		$total_factors_score = 0;
-		foreach($questions_per_factors as $factor_key => $questions_per_factor) {
-			$factor_value_sum = array_sum($questions_per_factor);
-			$factor_value_count = count($questions_per_factor);
 			
-			$perfect_score = 0;
-			$perfect_score = (3 * $factor_value_count) * count($users_list);
-	
+			// add scores per factor and also get total scores of all factors (will be used for its percentage)
+			$factor_per_percentage = array();
+			$total_factors_score = 0;
+			foreach($questions_per_factors as $factor_key => $questions_per_factor) {
+				$factor_value_sum = array_sum($questions_per_factor);
+				$factor_value_count = count($questions_per_factor);
+				
+				$perfect_score = 0;
+				$perfect_score = (3 * $factor_value_count) * count($users_list);
+		
+				
+				$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
+			}
+		
+		
+			arsort($factor_per_percentage);
+			// array_splice($factor_per_percentage, 16);
 			
-			$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
+			$genders = array();
+			$genders['males'] = $males;
+			$genders['females'] = $females;
+			
+			$this->set("factors_list", $factors_list);
+			$this->set("users_list", $users_list);
+			$this->set("factor_per_percentage", $factor_per_percentage);
+			$this->set('genders', $genders);
 		}
-		
-		arsort($factor_per_percentage);
-		// array_splice($factor_per_percentage, 16);
-		
-		$genders = array();
-		$genders['males'] = $males;
-		$genders['females'] = $females;
-		
-		$this->set("users_list", $users_list);
-		$this->set("factors_list", $factors_list);
-		$this->set("factor_per_percentage", $factor_per_percentage);
-		$this->set('genders', $genders);
 	}
 	
 	public function nutricheck_activity($user_id = null) {

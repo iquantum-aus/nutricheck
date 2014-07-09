@@ -130,4 +130,25 @@ class User extends AppModel {
 		}
         return true;
     }
+	
+	function unbindModelAll($to_all = true) { 
+		$unbind = array(); 
+		foreach ($this->belongsTo as $model=>$info) 
+		{ 
+		$unbind['belongsTo'][] = $model; 
+		} 
+		foreach ($this->hasOne as $model=>$info) 
+		{ 
+		$unbind['hasOne'][] = $model; 
+		} 
+		foreach ($this->hasMany as $model=>$info) 
+		{ 
+		$unbind['hasMany'][] = $model; 
+		} 
+		foreach ($this->hasAndBelongsToMany as $model=>$info) 
+		{ 
+		$unbind['hasAndBelongsToMany'][] = $model; 
+		} 
+		parent::unbindModel($unbind, $to_all); 
+	}
 }

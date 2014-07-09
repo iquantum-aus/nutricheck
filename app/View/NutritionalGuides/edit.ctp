@@ -7,6 +7,7 @@
 		echo $this->Form->input('title');
 		echo $this->Form->input('description');
 		echo $this->Form->input('user_id');
+		echo $this->Form->input('nutritional_guide_type_id');
 		echo $this->Form->input('status');
 	?>
 	</fieldset>

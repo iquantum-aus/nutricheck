@@ -16,6 +16,7 @@
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.nationality', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Nationality')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Zip')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Address')); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Contact Number')); ?></div>
 			
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.gender', array('div' => false, 'label' => false, 'empty' => 'Gender', 'options' => array('male' => 'Male', 'female' => 'Female'))); ?></div>
 									

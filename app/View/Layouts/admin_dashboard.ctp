@@ -34,17 +34,21 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $cakeDescription ?>:
 		<?php echo $title_for_layout; ?>
 	</title>
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
 	<?php
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->script('libs/jquery');
+		// echo $this->Html->script('libs/jquery');
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
 		// docs.css is only for this exapmple, remove for app dev
 		echo $this->Html->css('backend');
 		echo $this->Html->css('slidebars.min');
 		echo $this->Html->css('slidebars-theme');
+		echo $this->Html->css('jquery.fancybox');
 		echo $this->Html->css('style');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -77,6 +81,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('slidebars.min');
 		echo $this->Html->script('masonry.pkgd.min');
 		echo $this->Html->script('Chart.min');
+		echo $this->Html->script('jquery.fancybox');
 		echo $this->fetch('script');
  	?>
 </body>
@@ -86,6 +91,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	(function($) {
 		$(document).ready(function() {
 			
+			$('.fancybox').fancybox();
 			$.slidebars();
 			
 			// Slidebars Submenus
