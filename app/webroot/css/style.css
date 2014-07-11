@@ -16,6 +16,10 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+ @media print {
+	body {-webkit-print-color-adjust: exact;}
+}
+ 
 * {
 	margin:0;
 	padding:0;
@@ -1204,7 +1208,21 @@ ul.barGraph li {
 	display:none;
 }
 
+.qe_questionModules:first-child {
+	display:block;
+}
+
+.qe_questionModules {
+	display:none;
+}
+
 .paginatorSelector {
+	clear: none;
+	float: left !important;
+	margin-right: 15px !important;
+}
+
+.qe_paginatorSelector {
 	clear: none;
 	float: left !important;
 	margin-right: 15px !important;
@@ -1478,3 +1496,49 @@ border-bottom-color:#ebccd1;
 .chosen-container-single .chosen-single div b {
 	margin-top: 5px;
 }
+
+.horGraph {
+	background: #ddd;
+	padding-left: 20px;
+	padding-top: 2px;
+	height: 25px;
+	position: absolute;
+	opacity: .8;
+}
+
+.levelerHolder:first-child {
+	border-left: 1px solid #bbb;
+}
+
+.levelerHolder {
+	width: 20%;
+	text-align: right;
+	border-right: 1px solid #bbb;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 15px;
+	height: 25px;
+}
+
+#quickEntry_description {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 13px;
+	text-align: center;
+}
+
+.qe_itemInstance {
+	text-align: center; width: 80px; font-size: 11px !important;
+}
+
+.graphContentHolder {
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+#horGraphTable tr td { padding: 0px; }
+
+div.factorNames { float: left; margin-top: 2px; }

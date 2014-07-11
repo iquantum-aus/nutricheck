@@ -103,6 +103,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('chosen.jquery.min');
 		echo $this->Html->script('jquery.fancybox');
 		echo $this->Html->script('jquery-ui-1.10.4.min');
+		echo $this->Html->script('ckeditor/ckeditor');
 		echo $this->fetch('script');
  	?>
 </body>

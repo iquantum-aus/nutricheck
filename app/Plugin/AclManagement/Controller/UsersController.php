@@ -513,7 +513,7 @@ class UsersController extends AclManagementAppController {
 					$this->User->UserProfile->create();
 				}
 				
-				$this->User->UserProfile->save();
+				$this->User->UserProfile->save($this->request->data);
 				
 				$user = $user_info['User'];
 				if(!$this->Auth->login($user)) {

@@ -6,23 +6,23 @@
 <table class="table">
     <tbody>
         <tr>
-            <th><?php echo __('Id'); ?></th>
+            <d><?php echo __('Id'); ?></td>
             <td><?php echo h($user['User']['id']); ?></td>
         </tr>
         <tr>
-            <th><?php echo __('Email'); ?></th>
+            <td><?php echo __('Email'); ?></td>
             <td><?php echo h($user['User']['email']); ?></td>
         </tr>
         <tr>
-            <th><?php echo __('Group'); ?></th>
+            <td><?php echo __('Group'); ?></td>
             <td><?php echo h($user['Group']['name']); ?></td>
         </tr>
         <tr>
-            <th><?php echo __('Created'); ?></th>
+            <td><?php echo __('Created'); ?></td>
             <td><?php echo h($user['User']['created']); ?></td>
         </tr>
         <tr>
-            <th><?php echo __('Modified'); ?></th>
+            <td><?php echo __('Modified'); ?></td>
             <td><?php echo h($user['User']['modified']); ?></td>
         </tr>
     </tbody>

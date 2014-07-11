@@ -1,48 +1,36 @@
 <div class="nutritionalGuides view">
 <h2><?php echo __('Nutritional Guide'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Title'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Description'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['description']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Users'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($nutritionalGuide['Users']['name'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['Users']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Nutritional Guide Type Id'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['nutritional_guide_type_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['modified']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Status'); ?></dt>
-		<dd>
-			<?php echo h($nutritionalGuide['NutritionalGuide']['status']); ?>
-			&nbsp;
-		</dd>
-	</dl>
+<table class="table">	
+	<tbody>		
+		<tr>
+			<td><?php echo __('Title'); ?></td>
+			<td>
+				<?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>
+				&nbsp;
+			</td>
+		</tr>
+		
+		<tr>
+			<td><?php echo __('Description'); ?></td>
+			<td>
+				<?php echo $nutritionalGuide['NutritionalGuide']['description']; ?>
+				&nbsp;
+			</td>
+		</tr>
+		
+		<tr>
+			<td><?php echo __('Type'); ?></td>
+			<td>
+				<?php echo h($nutritionalGuide['NutritionalGuideType']['type']); ?>
+				&nbsp;
+			</td>
+		</tr>
+		
+	</tbody>
+</table>
 </div>
+
+<?php /*
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -54,3 +42,4 @@
 		<li><?php echo $this->Html->link(__('New Users'), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
+*/ ?>

@@ -4,7 +4,7 @@
 		<legend><?php echo __('Add Nutritional Guide'); ?></legend>
 	<?php
 		echo $this->Form->input('title');
-		echo $this->Form->input('description');
+		echo $this->Form->input('description', array('class' => 'ckeditor'));
 		echo $this->Form->input('nutritional_guide_type_id', array('options' => $nutritional_guide_types));
 	?>
 	</fieldset>

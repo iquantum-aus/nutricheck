@@ -114,8 +114,8 @@ class UsersController extends AppController {
 		);
 		
 		// gell all users that belong to your domain
-		if($group_id != 2) {
-		$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
+		if($group_id == 2) {
+			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
 		} else {
 			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3)));
 		}
@@ -124,6 +124,7 @@ class UsersController extends AppController {
 		
 		$females = 0;
 		$males = 0;
+		
 		
 		//get total number of maes and females as well as getting the total scores that each question got
 		foreach($users_list as $key => $user) {
@@ -169,6 +170,7 @@ class UsersController extends AppController {
 				$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
 				
 				foreach($factor['Question'] as $question_key => $question) {
+					// echo $questions_answers[$question['id']];
 					$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
 				}
 			}

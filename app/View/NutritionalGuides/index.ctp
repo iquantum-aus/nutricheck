@@ -6,28 +6,28 @@
 			<th><?php echo $this->Paginator->sort('title'); ?></th>
 			<th><?php echo $this->Paginator->sort('description'); ?></th>
 			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('nutritional_guide_type_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th><?php echo $this->Paginator->sort('status'); ?></th>
+			<th><?php echo $this->Paginator->sort('nutritional_guide_type_id', 'Type'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($nutritionalGuides as $nutritionalGuide): ?>
 	<tr>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['id']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>&nbsp;</td>
-		<td><?php echo h($nutritionalGuide['NutritionalGuide']['description']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($nutritionalGuide['Users']['name'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['Users']['id'])); ?>
+			<?php 
+				// echo $nutritionalGuide['NutritionalGuide']['description']; 
+				echo substr(strip_tags($nutritionalGuide['NutritionalGuide']['description']), 0, 300);  
+				echo "...";
+			?>&nbsp;
 		</td>
-		<td><?php echo h($nutritionalGuide['NutritionalGuide']['nutritional_guide_type_id']); ?>&nbsp;</td>
-		<td><?php echo h($nutritionalGuide['NutritionalGuide']['created']); ?>&nbsp;</td>
-		<td><?php echo h($nutritionalGuide['NutritionalGuide']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($nutritionalGuide['NutritionalGuide']['status']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $nutritionalGuide['NutritionalGuide']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $nutritionalGuide['NutritionalGuide']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $nutritionalGuide['NutritionalGuide']['id']), null, __('Are you sure you want to delete # %s?', $nutritionalGuide['NutritionalGuide']['id'])); ?>
+		<td>
+			<?php echo $this->Html->link($nutritionalGuide['User']['email'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['User']['id'])); ?>
+		</td>
+		<td><?php echo $nutritionalGuide['NutritionalGuideType']['type']; ?></td>
+		<td width="15%">
+			<a class="btn btn-primary" href="/nutritional_guides/view/<?php echo $nutritionalGuide['NutritionalGuide']['id']; ?>">View</a>
+			<a class="btn btn-warning" href="/nutritional_guides/edit/<?php echo $nutritionalGuide['NutritionalGuide']['id']; ?>">Edit</a>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $nutritionalGuide['NutritionalGuide']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $nutritionalGuide['NutritionalGuide']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

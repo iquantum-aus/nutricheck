@@ -197,6 +197,9 @@ class QuestionsController extends AppController {
 
 		if($this->request->is('post')) {
 			
+			// pr($this->request->data);
+			// exit();
+			
 			if(isset($this->request->data['Factors']['submit'])) {
 				
 				if(empty($this->request->data['Factors']['factors'])) {
@@ -226,8 +229,7 @@ class QuestionsController extends AppController {
 				$answers = $this->request->data;
 				$behalfUserId = $this->Session->read('behalfUserId');
 				
-				foreach($answers as $answer) {
-					
+				foreach($answers as $answer) {					
 					if(!empty($behalfUserId)) {
 						$answer['Answer']['user_id'] = $behalfUserId;
 					}

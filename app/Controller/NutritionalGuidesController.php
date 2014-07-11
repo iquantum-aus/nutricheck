@@ -23,7 +23,9 @@ class NutritionalGuidesController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->NutritionalGuide->recursive = 0;
-		$this->set('nutritionalGuides', $this->Paginator->paginate());
+		$nutritional_guides = $this->Paginator->paginate();
+		
+		$this->set('nutritionalGuides', $nutritional_guides);
 	}
 
 /**
@@ -48,9 +50,13 @@ class NutritionalGuidesController extends AppController {
  * @return void
  */
 	public function add() {
+		$user_id = $this->Session->read('Auth.User.id');
+		
 		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->NutritionalGuide->create();
+			
+			$this->request->data['NutritionalGuide']['user_id'] = $user_id;
 			if ($this->NutritionalGuide->save($this->request->data)) {
 				$this->Session->setFlash(__('The nutritional guide has been saved.'));
 				return $this->redirect(array('action' => 'index'));

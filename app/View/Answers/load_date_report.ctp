@@ -11,12 +11,13 @@
 		$question_per_disturbance = 0;
 		
 		foreach($report_per_factor as $answer) {
-			$total_score[$factor_key] += ($highest_score*$answer['FactorsQuestion']['multiplier']);
-			$question_count[$factor_key] = count($reports_per_factor[$factor_key]);
+			$total_score[$factor_key] += ($highest_score * $answer['FactorsQuestion']['multiplier']);
 			$raw_score[$factor_key] += ($answer['Answer']['rank'] * $answer['FactorsQuestion']['multiplier']);
+			$question_count[$factor_key] = count($reports_per_factor[$factor_key]);
 			
 			$percentage[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
-			$second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * 3);
+			// $second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * 3);
+			$second_percentage_value[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
 		}
 		
 		// echo $raw_score[$factor_key]." - ".$question_count[$factor_key];
@@ -52,7 +53,80 @@
 ?>
 
 <div class="index">
-	<canvas id="canvas" height="450" width="900"></canvas>
+	
+	<?php 
+		foreach($factors as $key => $factor) {
+			$factors_list[$key] = '"'.$factor.'"';
+		}
+		
+		$flatten_percentage = implode(",", $second_percentage_value);
+		$flatten_factors = implode(",", $factors_list);
+	?>
+	
+	<div>
+		<table id="horGraphTable" width="100%">
+			
+			<tr>
+				<td>
+					<strong>Functional Disturbances</strong>
+				</td>
+				<td>
+					<div class="left levelerHolder">20%</div>
+					<div class="left levelerHolder">40%</div>
+					<div class="left levelerHolder">60%</div>
+					<div class="left levelerHolder">80%</div>
+					<div class="left levelerHolder">100%</div>
+				</td>
+			</tr>
+			
+			<?php foreach($factors as $list_key => $factor) { ?>
+				<tr>
+					<td width="27%">
+						<div class="factorNames"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></div>
+					</td>
+					<td>
+						<?php
+							$graphColor = "";
+							
+							$second_percentage_value[$list_key] = round($second_percentage_value[$list_key]);
+							
+							if($second_percentage_value[$list_key] <= 20) { $graphColor = "yellow"; }
+							if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "green"; }
+							if($second_percentage_value[$list_key] >= 41 && $second_percentage_value[$list_key] <= 60) { $graphColor = "orange"; }
+							if($second_percentage_value[$list_key] >= 61 && $second_percentage_value[$list_key] <= 80) { $graphColor = "red"; }
+							if($second_percentage_value[$list_key] >= 81 && $second_percentage_value[$list_key] <= 100) { $graphColor = "red"; }
+						?>
+						
+						<div class="graphContentHolder">
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							
+							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background: <?php echo $graphColor; ?>;">
+								<?php // echo round($second_percentage_value[$list_key]); ?>
+							</div>
+						</div>
+					</td>
+				</tr>
+			<?php } ?>
+			
+			<tr>
+				<td></td>
+				<td>
+					<div class="left levelerHolder">20%</div>
+					<div class="left levelerHolder">40%</div>
+					<div class="left levelerHolder">60%</div>
+					<div class="left levelerHolder">80%</div>
+					<div class="left levelerHolder">100%</div>
+				</td>
+			</tr>
+			
+		</table>
+	</div>
+	
+	<!-- <canvas id="canvas" height="450" width="800"></canvas> -->
 	
 	<div style="margin-top: 80px;" id="prescription_report left full">
 		<?php foreach($final_prescription_values as $factor => $prescriptions) { ?>			
@@ -81,18 +155,11 @@
 	</div>
 </div>
 
-<?php 
-	foreach($factors as $key => $factor) {
-		$factors[$key] = '"'.$factor.'"';
-	}
-	
-	$flatten_percentage = implode(",", $second_percentage_value);
-	$flatten_factors = implode(",", $factors);
-?>
+
 
 <script>
 	$(document).ready( function () {
-		var barChartData = {
+		/* var barChartData = {
 			labels : [<?php echo $flatten_factors; ?>],
 			datasets : [
 				{
@@ -104,6 +171,6 @@
 			
 		}
 
-		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
+		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData); */
 	});	
 </script>
