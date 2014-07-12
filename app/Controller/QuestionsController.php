@@ -275,13 +275,20 @@ class QuestionsController extends AppController {
 						$latest_answer_date = $this->Question->Answer->find('first', array('fields' => array('Answer.created'), 'group' => array('Answer.created'), 'limit' => 1, 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $behalfUserId)));
 						$latest_answer_date = strtotime($latest_answer_date['Answer']['created']);
 						
-						$this->Session->setFlash(__('You successfully saved your answers'));
+						$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
 						$params = $latest_answer_date."/".$behalfUserId;
 						return $this->redirect('../answers/load_date_report/'.$params);
 					}
 				}
 				
-				$this->Session->setFlash(__('You successfully saved your answers'));
+				if($user_info['group_id'] == 2) {
+					$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
+				}
+				
+				if($user_info['group_id'] == 3) {
+					$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to our database, your pharmacist will be in touch to discuss the results with you'));
+				}
+				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}

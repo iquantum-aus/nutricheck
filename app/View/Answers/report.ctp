@@ -51,7 +51,7 @@
 					<tr>
 						<th>Functional Disturbance</th>
 						<th>Nutrients</th>
-						<th>Score</th>
+						<!-- <th>Score</th>-->
 						<th>Prescription</th>
 						<th>Maximum Daily Dose</th>
 					</tr>
@@ -60,7 +60,7 @@
 						<tr>
 							<td><?php echo $factor; ?></td>
 							<td><?php echo $functional_disturbance; ?></td>
-							<td><?php echo $prescription['score'] ?></td>
+							<?php /* <td><?php echo $prescription['score'] ?></td> */ ?>
 							<td><?php echo $prescription['dosage'] ?></td>
 							<td><?php echo $prescription['maximum_dosage']; ?></td>
 						</tr>

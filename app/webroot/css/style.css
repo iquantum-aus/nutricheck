@@ -1504,6 +1504,7 @@ border-bottom-color:#ebccd1;
 	height: 25px;
 	position: absolute;
 	opacity: .8;
+	max-width: 100%;
 }
 
 .levelerHolder:first-child {

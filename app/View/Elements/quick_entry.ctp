@@ -17,7 +17,7 @@
 
 <div style="width: 420px;">
 	<h3>Quick Entry Form</h3>
-	<form style="margin: 0;" class="left span12" method="POST">
+	<form style="margin: 0;" class="left span12" method="POST" action="/questions/nutrient_check">
 		<?php
 			foreach($qe_questions as $qe_key => $question_group) {
 				?>
@@ -44,7 +44,7 @@
 		$qe_question_data_count = count($qe_questions);
 	?>
 	
-	<div id="quickEntry_description" class="left span12">0 - Mever, 1 - Mild/Occasionally, 2 - Moderate/Frequently, 3 - Severe/Very Severely</div>
+	<div id="quickEntry_description" class="left span12">0 - Never, 1 - Mild/Occasionally, 2 - Moderate/Frequently, 3 - Severe/Very Severely</div>
 	
 	<div id="array_paginator">
 		<input id="qe_currentPaginatorstate" type="hidden" value="0">
