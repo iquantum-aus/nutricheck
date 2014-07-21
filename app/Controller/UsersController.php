@@ -188,7 +188,8 @@ class UsersController extends AppController {
 				
 				$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
 			}
-		
+			
+			$videos = $this->User->Group->Video->find('all', array('conditions' => array('group_id' => $group_id)));
 		
 			arsort($factor_per_percentage);
 			// array_splice($factor_per_percentage, 16);
@@ -197,6 +198,7 @@ class UsersController extends AppController {
 			$genders['males'] = $males;
 			$genders['females'] = $females;
 			
+			$this->set("videos", $videos);
 			$this->set("factors_list", $factors_list);
 			$this->set("users_list", $users_list);
 			$this->set("factor_per_percentage", $factor_per_percentage);

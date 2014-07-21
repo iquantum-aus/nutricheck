@@ -82,7 +82,10 @@
 			<?php foreach($factors as $list_key => $factor) { ?>
 				<tr>
 					<td width="27%">
-						<div class="factorNames"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></div>
+						<div class="hidden">
+							<div id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
+						</div>
+						<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
 					</td>
 					<td>
 						<?php
@@ -159,6 +162,9 @@
 
 <script>
 	$(document).ready( function () {
+		
+		$('.fancybox').fancybox();
+		
 		/* var barChartData = {
 			labels : [<?php echo $flatten_factors; ?>],
 			datasets : [

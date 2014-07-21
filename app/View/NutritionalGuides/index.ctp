@@ -7,13 +7,14 @@
 			<th><?php echo $this->Paginator->sort('description'); ?></th>
 			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('nutritional_guide_type_id', 'Type'); ?></th>
+			<th><?php echo $this->Paginator->sort('factor_id', 'Functional Disturbances'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($nutritionalGuides as $nutritionalGuide): ?>
 	<tr>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['id']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>&nbsp;</td>
-		<td>
+		<td width="50%">
 			<?php 
 				// echo $nutritionalGuide['NutritionalGuide']['description']; 
 				echo substr(strip_tags($nutritionalGuide['NutritionalGuide']['description']), 0, 300);  
@@ -24,7 +25,8 @@
 			<?php echo $this->Html->link($nutritionalGuide['User']['email'], array('controller' => 'users', 'action' => 'view', $nutritionalGuide['User']['id'])); ?>
 		</td>
 		<td><?php echo $nutritionalGuide['NutritionalGuideType']['type']; ?></td>
-		<td width="15%">
+		<td><?php echo $nutritionalGuide['Factor']['name']; ?></td>
+		<td width="25%">
 			<a class="btn btn-primary" href="/nutritional_guides/view/<?php echo $nutritionalGuide['NutritionalGuide']['id']; ?>">View</a>
 			<a class="btn btn-warning" href="/nutritional_guides/edit/<?php echo $nutritionalGuide['NutritionalGuide']['id']; ?>">Edit</a>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $nutritionalGuide['NutritionalGuide']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $nutritionalGuide['NutritionalGuide']['id'])); ?>

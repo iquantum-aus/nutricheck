@@ -92,8 +92,11 @@ class NutritionalGuidesController extends AppController {
 			$options = array('conditions' => array('NutritionalGuide.' . $this->NutritionalGuide->primaryKey => $id));
 			$this->request->data = $this->NutritionalGuide->find('first', $options);
 		}
+		
 		$users = $this->NutritionalGuide->User->find('list');
-		$this->set(compact('users'));
+		$nutritional_guide_types = $this->NutritionalGuide->NutritionalGuideType->find('list', array('fields' => array('id', 'type')));
+		$factors = $this->NutritionalGuide->Factor->find('list', array('fields' => array('id', 'name')));
+		$this->set(compact('users','factors','nutritional_guide_types'));
 	}
 
 /**

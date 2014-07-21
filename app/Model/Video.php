@@ -1,10 +1,11 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Group Model
+ * Video Model
  *
+ * @property Group $Group
  */
-class Group extends AppModel {
+class Video extends AppModel {
 
 /**
  * Validation rules
@@ -12,16 +13,6 @@ class Group extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'name' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
 		'status' => array(
 			'boolean' => array(
 				'rule' => array('boolean'),
@@ -33,15 +24,21 @@ class Group extends AppModel {
 			),
 		),
 	);
-	
-	public $hasMany = array(
-		'Video' => array(
-			'className' => 'Video',
+
+	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'Group' => array(
+			'className' => 'Group',
 			'foreignKey' => 'group_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		)
 	);
-	
 }

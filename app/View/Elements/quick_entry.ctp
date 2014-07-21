@@ -1,7 +1,13 @@
+<style>
+	#quickEntryForm .chosen-single { width: 300px; }
+	#quickEntryForm .chosen-drop { width: 300px; }
+</style>
+
 <?php
 	// The same as require('Controller/UsersController.php');
 	App::import('Controller', 'Questions');
-
+	$user_info = $this->Session->read('Auth.User');
+	
 	// We need to load the class
 	$Questions = new QuestionsController();
 
@@ -12,30 +18,60 @@
 	$qe_questions = $Questions->Question->find('all');	
 	
 	$qe_questions = array_chunk($qe_questions, 30, true);
+	$behalfUserId = $this->Session->read('behalfUserId');
+	
+	
+	if($user_info['group_id'] != 1) {
+		$condition = array('User.parent_id' => $user_info['id'], 'User.status' => 1, 'User.parent_id' => $user_info['id']);
+	} else {
+		$condition = array('User.status' => 1, 'User.parent_id' => $user_info['id']);
+	}
+	
+	$users_list = $Questions->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => $condition));
 ?>
-
 
 <div style="width: 420px;">
 	<h3>Quick Entry Form</h3>
-	<form style="margin: 0;" class="left span12" method="POST" action="/questions/nutrient_check">
-		<?php
-			foreach($qe_questions as $qe_key => $question_group) {
-				?>
-					<div class="qe_questionModules" id="qe_questionModule_<?php echo $qe_key; ?>">
-						<?php
-							foreach($question_group as $question_item) {
-								?>
-									<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $question_item['Question']['id']; ?>">
-									<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
-									
-									<input class="qe_itemInstance" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][rank]" type="number" id="qe_question_<?php echo $question_item['Question']['id']; ?>" placeholder="Q. #<?php echo $question_item['Question']['id']; ?>">
-								<?php
-							}
-						?>
-					</div>
-				<?php
-			}
-		?>
+	
+	
+	<form style="margin: 0;" class="left span12" method="POST" action="/questions/nutrient_check" id="quickEntryForm">
+		
+		<div class="left span12">
+			<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
+			<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $behalfUserId)); ?>
+			<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+		</div>
+		
+		<div class="left span12">
+			<?php
+				foreach($qe_questions as $qe_key => $question_group) {
+					?>
+						<div class="qe_questionModules" id="qe_questionModule_<?php echo $qe_key; ?>">
+							<?php
+								foreach($question_group as $question_item) {
+									?>
+										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $question_item['Question']['id']; ?>">
+										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+										
+										<!--
+										<input class="qe_itemInstance" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][rank]" type="number" id="qe_question_<?php echo $question_item['Question']['id']; ?>" placeholder="Q. #<?php echo $question_item['Question']['id']; ?>">
+										-->
+										
+										<select class="qe_itemInstance" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][rank]" id="qe_question_<?php echo $question_item['Question']['id']; ?>">
+											<option>Q. #<?php echo $question_item['Question']['id']; ?></option>
+											<option value="0">0</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+										</select>
+									<?php
+								}
+							?>
+						</div>
+					<?php
+				}
+			?>
+		</div>
 		
 		<input type="submit" class="btn btn-danger qe_save-answer" value="Submit">
 	</form>
@@ -57,6 +93,34 @@
 	$(document).ready(function() {		
 		var qe_maximum_page = "<?php echo  $qe_question_data_count ?>";
 		var qe_question_data_count = <?php echo $qe_question_data_count; ?>;
+		
+		$(document).on("submit", '#quickEntryForm', function () {	
+			var qe_unanswered_items = 0;
+			
+			var qe_currentPaginatorstate = $('#qe_currentPaginatorstate').val();
+			qe_currentPaginatorstate = parseInt(qe_currentPaginatorstate);
+			var qe_next_page = qe_currentPaginatorstate+1;
+			
+			$('#qe_questionModule_'+(qe_next_page - 1)).children('.qe_itemInstance').each( function () {	
+				var qe_item_id = $(this).attr('id');
+				
+				if($(this).val() == "" || $(this).val() > "3") {
+					qe_unanswered_items++;
+					$(this).css("border", "1px solid red");
+				} else {
+					$(this).css("border", "1px solid #ccc");
+				}
+			});
+			
+			console.log(qe_unanswered_items);
+			
+			if(qe_unanswered_items > 0) {
+				alert('There are unanswered items in the form. Please address them before you continue');
+				return false;
+			} else {
+				console.log("complete");
+			}
+		});
 		
 		$(document).on("click", '#qe_paginatorNext', function () {	
 			
@@ -85,6 +149,7 @@
 			// console.log(qe_unanswered_items);
 			
 			if(qe_unanswered_items > 0) {
+				alert('There are unanswered items in the form. Please address them before you continue');
 				return false;
 			}
 			

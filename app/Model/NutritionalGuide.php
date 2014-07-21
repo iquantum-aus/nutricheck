@@ -4,47 +4,18 @@ App::uses('AppModel', 'Model');
  * NutritionalGuide Model
  *
  * @property User $User
+ * @property Factor $Factor
  * @property NutritionalGuideType $NutritionalGuideType
  */
 class NutritionalGuide extends AppModel {
 
 /**
- * Validation rules
+ * Display field
  *
- * @var array
+ * @var string
  */
-	public $validate = array(
-		'title' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'description' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'status' => array(
-			'boolean' => array(
-				'rule' => array('boolean'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-	);
+	public $displayField = 'title';
+
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -57,6 +28,13 @@ class NutritionalGuide extends AppModel {
 		'User' => array(
 			'className' => 'User',
 			'foreignKey' => 'user_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Factor' => array(
+			'className' => 'Factor',
+			'foreignKey' => 'factor_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

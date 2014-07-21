@@ -65,7 +65,7 @@
 				<span>
 					Nutricheck is protected by copyright law. Unauthorized reproduction or distribution of this program, or any portion of it, may result in a breach of this copyright which will be prosecuted to the maximum extent possible of the law.
 				</span>
-			</div12>
+			</div>
 		</div>
 	</div>
 	

@@ -253,6 +253,7 @@ class AnswersController extends AppController {
 		ksort($reports_per_factor);
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 1)));
+		$nutritional_guides = $this->Answer->Question->Factor->NutritionalGuide->find('list', array('fields' => array('factor_id', 'description'), 'conditions' => array('NutritionalGuide.factor_id <>' => 0, 'NutritionalGuide.status' => 1)));
 		
 		$this->Answer->Question->Factor->Prescription->unbindModelAll();
 		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
@@ -273,6 +274,7 @@ class AnswersController extends AppController {
 		// pr($grouped_prescriptions);
 		
 		$this->set('factors', $factors);
+		$this->set('nutritional_guides', $nutritional_guides);
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
 	}

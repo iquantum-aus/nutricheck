@@ -223,11 +223,19 @@ class QuestionsController extends AppController {
 				}
 				
 			} else if(isset($this->request->data['User']['submit'])) {				
+				
 				$this->Session->write('behalfUserId', $this->request->data['User']['id']);
+				
 			} else {
 				
 				$answers = $this->request->data;
+				
+				if(isset($this->request->data['User']['id'])) {
+					$this->Session->write('behalfUserId', $this->request->data['User']['id']);
+				}
+				
 				$behalfUserId = $this->Session->read('behalfUserId');
+				unset($this->request->data['User']['id']);
 				
 				foreach($answers as $answer) {					
 					if(!empty($behalfUserId)) {

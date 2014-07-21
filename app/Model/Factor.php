@@ -3,48 +3,20 @@ App::uses('AppModel', 'Model');
 /**
  * Factor Model
  *
- * @property Users $Users
+ * @property User $User
+ * @property NutritionalGuide $NutritionalGuide
+ * @property Prescription $Prescription
  * @property Question $Question
  */
 class Factor extends AppModel {
-	var $displayField = 'name';
+
 /**
- * Validation rules
+ * Display field
  *
- * @var array
+ * @var string
  */
-	public $validate = array(
-		'name' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'description' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'status' => array(
-			'boolean' => array(
-				'rule' => array('boolean'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-	);
+	public $displayField = 'name';
+
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -63,16 +35,40 @@ class Factor extends AppModel {
 		)
 	);
 
-	
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
 	public $hasMany = array(
+		'NutritionalGuide' => array(
+			'className' => 'NutritionalGuide',
+			'foreignKey' => 'factor_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'Prescription' => array(
 			'className' => 'Prescription',
 			'foreignKey' => 'factor_id',
+			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
-			'order' => ''
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
 		)
 	);
+
 
 /**
  * hasAndBelongsToMany associations
@@ -83,11 +79,11 @@ class Factor extends AppModel {
 		'Question' => array(
 			'className' => 'Question',
 			'joinTable' => 'factors_questions',
-			'foreignKey' => 'factors_id',
-			'associationForeignKey' => 'questions_id',
+			'foreignKey' => 'factor_id',
+			'associationForeignKey' => 'question_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',
-			'fields' => array('id', 'question'),
+			'fields' => '',
 			'order' => '',
 			'limit' => '',
 			'offset' => '',

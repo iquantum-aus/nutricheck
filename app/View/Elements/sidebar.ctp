@@ -39,6 +39,15 @@
 							<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
 						</ul>
 					</li>
+					
+					<li>
+						<a class="sb-toggle-submenu"><div class="sideIco" id="widgetsIco"></div>Videos<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+						<ul class="sb-submenu">
+							<li><a href="/videos">List Videos</a></li>
+							<li><a href="/videos/create">Create Videos</a></li>
+						</ul>
+					</li>
+					
 					<li>
 						<a class="sb-toggle-submenu"><div class="sideIco" id="usersIco"></div>Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 						<ul class="sb-submenu">

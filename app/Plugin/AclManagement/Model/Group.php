@@ -16,6 +16,7 @@ class Group extends AclManagementAppModel {
             'unique' => array('rule' => 'isUnique','message' => 'Group name already in use.')
         )
     );
+	
     public $actsAs = array('Acl' => array('type' => 'requester'));
 
     function parentNode() {

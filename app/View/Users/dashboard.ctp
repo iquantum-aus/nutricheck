@@ -9,6 +9,18 @@
 				<div class="textBelow">Start Questionaire</div>
 			</div>
 			
+			<div style="height: 374px; width: 327px;" class="item">
+				How and what is required in the questionnaire and what the process is 
+			</div>
+			
+			<div style="height: 374px; width: 327px;" class="item">
+				 How clients should access NutriCheck
+			</div>
+			
+			<div style="height: 374px; width: 327px;" class="item">
+				Training for staff
+			</div>
+			
 			<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) { ?>
 				<div style="height: 455px; width: 706px;" class="item">
 					
@@ -126,6 +138,23 @@
 						 <source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />
 					</video>
 			</div>
+			
+			<?php foreach($videos as $video) { ?>
+				<div style="height: 281px; width: 500px;" class="item">
+					<?php
+
+						$newWidth = "500";
+						$newHeight = "281";
+
+						$content = preg_replace(
+						array('/width="\d+"/i', '/height="\d+"/i'),
+						array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
+						$video['Video']['video_link']);
+						
+						echo $content;
+					?>
+				</div>
+			<?php } ?>
 		</div>
 </div>
 
