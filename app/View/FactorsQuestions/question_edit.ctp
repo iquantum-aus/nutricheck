@@ -4,7 +4,7 @@
 		<legend><?php echo __('Edit Question'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('factors_id');
+		echo $this->Form->input('factor_id');
 		echo $this->Form->input('Question.id', array('value' => $this->request->data['Question']['id']));
 		echo $this->Form->input('Question.question', array('value' => $this->request->data['Question']['question'], 'type' => 'text'));
 		echo $this->Form->input('multiplier');

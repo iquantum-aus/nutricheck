@@ -13,8 +13,8 @@ class TempAnswerFixture extends CakeTestFixture {
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
 		'ip_address' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
-		'questions_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
-		'factors_id' => array('type' => 'biginteger', 'null' => true, 'default' => null),
+		'question_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'factor_id' => array('type' => 'biginteger', 'null' => true, 'default' => null),
 		'choice_id' => array('type' => 'biginteger', 'null' => true, 'default' => null),
 		'rank' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 5),
 		'answer' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
@@ -36,8 +36,8 @@ class TempAnswerFixture extends CakeTestFixture {
 		array(
 			'id' => '',
 			'ip_address' => 'Lorem ipsum dolor ',
-			'questions_id' => '',
-			'factors_id' => '',
+			'question_id' => '',
+			'factor_id' => '',
 			'choice_id' => '',
 			'rank' => 1,
 			'answer' => 'Lorem ipsum dolor sit amet',

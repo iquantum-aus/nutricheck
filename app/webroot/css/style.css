@@ -34,6 +34,21 @@ input {
 	margin-bottom: 10px;
 }
 
+.inputHolder label {
+	width: 15%;
+	font-weight: bold;
+}
+
+.inputHolder label, .inputHolder input {
+	float: left;
+	clear: none;
+}
+
+.inputHolder input {
+	width: 75%;
+}
+
+
 h1.siteName {
 	font-size: 20px;
 	background: transparent;
@@ -451,10 +466,11 @@ form div.submit {
 }
 label {
 	display: block;
-	font-size: 110%;
+	font-size: 14px;
 	margin-bottom:3px;
 	margin-right: 10px;
 	padding-top: 5px;
+	margin-left: 5px;
 }
 input, textarea {
 	clear: both;
@@ -1543,3 +1559,4 @@ border-bottom-color:#ebccd1;
 #horGraphTable tr td { padding: 0px; }
 
 div.factorNames { float: left; margin-top: 2px; }
+#headerScript { float: left; margin-top: 10px; color: #000; }

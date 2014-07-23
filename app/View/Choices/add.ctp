@@ -4,7 +4,7 @@
 		<legend><?php echo __('Add Choice'); ?></legend>
 	<?php
 		echo $this->Form->input('title');
-		echo $this->Form->input('questions_id');
+		echo $this->Form->input('question_id');
 		echo $this->Form->input('status');
 	?>
 	</fieldset>

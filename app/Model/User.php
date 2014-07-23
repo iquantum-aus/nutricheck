@@ -96,7 +96,7 @@ class User extends AppModel {
 			'className' => 'Answer',
 			'foreignKey' => 'user_id',
 			'conditions' => '',
-			'fields' => array('questions_id', 'rank'),
+			'fields' => array('question_id', 'rank'),
 			'order' => ''
 		)
 	);

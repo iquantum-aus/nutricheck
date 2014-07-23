@@ -46,7 +46,7 @@ class Choice extends AppModel {
 	public $belongsTo = array(
 		'Questions' => array(
 			'className' => 'Questions',
-			'foreignKey' => 'questions_id',
+			'foreignKey' => 'question_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

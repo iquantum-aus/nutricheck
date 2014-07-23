@@ -13,7 +13,7 @@ class ChoiceFixture extends CakeTestFixture {
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
 		'title' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 160, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
-		'questions_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'question_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'status' => array('type' => 'boolean', 'null' => false, 'default' => '1'),
@@ -32,7 +32,7 @@ class ChoiceFixture extends CakeTestFixture {
 		array(
 			'id' => '',
 			'title' => 'Lorem ipsum dolor sit amet',
-			'questions_id' => '',
+			'question_id' => '',
 			'created' => '2013-12-21 13:30:00',
 			'modified' => '2013-12-21 13:30:00',
 			'status' => 1

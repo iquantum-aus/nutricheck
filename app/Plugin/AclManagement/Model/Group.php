@@ -22,4 +22,15 @@ class Group extends AclManagementAppModel {
     function parentNode() {
         return null;
     }
+	
+	public $hasMany = array(
+		'Video' => array(
+			'className' => 'Video',
+			'foreignKey' => 'group_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
+	
 }

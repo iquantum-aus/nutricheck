@@ -36,11 +36,13 @@
 	
 	<form style="margin: 0;" class="left span12" method="POST" action="/questions/nutrient_check" id="quickEntryForm">
 		
-		<div class="left span12">
-			<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
-			<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $behalfUserId)); ?>
-			<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
-		</div>
+		<?php if($user_info['group_id'] == 2) { ?>
+			<div class="left span12">
+				<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
+				<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $behalfUserId)); ?>
+				<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+			</div>
+		<?php } ?>
 		
 		<div class="left span12">
 			<?php
@@ -50,7 +52,7 @@
 							<?php
 								foreach($question_group as $question_item) {
 									?>
-										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $question_item['Question']['id']; ?>">
+										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][question_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $question_item['Question']['id']; ?>">
 										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
 										
 										<!--

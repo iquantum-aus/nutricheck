@@ -162,19 +162,19 @@ class AnswersController extends AppController {
 			unset($temp_answer['TempAnswer']);
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date['Answer']['created'], 'Answer.created >=' => $latest_answer_date['Answer']['created'])));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date['Answer']['created'], 'Answer.created >=' => $latest_answer_date['Answer']['created'])));
 		}
 		
 		foreach($answers as $key => $answer) {
-			$question_id = $answer['Answer']['questions_id'];
+			$question_id = $answer['Answer']['question_id'];
 			
 			$this->FactorsQuestion->unbindModelAll();
-			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('questions_id' => $question_id)));
+			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('question_id' => $question_id)));
 			
 			foreach($associations as $association) {
 				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				
-				$factor_id = $answer['FactorsQuestion']['factors_id'];
+				$factor_id = $answer['FactorsQuestion']['factor_id'];
 				$inc++;
 				
 				$reports_per_factor[$factor_id][$inc] = $answer;
@@ -231,19 +231,19 @@ class AnswersController extends AppController {
 			$answers = $temp_answer;
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
 		}
 		
 		foreach($answers as $key => $answer) {
-			$question_id = $answer['Answer']['questions_id'];
+			$question_id = $answer['Answer']['question_id'];
 			
 			$this->FactorsQuestion->unbindModelAll();
-			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('questions_id' => $question_id)));
+			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('question_id' => $question_id)));
 			
 			foreach($associations as $association) {
 				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				
-				$factor_id = $answer['FactorsQuestion']['factors_id'];
+				$factor_id = $answer['FactorsQuestion']['factor_id'];
 				$inc++;
 				
 				$reports_per_factor[$factor_id][$inc] = $answer;
@@ -300,19 +300,19 @@ class AnswersController extends AppController {
 			$answers = $temp_answer;
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factors_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
 		}
 		
 		foreach($answers as $key => $answer) {
-			$question_id = $answer['Answer']['questions_id'];
+			$question_id = $answer['Answer']['question_id'];
 			
 			$this->FactorsQuestion->unbindModelAll();
-			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('questions_id' => $question_id)));
+			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('question_id' => $question_id)));
 			
 			foreach($associations as $association) {
 				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				
-				$factor_id = $answer['FactorsQuestion']['factors_id'];
+				$factor_id = $answer['FactorsQuestion']['factor_id'];
 				$inc++;
 				
 				$reports_per_factor[$factor_id][$inc] = $answer;

@@ -19,9 +19,9 @@ class UsersController extends AclManagementAppController {
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		if(empty($user_id)) {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -155,12 +155,15 @@ class UsersController extends AclManagementAppController {
 			if(count($user_existence) > 0) {
 				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
 			} else {
-			
 				$this->loadModel('AclManagement.User');
 				
 				if($user_info['group_id'] != 1)  {
 					$this->request->data['User']['status'] = 0;
 					$this->request->data['User']['group_id'] = 3;
+				}
+				
+				if(isset($this->request->data['create_and_answer'])) {
+					$this->request->data['User']['status'] = 1;
 				}
 				
 				$to_hash = time();
@@ -172,7 +175,6 @@ class UsersController extends AclManagementAppController {
 				if ($this->User->save($this->request->data)) {
 					
 					$to = $this->request->data['User']['email'];
-					
 					$subject = "You've been added to the system";
 
 					$headers = "From: nomail@nutricheck.com\r\n";
@@ -183,7 +185,7 @@ class UsersController extends AclManagementAppController {
 					$message = '<html><body>';
 					
 					$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-					$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url ."''>here</a><br><br><strong>Password:</strong> ".$raw_password;
+					$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
 					
 					$message .= "</body></html>";
 					
@@ -196,7 +198,13 @@ class UsersController extends AclManagementAppController {
 					$this->User->UserProfile->save($this->request->data);
 					
 					$this->Session->setFlash(__('The user has been saved'), 'alert/success');
-					$this->redirect(array('action' => 'index'));
+					
+					if(isset($this->request->data['create_and_answer'])) {
+						$this->Session->write('behalfUserId', $user_id);
+						$this->redirect('../../questions/nutrient_check');
+					} else {
+						$this->redirect(array('action' => 'index'));
+					}
 				} else {
 					$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
 				}
@@ -520,7 +528,6 @@ class UsersController extends AclManagementAppController {
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
 				}
 			} else {
-				
 				if(empty($user_id)) {
 					$this->Session->setFlash(__("Accessing this link is no longer permitted"), 'alert/error');
 					$this->redirect(array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'login'));
@@ -579,6 +586,8 @@ class UsersController extends AclManagementAppController {
 
         }else{
             $this->request->data = $this->User->read(null, $this->Auth->user('id'));
+			
+			
             $this->request->data['User']['password'] = '';
         }
     }
@@ -611,5 +620,220 @@ class UsersController extends AclManagementAppController {
         $this->Session->setFlash(__('Something went wrong. Sorry for any inconvenience.'), 'alert/error');
         $this->redirect(array('action' => 'login'));
     }
+	
+	
+	
+	##############################################################################################################################################
+	
+	 /*
+		CUSTOM FUNCTION HERE - THIS CAME FROM THE CORE USERS CONTROLLER FILE
+	 */
+	
+	##############################################################################################################################################
+	
+	public function dashboard() {
+		$this->layout = 'admin_dashboard';
+		
+		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$this->User->unBindModel(
+			array(
+				'hasMany' => array('Answer'),
+				'hasAndBelongsToMany' => array('Vitamin')
+			)
+		);
+		
+		$user_info = $this->User->findById($user_id);
+		if($group_id != 1) {
+			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['middle_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
+				$this->Session->setFlash('Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
+			}
+		}
+		
+		
+		// remove the unnecessary model from user so that it will be lighter for the query
+		$this->User->unBindModel(
+			array(
+				'hasAndBelongsToMany' => array('Vitamin')
+			)
+		);
+		
+		// gell all users that belong to your domain
+		if($group_id == 2) {
+			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
+		} else {
+			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3)));
+		}
+		
+		$questions_answers = array();
+		
+		$females = 0;
+		$males = 0;
+		
+		
+		//get total number of maes and females as well as getting the total scores that each question got
+		foreach($users_list as $key => $user) {
+			
+			// getting scores per question
+			foreach($user['Answer'] as $answer) {
+				
+				if(!isset($questions_answers[$answer['question_id']])) {
+					$questions_answers[$answer['question_id']] = 0;
+				} else {
+					$questions_answers[$answer['question_id']] = $questions_answers[$answer['question_id']] + $answer['rank'];
+				}
+				
+			}
+			
+			// getting total of each gender
+			if($user['UserProfile']['gender'] == "male") {
+				$males++;
+			} else if($user['UserProfile']['gender'] == "female") {
+				$females++;
+			}
+		}
+		
+		// remove unnecesary model from factor
+		$this->User->Answer->Question->Factor->unBindModel(
+			array(
+				'belongsTo' => array('User'),
+				'hasMany' => array('Prescription')
+			)
+		);
+		
+		if($group_id != 3) {
+			// get all factors
+			$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('status' => 1)));
+			
+			// pr($factors);
+			
+			// group questions by factor
+			$questions_per_factors = array();
+			$factors_list = array();
+			foreach($factors as $factor_key => $factor) {
+				
+				$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
+				
+				foreach($factor['Question'] as $question_key => $question) {
+					// echo $questions_answers[$question['id']];
+					$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
+				}
+			}
+			
+			// add scores per factor and also get total scores of all factors (will be used for its percentage)
+			$factor_per_percentage = array();
+			$total_factors_score = 0;
+			foreach($questions_per_factors as $factor_key => $questions_per_factor) {
+				$factor_value_sum = array_sum($questions_per_factor);
+				$factor_value_count = count($questions_per_factor);
+				
+				$perfect_score = 0;
+				$perfect_score = (3 * $factor_value_count) * count($users_list);
+		
+				
+				$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
+			}
+			
+			$videos = $this->User->Group->Video->find('all', array('conditions' => array('group_id' => $group_id)));
+		
+			arsort($factor_per_percentage);
+			// array_splice($factor_per_percentage, 16);
+			
+			$genders = array();
+			$genders['males'] = $males;
+			$genders['females'] = $females;
+			
+			$this->set("videos", $videos);
+			$this->set("factors_list", $factors_list);
+			$this->set("users_list", $users_list);
+			$this->set("factor_per_percentage", $factor_per_percentage);
+			$this->set('genders', $genders);
+		}
+	}
+	
+	public function nutricheck_activity($user_id = null) {
+		$this->layout = 'public_dashboard';
+		
+		$user_info = $this->Session->read('Auth.User');
+		
+		// if admin/client
+		if($user_info['group_id'] != 3) {
+			
+			// if user_id parameter is not set
+			if(empty($user_id)) {
+				$user_id = $this->Session->read('Auth.User.id');
+			} else {
+				$user_data = $this->User->findById($user_id);
+				$user_info = $user_data['User'];
+				$user_info['UserProfile'] = $user_data['UserProfile'];
+			}
+			
+		// if ordinary user(member)
+		} else {
+			$user_id = $this->Session->read('Auth.User.id');
+		}
+	
+		$this->User->Answer->unbindModelAll();
+		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $user_id)));
+		$this->set('answers_per_date', $answers_per_date);
+		$this->set('user_info', $user_info);
+		$this->set('user_id', $user_id);
+	}
+	
+	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
+	
+	public function remote_register() {
+		$this->layout = "ajax";
+		if ($this->request->is('post')) {
+			$this->loadModel('AclManagement.User');
+			if($this->request->data['User']['password'] == $this->request->data['User']['repeat_password']) {
+				
+				$token = md5(time());
+				$this->request->data['User']['token'] = $token;//key
+				
+				$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
+				$this->request->data['User']['group_id'] = 3;
+				$this->request->data['User']['status'] = 1;
+				
+				$this->User->create();
+				if($this->User->save($this->request->data)) {
+					$user_id = $this->User->id;
+					$this->request->data['UserProfile']['user_id'] = $user_id;
+					
+					$this->User->UserProfile->create();
+					if($this->User->UserProfile->save($this->request->data)) {
+						$user = $this->User->findById($user_id);
+						$user = $user['User'];
+						if($this->Auth->login($user)) {
+							$temp_answer = $this->Session->read('temp_answers');
+							if(!empty($temp_answer)) {
+								// 2 means to redirect to answer's controller to save the session based answer
+								echo "2";
+								exit();
+							} else {					
+								echo "1";
+								exit();
+							}
+						} else {
+							echo "0";
+						}
+					}
+				}
+			} else {
+				echo "0";
+			}
+		}
+		exit();
+	}
+	
+	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
+	
+	public function check_email_existence() {
+		$email = $_GET['email'];
+		$checkExistEmail = $this->User->find('count', array('conditions'=>array('User.email' => $email)));
+		echo $checkExistEmail;
+		exit();
+	}
 }
 ?>

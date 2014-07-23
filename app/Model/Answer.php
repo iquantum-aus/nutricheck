@@ -45,7 +45,7 @@ class Answer extends AppModel {
 		),
 		'Question' => array(
 			'className' => 'Question',
-			'foreignKey' => 'questions_id',
+			'foreignKey' => 'question_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

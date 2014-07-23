@@ -47,14 +47,14 @@ class TempAnswer extends AppModel {
 	public $belongsTo = array(
 		'Question' => array(
 			'className' => 'Question',
-			'foreignKey' => 'questions_id',
+			'foreignKey' => 'question_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
 		'Factor' => array(
 			'className' => 'Factor',
-			'foreignKey' => 'factors_id',
+			'foreignKey' => 'factor_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

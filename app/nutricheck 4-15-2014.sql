@@ -185,7 +185,7 @@ INSERT INTO `acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `
 
 CREATE TABLE IF NOT EXISTS `analysis_results` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `factors_id` bigint(20) NOT NULL,
+  `factor_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `score` int(10) NOT NULL,
   `created` datetime NOT NULL,
@@ -203,8 +203,8 @@ CREATE TABLE IF NOT EXISTS `analysis_results` (
 CREATE TABLE IF NOT EXISTS `answers` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL,
-  `questions_id` bigint(20) NOT NULL,
-  `factors_id` bigint(20) DEFAULT NULL,
+  `question_id` bigint(20) NOT NULL,
+  `factor_id` bigint(20) DEFAULT NULL,
   `choice_id` bigint(20) DEFAULT NULL,
   `rank` int(5) DEFAULT NULL,
   `answer` varchar(100) DEFAULT NULL,
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
 -- Dumping data for table `answers`
 --
 
-INSERT INTO `answers` (`id`, `user_id`, `questions_id`, `factors_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
+INSERT INTO `answers` (`id`, `user_id`, `question_id`, `factor_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
 (1, 1, 1, NULL, NULL, 1, NULL, '2014-04-15 23:21:30', '2014-04-15 23:21:30', 1),
 (2, 1, 2, NULL, NULL, 2, NULL, '2014-04-15 23:21:30', '2014-04-15 23:21:30', 1),
 (3, 1, 3, NULL, NULL, 3, NULL, '2014-04-15 23:21:30', '2014-04-15 23:21:30', 1),
@@ -391,7 +391,7 @@ INSERT INTO `aros_acos` (`id`, `aro_id`, `aco_id`, `_create`, `_read`, `_update`
 CREATE TABLE IF NOT EXISTS `choices` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(160) NOT NULL,
-  `questions_id` bigint(20) NOT NULL,
+  `question_id` bigint(20) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
@@ -472,8 +472,8 @@ INSERT INTO `factors` (`id`, `name`, `description`, `user_id`, `created`, `modif
 
 CREATE TABLE IF NOT EXISTS `factors_questions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `factors_id` int(20) DEFAULT NULL,
-  `questions_id` int(20) DEFAULT NULL,
+  `factor_id` int(20) DEFAULT NULL,
+  `question_id` int(20) DEFAULT NULL,
   `multiplier` int(5) DEFAULT '0',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
@@ -485,7 +485,7 @@ CREATE TABLE IF NOT EXISTS `factors_questions` (
 -- Dumping data for table `factors_questions`
 --
 
-INSERT INTO `factors_questions` (`id`, `factors_id`, `questions_id`, `multiplier`, `created`, `modified`, `status`) VALUES
+INSERT INTO `factors_questions` (`id`, `factor_id`, `question_id`, `multiplier`, `created`, `modified`, `status`) VALUES
 (1, 1, 5, 2, NULL, NULL, 1),
 (2, 1, 6, 2, NULL, NULL, 1),
 (3, 1, 8, 3, NULL, NULL, 1),

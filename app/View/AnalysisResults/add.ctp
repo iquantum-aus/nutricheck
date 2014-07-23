@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add Analysis Result'); ?></legend>
 	<?php
-		echo $this->Form->input('factors_id');
+		echo $this->Form->input('factor_id');
 		echo $this->Form->input('user_id');
 		echo $this->Form->input('score');
 		echo $this->Form->input('status');

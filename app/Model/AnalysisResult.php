@@ -46,7 +46,7 @@ class AnalysisResult extends AppModel {
 	public $belongsTo = array(
 		'Factors' => array(
 			'className' => 'Factors',
-			'foreignKey' => 'factors_id',
+			'foreignKey' => 'factor_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

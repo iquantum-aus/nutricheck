@@ -57,7 +57,7 @@ class Question extends AppModel {
 	public $hasMany = array(
 		'Answer' => array(
 			'className' => 'Answer',
-			'foreignKey' => 'questions_id',
+			'foreignKey' => 'question_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -65,7 +65,7 @@ class Question extends AppModel {
 		
 		'TempAnswer' => array(
 			'className' => 'TempAnswer',
-			'foreignKey' => 'questions_id',
+			'foreignKey' => 'question_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -82,8 +82,8 @@ class Question extends AppModel {
 		'Factor' => array(
 			'className' => 'Factor',
 			'joinTable' => 'factors_questions',
-			'foreignKey' => 'questions_id',
-			'associationForeignKey' => 'factors_id',
+			'foreignKey' => 'question_id',
+			'associationForeignKey' => 'factor_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',
 			'fields' => '',

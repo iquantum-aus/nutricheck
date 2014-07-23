@@ -3,8 +3,8 @@
 	<fieldset>
 		<legend><?php echo __('Add Factors Question'); ?></legend>
 	<?php
-		echo $this->Form->input('questions_id', array('empty' => 'Select a Question...', 'class' => 'chosen-select', 'tabindex' => '2', 'style' => 'width:450px; height: 30px;'));
-		echo $this->Form->input('factors_id', array('empty' => 'Select a Factor...', 'class' => 'chosen-select', 'tabindex' => '2', 'style' => 'width:450px; height: 30px;'));
+		echo $this->Form->input('question_id', array('empty' => 'Select a Question...', 'class' => 'chosen-select', 'tabindex' => '2', 'style' => 'width:450px; height: 30px;'));
+		echo $this->Form->input('factor_id', array('empty' => 'Select a Factor...', 'class' => 'chosen-select', 'tabindex' => '2', 'style' => 'width:450px; height: 30px;'));
 		echo $this->Form->input('multiplier', array('maxlength' => '2', 'type' => 'text'));
 		echo $this->Form->submit('Submit', array('class' => 'btn btn-success'));
 	?>

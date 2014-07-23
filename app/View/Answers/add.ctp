@@ -4,7 +4,7 @@
 		<legend><?php echo __('Add Answer'); ?></legend>
 	<?php
 		echo $this->Form->input('user_id');
-		echo $this->Form->input('questions_id');
+		echo $this->Form->input('question_id');
 		echo $this->Form->input('rank');
 		echo $this->Form->input('answer');
 		echo $this->Form->submit('Submit', array('class' => 'btn btn-success'));

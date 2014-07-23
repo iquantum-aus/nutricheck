@@ -12,8 +12,8 @@ class FactorsQuestionFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'factors_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 20),
-		'questions_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 20),
+		'factor_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 20),
+		'question_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 20),
 		'multiplier' => array('type' => 'boolean', 'null' => true, 'default' => null),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
@@ -29,8 +29,8 @@ class FactorsQuestionFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'factors_id' => 1,
-			'questions_id' => 1,
+			'factor_id' => 1,
+			'question_id' => 1,
 			'multiplier' => 1
 		),
 	);

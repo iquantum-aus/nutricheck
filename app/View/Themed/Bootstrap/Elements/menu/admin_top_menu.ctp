@@ -18,6 +18,23 @@
 				<div class="navicon-line"></div>
 			</div>
 			
+			<?php
+				$user_info = $this->Session->read('Auth');
+				
+				$first_name = $user_info['User']['UserProfile']['first_name'];
+				$last_name = $user_info['User']['UserProfile']['last_name'];
+				$email = $user_info['User']['email'];
+				
+				$strip_name = "";
+				if(empty($first_name) || empty($last_name)) {
+					$strip_name = $email;
+				} else {
+					$strip_name = $first_name." ".$last_name;
+				}
+			?>
+			
+			<div id="headerScript">Welcome <strong><?php echo $strip_name; ?></strong></div>
+			
 			<div class="nav-collapse collapse">
 				<ul class="nav secondary-nav pull-right">
 					<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>

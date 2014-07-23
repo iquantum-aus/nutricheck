@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add Factors Question'); ?></legend>
 	<?php
-		echo $this->Form->input('factors_id');
+		echo $this->Form->input('factor_id');
 		echo $this->Form->input('Question.question', array('type' => 'text'));
 		echo $this->Form->input('multiplier');
 	?>

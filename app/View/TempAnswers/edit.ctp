@@ -5,8 +5,8 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('ip_address');
-		echo $this->Form->input('questions_id');
-		echo $this->Form->input('factors_id');
+		echo $this->Form->input('question_id');
+		echo $this->Form->input('factor_id');
 		echo $this->Form->input('choice_id');
 		echo $this->Form->input('rank');
 		echo $this->Form->input('answer');

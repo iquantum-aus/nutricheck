@@ -3,8 +3,8 @@
 	<table class="full table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('factors_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('questions_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('factor_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('question_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('multiplier'); ?></th>
 			<th><?php echo __('Actions'); ?></th>
 	</tr>

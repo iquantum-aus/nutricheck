@@ -29,6 +29,7 @@
 
 <?php	
 	$final_prescription_values = array();
+	$groupBy_functionalDisturbance = array();
 	foreach($second_percentage_value as $key => $percentage_final_score) {
 		$factor_id = $key;
 		$percentage_final_score = round($percentage_final_score);
@@ -42,13 +43,22 @@
 				if(($percentage_final_score >= 21) && ($percentage_final_score <= 40)) { $dosage = $prescription['Prescription']['21_40']; }
 				if(($percentage_final_score >= 41) && ($percentage_final_score <= 60)) { $dosage = $prescription['Prescription']['41_60']; }
 				if(($percentage_final_score >= 61) && ($percentage_final_score <= 80)) { $dosage = $prescription['Prescription']['61_80']; }
-				if(($percentage_final_score >= 81) && ($percentage_final_score <= 1000)) {$dosage = $prescription['Prescription']['81_100']; }
+				if(($percentage_final_score >= 81)) {$dosage = $prescription['Prescription']['81_100']; }
 			
 				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
 				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
 				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
+				
+				$groupBy_functionalDisturbance[$prescription['Prescription']['functional_disturbance']][$factor_id] = $dosage;
 			}
 		}
+	}
+?>
+
+<?php
+	foreach($groupBy_functionalDisturbance as $key => $itemizedBy_functionalDisturbance) {
+		rsort($itemizedBy_functionalDisturbance);
+		$groupBy_functionalDisturbance[$key] = $itemizedBy_functionalDisturbance;
 	}
 ?>
 
@@ -131,30 +141,28 @@
 	
 	<!-- <canvas id="canvas" height="450" width="800"></canvas> -->
 	
-	<div style="margin-top: 80px;" id="prescription_report left full">
-		<?php foreach($final_prescription_values as $factor => $prescriptions) { ?>			
-			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
-				<tbody>
+	<div style="margin-top: 80px;" id="prescription_report left full">		
+		<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+			<tbody>
+				<tr>
+					<th>Nutrients</th>
+					<th>Dosage</th>
+				</tr>
+				<?php foreach($groupBy_functionalDisturbance as $name => $dosage) { ?>			
 					<tr>
-						<th>Functional Disturbance</th>
-						<th>Nutrients</th>
-						<?php /* <th>Score</th>*/ ?>
-						<th>Prescription</th>
-						<th>Maximum Daily Dose</th>
+						<td><?php echo $name; ?></td>
+						<td><?php 
+							
+							if(empty($dosage[0])) {
+								$dosage[0] = "N/A";
+							}
+							
+							echo $dosage[0]; ?>
+						</td>
 					</tr>
-					
-					<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
-						<tr>
-							<td><?php echo $factor; ?></td>
-							<td><?php echo $functional_disturbance; ?></td>
-							<?php /* <td><?php echo $prescription['score'] ?></td> */ ?>
-							<td><?php echo $prescription['dosage'] ?></td>
-							<td><?php echo $prescription['maximum_dosage']; ?></td>
-						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		<?php } ?>
+				<?php } ?>
+			</tbody>
+		</table>
 	</div>
 </div>
 

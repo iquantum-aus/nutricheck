@@ -51,10 +51,10 @@ class FactorsQuestionsController extends AppController {
 		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			
-			$question_id = $this->request->data['FactorsQuestion']['questions_id'];
-			$factor_id = $this->request->data['FactorsQuestion']['factors_id'];
+			$question_id = $this->request->data['FactorsQuestion']['question_id'];
+			$factor_id = $this->request->data['FactorsQuestion']['factor_id'];
 			
-			$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factors_id' => $factor_id, 'questions_id' => $question_id)));
+			$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factor_id' => $factor_id, 'question_id' => $question_id)));
 			
 			if($existing) {
 				$this->Session->setFlash(__('Invalid Association. This already exists.'));
@@ -87,7 +87,7 @@ class FactorsQuestionsController extends AppController {
 			
 			$this->FactorsQuestion->Question->create();
 			$this->FactorsQuestion->Question->save($this->request->data);
-			$this->request->data['FactorsQuestion']['questions_id'] = $this->FactorsQuestion->Question->id;
+			$this->request->data['FactorsQuestion']['question_id'] = $this->FactorsQuestion->Question->id;
 			
 			if ($this->FactorsQuestion->save($this->request->data)) {
 				$this->Session->setFlash(__('The question has been saved.'));
@@ -115,13 +115,13 @@ class FactorsQuestionsController extends AppController {
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			
-			$question_id = $this->request->data['FactorsQuestion']['questions_id'];
-			$factor_id = $this->request->data['FactorsQuestion']['factors_id'];
+			$question_id = $this->request->data['FactorsQuestion']['question_id'];
+			$factor_id = $this->request->data['FactorsQuestion']['factor_id'];
 			
 			$original_info = $this->FactorsQuestion->findById($id);
 			
-			if(($original_info['FactorsQuestion']['factors_id'] != $factor_id) && $original_info['FactorsQuestion']['questions_id'] != $question_id) {
-				$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factors_id' => $factor_id, 'questions_id' => $question_id)));
+			if(($original_info['FactorsQuestion']['factor_id'] != $factor_id) && $original_info['FactorsQuestion']['question_id'] != $question_id) {
+				$existing = $this->FactorsQuestion->find('count', array('conditions' => array('factor_id' => $factor_id, 'question_id' => $question_id)));
 			} else {
 				$existing = 0;
 			}

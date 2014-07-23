@@ -205,11 +205,11 @@ class QuestionsController extends AppController {
 				if(empty($this->request->data['Factors']['factors'])) {
 					$this->Session->setFlash(__("You didn't select a functional disturbance"));
 				} else {				
-					$factors_ids = implode(",", $this->request->data['Factors']['factors']);
+					$factor_ids = implode(",", $this->request->data['Factors']['factors']);
 					$selected_factors = $this->request->data['Factors']['factors'];
 					$this->set('selected_factors', $selected_factors);
 					
-					$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.questions_id WHERE factors_id IN ($factors_ids)";
+					$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
 					$question_ids = $this->Question->query($sql);
 					$flatten_qid = array();
 					
@@ -218,7 +218,8 @@ class QuestionsController extends AppController {
 					}
 					
 					 $this->Paginator->settings = array(
-						'conditions' => array('Question.id IN' => $flatten_qid)
+						'conditions' => array('Question.id' => $flatten_qid),
+						'limit' => -1
 					);
 				}
 				

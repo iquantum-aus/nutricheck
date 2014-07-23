@@ -5,7 +5,7 @@
 			<div class="left">
 				<form style="min-width: 420px;" method="POST">
 					<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
-					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $this->Session->read('behalfUserId'))); ?>
 					<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
 				</form>
 			</div>
@@ -51,7 +51,7 @@
 								for($i = 0; $i<=3; $i++) {
 									?>
 										<td style="height: 50px; width:8%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][questions_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
 											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
 											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
 											<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
@@ -120,6 +120,8 @@
 		var maximum_page = "<?php echo  $question_data_count ?>";
 		$( "#pageSelection_0" ).attr('checked', true);
 		
+		alert(maximum_page);
+		
 		var question_data_count = <?php echo $question_data_count; ?>;
 		
 		$('.paginatorSelector').click( function () {
@@ -172,6 +174,7 @@
 			});
 			
 			if(checked_rank < question_count) {
+				alert('There are unanswered items in the form. Please address them before you continue');
 				return false;
 			}
 			

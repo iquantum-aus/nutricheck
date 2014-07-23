@@ -10,6 +10,12 @@ Router::connect('/users/activate_password/*', array('plugin' => 'acl_management'
 //login
 Router::connect('/users/login', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'login'));
 Router::connect('/admin/users/login', array('admin'=>true, 'plugin' => 'acl_management', 'controller' => 'users', 'action' => 'login'));
+
+Router::connect('/users/dashboard', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'dashboard'));
+Router::connect('/users/nutricheck_activity/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'nutricheck_activity'));
+Router::connect('/users/remote_register', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'remote_register'));
+Router::connect('/users/check_email_existence', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'check_email_existence'));
+
 //logout
 Router::connect('/users/logout', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'logout'));
 Router::connect('/admin/users/logout', array('admin'=>true, 'plugin' => 'acl_management', 'controller' => 'users', 'action' => 'logout'));

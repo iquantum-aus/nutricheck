@@ -66,7 +66,7 @@
 		<tr>
 			<td><?php echo $answer['id']; ?></td>
 			<td><?php echo $answer['user_id']; ?></td>
-			<td><?php echo $answer['questions_id']; ?></td>
+			<td><?php echo $answer['question_id']; ?></td>
 			<td><?php echo $answer['choice_id']; ?></td>
 			<td><?php echo $answer['rank']; ?></td>
 			<td><?php echo $answer['answer']; ?></td>

@@ -38,7 +38,7 @@
 								for($i = 0; $i<=3; $i++) {
 									?>
 										<td style="height: 50px; width:8%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][questions_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][question_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
 											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][user_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
 											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
 											<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
