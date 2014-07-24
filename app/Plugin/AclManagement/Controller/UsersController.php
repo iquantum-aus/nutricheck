@@ -260,6 +260,7 @@ class UsersController extends AclManagementAppController {
             throw new NotFoundException(__('Invalid user'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
+			
             if ($this->User->save($this->request->data)) {
 			
 				$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
@@ -268,10 +269,12 @@ class UsersController extends AclManagementAppController {
 					$this->User->UserProfile->create();
 				}
 				
-				$this->User->UserProfile->save($this->request->data);
+				if($this->User->UserProfile->save($this->request->data)) {
+					$this->Session->setFlash(__('The user has been updated'), 'alert/success');
+				} else {
+					$this->Session->setFlash(__("Something went wront"), 'alert/error');
+				}
 				
-                $this->Session->setFlash(__('The user has been updated'), 'alert/success');
-                // $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
             }
@@ -537,7 +540,8 @@ class UsersController extends AclManagementAppController {
 		
 		
         if ($this->request->is('post') || $this->request->is('put')) {
-            if(!empty($this->request->data['User']['password']) || !empty($this->request->data['User']['password2'])){
+            
+			if(!empty($this->request->data['User']['password']) || !empty($this->request->data['User']['password2'])){
                 //do nothing
             }else{
                 //do not check password validate
@@ -574,10 +578,12 @@ class UsersController extends AclManagementAppController {
 						$this->User->UserProfile->create();
 					}
 					
-					$this->User->UserProfile->save($this->request->data);
-					
-					$this->Session->setFlash(__('Congrats! Your profile has been updated successfully'), 'alert/success');
-                    $this->redirect(array('action' => 'edit_profile',));
+					if($this->User->UserProfile->save($this->request->data)) {					
+						$this->Session->setFlash(__('Congrats! Your profile has been updated successfully'), 'alert/success');
+						$this->redirect(array('action' => 'edit_profile',));
+					} else {
+						$this->Session->setFlash(__('Something wen\'t wrong'), 'alert/error');
+					}
                 }
             }else{
                 $errors = $this->User->validationErrors;
@@ -586,8 +592,6 @@ class UsersController extends AclManagementAppController {
 
         }else{
             $this->request->data = $this->User->read(null, $this->Auth->user('id'));
-			
-			
             $this->request->data['User']['password'] = '';
         }
     }

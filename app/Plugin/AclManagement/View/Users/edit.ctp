@@ -1,5 +1,5 @@
 <?php
-	$user_info = $this->request->data['User'];
+	$user_info = $this->Session->read('Auth.User');
 ?>
 
 <div class="users form">
@@ -17,6 +17,24 @@
 			*/ ?>
 			
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'placeholder' => 'Lastname')); ?></div>
+			
+			<div class="left span12 inputHolder">
+				<label>Gender</label>
+				<div class="left">
+					<input name="data[UserProfile][gender]" id="UserProfileGender_" value="" type="hidden">
+					
+					<div class="left">
+						<input <?php if($this->request->data['UserProfile']['gender'] == "male") { echo "checked"; } ?> name="data[UserProfile][gender]" id="UserProfileGenderMale" value="male" type="radio">
+						<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderMale">male</label>
+					</div>
+					
+					<div class="left">
+						<input <?php if($this->request->data['UserProfile']['gender'] == "female") { echo "checked"; } ?> name="data[UserProfile][gender]" id="UserProfileGenderFemale" value="female" type="radio">
+						<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderFemale">female</label>
+					</div>
+				</div>
+			</div>
+			
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'placeholder' => 'Contact Number', 'label' => 'Contact Number')); ?></div>
 			
 			<?php if($user_info['group_id'] != 3) { ?>
@@ -31,8 +49,6 @@
 			
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'placeholder' => 'Zip')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
-			
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.gender', array('div' => false, 'empty' => 'Gender', 'options' => array('male' => 'Male', 'female' => 'Female'))); ?></div>
 									
 			<br /><br />
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email', 'readonly' => true)); ?></div>

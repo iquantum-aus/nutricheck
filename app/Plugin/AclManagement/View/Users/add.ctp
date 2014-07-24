@@ -14,6 +14,24 @@
 		*/ ?>
 		
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'placeholder' => 'Lastname')); ?></div>
+		
+		<div class="left span12 inputHolder">
+			<label>Gender</label>
+			<div class="left">
+				<input name="data[UserProfile][gender]" id="UserProfileGender_" value="" type="hidden">
+				
+				<div class="left">
+					<input name="data[UserProfile][gender]" id="UserProfileGenderMale" value="male" type="radio">
+					<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderMale">male</label>
+				</div>
+				
+				<div class="left">
+					<input name="data[UserProfile][gender]" id="UserProfileGenderFemale" value="female" type="radio">
+					<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderFemale">female</label>
+				</div>
+			</div>
+		</div>
+		
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'placeholder' => 'Contact Number', 'label' => 'Contact Number')); ?></div>
 		
 		<?php if($user_info['group_id'] == 1) { ?>
@@ -29,8 +47,6 @@
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'placeholder' => 'Zip')); ?></div>
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
 		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.gender', array('div' => false, 'empty' => 'Gender', 'options' => array('male' => 'Male', 'female' => 'Female'))); ?></div>
-								
 		<br /><br />
 		<div class="left span12 inputHolder">
 			<?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email')); ?>
@@ -81,25 +97,9 @@
 		});
 		
 		$('#UserAddForm').submit( function () {
-			
-			var email = $('#UserEmail').val();
-			if(email != "") {
-				$.ajax({
-					async:true,
-					dataType:'html',
-					success:function (data, textStatus) {
-						if(data > 0) {
-							return false;
-						} else {
-							return true;
-						}
-					},
-					url:"/users/check_email_existence?email="+email
-				});
+			if($('#emailExist').is(':visible')) {
+				return false;
 			}
-			
-			return false;
-			
 		});
 	});
 </script>
