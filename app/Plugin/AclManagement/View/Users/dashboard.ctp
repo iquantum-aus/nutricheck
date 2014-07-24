@@ -21,6 +21,10 @@
 				<div class="textBelow">Training for staff</div>
 			</div>
 			
+			<div style="height: 374px; width: 327px;" class="item green">
+				<a href="#"><div class="textBelow">Nutrition Medicine</div></a>
+			</div>
+			
 			<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) { ?>
 				<div style="height: 455px; width: 706px;" class="item">
 					
