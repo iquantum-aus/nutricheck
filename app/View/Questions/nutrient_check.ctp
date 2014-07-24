@@ -120,8 +120,6 @@
 		var maximum_page = "<?php echo  $question_data_count ?>";
 		$( "#pageSelection_0" ).attr('checked', true);
 		
-		alert(maximum_page);
-		
 		var question_data_count = <?php echo $question_data_count; ?>;
 		
 		$('.paginatorSelector').click( function () {

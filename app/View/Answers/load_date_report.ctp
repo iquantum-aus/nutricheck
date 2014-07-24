@@ -1,3 +1,7 @@
+<style>
+	h1 { font-size: 20px; font-weight: bold; }
+</style>
+
 <?php
 	$total_score = array();
 	$raw_score = array();
@@ -141,7 +145,9 @@
 	
 	<!-- <canvas id="canvas" height="450" width="800"></canvas> -->
 	
-	<div style="margin-top: 80px;" id="prescription_report left full">		
+	<br />
+	<h1>Summarized Prescription</h1>
+	<div class="prescription_report left full">		
 		<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
 			<tbody>
 				<tr>
@@ -164,6 +170,33 @@
 			</tbody>
 		</table>
 	</div>
+	
+	<br />
+	<h1>Detailed Prescription</h1>
+	<div class="prescription_report left full">
+		<?php foreach($final_prescription_values as $factor => $prescriptions) { ?>			
+			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+				<tbody>
+					<tr>
+						<th>Factor</th>
+						<th>Functional Disturbance</th>
+						<th>Prescription</th>
+					</tr>
+					
+					<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+						<tr>
+							<td><?php echo $factor; ?></td>
+							<td><?php echo $functional_disturbance; ?></td>
+							<td><?php echo $prescription['dosage'] ?></td>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		<?php } ?>
+	</div>
+	
+	<input type="button" class="btn btn-success" value="DONE" id="doneAssessment">
+	
 </div>
 
 
@@ -172,6 +205,11 @@
 	$(document).ready( function () {
 		
 		$('.fancybox').fancybox();
+		
+		$(document).on("click", "#doneAssessment", function () {
+			parent.jQuery.fancybox.close();
+			parent.window.location.replace("http://<?php echo $_SERVER['SERVER_NAME']; ?>/admin/users");
+		});
 		
 		/* var barChartData = {
 			labels : [<?php echo $flatten_factors; ?>],
