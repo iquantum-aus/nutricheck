@@ -637,9 +637,11 @@ class UsersController extends AclManagementAppController {
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
-		
+			
 		$user_id = $this->Session->read('Auth.User.id');
 		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$external_flash_message = $this->Session->read('Message.flash.message');
 		
 		$this->User->unBindModel(
 			array(
@@ -750,10 +752,12 @@ class UsersController extends AclManagementAppController {
 			
 			$this->set("videos", $videos);
 			$this->set("factors_list", $factors_list);
-			$this->set("users_list", $users_list);
+			$this->set("users_list", $users_list);			
 			$this->set("factor_per_percentage", $factor_per_percentage);
 			$this->set('genders', $genders);
 		}
+		
+		$this->set('external_flash_message', $external_flash_message);
 	}
 	
 	public function nutricheck_activity($user_id = null) {

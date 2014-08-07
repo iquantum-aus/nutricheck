@@ -143,21 +143,23 @@
 					</video>
 			</div>
 			
-			<?php foreach($videos as $video) { ?>
-				<div style="height: 281px; width: 500px;" class="item">
-					<?php
+			<?php if(!empty($videos)) { ?>
+				<?php foreach($videos as $video) { ?>
+					<div style="height: 281px; width: 500px;" class="item">
+						<?php
 
-						$newWidth = "500";
-						$newHeight = "281";
+							$newWidth = "500";
+							$newHeight = "281";
 
-						$content = preg_replace(
-						array('/width="\d+"/i', '/height="\d+"/i'),
-						array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
-						$video['Video']['video_link']);
-						
-						echo $content;
-					?>
-				</div>
+							$content = preg_replace(
+							array('/width="\d+"/i', '/height="\d+"/i'),
+							array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
+							$video['Video']['video_link']);
+							
+							echo $content;
+						?>
+					</div>
+				<?php } ?>
 			<?php } ?>
 		</div>
 </div>

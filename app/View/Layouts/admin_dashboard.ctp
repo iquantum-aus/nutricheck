@@ -66,6 +66,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->element("menu/admin_top_menu"); ?>
 	</header>
 	<div id="content">
+		
+		<?php if(!empty($external_flash_message)) { ?>
+			<div class="alert alert-success">
+				<button type="button" class="close" data-dismiss="alert">×</button><?php echo $external_flash_message; ?>
+			</div>
+		<?php } ?>
+		
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $this->Session->flash('auth'); ?>
 		<?php echo $this->element('sidebar'); ?>
