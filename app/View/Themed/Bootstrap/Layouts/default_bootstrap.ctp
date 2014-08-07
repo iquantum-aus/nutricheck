@@ -35,6 +35,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
+		echo $this->Html->css('datepicker');
 		// docs.css is only for this exapmple, remove for app dev
 		echo $this->Html->css('docs');
 		echo $this->fetch('meta');
@@ -42,6 +43,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('libs/modernizr.min');
 		echo $this->Html->script('libs/jquery');
 		echo $this->Html->script('libs/bootstrap.min');
+		echo $this->Html->script('bootstrap-datepicker');
 		echo $this->fetch('script');
 	?>
 

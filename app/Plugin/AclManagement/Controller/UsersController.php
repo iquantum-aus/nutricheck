@@ -580,7 +580,7 @@ class UsersController extends AclManagementAppController {
 					
 					if($this->User->UserProfile->save($this->request->data)) {					
 						$this->Session->setFlash(__('Congrats! Your profile has been updated successfully'), 'alert/success');
-						$this->redirect(array('action' => 'edit_profile',));
+						$this->redirect(array('action' => 'dashboard'));
 					} else {
 						$this->Session->setFlash(__('Something wen\'t wrong'), 'alert/error');
 					}
@@ -653,7 +653,11 @@ class UsersController extends AclManagementAppController {
 		$user_info = $this->User->findById($user_id);
 		if($group_id != 1) {
 			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['middle_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
+				
 				$this->Session->setFlash('Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
+				if(!empty($external_flash_message)) {
+					$this->Session->setFlash($external_flash_message.'<br />Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
+				}
 			}
 		}
 		

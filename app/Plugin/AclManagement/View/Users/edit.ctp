@@ -43,7 +43,7 @@
 			
 			<?php if($user_info['group_id'] == 3) { ?>
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'placeholder' => 'Age')); ?></div>
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.birthday', array('type' => 'text', 'div' => false, 'class' => 'hasDatepicker', 'id' => 'datepicker', 'placeholder' => 'Birthday')); ?></div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.birthday', array('data-date-format' => 'yyyy-mm-dd', 'type' => 'text', 'div' => false, 'class' => 'hasDatepicker', 'id' => 'datepicker', 'placeholder' => 'Birthday')); ?></div>
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.nationality', array('type' => 'text', 'div' => false, 'placeholder' => 'Nationality')); ?></div>
 			<?php } ?>
 			
