@@ -223,7 +223,7 @@ INSERT INTO `acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `
 
 CREATE TABLE IF NOT EXISTS `analysis_results` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `factor_id` bigint(20) NOT NULL,
+  `factors_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `score` int(10) NOT NULL,
   `created` datetime NOT NULL,
@@ -243,8 +243,8 @@ CREATE TABLE IF NOT EXISTS `answers` (
   `user_id` bigint(20) NOT NULL,
   `ip_address` varchar(20) NOT NULL,
   `link` text NOT NULL,
-  `question_id` bigint(20) NOT NULL,
-  `factor_id` bigint(20) DEFAULT NULL,
+  `questions_id` bigint(20) NOT NULL,
+  `factors_id` bigint(20) DEFAULT NULL,
   `choice_id` bigint(20) DEFAULT NULL,
   `rank` int(5) DEFAULT NULL,
   `answer` varchar(100) DEFAULT NULL,
@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `answers` (
 -- Dumping data for table `answers`
 --
 
-INSERT INTO `answers` (`id`, `user_id`, `ip_address`, `link`, `question_id`, `factor_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
+INSERT INTO `answers` (`id`, `user_id`, `ip_address`, `link`, `questions_id`, `factors_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
 (1, 15, '127.0.0.1', '', 1, NULL, NULL, 3, NULL, '2014-06-27 10:33:35', '2014-06-27 10:33:35', 1),
 (2, 15, '127.0.0.1', '', 2, NULL, NULL, 2, NULL, '2014-06-27 10:33:35', '2014-06-27 10:33:35', 1),
 (3, 15, '127.0.0.1', '', 3, NULL, NULL, 1, NULL, '2014-06-27 10:33:35', '2014-06-27 10:33:35', 1),
@@ -730,7 +730,7 @@ INSERT INTO `base_nutrients` (`id`, `base_nutrient_formula`, `daily_dosage`, `ma
 CREATE TABLE IF NOT EXISTS `choices` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(160) NOT NULL,
-  `question_id` bigint(20) NOT NULL,
+  `questions_id` bigint(20) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
@@ -811,8 +811,8 @@ INSERT INTO `factors` (`id`, `name`, `description`, `user_id`, `created`, `modif
 
 CREATE TABLE IF NOT EXISTS `factors_questions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `factor_id` int(20) DEFAULT NULL,
-  `question_id` int(20) DEFAULT NULL,
+  `factors_id` int(20) DEFAULT NULL,
+  `questions_id` int(20) DEFAULT NULL,
   `multiplier` int(5) DEFAULT '0',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
@@ -824,7 +824,7 @@ CREATE TABLE IF NOT EXISTS `factors_questions` (
 -- Dumping data for table `factors_questions`
 --
 
-INSERT INTO `factors_questions` (`id`, `factor_id`, `question_id`, `multiplier`, `created`, `modified`, `status`) VALUES
+INSERT INTO `factors_questions` (`id`, `factors_id`, `questions_id`, `multiplier`, `created`, `modified`, `status`) VALUES
 (1, 1, 5, 2, NULL, NULL, 1),
 (2, 1, 6, 2, NULL, NULL, 1),
 (3, 1, 8, 3, NULL, NULL, 1),
@@ -1583,8 +1583,8 @@ CREATE TABLE IF NOT EXISTS `temp_answers` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(20) NOT NULL,
   `link` text NOT NULL,
-  `question_id` bigint(20) NOT NULL,
-  `factor_id` bigint(20) DEFAULT NULL,
+  `questions_id` bigint(20) NOT NULL,
+  `factors_id` bigint(20) DEFAULT NULL,
   `choice_id` bigint(20) DEFAULT NULL,
   `rank` int(5) DEFAULT NULL,
   `answer` varchar(100) DEFAULT NULL,
@@ -1598,7 +1598,7 @@ CREATE TABLE IF NOT EXISTS `temp_answers` (
 -- Dumping data for table `temp_answers`
 --
 
-INSERT INTO `temp_answers` (`id`, `ip_address`, `link`, `question_id`, `factor_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
+INSERT INTO `temp_answers` (`id`, `ip_address`, `link`, `questions_id`, `factors_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
 (111, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 1, NULL, NULL, 1, NULL, '2014-05-08 08:14:10', '2014-05-08 08:14:10', 1),
 (112, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 2, NULL, NULL, 2, NULL, '2014-05-08 08:14:10', '2014-05-08 08:14:10', 1),
 (113, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 3, NULL, NULL, 3, NULL, '2014-05-08 08:14:10', '2014-05-08 08:14:10', 1),
@@ -1916,7 +1916,7 @@ INSERT INTO `temp_answers` (`id`, `ip_address`, `link`, `question_id`, `factor_i
 (425, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 93, NULL, NULL, NULL, NULL, '2014-05-09 02:08:10', '2014-05-09 02:08:10', 1),
 (426, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 94, NULL, NULL, NULL, NULL, '2014-05-09 02:08:10', '2014-05-09 02:08:10', 1),
 (427, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 95, NULL, NULL, NULL, NULL, '2014-05-09 02:08:10', '2014-05-09 02:08:10', 1);
-INSERT INTO `temp_answers` (`id`, `ip_address`, `link`, `question_id`, `factor_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
+INSERT INTO `temp_answers` (`id`, `ip_address`, `link`, `questions_id`, `factors_id`, `choice_id`, `rank`, `answer`, `created`, `modified`, `status`) VALUES
 (428, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 96, NULL, NULL, NULL, NULL, '2014-05-09 02:08:10', '2014-05-09 02:08:10', 1),
 (429, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 97, NULL, NULL, NULL, NULL, '2014-05-09 02:08:10', '2014-05-09 02:08:10', 1),
 (430, '127.0.0.1', 'http://localnutricheck.com/questions/remote_nutrient_check', 98, NULL, NULL, NULL, NULL, '2014-05-09 02:08:10', '2014-05-09 02:08:10', 1),

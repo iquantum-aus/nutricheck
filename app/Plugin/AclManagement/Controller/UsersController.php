@@ -652,7 +652,7 @@ class UsersController extends AclManagementAppController {
 		
 		$user_info = $this->User->findById($user_id);
 		if($group_id != 1) {
-			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['middle_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
+			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
 				
 				$this->Session->setFlash('Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
 				if(!empty($external_flash_message)) {

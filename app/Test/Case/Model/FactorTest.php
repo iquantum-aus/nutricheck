@@ -14,20 +14,7 @@ class FactorTest extends CakeTestCase {
  */
 	public $fixtures = array(
 		'app.factor',
-		'app.user',
-		'app.group',
-		'app.user_profile',
-		'app.answer',
-		'app.question',
-		'app.temp_answer',
-		'app.choice',
-		'app.questions',
-		'app.factors_question',
-		'app.qgroup',
-		'app.questions_qgroup',
-		'app.vitamin',
-		'app.users_vitamin',
-		'app.prescription'
+		'app.users'
 	);
 
 /**

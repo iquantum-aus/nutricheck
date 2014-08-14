@@ -12,8 +12,8 @@ class AnswerFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
-		'question_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'users_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'questions_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'choice_id' => array('type' => 'biginteger', 'null' => true, 'default' => null),
 		'rank' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 5),
 		'answer' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
@@ -34,8 +34,8 @@ class AnswerFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'user_id' => '',
-			'question_id' => '',
+			'users_id' => '',
+			'questions_id' => '',
 			'choice_id' => '',
 			'rank' => 1,
 			'answer' => 'Lorem ipsum dolor sit amet',

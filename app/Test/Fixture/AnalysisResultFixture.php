@@ -12,8 +12,8 @@ class AnalysisResultFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'factor_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
-		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'factors_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'users_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'score' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -32,8 +32,8 @@ class AnalysisResultFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'factor_id' => '',
-			'user_id' => '',
+			'factors_id' => '',
+			'users_id' => '',
 			'score' => 1,
 			'created' => '2013-12-21 13:30:46',
 			'modified' => '2013-12-21 13:30:46',

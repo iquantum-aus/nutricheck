@@ -932,8 +932,9 @@ pre {
 
 #logoHolder {
 	padding-top: 20px;
-	width: 115px;
+	width: 185px;
 	margin: auto;
+	text-align: center;
 }
 
 #sidebar-main-menu {

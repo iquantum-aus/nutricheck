@@ -12,7 +12,7 @@ class HistoryFixture extends CakeTestFixture {
  */
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
+		'users_id' => array('type' => 'biginteger', 'null' => false, 'default' => null),
 		'diagnostics' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -31,7 +31,7 @@ class HistoryFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => '',
-			'user_id' => '',
+			'users_id' => '',
 			'diagnostics' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
 			'created' => '2013-12-21 13:27:43',
 			'modified' => '2013-12-21 13:27:43',
