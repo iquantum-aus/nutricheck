@@ -61,7 +61,7 @@ class UsersController extends AclManagementAppController {
      */
 	public function login() {
 		
-		$this->layout = "public_dashboard";
+		$this->layout = "ajax";
 		
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
@@ -83,7 +83,7 @@ class UsersController extends AclManagementAppController {
 			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
 				echo "0";
 			} else {
-				$this->Session->setFlash(__('Invalid username or password, try again'));
+				$this->Session->setFlash(__('Invalid username or password, try again'), 'alert/error');
 			}
 		}
 	}
