@@ -3,13 +3,9 @@
 ?>
 
 <div class="sb-slidebar sb-left">
-	
-	
 	<div id="logoHolder">
 		<a class="homeLink" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/dashboard">
 			<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
-			<h1 class="siteName">NutriCheck</h1>
-			<h4 class="slogan">Slogan Here</h4>
 		</a>
 	</div>
 	

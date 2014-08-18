@@ -21,9 +21,8 @@
 <html>
 <head>
 	<?php echo $this->Html->charset(); ?>
-	<title>
-		<?php echo $title_for_layout; ?>
-	</title>
+	<title>Identify - Enhance - Supervise</title>
+	
 	<?php
 		echo $this->Html->meta('icon');
 
