@@ -121,7 +121,7 @@
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
 							
-							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background: <?php echo $graphColor; ?>;">
+							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background: url(/img/<?php echo $graphColor; ?>.jpg);">
 								<?php // echo round($second_percentage_value[$list_key]); ?>
 							</div>
 						</div>
@@ -146,13 +146,13 @@
 	<!-- <canvas id="canvas" height="450" width="800"></canvas> -->
 	
 	<br />
-	<h1>Summarized Prescription</h1>
+	<h1>Summarised Nutrient Recommendation</h1>
 	<div class="prescription_report left full">		
 		<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
 			<tbody>
 				<tr>
 					<th>Nutrients</th>
-					<th>Dosage</th>
+					<th>Recommended Daily Dosage</th>
 				</tr>
 				<?php foreach($groupBy_functionalDisturbance as $name => $dosage) { ?>			
 					<tr>
@@ -172,15 +172,15 @@
 	</div>
 	
 	<br />
-	<h1>Detailed Prescription</h1>
+	<h1>Detailed Nutrient Recommendation</h1>
 	<div class="prescription_report left full">
 		<?php foreach($final_prescription_values as $factor => $prescriptions) { ?>			
 			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
 				<tbody>
 					<tr>
 						<th>Factor</th>
-						<th>Functional Disturbance</th>
-						<th>Prescription</th>
+						<th>Nutrient Disturbance</th>
+						<th>Recommended Dosage</th>
 					</tr>
 					
 					<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
