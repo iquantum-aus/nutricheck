@@ -107,8 +107,8 @@
 							
 							$second_percentage_value[$list_key] = round($second_percentage_value[$list_key]);
 							
-							if($second_percentage_value[$list_key] <= 20) { $graphColor = "yellow"; }
-							if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "green"; }
+							if($second_percentage_value[$list_key] <= 20) { $graphColor = "green"; }
+							if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "yellow"; }
 							if($second_percentage_value[$list_key] >= 41 && $second_percentage_value[$list_key] <= 60) { $graphColor = "orange"; }
 							if($second_percentage_value[$list_key] >= 61 && $second_percentage_value[$list_key] <= 80) { $graphColor = "red"; }
 							if($second_percentage_value[$list_key] >= 81) { $graphColor = "red"; }
