@@ -211,7 +211,7 @@ class UsersController extends AclManagementAppController {
 			}
         }
 		
-        $groups = $this->User->Group->find('list');
+        $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
         $this->set(compact('groups'));
     }
 

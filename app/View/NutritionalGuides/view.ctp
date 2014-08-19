@@ -1,33 +1,34 @@
 <div class="nutritionalGuides view">
-<h2><?php echo __('Nutritional Guide'); ?></h2>
-<table class="table">	
-	<tbody>		
-		<tr>
-			<td><?php echo __('Title'); ?></td>
-			<td>
-				<?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>
-				&nbsp;
-			</td>
-		</tr>
+	<h2><?php echo __('Nutritional Guide'); ?> <a target="_blank" href="/nutritional_guides/data/<?php echo $nutritionalGuide['NutritionalGuide']['id']; ?>" class="btn btn-info">PRINT</a></h2>
+	<table class="table">	
+		<tbody>
 		
-		<tr>
-			<td><?php echo __('Description'); ?></td>
-			<td>
-				<?php echo $nutritionalGuide['NutritionalGuide']['description']; ?>
-				&nbsp;
-			</td>
-		</tr>
-		
-		<tr>
-			<td><?php echo __('Type'); ?></td>
-			<td>
-				<?php echo h($nutritionalGuide['NutritionalGuideType']['type']); ?>
-				&nbsp;
-			</td>
-		</tr>
-		
-	</tbody>
-</table>
+			<tr>
+				<td><?php echo __('Title'); ?></td>
+				<td>
+					<?php echo h($nutritionalGuide['NutritionalGuide']['title']); ?>
+					&nbsp;
+				</td>
+			</tr>
+			
+			<tr>
+				<td><?php echo __('Description'); ?></td>
+				<td>
+					<?php echo $nutritionalGuide['NutritionalGuide']['description']; ?>
+					&nbsp;
+				</td>
+			</tr>
+			
+			<tr>
+				<td><?php echo __('Type'); ?></td>
+				<td>
+					<?php echo h($nutritionalGuide['NutritionalGuideType']['type']); ?>
+					&nbsp;
+				</td>
+			</tr>
+			
+		</tbody>
+	</table>
 </div>
 
 <?php /*

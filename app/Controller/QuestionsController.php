@@ -295,7 +295,7 @@ class QuestionsController extends AppController {
 				}
 				
 				if($user_info['group_id'] == 3) {
-					$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to our database, your pharmacist will be in touch to discuss the results with you'));
+					$this->Session->setFlash(__('End Message to appear to client after Completion: You have successfully completed a NutriCheck as '.$user_info['email'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
 				}
 				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));

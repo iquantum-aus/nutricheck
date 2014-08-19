@@ -44,6 +44,15 @@ class NutritionalGuidesController extends AppController {
 		$this->set('nutritionalGuide', $this->NutritionalGuide->find('first', $options));
 	}
 
+	public function data($id = null) {
+		$this->layout = "ajax";
+		if (!$this->NutritionalGuide->exists($id)) {
+			throw new NotFoundException(__('Invalid nutritional guide'));
+		}
+		$options = array('conditions' => array('NutritionalGuide.' . $this->NutritionalGuide->primaryKey => $id));
+		$this->set('nutritionalGuide', $this->NutritionalGuide->find('first', $options));
+	}
+
 /**
  * add method
  *

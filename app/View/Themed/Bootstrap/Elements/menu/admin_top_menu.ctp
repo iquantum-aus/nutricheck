@@ -37,7 +37,11 @@
 			
 			<div class="nav-collapse collapse">
 				<ul class="nav secondary-nav pull-right">
-					<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
+					
+					<?php if($user_info['User']['group_id'] == 2) { ?>
+						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
+					<?php } ?>
+					
 					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About Nutricheck</a></li>
 					<li class="menu"><?php echo $this->Html->link('My Profile', '/users/edit_profile');?></li>
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
