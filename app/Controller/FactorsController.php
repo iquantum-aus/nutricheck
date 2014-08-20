@@ -59,9 +59,11 @@ class FactorsController extends AppController {
 				$this->Session->setFlash(__('The factor could not be saved. Please, try again.'));
 			}
 		}
+		
+		$factorTypes = $this->Factor->FactorType->find('list');
 		$users = $this->Factor->User->find('list');
 		$questions = $this->Factor->Question->find('list');
-		$this->set(compact('users', 'questions'));
+		$this->set(compact('users', 'questions', 'factorTypes'));
 	}
 
 /**
@@ -87,9 +89,11 @@ class FactorsController extends AppController {
 			$options = array('conditions' => array('Factor.' . $this->Factor->primaryKey => $id));
 			$this->request->data = $this->Factor->find('first', $options);
 		}
+		
+		$factorTypes = $this->Factor->FactorType->find('list');
 		$users = $this->Factor->User->find('list');
 		$questions = $this->Factor->Question->find('list');
-		$this->set(compact('users', 'questions'));
+		$this->set(compact('users', 'questions', 'factorTypes'));
 	}
 
 /**

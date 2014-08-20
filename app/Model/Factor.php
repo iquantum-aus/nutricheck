@@ -4,6 +4,8 @@ App::uses('AppModel', 'Model');
  * Factor Model
  *
  * @property User $User
+ * @property FactorType $FactorType
+ * @property Answer $Answer
  * @property NutritionalGuide $NutritionalGuide
  * @property Prescription $Prescription
  * @property Question $Question
@@ -11,12 +13,42 @@ App::uses('AppModel', 'Model');
 class Factor extends AppModel {
 
 /**
- * Display field
+ * Validation rules
  *
- * @var string
+ * @var array
  */
-	public $displayField = 'name';
-
+	public $validate = array(
+		'name' => array(
+			'notEmpty' => array(
+				'rule' => array('notEmpty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'description' => array(
+			'notEmpty' => array(
+				'rule' => array('notEmpty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'status' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -32,6 +64,13 @@ class Factor extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'FactorType' => array(
+			'className' => 'FactorType',
+			'foreignKey' => 'factor_type_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 
@@ -41,6 +80,19 @@ class Factor extends AppModel {
  * @var array
  */
 	public $hasMany = array(
+		'Answer' => array(
+			'className' => 'Answer',
+			'foreignKey' => 'factor_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'NutritionalGuide' => array(
 			'className' => 'NutritionalGuide',
 			'foreignKey' => 'factor_id',

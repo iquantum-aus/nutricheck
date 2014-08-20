@@ -715,7 +715,7 @@ class UsersController extends AclManagementAppController {
 		
 		if($group_id != 3) {
 			// get all factors
-			$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('status' => 1)));
+			$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('Factor.status' => 1)));
 			
 			// pr($factors);
 			

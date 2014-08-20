@@ -3,6 +3,7 @@
 	<table class="full table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
+			<th><?php echo $this->Paginator->sort('factor_type_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
 			<th><?php echo $this->Paginator->sort('description'); ?></th>
 			<th><?php echo __('Actions'); ?></th>
@@ -10,6 +11,7 @@
 	<?php foreach ($factors as $factor): ?>
 	<tr>
 		<td><?php echo h($factor['Factor']['id']); ?>&nbsp;</td>
+		<td><?php echo h($factor['FactorType']['type']); ?>&nbsp;</td>
 		<td><?php echo h($factor['Factor']['name']); ?>&nbsp;</td>
 		<td><?php echo h($factor['Factor']['description']); ?>&nbsp;</td>
 		<td>

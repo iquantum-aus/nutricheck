@@ -4,6 +4,7 @@
 		<legend><?php echo __('Edit Factor'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
+		echo $this->Form->input('factor_type_id');
 		echo $this->Form->input('name');
 		echo $this->Form->input('description');
 		echo $this->Form->submit('Submit', array('class' => 'btn btn-success'));
