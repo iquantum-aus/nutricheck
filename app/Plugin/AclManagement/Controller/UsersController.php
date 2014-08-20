@@ -638,7 +638,7 @@ class UsersController extends AclManagementAppController {
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
-			
+		
 		$user_id = $this->Session->read('Auth.User.id');
 		$group_id = $this->Session->read('Auth.User.group_id');
 		

@@ -1,11 +1,11 @@
 <?php
-App::uses('FactorsController', 'Controller');
+App::uses('PageAccessFlagsController', 'Controller');
 
 /**
- * FactorsController Test Case
+ * PageAccessFlagsController Test Case
  *
  */
-class FactorsControllerTest extends ControllerTestCase {
+class PageAccessFlagsControllerTest extends ControllerTestCase {
 
 /**
  * Fixtures
@@ -13,7 +13,7 @@ class FactorsControllerTest extends ControllerTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'app.factor',
+		'app.page_access_flag',
 		'app.user',
 		'app.group',
 		'app.video',
@@ -21,16 +21,18 @@ class FactorsControllerTest extends ControllerTestCase {
 		'app.answer',
 		'app.question',
 		'app.temp_answer',
+		'app.factor',
+		'app.factor_type',
+		'app.nutritional_guide',
+		'app.nutritional_guide_type',
+		'app.prescription',
+		'app.factors_question',
 		'app.choice',
 		'app.questions',
-		'app.factors_question',
 		'app.qgroup',
 		'app.questions_qgroup',
 		'app.vitamin',
-		'app.users_vitamin',
-		'app.nutritional_guide',
-		'app.nutritional_guide_type',
-		'app.prescription'
+		'app.users_vitamin'
 	);
 
 /**

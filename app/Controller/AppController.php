@@ -51,7 +51,33 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-      
+		
+		$this->loadModel('PageAccessFlag');
+		$params = $this->params;
+		$user_info = $this->Session->read('Auth.User');
+		
+		$today = date('Y-m-d')." 00:00:00.000000";
+		$tomorrow = date("Y-m-d", strtotime($today." + 1 day"))." 00:00:00.000000";
+		
+		
+		if(isset($user_info['id']) && !empty($user_info['id'])) {
+			if($user_info['group_id'] == 3) {
+				$page_access_log = array();
+				$page_access_log['PageAccessFlag']['plugin'] = $params->params['plugin'];
+				$page_access_log['PageAccessFlag']['controller'] = $params->params['controller'];
+				$page_access_log['PageAccessFlag']['action'] = $params->params['action'];
+				$page_access_log['PageAccessFlag']['user_id'] = $user_info['id'];
+				$page_access_log['PageAccessFlag']['group_id'] = $user_info['group_id'];
+				
+				$log_validity_existence = $this->PageAccessFlag->find('first', array('conditions' => array('created >=' => $today, 'created <' => $tomorrow)));
+				
+				$this->PageAccessFlag->create();
+				$this->PageAccessFlag->save($page_access_log);
+			}
+		}
+		 
+		
+		
 		// $this->Auth->allow();//must comment after generate action
  
 		//Configure AuthComponent
