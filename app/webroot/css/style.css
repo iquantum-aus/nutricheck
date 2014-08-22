@@ -16,7 +16,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
- @media print {
+@media print {
 	body {-webkit-print-color-adjust: exact;}
 }
  
