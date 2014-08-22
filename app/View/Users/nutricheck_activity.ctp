@@ -18,7 +18,7 @@
 						?>
 							<tr>
 								<td>
-									<a class="fancybox fancybox.iframe" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/answers/load_date_report/<?php echo strtotime($answer_per_date['Answer']['created']); ?>/<?php echo $user_id; ?>"><?php echo $answer_per_date['Answer']['created']; ?></a>
+									<a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/answers/load_date_report/<?php echo strtotime($answer_per_date['Answer']['created']); ?>/<?php echo $user_id; ?>"><?php echo $answer_per_date['Answer']['created']; ?></a>
 								</td>
 							</tr>
 						<?php

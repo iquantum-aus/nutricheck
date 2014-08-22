@@ -77,7 +77,11 @@
 		$flatten_factors = implode(",", $factors_list);
 	?>
 	
-	<div>
+	<a class="btn btn-success" href="/admin/users">Back to User List</a>
+	<a class="btn btn-warning" target="_blank" href="/answers/report_print/<?php echo $date; ?>/<?php echo $user_id; ?>">Print Report</a>
+	<br /><br />
+	
+	<div>		
 		<table id="horGraphTable" width="100%">
 			
 			<tr>
@@ -97,7 +101,7 @@
 				<tr>
 					<td width="27%">
 						<div class="hidden">
-							<div id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
+							<div style="width: 1080px; padding: 0px 50px 0px 20px; height: 750px;" id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
 						</div>
 						<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
 					</td>
@@ -194,35 +198,15 @@
 			</table>
 		<?php } ?>
 	</div>
-	
-	<input type="button" class="btn btn-success" value="DONE" id="doneAssessment">
-	
 </div>
 
-
+<style>
+	.fancybox-inner { overflow-x: hidden !important;  }
+	.fancybox-outer { padding: 20px 0px; }
+</style>
 
 <script>
 	$(document).ready( function () {
-		
 		$('.fancybox').fancybox();
-		
-		$(document).on("click", "#doneAssessment", function () {
-			parent.jQuery.fancybox.close();
-			parent.window.location.replace("http://<?php echo $_SERVER['SERVER_NAME']; ?>/admin/users");
-		});
-		
-		/* var barChartData = {
-			labels : [<?php echo $flatten_factors; ?>],
-			datasets : [
-				{
-					fillColor : "rgba(220,220,220,0.5)",
-					strokeColor : "rgba(220,220,220,1)",
-					data : [<?php echo $flatten_percentage; ?>]
-				}
-			]
-			
-		}
-
-		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData); */
 	});	
 </script>

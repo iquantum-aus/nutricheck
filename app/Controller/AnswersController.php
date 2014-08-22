@@ -213,7 +213,7 @@ class AnswersController extends AppController {
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
 	public function load_date_report($date, $user_id) {
-		$this->layout = "ajax_plus_scripts";
+		$this->layout = "public_dashboard";
 		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
@@ -277,6 +277,9 @@ class AnswersController extends AppController {
 		$this->set('nutritional_guides', $nutritional_guides);
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
+		
+		$this->set("date", $date);
+		$this->set("user_id", $user_id);
 	}
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
