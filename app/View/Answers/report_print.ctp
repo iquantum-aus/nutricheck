@@ -39,6 +39,7 @@
 		$percentage_final_score = round($percentage_final_score);
 		
 		if(isset($grouped_prescriptions[$factor_id])) {
+			
 			foreach($grouped_prescriptions[$factor_id] as $prescription) {
 				
 				$dosage = "";
@@ -48,15 +49,26 @@
 				if(($percentage_final_score >= 41) && ($percentage_final_score <= 60)) { $dosage = $prescription['Prescription']['41_60']; }
 				if(($percentage_final_score >= 61) && ($percentage_final_score <= 80)) { $dosage = $prescription['Prescription']['61_80']; }
 				if(($percentage_final_score >= 81)) {$dosage = $prescription['Prescription']['81_100']; }
-			
-				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
-				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
-				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
+				
+				
+				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
+				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
+				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
 				
 				$groupBy_functionalDisturbance[$prescription['Prescription']['functional_disturbance']][$factor_id] = $dosage;
 			}
 		}
 	}
+	
+	
+	$final_factor_grouped_by_type = array();
+	foreach($factor_type_grouping as $factor_group_key => $factors_type) {
+		
+		foreach($factors_type as $factor_in_type_key => $factor_in_type_item) {
+			$final_factor_grouped_by_type[$factor_group_key][$factor_in_type_key] = $final_prescription_values[$factor_in_type_key];
+		}
+	}
+	
 ?>
 
 <?php
@@ -77,7 +89,8 @@
 		$flatten_factors = implode(",", $factors_list);
 	?>
 	
-	<div>
+	
+	<div>		
 		<table id="horGraphTable" width="100%">
 			
 			<tr>
@@ -97,7 +110,7 @@
 				<tr>
 					<td width="27%">
 						<div class="hidden">
-							<div id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
+							<div style="width: 1080px; padding: 0px 50px 0px 20px; height: 750px;" id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
 						</div>
 						<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
 					</td>
@@ -174,29 +187,36 @@
 	<br />
 	<h1>Detailed Nutrient Recommendation</h1>
 	<div class="prescription_report left full">
-		<?php foreach($final_prescription_values as $factor => $prescriptions) { ?>			
-			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
-				<tbody>
-					<tr>
-						<th>Factor</th>
-						<th>Nutrient Disturbance</th>
-						<th>Recommended Dosage</th>
-					</tr>
-					
-					<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+		
+		<?php foreach($final_factor_grouped_by_type as $factor_type_id => $final_prescription_values) { ?>
+			
+			<h2><?php echo $factor_types[$factor_type_id]; ?></h2>
+			
+			<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>			
+				<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+					<tbody>
 						<tr>
-							<td><?php echo $factor; ?></td>
-							<td><?php echo $functional_disturbance; ?></td>
-							<td><?php echo $prescription['dosage'] ?></td>
+							<th>Factor</th>
+							<th>Nutrient Disturbance</th>
+							<th>Recommended Dosage</th>
 						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
+						
+						<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+							<tr>
+								<td><?php echo $factors[$factor_id]; ?></td>
+								<td><?php echo $functional_disturbance; ?></td>
+								<td><?php echo $prescription['dosage'] ?></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			<?php } ?>
+			
+			<br /><br /><br />
+			
 		<?php } ?>
-	</div>	
+	</div>
 </div>
-
-
 
 <script>
 	$(document).ready( function () {
