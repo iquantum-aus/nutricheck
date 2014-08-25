@@ -407,7 +407,7 @@ class UsersController extends AclManagementAppController {
 				
 				mail($to, $subject, $message, $headers);
 
-                $this->Session->setFlash(__('Thank you for sign up! Please check your email to complete registration.'), 'alert/success');
+                $this->Session->setFlash(__("An Activation email has been sent to your nominated email address. If you're having trouble locating it please check your Spam or Junk folders as the notification email might have been moved due to your Spam Settings"), 'alert/success');
                 $this->request->data = null;
 				
 				
