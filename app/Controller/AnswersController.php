@@ -289,6 +289,7 @@ class AnswersController extends AppController {
 		
 		$this->set("date", $date);
 		$this->set("user_info", $user_info);
+		$this->set("user_id", $user_id);
 	}
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
@@ -360,9 +361,13 @@ class AnswersController extends AppController {
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type'] = $factor_info['FactorType']['type'];
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_id'] = $grouped_key;
 		}
+<<<<<<< HEAD
 	
 		
 		$user_info = $this->Answer->User->findById($user_id);
+=======
+		
+>>>>>>> origin/master
 		
 		$this->set('factor_type_grouping', $factor_type_grouping);
 		$this->set('factor_types', $factor_types);
@@ -370,8 +375,11 @@ class AnswersController extends AppController {
 		$this->set('nutritional_guides', $nutritional_guides);
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
+<<<<<<< HEAD
 		$this->set("user_id", $user_id);
 		$this->set("user_info", $user_info);
+=======
+>>>>>>> origin/master
 		
 		$this->set("date", $date);
 		$this->set("user_id", $user_id);

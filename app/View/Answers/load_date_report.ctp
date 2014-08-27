@@ -195,12 +195,13 @@
 			
 			<h2><?php echo $factor_types[$factor_type_id]; ?></h2>
 			
-			<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>			
+			<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>
 				
 				<h4><?php echo $factors[$factor_id]; ?></h4>
 				<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
 					<tbody>
 						<tr>
+							<th>Factor</th>
 							<th>Nutrient Disturbance</th>
 							<th>Recommended Dosage</th>
 						</tr>
@@ -209,6 +210,9 @@
 							<tr>
 								<td width="50%"><?php echo $functional_disturbance; ?></td>
 								<td width="50%"><?php echo $prescription['dosage'] ?></td>
+								<td><?php echo $factors[$factor_id]; ?></td>
+								<td><?php echo $functional_disturbance; ?></td>
+								<td><?php echo $prescription['dosage'] ?></td>
 							</tr>
 						<?php } ?>
 					</tbody>

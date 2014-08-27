@@ -175,22 +175,24 @@ class UsersController extends AclManagementAppController {
 				$this->User->create();
 				if ($this->User->save($this->request->data)) {
 					
-					$to = $this->request->data['User']['email'];
-					$subject = "You've been added to the system";
+					if(!isset($this->request->data['create_and_answer'])) {
+						$to = $this->request->data['User']['email'];
+						$subject = "You've been added to the system";
 
-					$headers = "From: nomail@nutricheck.com\r\n";
-					$headers .= "Reply-To: noreply@nutricheck.com\r\n";
-					$headers .= "MIME-Version: 1.0\r\n";
-					$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-					
-					$message = '<html><body>';
-					
-					$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-					$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
-					
-					$message .= "</body></html>";
-					
-					mail($to, $subject, $message, $headers);
+						$headers = "From: nomail@nutricheck.com\r\n";
+						$headers .= "Reply-To: noreply@nutricheck.com\r\n";
+						$headers .= "MIME-Version: 1.0\r\n";
+						$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+						
+						$message = '<html><body>';
+						
+						$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+						$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
+						
+						$message .= "</body></html>";
+						
+						mail($to, $subject, $message, $headers);
+					}
 					
 					$user_id = $this->User->id;
 					$this->request->data['UserProfile']['user_id'] = $user_id;
@@ -376,45 +378,56 @@ class UsersController extends AclManagementAppController {
             $this->User->create();
 			
 			$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
-			
             $this->request->data['User']['group_id']    = 3;//member
-            $this->request->data['User']['status']      = 1;//active user
+			$this->request->data['User']['can_answer']      = 0;//can't answer
+            $this->request->data['User']['status']      = 0;//inactive user
+			
+			$user_profile_info = array();
+			$user_profile_info['UserProfile'] = $this->request->data['UserProfile'];
+			$raw_password = $this->request->data['User']['password2'];
 			
             $token = md5(time());
-            $this->request->data['User']['token']         = $token;//key
+            $this->request->data['User']['hash_value'] = $token;//key
 			
             if ($this->User->save($this->request->data)) {
-               
-/* 			   $ident = $this->User->getLastInsertID();
-                $comfirm_link = Router::url("/acl_management/users/confirm_register/$ident/$token", true);
+		   
+				$to = $this->request->data['User']['email'];
+				$subject = "You've been added to the system";
 
-                $cake_email = new CakeEmail();
-                $cake_email->from(array('no-reply@example.com' => 'Please Do Not Reply'));
-                $cake_email->to($this->request->data['User']['email']);
-                $cake_email->subject(''.__('Register Confirm Email'));
-                $cake_email->viewVars(array('comfirm_link'=>$comfirm_link));
-                $cake_email->emailFormat('html');
-                $cake_email->template('AclManagement.register_confirm_email');
-                $cake_email->send();
+				$headers = "From: nomail@nutricheck.com\r\n";
+				$headers .= "Reply-To: noreply@nutricheck.com\r\n";
+				$headers .= "MIME-Version: 1.0\r\n";
+				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+				
+				$message = '<html><body>';
+				
+				$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+				$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
+				
+				$message .= "</body></html>";
+				
+				mail($to, $subject, $message, $headers);
 
-
-                $this->Session->setFlash(__('Thank you for sign up! Please check your email to complete registration.'), 'alert/success');
+                $this->Session->setFlash(__("An Activation email has been sent to your nominated email address. If you're having trouble locating it please check your Spam or Junk folders as the notification email might have been moved due to your Spam Settings"), 'alert/success');
                 $this->request->data = null;
-                $this->redirect(array('action' => 'login')); */
+				
 				
 				$user_id = $this->User->id;
-				$this->request->data['UserProfile']['user_id'] = $user_id;
+				$user_profile_info['UserProfile']['user_id'] = $user_id;
+				
 				
 				$this->User->UserProfile->create();
-				if($this->User->UserProfile->save($this->request->data)) {
-					$user = $this->User->findById($user_id);
+				if($this->User->UserProfile->save($user_profile_info)) {
+					$this->redirect(array('action' => 'login'));
 					
+					/* $user = $this->User->findById($user_id);
 					$user = $user['User'];
 					if($this->Auth->login($user)) {
 						$this->redirect('/users/nutricheck_activity');
 					} else {
 						$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
-					}
+					} */
+					
 				}
 				
 				
@@ -423,6 +436,7 @@ class UsersController extends AclManagementAppController {
                 $this->redirect(array('action' => 'login'));
             }
         }
+		
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
     }
@@ -515,21 +529,13 @@ class UsersController extends AclManagementAppController {
 		if(!empty($hash)) {
 			$user_info = $this->User->findByHashValue($hash);		
 			
-			if($user_info['User']['status'] == 0) {
-			
+			if($user_info['User']['status'] == 0) {	
 				$user_info['User']['status'] = 1;
 				$this->User->save($user_info);
 				
-				$this->request->data['UserProfile']['user_id'] = $user_id;
-				
-				if(empty($this->request->data['UserProfile']['id'])) {
-					$this->User->UserProfile->create();
-				}
-				
-				$this->User->UserProfile->save($this->request->data);
-				
 				$user = $user_info['User'];
 				if(!$this->Auth->login($user)) {
+					$user_id = $user['id'];
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
 				}
 			} else {
@@ -549,8 +555,7 @@ class UsersController extends AclManagementAppController {
                 //do not check password validate
                 unset($this->request->data['User']['password']);
             }
-
-            $this->User->set($this->request->data);
+			
             if ($this->User->validates()) {
                 //check email change
                 if($this->request->data['User']['email'] != $this->Session->read('Auth.User.email')){
@@ -596,8 +601,18 @@ class UsersController extends AclManagementAppController {
             $this->request->data = $this->User->read(null, $this->Auth->user('id'));
             $this->request->data['User']['password'] = '';
         }
+		
+		if(!empty($user_id) && isset($user_id)) {
+			$userprofile_info = $this->User->UserProfile->findByUserId($user_id);
+			$this->request->data['UserProfile'] = $userprofile_info['UserProfile'];
+			$this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
+		}
+		
+		$this->User->set($this->request->data);
     }
-         /**
+	
+	
+	/**
     * confirm register
     * @return void
     */
