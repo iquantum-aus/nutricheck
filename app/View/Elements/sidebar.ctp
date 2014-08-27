@@ -56,6 +56,7 @@
 						<a class="sb-toggle-submenu"><div class="sideIco" id="settingsIco"></div>Settings<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 						<ul class="sb-submenu">
 							<li><a href="/factors">Factors</a></li>
+							<li><a href="/factor_types">Factor Types</a></li>
 							<li><a href="/prescriptions">Prescriptions</a></li>
 						</ul>
 					</li>

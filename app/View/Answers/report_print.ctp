@@ -1,3 +1,7 @@
+<style>
+	h1 { font-size: 20px; font-weight: bold; }
+</style>
+
 <?php
 	$total_score = array();
 	$raw_score = array();
@@ -16,9 +20,12 @@
 			$question_count[$factor_key] = count($reports_per_factor[$factor_key]);
 			
 			$percentage[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
-			// $second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * 3);
-			$second_percentage_value[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
+			$second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * 3);
+			// $second_percentage_value[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
 		}
+		
+		// echo $raw_score[$factor_key]." - ".$question_count[$factor_key];
+		// echo "<br />";
 		
 	}
 ?>
@@ -26,11 +33,13 @@
 
 <?php	
 	$final_prescription_values = array();
+	$groupBy_functionalDisturbance = array();
 	foreach($second_percentage_value as $key => $percentage_final_score) {
 		$factor_id = $key;
 		$percentage_final_score = round($percentage_final_score);
 		
 		if(isset($grouped_prescriptions[$factor_id])) {
+			
 			foreach($grouped_prescriptions[$factor_id] as $prescription) {
 				
 				$dosage = "";
@@ -39,17 +48,39 @@
 				if(($percentage_final_score >= 21) && ($percentage_final_score <= 40)) { $dosage = $prescription['Prescription']['21_40']; }
 				if(($percentage_final_score >= 41) && ($percentage_final_score <= 60)) { $dosage = $prescription['Prescription']['41_60']; }
 				if(($percentage_final_score >= 61) && ($percentage_final_score <= 80)) { $dosage = $prescription['Prescription']['61_80']; }
-				if(($percentage_final_score >= 81) && ($percentage_final_score <= 1000)) {$dosage = $prescription['Prescription']['81_100']; }
-			
-				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
-				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
-				$final_prescription_values[$factors[$factor_id]][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
+				if(($percentage_final_score >= 81)) {$dosage = $prescription['Prescription']['81_100']; }
+				
+				
+				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
+				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
+				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
+				
+				$groupBy_functionalDisturbance[$prescription['Prescription']['functional_disturbance']][$factor_id] = $dosage;
 			}
 		}
+	}
+	
+	
+	$final_factor_grouped_by_type = array();
+	foreach($factor_type_grouping as $factor_group_key => $factors_type) {
+		
+		foreach($factors_type as $factor_in_type_key => $factor_in_type_item) {
+			$final_factor_grouped_by_type[$factor_group_key][$factor_in_type_key] = $final_prescription_values[$factor_in_type_key];
+		}
+	}
+	
+?>
+
+<?php
+	foreach($groupBy_functionalDisturbance as $key => $itemizedBy_functionalDisturbance) {
+		rsort($itemizedBy_functionalDisturbance);
+		$groupBy_functionalDisturbance[$key] = $itemizedBy_functionalDisturbance;
 	}
 ?>
 
 <div class="index">
+	
+	<h1>Performed By: <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?><br />Date: <?php echo date("M. d, Y", $date); ?><br /></h1>
 	
 	<?php 
 		foreach($factors as $key => $factor) {
@@ -60,20 +91,30 @@
 		$flatten_factors = implode(",", $factors_list);
 	?>
 	
-	<div>
-		<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+	
+	<div>		
+		<table id="horGraphTable" width="100%">
 			
 			<tr>
 				<td>
 					<strong>Functional Disturbances</strong>
 				</td>
-				<td></td>
+				<td>
+					<div class="left levelerHolder">20%</div>
+					<div class="left levelerHolder">40%</div>
+					<div class="left levelerHolder">60%</div>
+					<div class="left levelerHolder">80%</div>
+					<div class="left levelerHolder">100%</div>
+				</td>
 			</tr>
 			
 			<?php foreach($factors as $list_key => $factor) { ?>
 				<tr>
 					<td width="27%">
-						<?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?>
+						<div class="hidden">
+							<div style="width: 1080px; padding: 0px 50px 0px 20px; height: 750px;" id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
+						</div>
+						<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
 					</td>
 					<td>
 						<?php
@@ -81,48 +122,106 @@
 							
 							$second_percentage_value[$list_key] = round($second_percentage_value[$list_key]);
 							
-							if($second_percentage_value[$list_key] <= 20) { $graphColor = "#0000ff"; }
-							if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "#00ff00"; }
-							if($second_percentage_value[$list_key] >= 41 && $second_percentage_value[$list_key] <= 60) { $graphColor = "#00ffff"; }
-							if($second_percentage_value[$list_key] >= 61 && $second_percentage_value[$list_key] <= 80) { $graphColor = "#ff00ff"; }
-							if($second_percentage_value[$list_key] >= 81 && $second_percentage_value[$list_key] <= 100) { $graphColor = "#ff0000"; }
+							if($second_percentage_value[$list_key] <= 20) { $graphColor = "green"; }
+							if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "yellow"; }
+							if($second_percentage_value[$list_key] >= 41 && $second_percentage_value[$list_key] <= 60) { $graphColor = "orange"; }
+							if($second_percentage_value[$list_key] >= 61 && $second_percentage_value[$list_key] <= 80) { $graphColor = "red"; }
+							if($second_percentage_value[$list_key] >= 81) { $graphColor = "red"; }
 						?>
 						
-						<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background: <?php echo $graphColor; ?>;">
-							<?php echo $second_percentage_value[$list_key]; ?>%
+						<div class="graphContentHolder">
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							<div class="left levelerHolder"></div>
+							
+							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background-color: <?php echo $graphColor; ?>;">
+								<?php // echo round($second_percentage_value[$list_key]); ?>
+							</div>
 						</div>
 					</td>
 				</tr>
 			<?php } ?>
+			
+			<tr>
+				<td></td>
+				<td>
+					<div class="left levelerHolder">20%</div>
+					<div class="left levelerHolder">40%</div>
+					<div class="left levelerHolder">60%</div>
+					<div class="left levelerHolder">80%</div>
+					<div class="left levelerHolder">100%</div>
+				</td>
+			</tr>
 			
 		</table>
 	</div>
 	
 	<!-- <canvas id="canvas" height="450" width="800"></canvas> -->
 	
-	<div style="margin-top: 80px;" id="prescription_report left full">
-		<?php foreach($final_prescription_values as $factor => $prescriptions) { ?>			
-			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
-				<tbody>
+	<br />
+	<h1>Summarised Nutrient Recommendation</h1>
+	<div class="prescription_report left full">		
+		<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+			<tbody>
+				<tr>
+					<th>Nutrients</th>
+					<th>Recommended Daily Dosage</th>
+				</tr>
+				<?php foreach($groupBy_functionalDisturbance as $name => $dosage) { ?>			
 					<tr>
-						<th>Functional Disturbance</th>
-						<th>Nutrients</th>
-						<th>Score</th>
-						<th>Prescription</th>
-						<th>Maximum Daily Dose</th>
+						<td><?php echo $name; ?></td>
+						<td><?php 
+							
+							if(empty($dosage[0])) {
+								$dosage[0] = "N/A";
+							}
+							
+							echo $dosage[0]; ?>
+						</td>
 					</tr>
-					
-					<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	
+	<br />
+	<h1>Detailed Nutrient Recommendation</h1>
+	<div class="prescription_report left full">
+		
+		<?php foreach($final_factor_grouped_by_type as $factor_type_id => $final_prescription_values) { ?>
+			
+			<h2><?php echo $factor_types[$factor_type_id]; ?></h2>
+			
+			<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>			
+				
+				<h4><?php echo $factors[$factor_id]; ?></h4>
+				<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+					<tbody>
 						<tr>
-							<td><?php echo $factor; ?></td>
-							<td><?php echo $functional_disturbance; ?></td>
-							<td><?php echo $prescription['score'] ?></td>
-							<td><?php echo $prescription['dosage'] ?></td>
-							<td><?php echo $prescription['maximum_dosage']; ?></td>
+							<th>Nutrient Disturbance</th>
+							<th>Recommended Dosage</th>
 						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
+						
+						<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+							<tr>
+								<td width="50%"><?php echo $functional_disturbance; ?></td>
+								<td width="50%"><?php echo $prescription['dosage'] ?></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			<?php } ?>
+			
+			<br /><br /><br />
+			
 		<?php } ?>
 	</div>
 </div>
+
+<script>
+	$(document).ready( function () {
+		window.print();
+	});	
+</script>

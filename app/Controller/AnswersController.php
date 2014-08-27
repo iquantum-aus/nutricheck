@@ -213,7 +213,7 @@ class AnswersController extends AppController {
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
 	public function load_date_report($date, $user_id) {
-		$this->layout = "ajax_plus_scripts";
+		$this->layout = "public_dashboard";
 		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
@@ -253,6 +253,7 @@ class AnswersController extends AppController {
 		ksort($reports_per_factor);
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 1)));
+		$factor_types = $this->Answer->Question->Factor->FactorType->find('list', array('conditions' => array('FactorType.status' => 1)));
 		$nutritional_guides = $this->Answer->Question->Factor->NutritionalGuide->find('list', array('fields' => array('factor_id', 'description'), 'conditions' => array('NutritionalGuide.factor_id <>' => 0, 'NutritionalGuide.status' => 1)));
 		
 		$this->Answer->Question->Factor->Prescription->unbindModelAll();
@@ -271,12 +272,23 @@ class AnswersController extends AppController {
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		
-		// pr($grouped_prescriptions);
+		$factor_type_grouping = array();
+		foreach($grouped_prescriptions as $grouped_key => $grouped_prescription_breakdown) {
+			$factor_info = $this->Answer->Question->Factor->findById($grouped_key);
+			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type_id'] = $factor_info['FactorType']['id'];
+			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type'] = $factor_info['FactorType']['type'];
+			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_id'] = $grouped_key;
+		}
 		
+		$this->set('factor_type_grouping', $factor_type_grouping);
+		$this->set('factor_types', $factor_types);
 		$this->set('factors', $factors);
 		$this->set('nutritional_guides', $nutritional_guides);
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
+		
+		$this->set("date", $date);
+		$this->set("user_info", $user_info);
 	}
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
@@ -322,6 +334,8 @@ class AnswersController extends AppController {
 		ksort($reports_per_factor);
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 1)));
+		$factor_types = $this->Answer->Question->Factor->FactorType->find('list', array('conditions' => array('FactorType.status' => 1)));
+		$nutritional_guides = $this->Answer->Question->Factor->NutritionalGuide->find('list', array('fields' => array('factor_id', 'description'), 'conditions' => array('NutritionalGuide.factor_id <>' => 0, 'NutritionalGuide.status' => 1)));
 		
 		$this->Answer->Question->Factor->Prescription->unbindModelAll();
 		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
@@ -339,10 +353,27 @@ class AnswersController extends AppController {
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		
-		// pr($grouped_prescriptions);
+		$factor_type_grouping = array();
+		foreach($grouped_prescriptions as $grouped_key => $grouped_prescription_breakdown) {
+			$factor_info = $this->Answer->Question->Factor->findById($grouped_key);
+			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type_id'] = $factor_info['FactorType']['id'];
+			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type'] = $factor_info['FactorType']['type'];
+			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_id'] = $grouped_key;
+		}
+	
 		
+		$user_info = $this->Answer->User->findById($user_id);
+		
+		$this->set('factor_type_grouping', $factor_type_grouping);
+		$this->set('factor_types', $factor_types);
 		$this->set('factors', $factors);
+		$this->set('nutritional_guides', $nutritional_guides);
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
+		$this->set("user_id", $user_id);
+		$this->set("user_info", $user_info);
+		
+		$this->set("date", $date);
+		$this->set("user_id", $user_id);
 	}
 }

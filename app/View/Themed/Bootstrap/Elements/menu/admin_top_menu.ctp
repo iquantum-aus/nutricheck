@@ -39,6 +39,7 @@
 				<ul class="nav secondary-nav pull-right">
 					
 					<?php if($user_info['User']['group_id'] == 2) { ?>
+						<li><a target="_blank" href="/questions/print_question_list">Print Question List</a></li>
 						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
 					<?php } ?>
 					

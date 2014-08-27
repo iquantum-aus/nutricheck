@@ -69,7 +69,7 @@ class AppController extends Controller {
 				$page_access_log['PageAccessFlag']['user_id'] = $user_info['id'];
 				$page_access_log['PageAccessFlag']['group_id'] = $user_info['group_id'];
 				
-				$log_validity_existence = $this->PageAccessFlag->find('first', array('conditions' => array('created >=' => $today, 'created <' => $tomorrow)));
+				// $log_validity_existence = $this->PageAccessFlag->find('first', array('conditions' => array('PageAccessFlag.created >=' => $today, 'PageAccessFlag.created <' => $tomorrow)));
 				
 				$this->PageAccessFlag->create();
 				$this->PageAccessFlag->save($page_access_log);

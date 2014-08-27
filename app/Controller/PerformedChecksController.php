@@ -100,4 +100,25 @@ class PerformedChecksController extends AppController {
 			$this->Session->setFlash(__('The performed check could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+		
+	public function performed_checks() {
+		$this->loadModel('User');	
+		$user_to_send_email = $this->PerformedCheck->find('list', array('fields' => array('id', 'user_id'), 'conditions' => array('isComplete' => 0)));
+		
+		$emails_to_send_alert = array();
+		foreach($user_to_send_email as $user_id) {
+			$this->User->unbindModelAll();
+			$user_info = $this->User->findById($user_id);
+			
+			if(empty($user_info['User']['email'])) {
+				$this->User->unbindModelAll();
+				$user_info = $this->User->findById($user_info['User']['parent_id']);
+			}
+		}
+		
+		pr($user_info);
+		
+		exit();
+	}
+}

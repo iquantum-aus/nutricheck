@@ -51,7 +51,7 @@
 		<li><?php echo $this->Html->link(__('List Questions'), array('controller' => 'questions', 'action' => 'index'), array('class' => 'btn btn-primary')); ?></li>
 		<li><?php echo $this->Html->link(__('List Factors'), array('controller' => 'factors', 'action' => 'index'), array('class' => 'btn btn-primary')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Factors'), array('controller' => 'factors', 'action' => 'add'), array('class' => 'btn btn-primary')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nutrient Check'), array('action' => 'nutrient_check'), array('class' => 'btn btn-primary')); ?> </li>
+		<li><?php echo $this->Html->link(__('NutriCheck'), array('action' => 'nutrient_check'), array('class' => 'btn btn-primary')); ?> </li>
 	</ul>
 </div>
 */ ?>

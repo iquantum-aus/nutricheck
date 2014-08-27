@@ -15,6 +15,7 @@ Router::connect('/users/dashboard', array('plugin' => 'acl_management', 'control
 Router::connect('/users/nutricheck_activity/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'nutricheck_activity'));
 Router::connect('/users/remote_register', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'remote_register'));
 Router::connect('/users/check_email_existence', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'check_email_existence'));
+Router::connect('/users/return_existence', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'return_existence'));
 
 //logout
 Router::connect('/users/logout', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'logout'));

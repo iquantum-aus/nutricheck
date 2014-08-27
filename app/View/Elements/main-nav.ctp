@@ -9,7 +9,7 @@
 		<a href="/answers">Answers</a>
 	</li>
 	<li>
-		<a href="/nutrient_check">Nutrient Check</a>
+		<a href="/nutrient_check">NutriCheck</a>
 	</li>
 </ul>
 

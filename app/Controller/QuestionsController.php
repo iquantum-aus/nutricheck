@@ -16,7 +16,7 @@ class QuestionsController extends AppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
 		} else {
-			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check');
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list');
 		}
 	}
 	
@@ -171,6 +171,7 @@ class QuestionsController extends AppController {
 	
 	public function nutrient_check( $method = null ) {
 		
+		$this->loadModel('PerformedCheck');
 		$user_info = $this->Session->read('Auth.User');
 		$behalfUserId = $this->Session->read('behalfUserId');
 		
@@ -191,17 +192,29 @@ class QuestionsController extends AppController {
 		
 		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => $condition));
 		
+		$performed_check_data = array();
+		$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
+		$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
+		$performed_check_data['PerformedCheck']['user_id'] = $behalfUserId;
+		
+		if(!empty($behalfUserId)) {
+			$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+			
+			if(count($log_existence) == 0) {
+				$this->PerformedCheck->create();
+				$this->PerformedCheck->save($performed_check_data);
+			}
+		}
+		
 		$this->Paginator->settings = array(
 			'limit' => 200
 		);
 
 		if($this->request->is('post')) {
 			
-			// pr($this->request->data);
-			// exit();
-			
 			if(isset($this->request->data['Factors']['submit'])) {
 				
+				$behalfUserId = $this->Session->read('behalfUserId');
 				if(empty($this->request->data['Factors']['factors'])) {
 					$this->Session->setFlash(__("You didn't select a functional disturbance"));
 				} else {				
@@ -235,7 +248,6 @@ class QuestionsController extends AppController {
 					$this->Session->write('behalfUserId', $this->request->data['User']['id']);
 				}
 				
-				$behalfUserId = $this->Session->read('behalfUserId');
 				unset($this->request->data['User']['id']);
 				
 				foreach($answers as $answer) {					
@@ -286,16 +298,20 @@ class QuestionsController extends AppController {
 						
 						$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
 						$params = $latest_answer_date."/".$behalfUserId;
-						return $this->redirect('../answers/load_date_report/'.$params);
 					}
 				}
 				
-				if($user_info['group_id'] == 2) {
-					$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
+				if($user_info['group_id'] == 3) {
+					$this->Session->setFlash(__('You have successfully completed a NutriCheck as '.$user_info['email'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
 				}
 				
-				if($user_info['group_id'] == 3) {
-					$this->Session->setFlash(__('End Message to appear to client after Completion: You have successfully completed a NutriCheck as '.$user_info['email'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
+				if(!empty($behalfUserId)) {
+					$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+					
+					foreach($logs_existence as $log_existence) {
+						$log_existence['PerformedCheck']['isComplete'] = 1;
+						$this->PerformedCheck->save($log_existence);
+					}
 				}
 				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -515,5 +531,31 @@ class QuestionsController extends AppController {
 		$user_data['User']['id'] = $user_info['id'];
 		$this->Question->User->save($user_data);
 	}
+	
+	
+	public function print_question_list() {
+		$this->layout = "ajax_plus_scripts";
+
+		if(!empty($this->request->data['Factors']['factors'])) {
+			$factor_ids = implode(",", $this->request->data['Factors']['factors']);
+			$selected_factors = $this->request->data['Factors']['factors'];
+			$this->set('selected_factors', $selected_factors);
+			
+			$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
+			$question_ids = $this->Question->query($sql);
+			$flatten_qid = array();
+			
+			foreach($question_ids as $key => $question_id) {
+				$flatten_qid[$key] = $question_id['Question']['id'];
+			}
+			
+			$questions = $this->Question->find('list', array('fields' => array('id', 'question'), 'conditions' => array('Question.id' => $flatten_qid)));
+		} else {
+			$questions = $this->Question->find('list', array('fields' => array('id', 'question')));
+		}
+		
+		$this->set(compact('questions'));
+	}
+
 
 }
