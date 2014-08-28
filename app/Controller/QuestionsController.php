@@ -192,19 +192,39 @@ class QuestionsController extends AppController {
 		
 		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => $condition));
 		
-		$performed_check_data = array();
-		$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
-		$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
-		$performed_check_data['PerformedCheck']['user_id'] = $behalfUserId;
-		
-		if(!empty($behalfUserId)) {
-			$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
+			$performed_check_data = array();
+			$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
+			$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
 			
-			if(count($log_existence) == 0) {
-				$this->PerformedCheck->create();
-				$this->PerformedCheck->save($performed_check_data);
+			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
+				$performed_check_data['PerformedCheck']['user_id'] = $behalfUserId;
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+			} else {
+				$performed_check_data['PerformedCheck']['user_id'] = $user_info['id'];
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
 			}
-		}
+			
+			
+			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
+				// will only log instance of user id if the client is performing in behalf of a patient
+				if(count($log_existence) == 0) {
+					$this->PerformedCheck->create();
+					$this->PerformedCheck->save($performed_check_data);
+				}
+			} else {
+				// will only log instance of access of user_id if group is not equivalent to client
+				if(($user_info['group_id'] != 2)) {
+					if(!empty($user_info['id'])) {
+						if(count($log_existence) == 0) {
+							$this->PerformedCheck->create();
+							$this->PerformedCheck->save($performed_check_data);
+						}
+					}
+				}
+			}
+		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
+		
 		
 		$this->Paginator->settings = array(
 			'limit' => 200
@@ -239,6 +259,22 @@ class QuestionsController extends AppController {
 			} else if(isset($this->request->data['User']['submit'])) {				
 				
 				$this->Session->write('behalfUserId', $this->request->data['User']['id']);
+				
+				/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
+					$performed_check_data = array();
+					$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
+					$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
+					
+					$performed_check_data['PerformedCheck']['user_id'] = $this->request->data['User']['id'];
+					$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $this->request->data['User']['id'])));
+				
+					if(count($log_existence) == 0) {
+						$this->PerformedCheck->create();
+						$this->PerformedCheck->save($performed_check_data);
+					}
+					
+				/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
+				
 				
 			} else {
 				
@@ -304,13 +340,22 @@ class QuestionsController extends AppController {
 				if($user_info['group_id'] == 3) {
 					$this->Session->setFlash(__('You have successfully completed a NutriCheck as '.$user_info['email'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
 				}
-				
-				if(!empty($behalfUserId)) {
+			
+				if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 					$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
 					
 					foreach($logs_existence as $log_existence) {
 						$log_existence['PerformedCheck']['isComplete'] = 1;
 						$this->PerformedCheck->save($log_existence);
+					}
+				} else {
+					if(!empty($user_info['id'])) {
+						$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
+						
+						foreach($logs_existence as $log_existence) {
+							$log_existence['PerformedCheck']['isComplete'] = 1;
+							$this->PerformedCheck->save($log_existence);
+						}
 					}
 				}
 				

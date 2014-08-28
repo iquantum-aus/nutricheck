@@ -94,6 +94,7 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
     function logout() {
+		$this->Session->destroy();
         $this->Session->setFlash('Good-Bye', 'alert/success');
         $this->redirect($this->Auth->logout());
     }

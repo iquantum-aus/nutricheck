@@ -136,45 +136,45 @@ class PerformedChecksController extends AppController {
 			
 			$email = $user_info['User']['email'];
 			
-			$result = $this->send($name, $email);
-			
-			if(!$result) {
-				echo "<pre>";
-					print_r($result);
-				echo "</pre>";
-			}
+			$result = $this->send($email, $name);
+			pr($result);
 		}
+		
+		exit();
 	}
 	
 	
 	function send($email, $name) { 
-		vendor('phpmailer'.DS.'class.phpmailer'); 
+		// endor('phpmailer'.DS.'class.phpmailer'); 
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		$mail = new PHPMailer(); 
 
-		$mail->IsSMTP();            // set mailer to use SMTP 
-		$mail->SMTPAuth = true;     // turn on SMTP authentication 
-		$mail->Host   = "email-smtp.us-east-1.amazonaws.com"; 
+		$mail->IsSMTP(); // we are going to use SMTP
+		$mail->IsHTML(true);
+		$mail->Host = 'email-smtp.us-east-1.amazonaws.com';  // Specify main and backup server
+		$mail->SMTPAuth = true;                               // Enable SMTP authentication
 		$mail->Username = "AKIAIFE5UJ3F2OYW64CQ"; 
 		$mail->Password = "AiMbFeTu00PxAlzDl2Cn60zDlPoYdVfZBvwChnbB3C50"; 
+		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-		$mail->From = "info@nutricheck.com"; 
-		$mail->FromName = "NutriCheck"; 
-		$mail->AddAddress($email, $email); 
+		$mail->From = "noman@iquantum.com.au"; 
+		$mail->FromName = "noman@iquantum.com.au"; 
+		$mail->AddAddress($email, $email);
 		
-		$mail->AddReplyTo("info@nutricheck.com", "NutriCheck"); 
+		$mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 
 		$mail->CharSet  = 'UTF-8'; 
-		$mail->WordWrap = 50;  // set word wrap to 50 characters 
+		$mail->WordWrap = 50;  // set word wrap to 50 characters
 
 		$mail->IsHTML(true);  // set email format to HTML 
 
 		$mail->Subject = "Incomplete Questionnaire";
 		$mail->Body    = "You have an incomplete Nutrient Check please go back to the system to complete the check."; 
 
-		$result = $mail->Send(); 
-
-		if($result == false ) $result = $mail->ErrorInfo; 
-
-		return $result; 
+		if($mail->Send()) {
+			return true;
+		} else {
+			return $mail->ErrorInfo; 
+		}
     }
 }
