@@ -14,6 +14,11 @@ class PerformedChecksController extends AppController {
  * @var array
  */
 	public $components = array('Paginator');
+	
+	function beforeFilter() {
+        parent::beforeFilter();
+		$this->Auth->allow('performed_checks');
+    }
 
 /**
  * index method
@@ -103,22 +108,73 @@ class PerformedChecksController extends AppController {
 	}
 		
 	public function performed_checks() {
+		App::uses('CakeEmail', 'Network/Email');
+		
 		$this->loadModel('User');	
 		$user_to_send_email = $this->PerformedCheck->find('list', array('fields' => array('id', 'user_id'), 'conditions' => array('isComplete' => 0)));
 		
 		$emails_to_send_alert = array();
 		foreach($user_to_send_email as $user_id) {
-			$this->User->unbindModelAll();
-			$user_info = $this->User->findById($user_id);
+			// $this->User->unbindModelAll();
+			
+			$this->User->unbindModel(
+				array(
+					'hasMany' => array('Answer'),
+					'belongsTo' => array('Group'),
+					'belongsTo' => array('Group'),
+					'hasAndBelongsToMany' => array('Vitamin'),
+				)
+			);
+			
+			$user_info = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields' => array('User.*', 'UserProfile.first_name', 'UserProfile.last_name')));
+			$name = $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name'];
 			
 			if(empty($user_info['User']['email'])) {
 				$this->User->unbindModelAll();
 				$user_info = $this->User->findById($user_info['User']['parent_id']);
 			}
+			
+			$email = $user_info['User']['email'];
+			
+			$result = $this->send($name, $email);
+			
+			if(!$result) {
+				echo "<pre>";
+					print_r($result);
+				echo "</pre>";
+			}
 		}
-		
-		pr($user_info);
-		
-		exit();
 	}
+	
+	
+	function send($email, $name) { 
+		vendor('phpmailer'.DS.'class.phpmailer'); 
+		$mail = new PHPMailer(); 
+
+		$mail->IsSMTP();            // set mailer to use SMTP 
+		$mail->SMTPAuth = true;     // turn on SMTP authentication 
+		$mail->Host   = "email-smtp.us-east-1.amazonaws.com"; 
+		$mail->Username = "AKIAIFE5UJ3F2OYW64CQ"; 
+		$mail->Password = "AiMbFeTu00PxAlzDl2Cn60zDlPoYdVfZBvwChnbB3C50"; 
+
+		$mail->From = "info@nutricheck.com"; 
+		$mail->FromName = "NutriCheck"; 
+		$mail->AddAddress($email, $email); 
+		
+		$mail->AddReplyTo("info@nutricheck.com", "NutriCheck"); 
+
+		$mail->CharSet  = 'UTF-8'; 
+		$mail->WordWrap = 50;  // set word wrap to 50 characters 
+
+		$mail->IsHTML(true);  // set email format to HTML 
+
+		$mail->Subject = "Incomplete Questionnaire";
+		$mail->Body    = "You have an incomplete Nutrient Check please go back to the system to complete the check."; 
+
+		$result = $mail->Send(); 
+
+		if($result == false ) $result = $mail->ErrorInfo; 
+
+		return $result; 
+    }
 }
