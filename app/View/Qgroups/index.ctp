@@ -19,7 +19,7 @@
 		<td><?php echo h($qgroup['Qgroup']['modified']); ?>&nbsp;</td>
 		<td>
 			<p>
-				<textarea style="font-size: 12px;" name="clipboard-text" id="clipboard-text" cols="30" rows="10"><script type="text/javascript" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/js/iframe-panel.js"></script><link rel="stylesheet" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/css/iframe-panel.css"><div id="leftbar" style="width='120px' height='690'"><div id="closeButton"></div><div id="panelContentHolder"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0" width="1560" height="690" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_questions/<?php echo $qgroup['Qgroup']['id']; ?>" name="imgbox"></iframe></div></div><a class="btn" id="panelToggle" href="#">Show Panel</a></textarea>
+				<textarea style="font-size: 12px;" name="clipboard-text" id="clipboard-text" cols="30" rows="10"><script type="text/javascript" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/js/iframe-panel.js"></script><link rel="stylesheet" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/css/iframe-panel.css"><div id="leftbar" style="width='120px' height='690'"><div id="closeButton"></div><div id="panelContentHolder"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0" width="1110" height="690" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_questions/<?php echo $qgroup['Qgroup']['id']; ?>" name="imgbox"></iframe></div></div><a class="btn" id="panelToggle" href="#">Show Panel</a></textarea>
 				<br />
 				<button class="btn btn-success" id="target-to-copy" data-clipboard-target="clipboard-text">Click To Copy</button><br/>
 			</p>

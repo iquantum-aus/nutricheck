@@ -1,0 +1,71 @@
+input[type=text], input[type=password], input[type=email] {
+	border-radius: 4px;
+	padding: 10px 10px 10px 10px;
+	height: 40px;
+	width: 300px;
+	margin-bottom: 10px;
+}
+
+body { background: transparent; }
+#content { background: transparent; }
+
+#registerWidget_holder, #loginWidget_holder {
+	width: 320px;
+	margin: 60px auto 0px;
+}
+
+div.form,
+div.index,
+div.view {
+	width: 1140px;
+	margin-right: 25px;
+}
+
+.controls {
+	margin: 10px 0px !important;
+}
+
+.control-group {
+	margin: 0 !important;
+}
+
+.form-actions {
+	float: left;
+	width: 100%;
+	padding: 20px 0px !important;
+	background-color: transparent;
+}
+
+.form-horizontal {
+	margin: 0 !important;
+	width: auto;
+}
+
+fieldset legend {
+	color: #2598c8;
+}
+
+#selectedWidget_holder {
+	float: left;
+	margin-top: 25px;
+}
+
+ul, li { margin: 0; }
+
+* {
+	outline: none;
+}
+.actions input {
+	float: left;
+	clear: none;
+	margin-left: 11px;
+}
+
+.actions input:first-child {
+	margin-left: 0;
+}
+
+#logoLoginRemote {
+	width: 300px;
+	margin: auto;
+}

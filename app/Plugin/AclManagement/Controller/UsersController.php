@@ -67,22 +67,16 @@ class UsersController extends AclManagementAppController {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {					
-					$temp_answer = $this->Session->read('temp_answers');
-					if(!empty($temp_answer)) {
-						// 2 means to redirect to answer's controller to save the session based answer
-						echo "2";
-						exit();
-					} else {					
-						echo "1";
-						exit();
-					}
+					echo $this->Session->read('Auth.User.can_answer');
+					exit();
 				} else {
 					return $this->redirect($this->Auth->redirect());
 				}
 			}
 			
 			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-				echo "0";
+				echo "2";
+				exit();
 			} else {
 				$this->Session->setFlash(__('Invalid username or password, try again'), 'alert/error');
 			}

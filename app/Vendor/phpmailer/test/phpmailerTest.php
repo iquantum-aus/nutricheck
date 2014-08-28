@@ -13,6 +13,7 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
+require_once 'PHPUnit/Autoload.php';
 require_once '../PHPMailerAutoload.php';
 
 /**
@@ -71,7 +72,6 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
             include './testbootstrap.php'; //Overrides go in here
         }
         $this->Mail = new PHPMailer;
-        $this->Mail->SMTPDebug = 4; //Full debug output
         $this->Mail->Priority = 3;
         $this->Mail->Encoding = '8bit';
         $this->Mail->CharSet = 'iso-8859-1';
@@ -289,18 +289,6 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
                 return $this->Mail->addBCC($sAddress, $sName);
         }
         return false;
-    }
-
-    /**
-     * Check that we have loaded default test params.
-     * Pretty much everything will fail due to unset recipient if this is not done.
-     */
-    public function testBootstrap()
-    {
-        $this->assertTrue(
-            file_exists('./testbootstrap.php'),
-            'Test config params missing - copy testbootstrap.php to testbootstrap-dist.php and change as appropriate'
-        );
     }
 
     /**
@@ -651,12 +639,9 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
     public function testWordWrap()
     {
         $this->Mail->WordWrap = 40;
-        $my_body = str_repeat(
-            'Here is the main body of this message.  It should ' .
-            'be quite a few lines.  It should be wrapped at ' .
-            '40 characters.  Make sure that it is. ',
-            10
-        );
+        $my_body = 'Here is the main body of this message.  It should ' .
+            'be quite a few lines.  It should be wrapped at the ' .
+            '40 characters.  Make sure that it is.';
         $nBodyLen = strlen($my_body);
         $my_body .= "\n\nThis is the above body length: " . $nBodyLen;
 
@@ -1059,6 +1044,30 @@ EOT;
     }
 
     /**
+     * Test SMTP host connections
+     */
+    public function testSmtpConnect()
+    {
+        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP single connect failed');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = "ssl://localhost:12345;tls://localhost:587;10.10.10.10:54321;localhost:12345;10.10.10.10";
+        $this->assertFalse($this->Mail->smtpConnect(), 'SMTP bad multi-connect succeeded');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = "localhost:12345;10.10.10.10:54321;" . $_REQUEST['mail_host'];
+        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP multi-connect failed');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = " localhost:12345 ; " . $_REQUEST['mail_host'] . ' ';
+        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP hosts with stray spaces failed');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = $_REQUEST['mail_host'];
+        //Need to pick a harmless option so as not cause problems of its own! socket:bind doesn't work with Travis-CI
+        $this->assertTrue(
+            $this->Mail->smtpConnect(array('ssl' => array('verify_depth' => 10))),
+            'SMTP connect with options failed'
+        );
+    }
+
+    /**
      * Tests this denial of service attack:
      *    http://www.cybsec.com/vuln/PHPMailer-DOS.pdf
      */
@@ -1253,6 +1262,7 @@ EOT;
         $this->Mail->Subject .= ': DKIM signing';
         $this->Mail->Body = 'This message is DKIM signed.';
         $this->buildBody();
+        //$this->Mail->SMTPDebug = 2;
         $privatekeyfile = 'dkim_private.key';
         //Make a new key pair
         //(2048 bits is the recommended minimum key length -
@@ -1286,6 +1296,48 @@ EOT;
         $this->assertEquals($target, PHPMailer::normalizeBreaks($macsrc), 'Mac break reformatting failed');
         $this->assertEquals($target, PHPMailer::normalizeBreaks($windowssrc), 'Windows break reformatting failed');
         $this->assertEquals($target, PHPMailer::normalizeBreaks($mixedsrc), 'Mixed break reformatting failed');
+    }
+
+    /**
+     * Use a fake POP3 server to test POP-before-SMTP auth
+     * With a known-good login
+     */
+    public function testPopBeforeSmtpGood()
+    {
+        //Start a fake POP server
+        $pid = shell_exec('nohup ./runfakepopserver.sh >/dev/null 2>/dev/null & printf "%u" $!');
+        $this->pids[] = $pid;
+
+        sleep(2);
+        //Test a known-good login
+        $this->assertTrue(
+            POP3::popBeforeSmtp('localhost', 1100, 10, 'user', 'test', 0),
+            'POP before SMTP failed'
+        );
+        //Kill the fake server
+        shell_exec('kill -TERM '.escapeshellarg($pid));
+        sleep(2);
+    }
+
+    /**
+     * Use a fake POP3 server to test POP-before-SMTP auth
+     * With a known-bad login
+     */
+    public function testPopBeforeSmtpBad()
+    {
+        //Start a fake POP server on a different port
+        //so we don't inadvertently connect to the previous instance
+        $pid = shell_exec('nohup ./runfakepopserver.sh 1101 >/dev/null 2>/dev/null & printf "%u" $!');
+        $this->pids[] = $pid;
+
+        sleep(2);
+        //Test a known-bad login
+        $this->assertFalse(
+            POP3::popBeforeSmtp('localhost', 1101, 10, 'user', 'xxx', 0),
+            'POP before SMTP should have failed'
+        );
+        shell_exec('kill -TERM '.escapeshellarg($pid));
+        sleep(2);
     }
 
     /**
@@ -1340,73 +1392,6 @@ EOT;
         $this->assertEquals($q['basename'], '飛兒樂 團光茫.mp3', 'Windows basename not matched');
         $this->assertEquals($q['extension'], 'mp3', 'Windows extension not matched');
         $this->assertEquals($q['filename'], '飛兒樂 團光茫', 'Windows filename not matched');
-    }
-
-    /**
-     * Use a fake POP3 server to test POP-before-SMTP auth
-     * With a known-good login
-     */
-    public function testPopBeforeSmtpGood()
-    {
-        //Start a fake POP server
-        $pid = shell_exec('nohup ./runfakepopserver.sh >/dev/null 2>/dev/null & printf "%u" $!');
-        $this->pids[] = $pid;
-
-        sleep(2);
-        //Test a known-good login
-        $this->assertTrue(
-            POP3::popBeforeSmtp('localhost', 1100, 10, 'user', 'test', $this->Mail->SMTPDebug),
-            'POP before SMTP failed'
-        );
-        //Kill the fake server
-        shell_exec('kill -TERM '.escapeshellarg($pid));
-        sleep(2);
-    }
-
-    /**
-     * Use a fake POP3 server to test POP-before-SMTP auth
-     * With a known-bad login
-     */
-    public function testPopBeforeSmtpBad()
-    {
-        //Start a fake POP server on a different port
-        //so we don't inadvertently connect to the previous instance
-        $pid = shell_exec('nohup ./runfakepopserver.sh 1101 >/dev/null 2>/dev/null & printf "%u" $!');
-        $this->pids[] = $pid;
-
-        sleep(2);
-        //Test a known-bad login
-        $this->assertFalse(
-            POP3::popBeforeSmtp('localhost', 1101, 10, 'user', 'xxx', $this->Mail->SMTPDebug),
-            'POP before SMTP should have failed'
-        );
-        shell_exec('kill -TERM '.escapeshellarg($pid));
-        sleep(2);
-    }
-
-    /**
-     * Test SMTP host connections.
-     * This test can take a long time, so run it last
-     */
-    public function testSmtpConnect()
-    {
-        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP single connect failed');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = "ssl://localhost:12345;tls://localhost:587;10.10.10.10:54321;localhost:12345;10.10.10.10";
-        $this->assertFalse($this->Mail->smtpConnect(), 'SMTP bad multi-connect succeeded');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = "localhost:12345;10.10.10.10:54321;" . $_REQUEST['mail_host'];
-        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP multi-connect failed');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = " localhost:12345 ; " . $_REQUEST['mail_host'] . ' ';
-        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP hosts with stray spaces failed');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = $_REQUEST['mail_host'];
-        //Need to pick a harmless option so as not cause problems of its own! socket:bind doesn't work with Travis-CI
-        $this->assertTrue(
-            $this->Mail->smtpConnect(array('ssl' => array('verify_depth' => 10))),
-            'SMTP connect with options failed'
-        );
     }
 }
 

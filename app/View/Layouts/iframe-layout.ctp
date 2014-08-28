@@ -43,6 +43,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('style');
 		echo $this->Html->css('chosen');
 		echo $this->Html->css('bootstrap-iframe-theme');
+		echo $this->Html->css('iframe-layout');
 		echo $this->Html->css('smoothness/jquery-ui-1.9.2.custom.min');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -52,66 +53,10 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	
 	<link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
 	<script src="//vjs.zencdn.net/4.5/video.js"></script>
-	
-	<style>
-		input[type=text], input[type=password], input[type=email] {
-			border-radius: 4px;
-			padding: 10px 10px 10px 10px;
-			height: 40px;
-			width: 300px;
-			margin-bottom: 10px;
-		}
-		
-		body { background: transparent; }
-		#content { background: transparent; }
-		
-		#registerWidget_holder, #loginWidget_holder {
-			width: 350px; 
-			float: left;
-		}
-		
-		div.form,
-		div.index,
-		div.view {
-			width: 1140px;
-			border-right: 4px solid #e6e6e6;
-			margin-right: 25px;
-		}
-		
-		.controls {
-			margin: 10px 0px !important;
-		}
-		
-		.control-group {
-			margin: 0 !important;
-		}
-		
-		.form-actions {
-			float: left;
-			width: 100%;
-			padding: 20px 0px !important;
-			background-color: transparent;
-		}
-		
-		.form-horizontal {
-			margin: 0 !important;
-			width: auto;
-		}
-		
-		fieldset legend {
-			color: #2598c8;
-		}
-		
-		#selectedWidget_holder {
-			float: left;
-			margin-top: 25px;
-		}
-		
-		ul, li { margin: 0; }
-	</style>
 	
 </head>
 <body>
@@ -119,6 +64,30 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $this->Session->flash('auth'); ?>
 		<?php echo $this->fetch('content'); ?>
+	
+		<?php if(empty($this->Session->read('Auth.User.id'))) { ?>
+			<div id="loginWidget_holder">
+				<img id="logoLoginRemote" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
+				<br /><br />
+				
+				<?php
+					echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal', "id" => "UserLogin"));
+						?>
+						<fieldset>
+							<legend><?php echo __('Login'); ?></legend>
+							<?php echo $this->Form->input('email', array('div' => false, 'label' => false, 'placeholder' => "Email")); ?>
+							<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
+							
+							<div class="form-actions">
+								<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
+								<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
+							</div>
+						</fieldset>
+						<?php
+					echo $this->Form->end();
+				?>
+			</div>
+		<?php } ?>
 		
 		<?php
 			$user_id = $this->Session->read('Auth.User.id');
@@ -128,81 +97,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			if(empty($user_id)) {
 			if(!isset($_GET['action'])) { $_GET['action'] = "login"; }
 		?>
-				
-			<div id="selectedWidget_holder">
-			
-				<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
-				<br /><br /><br />
-				
-				<!-- Nav tabs -->
-				<ul class="nav nav-tabs">
-				  <li class="active"><a href="#home" data-toggle="tab">Login</a></li>
-				  <?php /* <li><a href="#profile" data-toggle="tab">Sign Up</a></li> */ ?>
-				</ul>
-
-				<!-- Tab panes -->
-				<div class="tab-content">
-					<div class="tab-pane active" id="home">
-						<div id="loginWidget_holder">
-							<?php
-								echo $this->Form->create('User', array('action' => 'login?source=remote', 'class'=>'form-horizontal', "id" => "UserLogin"));
-									?>
-									<fieldset>
-										<legend><?php echo __('Login'); ?></legend>
-										<?php echo $this->Form->input('email', array('div' => false, 'label' => false, 'placeholder' => "Email")); ?>
-										<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
-										
-										<div class="form-actions">
-											<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
-											<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
-										</div>
-									</fieldset>
-									<?php
-								echo $this->Form->end();
-							?>
-						</div>
-					</div>
-				  
-				  <?php /*
-					<div class="tab-pane" id="profile">
-						<div id="registerWidget_holder">
-							<?php echo $this->Form->create('Users', array('id' => 'resgisterForm', 'action' => '/remote_register?answered=true&status=temp')); ?>
-								<fieldset>
-									<legend><?php echo __('Sign Up'); ?></legend>
-									
-									<div class="left span12"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'label' => false, 'placeholder' => 'Firstname')); ?></div>
-									<div class="left span12"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'label' => false, 'placeholder' => 'Lastname')); ?></div>
-									<div class="left span12"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => 'Age')); ?></div>
-									
-									<div class="left span12"><?php echo $this->Form->input('UserProfile.gender', array('div' => false, 'label' => false, 'empty' => 'Gender', 'options' => array('male' => 'Male', 'female', 'Female'))); ?></div>
-									
-									<div class="left span12"><?php echo $this->Form->input('User.email', array('div' => false, 'label' => false, 'placeholder' => 'Email')); ?></div>
-									<div class="left span12"><?php echo $this->Form->input('User.password', array('div' => false, 'label' => false, 'placeholder' => 'Password')); ?></div>
-									<div class="left span12"><?php echo $this->Form->input('User.repeat_password', array('type' => 'password', 'div' => false, 'label' => false, 'placeholder' => 'Repeat Password')); ?></div>
-									
-									<div class="form-actions">
-										<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
-										<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
-									</div>
-								</fieldset>
-							<?php echo $this->Form->end(); ?>
-						</div>
-					</div>
-					<?php */ ?>
-				</div>
-			</div>
 
 		<?php } else { ?>
-			
-			<div id="selectedWidget_holder">
-				<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
-				<br /><br /><br />
-				
-				<?php echo Configure::read('Authenticated.default_message'); ?>
-				
-				<br />
-				<a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>">Go to Site</a>
-			</div>
 				
 		<?php
 			}
@@ -252,12 +148,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				dataType:'html',
 				success:function (data, textStatus) {
 					if(data == 1) {
-						$('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
+						$('#loginWidget_holder').fadeOut('500');
+						window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_questions/<?php echo $id; ?>";
 					} else {
 						if(data == 2) {
-							window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/save_remote_nutrient_check";
-						} else {
 							alert('Authentication Failed');
+						} else {
+							alert('Not allower answer');
 						}
 					}
 					
@@ -268,29 +165,29 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			return false;
 		});
 		
-		$(document).on('submit', '#resgisterForm', function () {
-			$.ajax({
-				async:true,
-				data:$(this).serialize(),
-				dataType:'html',
-				success:function (data, textStatus) {
+		// $(document).on('submit', '#resgisterForm', function () {
+			// $.ajax({
+				// async:true,
+				// data:$(this).serialize(),
+				// dataType:'html',
+				// success:function (data, textStatus) {
 					
-					console.log(data);
+					// console.log(data);
 					
-					if(data == "1" || data == ".1") {
-						$('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
-					} else {
-						if(data == "2" || data == ".2") {
-							window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/save_remote_nutrient_check";
-						} else {
-							alert('Registration Failed');
-						}
-					}
-				},
-				type:'post',
-				url:"/users/remote_register"
-			});
-			return false;
-		});
+					// if(data == "1" || data == ".1") {
+						// $('#selectedWidget_holder').html('<?php echo Configure::read('Authenticated.default_message'); ?>');
+					// } else {
+						// if(data == "2" || data == ".2") {
+							// window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/save_remote_nutrient_check";
+						// } else {
+							// alert('Registration Failed');
+						// }
+					// }
+				// },
+				// type:'post',
+				// url:"/users/remote_register"
+			// });
+			// return false;
+		// });
 	});		
 </script>

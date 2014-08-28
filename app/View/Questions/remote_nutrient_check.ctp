@@ -1,27 +1,31 @@
 <div class="questions index">
 	
-	<?php if(!empty($method)) { ?>
-		<form method="POST">
-			<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Factors:</label>			
-			<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
-			<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
-		</form>
-	<?php } ?>
+	<div style="margin: 0;" class="span12">
+		
+		<?php if(!empty($method)) { ?>
+			<div class="left">
+				<form style="min-width: 680px;" method="POST">
+					<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>			
+					<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
+					<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
+				</form>
+			</div>
+		<?php } ?>
+	</div>
 	
-	<div style="margin: 0;" class="sectionTitle">Questions</div>
+	<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
 	
-	<form style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
+	<form style="height: 600px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
 		<?php
 			$raw_questions = $questions;
 			$question_data = array_chunk($questions, 10);
 			$question_data_count = count($question_data);
-			$q_inc = 1;
 			foreach($question_data as $key => $questions) {
 		?>
 	
 			<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
 				<tbody style="float:left; width: 100%;">	
-					<tr style="width: 100%; float: left;">
+					<tr class="headerHolder" style="width: 100%; float: left;">
 						<th style="float: left; width: 15%;"><span class="blue">Quest. #</span></th>
 						<th style="float: left; width: 53%;">Question</th>
 						<th style="float: left; width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
@@ -32,16 +36,16 @@
 					
 					<?php foreach ($questions as $question) { ?>
 						<tr class="rankHolder" style="width:100%; float: left;">
-							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo $q_inc++; ?>&nbsp;</span></td>
+							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
 							<td style="height: 50px;  width: 53%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
 							<?php
 								for($i = 0; $i<=3; $i++) {
 									?>
 										<td style="height: 50px; width:8%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][question_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][user_id]" id="TempAnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
-											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][TempAnswer][rank]" id="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-											<label for="TempAnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
+											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+											<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
 										</td>
 									<?php
 								}
@@ -51,15 +55,16 @@
 				</tbody>
 			</table>
 		<?php } ?>
-		<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
+		
 		<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 	</form>
 		
 	<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
-		<?php $question_data_count = count($question_data); ?>
 		<form id="paginator_form">
 			<input id="currentPaginatorstate" type="hidden" value="0">
+			
 			<a href="#" id="paginatorPrev" class="paginatorButton btn btn-primary disabled">PREV</a>
+				
 				<?php 
 					/* for($i=0; $i<$question_data_count; $i++) {
 						?>
@@ -67,9 +72,11 @@
 						<?php
 					} */
 				?>
+			
 			<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
 		</form>
 	</div>
+	
 </div>
 
 
@@ -117,6 +124,7 @@
 		
 		$(document).on("click", '#paginatorNext', function () {
 			
+			
 			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
 			
 			var question_module_id = "";
@@ -155,10 +163,12 @@
 			});
 			
 			if(checked_rank < question_count) {
+				alert('There are unanswered items in the form. Please address them before you continue');
 				return false;
 			}
 			
 			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
+			
 			
 			var currentPaginatorstate = $('#currentPaginatorstate').val();
 			currentPaginatorstate = parseInt(currentPaginatorstate);
@@ -214,10 +224,4 @@
 			$('.save-answer').show();
 		}
 	});
-	
-	$(window).ready( function () {
-		var url = (window.location != window.parent.location) ? document.referrer: document.location;	
-		$('#remoteLink').val(url);
-	});
 </script>
-

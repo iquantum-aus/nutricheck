@@ -189,6 +189,7 @@ class QgroupsController extends AppController {
 		}
 		
 		$this->set('questions', $questions);
+		$this->set('id', $id);
 	}
 	
 	public function load_preview($id = null) {
