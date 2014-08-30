@@ -1,5 +1,8 @@
-<div class="questions index">
-	
+<?php 
+	$time = time();
+?>
+
+<div class="questions index">	
 	<div style="margin: 0;" class="span12">
 		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 			<div class="left">
@@ -22,70 +25,73 @@
 		<?php } ?>
 	</div>
 	
-	<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
-	
-	<form style="height: 600px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
-		<?php
-			$raw_questions = $questions;
-			$question_data = array_chunk($questions, 10);
-			$question_data_count = count($question_data);
-			foreach($question_data as $key => $questions) {
-		?>
-	
-			<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
-				<tbody style="float:left; width: 100%;">	
-					<tr class="headerHolder" style="width: 100%; float: left;">
-						<th style="float: left; width: 15%;"><span class="blue">Quest. #</span></th>
-						<th style="float: left; width: 53%;">Question</th>
-						<th style="float: left; width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
-						<th style="float: left; width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
-						<th style="float: left; width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
-						<th style="float: left; width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
-					</tr>
-					
-					<?php foreach ($questions as $question) { ?>
-						<tr class="rankHolder" style="width:100%; float: left;">
-							<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
-							<td style="height: 50px;  width: 53%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
-							<?php
-								for($i = 0; $i<=3; $i++) {
-									?>
-										<td style="height: 50px; width:8%;  float: left;" class="actions">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-											<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
-											<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-											<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
-										</td>
-									<?php
-								}
-							?>
+	<?php if(!empty($user_id)) { ?>
+		<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
+		
+		<form style="height: 600px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
+			<?php
+				$raw_questions = $questions;
+				$question_data = array_chunk($questions, 10);
+				$question_data_count = count($question_data);
+				foreach($question_data as $key => $questions) {
+			?>
+		
+				<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
+					<tbody style="float:left; width: 100%;">	
+						<tr class="headerHolder" style="width: 100%; float: left;">
+							<th style="float: left; width: 15%;"><span class="blue">Quest. #</span></th>
+							<th style="float: left; width: 53%;">Question</th>
+							<th style="float: left; width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
+							<th style="float: left; width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
+							<th style="float: left; width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
+							<th style="float: left; width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
 						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		<?php } ?>
-		
-		<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
-	</form>
-		
-	<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
-		<form id="paginator_form">
-			<input id="currentPaginatorstate" type="hidden" value="0">
+						
+						<?php foreach ($questions as $question) { ?>
+							<tr class="rankHolder" style="width:100%; float: left;">
+								<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
+								<td style="height: 50px;  width: 53%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
+								<?php
+									for($i = 0; $i<=3; $i++) {
+										?>
+											<td style="height: 50px; width:8%;  float: left;" class="actions">
+												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
+												<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+												<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+											</td>
+										<?php
+									}
+								?>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			<?php } ?>
 			
-			<a href="#" id="paginatorPrev" class="paginatorButton btn btn-primary disabled">PREV</a>
-				
-				<?php 
-					/* for($i=0; $i<$question_data_count; $i++) {
-						?>
-							<input name="pageSelected" id="pageSelection_<?php echo $i; ?>" class="paginatorSelector" type="radio" value="<?php echo $i; ?>">
-						<?php
-					} */
-				?>
-			
-			<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
+			<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 		</form>
-	</div>
-	
+			
+		<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
+			<form id="paginator_form">
+				<input id="currentPaginatorstate" type="hidden" value="0">
+				
+				<a href="#" id="paginatorPrev" class="paginatorButton btn btn-primary disabled">PREV</a>
+					
+					<?php 
+						/* for($i=0; $i<$question_data_count; $i++) {
+							?>
+								<input name="pageSelected" id="pageSelection_<?php echo $i; ?>" class="paginatorSelector" type="radio" value="<?php echo $i; ?>">
+							<?php
+						} */
+					?>
+				
+				<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
+			</form>
+		</div>
+	<?php } else { ?>
+		<div style="margin: 0; color: red;" class="span12 left sectionTitle">You need to select a patient before you can continue</div>		
+	<?php } ?>
 </div>
 
 
@@ -129,6 +135,12 @@
 			$('.questionModules').fadeOut(500);
 			$('#questionModule_'+page_number).delay(500).fadeIn();
 			$('#currentPaginatorstate').val(page_number);
+		});
+		
+		$('.css-label').click( function () {
+			var value = $(this).attr('value');
+			var question_id = $(this).siblings('.AnswerQuestionId').val();
+			var perform_user_id = $(this).siblings('.AnswerUserId').val();
 		});
 		
 		$(document).on("click", '#paginatorNext', function () {

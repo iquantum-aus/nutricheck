@@ -275,6 +275,8 @@ class QuestionsController extends AppController {
 					
 				/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 				
+				$behalfUserId = $this->Session->read('behalfUserId');
+				$this->set('user_id', $behalfUserId);
 				
 			} else {
 				
@@ -370,6 +372,17 @@ class QuestionsController extends AppController {
 			$factors = $this->Question->Factor->find('list');
 			$this->set('factors', $factors);
 		}
+
+
+		if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
+			$this->set('user_id', $behalfUserId);
+		} else {
+			// will only log instance of access of user_id if group is not equivalent to client
+			if(($user_info['group_id'] != 2)) {
+				$this->set('user_id', $user_info['id']);
+			}
+		}
+		
 		
 		$this->set('selected_factors', $selected_factors);
 		$this->set('method', $method);

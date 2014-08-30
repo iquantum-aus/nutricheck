@@ -65,7 +65,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->Session->flash('auth'); ?>
 		<?php echo $this->fetch('content'); ?>
 	
-		<?php if(empty($this->Session->read('Auth.User.id'))) { ?>
+		<?php if($this->Session->read('Auth.User.id') == "") { ?>
 			<div id="loginWidget_holder">
 				<img id="logoLoginRemote" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
 				<br /><br />
@@ -154,7 +154,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 						if(data == 2) {
 							alert('Authentication Failed');
 						} else {
-							alert('Not allower answer');
+							$('#loginWidget_holder').fadeOut('500');
+							alert('Not allowed to answer');
 						}
 					}
 					
