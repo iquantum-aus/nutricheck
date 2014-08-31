@@ -48,16 +48,23 @@
 						</tr>
 						
 						<?php foreach ($questions as $question) { ?>
+							
 							<tr class="rankHolder" style="width:100%; float: left;">
 								<td style="height: 50px; width: 15%; text-align: center; font-weight: bold;  float: left;"><span class="blue"><?php echo h($question['Question']['id']); ?>&nbsp;</span></td>
 								<td style="height: 50px;  width: 53%;  float: left;"><?php echo h($question['Question']['question']); ?></td>
 								<?php
 									for($i = 0; $i<=3; $i++) {
+										
+										$radio_selected = "";
+										if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
+											$radio_selected = "selected=selected";
+										}
+										
 										?>
 											<td style="height: 50px; width:8%;  float: left;" class="actions">
 												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
 												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
-												<input class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+												<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
 												<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
 											</td>
 										<?php
@@ -137,14 +144,26 @@
 			$('#currentPaginatorstate').val(page_number);
 		});
 		
+		
 		$('.css-label').click( function () {
-			var value = $(this).attr('value');
+			var choice_value = $(this).attr('value');
 			var question_id = $(this).siblings('.AnswerQuestionId').val();
 			var perform_user_id = $(this).siblings('.AnswerUserId').val();
+			var performed_time = "<?php echo $time; ?>";
+			
+			$.ajax({
+				async:true,
+				dataType:'html',
+				success:function (data, textStatus) {
+					console.log(data);
+				},
+				type:'get',
+				url:"/selected_answer_logs/add?source=remote&choice_value="+choice_value+"&question_id="+question_id+"&user_id="+perform_user_id+"&performed_time="+performed_time
+			});
 		});
 		
+		
 		$(document).on("click", '#paginatorNext', function () {
-			
 			
 			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
 			

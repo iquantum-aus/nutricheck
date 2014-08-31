@@ -36,6 +36,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
+		
 		// docs.css is only for this exapmple, remove for app dev
 		echo $this->Html->css('backend');
 		echo $this->Html->css('slidebars.min');

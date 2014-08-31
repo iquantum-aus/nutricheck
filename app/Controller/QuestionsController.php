@@ -11,7 +11,6 @@ class QuestionsController extends AppController {
 	function beforeFilter() {
 		parent::beforeFilter();
 		
-		
 		$user_id = $this->Session->read('Auth.User.id');
 		if(empty($user_id)) {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
@@ -172,6 +171,8 @@ class QuestionsController extends AppController {
 	public function nutrient_check( $method = null ) {
 		
 		$this->loadModel('PerformedCheck');
+		$this->loadModel('SelectedAnswerLog');
+		
 		$user_info = $this->Session->read('Auth.User');
 		$behalfUserId = $this->Session->read('behalfUserId');
 		
@@ -373,23 +374,50 @@ class QuestionsController extends AppController {
 			$this->set('factors', $factors);
 		}
 
-
+		$return_user_id = "";
 		if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 			$this->set('user_id', $behalfUserId);
+			$return_user_id = $behalfUserId;
 		} else {
 			// will only log instance of access of user_id if group is not equivalent to client
 			if(($user_info['group_id'] != 2)) {
 				$this->set('user_id', $user_info['id']);
+				$return_user_id = $user_info['id'];
 			}
 		}
 		
+		$this->SelectedAnswerLog->unbindModelAll();
+		$returnee_answer_data = $this->SelectedAnswerLog->find('all', 
+			array(
+				'conditions' => 
+					array(
+						'SelectedAnswerLog.user_id' => $return_user_id
+					),
+				'order' => array('question_id' => 'ASC', 'created' => 'DESC'),
+				'fields' => array('choice_value', 'question_id')
+			)
+		);
+		
+		/* -------------------------------------------------------------------- ALLOWING THE USER TO GO BACK TO THEIR PREVIOUOS PROGRESS ------------------------------------------------------------ */
+
+			$return_progress = array();
+			foreach($returnee_answer_data as $returnee_answer) {
+				if(!isset($return_progress[$returnee_answer['SelectedAnswerLog']['question_id']])) {
+					$return_progress[$returnee_answer['SelectedAnswerLog']['question_id']] = $returnee_answer['SelectedAnswerLog']['choice_value'];
+				}
+			}
+			
+			// if has previously perofrmed nutricheck but didn't finish it
+			$this->set('return_progress', $return_progress);
+			
+			
+		/* -------------------------------------------------------------------- ALLOWING THE USER TO GO BACK TO THEIR PREVIOUOS PROGRESS ------------------------------------------------------------ */
 		
 		$this->set('selected_factors', $selected_factors);
 		$this->set('method', $method);
 		$this->set('users_list', $users_list);
 		$this->set('questions', $questions);
 	}
-	
 	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
