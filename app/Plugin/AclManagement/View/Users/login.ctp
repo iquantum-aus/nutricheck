@@ -27,7 +27,7 @@
 				</div>
 				
 				<p>
-					<img style="margin-left: -50px;" src="/img/nutricheck-logo.png">
+					<img style="width:100%;" src="/img/nutricheck-logo.png">
 				</p>
 				
 				<div class="form-box">
