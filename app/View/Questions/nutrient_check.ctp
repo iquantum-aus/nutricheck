@@ -57,7 +57,7 @@
 										
 										$radio_selected = "";
 										if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
-											$radio_selected = "selected=selected";
+											$radio_selected = "checked=checked";
 										}
 										
 										?>

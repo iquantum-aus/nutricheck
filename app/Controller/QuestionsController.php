@@ -281,10 +281,12 @@ class QuestionsController extends AppController {
 				
 			} else {
 				
+				$return_user_id = "";
 				$answers = $this->request->data;
 				
 				if(isset($this->request->data['User']['id'])) {
 					$this->Session->write('behalfUserId', $this->request->data['User']['id']);
+					$return_user_id = $this->request->data['User']['id'];
 				}
 				
 				unset($this->request->data['User']['id']);
@@ -337,15 +339,18 @@ class QuestionsController extends AppController {
 						
 						$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
 						$params = $latest_answer_date."/".$behalfUserId;
+						$return_user_id = $behalfUserId;
 					}
 				}
 				
 				if($user_info['group_id'] == 3) {
 					$this->Session->setFlash(__('You have successfully completed a NutriCheck as '.$user_info['email'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
+					$return_user_id = $user_info['id'];
 				}
 			
 				if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 					$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+					$return_user_id = $behalfUserId;
 					
 					foreach($logs_existence as $log_existence) {
 						$log_existence['PerformedCheck']['isComplete'] = 1;
@@ -354,6 +359,7 @@ class QuestionsController extends AppController {
 				} else {
 					if(!empty($user_info['id'])) {
 						$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
+						$return_user_id = $user_info['id'];
 						
 						foreach($logs_existence as $log_existence) {
 							$log_existence['PerformedCheck']['isComplete'] = 1;
@@ -362,6 +368,8 @@ class QuestionsController extends AppController {
 					}
 				}
 				
+				
+				$this->SelectedAnswerLog->query('DELETE FROM selected_answer_logs where user_id = '.$return_user_id);				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}
@@ -409,7 +417,6 @@ class QuestionsController extends AppController {
 			
 			// if has previously perofrmed nutricheck but didn't finish it
 			$this->set('return_progress', $return_progress);
-			
 			
 		/* -------------------------------------------------------------------- ALLOWING THE USER TO GO BACK TO THEIR PREVIOUOS PROGRESS ------------------------------------------------------------ */
 		
