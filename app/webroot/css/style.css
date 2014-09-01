@@ -26,6 +26,13 @@
 	outline: none;
 }
 
+html{
+	overflow:visible;
+}
+body{
+	overflow-x: hidden;
+}
+
 input {
 	min-height: 35px;
 }
@@ -229,6 +236,7 @@ p {
 	float: left;
 	width: 100%;
 	height: 100%;
+	margin-top:50px;
 }
 #footer {
 	clear: both;
@@ -279,12 +287,6 @@ th {
 	border:0;
 	text-align: left;
 	padding:4px;
-}
-
-.headerHolder {
-	border-bottom:2px solid #2598c8;
-	margin-bottom: 10px;
-	padding-bottom: 5px;
 }
 
 th a {
@@ -1570,4 +1572,37 @@ div.factorNames { float: left; margin-top: 2px; }
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	padding:20px;
+}
+/* QUESTION TABLE */
+.rankHolder td{
+	/*padding:6px 0 6px 0;*/
+	padding:0;
+	vertical-align: middle;
+	min-height: 50px;
+	/*float: left;*/
+	position:relative;
+	display: table-cell;
+}
+.rankHolder td p{	
+	vertical-align: middle;
+	margin:0;
+	padding:6px 0 6px 0;
+}
+
+.headerHolder {
+	border-bottom:2px solid #2598c8;
+	/*margin-bottom: 10px;*/
+	/*padding-bottom: 5px;*/
+}
+.headerHolder th{
+	/*float: left; */
+}
+#sb-site{
+	float: left; 
+	padding:0;
+}
+
+
+@media (max-width: 800px) {
+
 }
