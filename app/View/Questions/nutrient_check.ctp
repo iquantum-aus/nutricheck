@@ -1,5 +1,8 @@
 <?php 
 	$time = time();
+	
+	// color of row that has been checked
+	$colorRowChecked = "#F1F1F1";
 ?>
 
 <div class="questions index">	
@@ -53,8 +56,9 @@
 						</tr>
 						
 						<?php foreach ($questions as $question) {
+										$setstyle = "";
 										if (isset($return_progress[$question['Question']['id']])) {
-											$setstyle = "background: #f1f1f1;";
+											$setstyle = "background:".$colorRowChecked.";";
 										}
 						?>
 							
@@ -208,7 +212,7 @@
 			}
 			// not gray
 			else{
-				$('#q'+question_id).css('background','#f1f1f1');
+				$('#q'+question_id).css('background','<?php echo $colorRowChecked; ?>');
 			}
 			
 		}

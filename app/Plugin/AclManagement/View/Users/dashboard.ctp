@@ -10,23 +10,29 @@
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<div class="textBelow">How and what is required in the questionnaire and what the process is</div>
+				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+				<div class="textBelowsmall">How and what is required in the questionnaire and what the process is</div>
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<div class="textBelow">How clients should access NutriCheck</div>
+				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+				<div class="textBelowsmall">How clients should access NutriCheck</div>
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<div class="textBelow">Training for staff</div>
+				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+				<div class="textBelowsmall">Training for staff</div>
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<a href="#"><div class="textBelow">Nutrition Medicine</div></a>
+				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+				<div class="textBelowsmall">Nutrition Medicine</div>
 			</div>
 			
-			<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) { ?>
-				<div style="height: 455px; width: 706px;" class="item">
+			<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) {
+//height: 455px; 
+			?>
+				<div style="width: 706px;" class="item">
 					
 					<br /><div class="widget sectionTitle">At A Glance</div><br />
 					
