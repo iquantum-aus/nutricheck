@@ -52,9 +52,13 @@
 							<th style="width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
 						</tr>
 						
-						<?php foreach ($questions as $question) { ?>
+						<?php foreach ($questions as $question) {
+										if (isset($return_progress[$question['Question']['id']])) {
+											$setstyle = "background: #f1f1f1;";
+										}
+						?>
 							
-							<tr class="rankHolder" style="width:100%;">
+							<tr class="rankHolder" style="width:100%;<?php echo $setstyle; ?>" id="q<?php echo h($question['Question']['id']); ?>">
 								<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
 								<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
 								<?php
@@ -191,8 +195,24 @@
 				},
 				type:'get',
 				url:"/selected_answer_logs/add?source=remote&choice_value="+choice_value+"&question_id="+question_id+"&user_id="+perform_user_id+"&performed_time="+performed_time
-			});
+			});			
+			SwitchBG(question_id);			
 		});
+		
+		function SwitchBG(question_id){
+			var curbg = $('#q'+question_id).css('background');
+			console.log("curbg : " + curbg);
+			// is gray
+			if (curbg.indexOf("241") > -1){
+				//$('#q'+question_id).css('background','rgba(0, 0, 0, 0)');
+			}
+			// not gray
+			else{
+				$('#q'+question_id).css('background','#f1f1f1');
+			}
+			
+		}
+		
 		
 		/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
 		// NEXT CLICK
@@ -262,7 +282,8 @@
 				$('#currentPaginatorstate').val(prev_page);
 			}			
 			return false;
-		});		
+		});	
+		
 		if(question_data_count > 1) {
 			$('.save-answer').hide();
 		} else {
