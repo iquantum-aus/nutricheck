@@ -1060,6 +1060,10 @@ min-height:374px;
 }
 .item.w2 { width: 50%; }
 
+.item:hover{
+	border: 1px solid #999999; 
+}
+
 #mainContentWrapper { 
 float: left; 
 width: 100%;
