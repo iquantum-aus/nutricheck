@@ -1,15 +1,9 @@
-===================================================
- _   _       _        _ _____ _               _    
-| \ | |     | |      (_)  __ \ |             | |   
-|  \| |_   _| |_ _ __ _| /  \/ |__   ___  ___| | __
-| . ` | | | | __| '__| | |   | '_ \ / _ \/ __| |/ /
-| |\  | |_| | |_| |  | | \__/\ | | |  __/ (__|   < 
-\_| \_/\__,_|\__|_|  |_|\____/_| |_|\___|\___|_|\_\
-                                                   
+Nutricheck
+
 ===================================================
 INTRODUCTION
 ===================================================
-
+NutriCheck System
 
 
 
@@ -17,7 +11,9 @@ INTRODUCTION
 SETUP
 ===================================================
 - Import nutricheck2.sql to you mysql database
-
-
-
-
+- Edit /app/Config/database.php to your mysql connection settings
+- Edit /app/Config/Core.php for debugging options
+- Set WRITE permissions on folder /app
+- Setup your IIS/Apache website to point to your NutriCheck folder
+- Edit web.config/.htaccess if needed (Default should work)
+- Run site
