@@ -111,33 +111,56 @@ class PerformedChecksController extends AppController {
 		App::uses('CakeEmail', 'Network/Email');
 		
 		$this->loadModel('User');	
-		$user_to_send_email = $this->PerformedCheck->find('list', array('fields' => array('id', 'user_id'), 'conditions' => array('isComplete' => 0)));
+		
+		$today = date('Y-m-d');
+		
+		$user_to_send_email = $this->PerformedCheck->find('list', array('fields' => array('created', 'user_id'), 'conditions' => array('isComplete' => 0)));
 		
 		$emails_to_send_alert = array();
-		foreach($user_to_send_email as $user_id) {
-			// $this->User->unbindModelAll();
+		foreach($user_to_send_email as $created_date => $user_id) {
 			
-			$this->User->unbindModel(
-				array(
-					'hasMany' => array('Answer'),
-					'belongsTo' => array('Group'),
-					'belongsTo' => array('Group'),
-					'hasAndBelongsToMany' => array('Vitamin'),
-				)
-			);
+			$difference = strtotime($today) - strtotime($created_date);
 			
-			$user_info = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields' => array('User.*', 'UserProfile.first_name', 'UserProfile.last_name')));
-			$name = $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name'];
+			$days_difference =  floor($difference/(60*60*24));
+			$hours_difference =  floor($difference/(60*60));
+			$minutes_difference =  floor($difference/60);
 			
-			if(empty($user_info['User']['email'])) {
-				$this->User->unbindModelAll();
-				$user_info = $this->User->findById($user_info['User']['parent_id']);
+			// if($days_difference >= 7) {
+			if($minutes_difference >= 30) {
+			
+				$this->User->unbindModel(
+					array(
+						'hasMany' => array('Answer'),
+						'belongsTo' => array('Group'),
+						'belongsTo' => array('Group'),
+						'hasAndBelongsToMany' => array('Vitamin'),
+					)
+				);
+				
+				$user_info = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields' => array('User.*', 'UserProfile.first_name', 'UserProfile.last_name')));
+				$name = $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name'];
+				
+				if(empty($user_info['User']['email'])) {
+					$this->User->unbindModelAll();
+					$user_info = $this->User->findById($user_info['User']['parent_id']);
+				}
+				
+				$email = $user_info['User']['email'];
+				
+				$data_modification = array();
+				$datetime = date("Y-m-d H:i:s");
+				$data_modification['User']['id'] = $user_id;
+				$data_modification['User']['last_alerted'] = $datetime;
+				
+				$result = $this->send($email, $name);
+				
+				echo $user_id;
+				echo "<br />";
+				
+				if($result) {
+					$this->User->save($data_modification);
+				}
 			}
-			
-			$email = $user_info['User']['email'];
-			
-			$result = $this->send($email, $name);
-			pr($result);
 		}
 		
 		exit();
