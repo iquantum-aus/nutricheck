@@ -9,34 +9,34 @@
 				<div class="textBelow">Start Questionaire</div>
 			</div>
 			
-			<div style="height: 374px; width: 327px;" class="item green">
-				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+			<div style="height: 374px; width: 327px;" class="item blue">
+				<a class="dashboardLink" href="#"><img src="../img/answer.png"></a>
 				<div class="textBelowsmall">How and what is required in the questionnaire and what the process is</div>
 			</div>
 			
-			<div style="height: 374px; width: 327px;" class="item green">
-				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+			<div style="height: 374px; width: 327px;" class="item blue">
+				<a class="dashboardLink" href="#"><img src="../img/answer.png"></a>
 				<div class="textBelowsmall">How clients should access NutriCheck</div>
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
-				<div class="textBelowsmall">Training for staff</div>
+				<a class="dashboardLink" href="#"><img src="../img/training.png"></a>
+				<div class="textBelow">Training<br>for staff</div>
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
-				<div class="textBelowsmall">Nutrition Medicine</div>
+				<a class="dashboardLink" href="#"><img src="../img/medicine2.png"></a>
+				<div class="textBelow">Nutrition Medicine</div>
 			</div>
 			
 			<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) {
 //height: 455px; 
 			?>
-				<div style="width: 706px;" class="item">
+				<div style="width: 687px;" class="item">
 					
-					<br /><div class="widget sectionTitle">At A Glance</div><br />
+					<div class="widget sectionTitle" style="margin-bottom:15px;margin-top:15px;">At A Glance</div>
 					
-					<h1 class="sectionHeader">Users in system <strong><?php echo count($users_list); ?></strong></h1>
+					<h1 class="sectionHeader" style="margin-bottom:15px;">Users in system <strong><?php echo count($users_list); ?></strong></h1>
 					
 					<div class="biColumn_Container">
 						<div class="half">

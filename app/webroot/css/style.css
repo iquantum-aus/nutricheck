@@ -941,9 +941,10 @@ pre {
 }
 
 #sidebar-main-menu {
-	width: 80%;
+	width: 100%;
+	/*width: 80%;*/
 	margin: auto;
-	margin-top: 40px;
+	margin-top: 20px;
 }
 
 .sb-menu li {
@@ -1014,9 +1015,9 @@ pre {
 	position: absolute;
 	width: 15px;
 	height: 28px;
-	left: 0;
+	right: -2px;
 	top: 0;
-	margin-left: 106%;
+	/*margin-left: 106%;*/
 	margin-top: 10px;
 	display:none;
 }
@@ -1036,16 +1037,16 @@ pre {
 .blue { color: #2598c8; }
 .green { color: #7bac00; }
 .textBelow {
- width: 80%; 
- margin: auto; 
- line-height: 35px;
- margin-top: 10px;
+	width: 80%; 
+	margin: auto; 
+	line-height: 35px;
+	margin-top: 20px;
 }
 .textBelowsmall {
  width: 80%; 
  margin: auto; 
  line-height: 28px;
- margin-top: 10px;
+ margin-top: 20px;
  font-size: 25px;
  }
 .item { 
@@ -1057,6 +1058,7 @@ text-align: center;
 font-size: 35px; 
 border: 1px solid #dadada; 
 min-height:374px;
+/*min-width:327px;*/
 }
 .item.w2 { width: 50%; }
 
@@ -1100,7 +1102,7 @@ width: 100%;
 
 .sectionTitle {
 	font-weight: bold;
-	font-style: italic;
+	/*font-style: italic;*/
 	color: #2598c8;
 	font-size: 20px;
 	margin-left: 15px;

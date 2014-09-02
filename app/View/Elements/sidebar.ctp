@@ -2,6 +2,16 @@
 	$group_id = $this->Session->read('Auth.User.group_id');
 ?>
 
+<script>
+$(document).ready(function(){
+	// SELECT MENU
+	var getloc = location.pathname;
+	$('a[href="'+getloc+'"]').find('.active-sidebar-menu').each(function(){
+		$(this).addClass('active');
+	});
+});
+</script>
+
 <div class="sb-slidebar sb-left">
 	<div id="logoHolder">
 		<a class="homeLink" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/dashboard">
@@ -13,7 +23,13 @@
 		<?php if($group_id == 1) { ?>
 			<nav>
 				<ul id="sidebar-main-menu" class="sb-menu">
-					<li class="active-sidebar-item"><a href="/users/dashboard"><div class="sideIco" id="dashboardIco"></div>Dashboard<div class="active-sidebar-menu"></div></a></li>
+					<li class="active-sidebar-item">
+						<a href="/users/dashboard">
+						<div class="sideIco" id="dashboardIco"></div>
+						Dashboard
+						<div class="active-sidebar-menu"></div>
+						</a>
+					</li>
 					
 					<!--
 					<li>
