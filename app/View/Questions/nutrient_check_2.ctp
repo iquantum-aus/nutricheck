@@ -18,7 +18,6 @@
 			<div class="left">
 				<form style="min-width: 680px;" method="POST">
 					<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>			
-					<input type="hidden" name="data[Factors][user_id]"  value="<?php echo $user_id; ?>">
 					<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
 					<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
 				</form>
@@ -29,75 +28,73 @@
 	<?php if(!empty($user_id)) { ?>
 		<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
 		
-		<form style="margin-bottom: 40px; float: left; max-width: 1080px;width:100%;" method="POST">
+		<form style="height: 600px; margin-bottom: 40px;max-width: 1080px;width:100%;" method="POST">
 			<?php
 				$raw_questions = $questions;
 				$question_data = array_chunk($questions, 10);
 				$question_data_count = count($question_data);
-				$pcount = 0;
-				$ptotal = count($question_data);
-				//echo count($question_data);
 				foreach($question_data as $key => $questions) {
-				$pcount++;
 			?>
 		
-				<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
-					<tbody style="width: 100%;">	
+				<table style="float:left;width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">					
+					<tbody style="width: 100%;">
 						<tr class="headerHolder" style="width: 100%;">
-							<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
+							<th style="width: 15%;"><span class="blue" style="display:block;">Quest. #</span></th>
 							<th style="width: 53%;">Question</th>
-							<th style="width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
-							<th style="width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
-							<th style="width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
-							<th style="width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
-						</tr>
-						
-						<?php foreach ($questions as $question) { ?>
-							
-							<tr class="rankHolder" style="width:100%;">
-								<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
+							<th style="width: 8%;" class="actions"><span style="display:block;" class="blue">0<br />Never</span></th>
+							<th style="width: 8%;" class="actions"><span style="display:block;" class="blue">1<br />Occasional / Mild</span></th>
+							<th style="width: 8%;" class="actions"><span style="display:block;" class="blue">2<br />Moderate / Frequently</span></th>
+							<th style="width: 8%;" class="actions"><span style="display:block;" class="blue">3<br />Severe / Very Severe</span></th>
+						</tr>						
+						<?php foreach ($questions as $question) { ?>							
+							<tr class="rankHolder" style="width:100%; ">
+								<td style="width: 15%; text-align: center; font-weight: bold;">
+									<span class="blue" style="padding:6px 0 6px 0;display:block;min-height: 50px;"><?php echo h($question['Question']['id']); ?></span>
+								</td>
 								<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
+									<?php
+										for($i = 0; $i<=3; $i++) {										
+											$radio_selected = "";
+											//echo "i = ".$i."<br>";
+											//echo "question['Question']['id'] = ".$question['Question']['id']."<br>";
+											//echo "return_progress question['Question']['id'] = ".$return_progress[$question['Question']['id']]."<br><br>";
+											//echo "i = ".$i."<br>";
+											
+											/*if (isset($return_progress[$question['Question']['id']])){
+												if(($i == $return_progress[$question['Question']['id']])) {
+													$radio_selected = "checked=checked";
+												}
+											}*/
+											
+											if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
+												$radio_selected = "checked=checked";
+											}
+									?>
+								<td style="width:8%;" class="actions">
+									<p>
+										<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+										<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
+										<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+										<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+									</p>
+								</td>
 								<?php
-									for($i = 0; $i<=3; $i++) {
-										
-										$radio_selected = "";
-										if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
-											$radio_selected = "checked=checked";
-										}
-										
-										?>
-											<td style="width:8%;" class="actions">
-												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-												<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
-												<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-												<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
-											</td>
-										<?php
 									}
 								?>
 							</tr>
-							
 						<?php } ?>
-						<tr>
-								<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
-								Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
-								<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
-								<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">PREV</a>
-								<a href="#" id="paginatorNext" class="paginatorNext paginatorButton btn btn-primary <?php if ($pcount==$ptotal){ echo 'disabled'; } ?>">NEXT</a>
-								</span>
-								</td>								
-						</tr>
-					</tbody>
+						</tbody>
 				</table>
-			<?php } ?>			
+			<?php } ?>
+			
 			<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 		</form>
 			
 		<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
-			<form id="paginator_form" style="display:none;">
+			<form id="paginator_form">
 				<input id="currentPaginatorstate" type="hidden" value="0">
 				
-				<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary disabled">PREV</a>
+				<a href="#" id="paginatorPrev" class="paginatorButton btn btn-primary disabled">PREV</a>
 					
 					<?php 
 						/* for($i=0; $i<$question_data_count; $i++) {
@@ -107,10 +104,9 @@
 						} */
 					?>
 				
-				<a href="#" id="paginatorNext" class="paginatorNext paginatorButton btn btn-primary">NEXT</a>
+				<a href="#" id="paginatorNext" class="paginatorButton btn btn-primary">NEXT</a>
 			</form>
 		</div>
-		
 	<?php } else { ?>
 		<div style="margin: 0; color: red;" class="span12 left sectionTitle">You need to select a patient before you can continue</div>		
 	<?php } ?>
@@ -144,39 +140,22 @@
 </style>
 
 <script>
-	function MoveNextPrev(){
-		//var geth = $('#paginator_form').html();
-		//$('#paginator_form').hide();
-		//$('#paginator_form').html('');
-		//$('.questionModules:visible #nextprev').html(geth);
-		//$('.questionModules #nextprev').html(geth);
-	}
-
-	$(document).ready(function() {
-	
-		// KEYBOARD NEXT prev
-		$("body").keydown(function(e) {
-			if(e.keyCode == 37) { // left
-				$('#paginatorPrev').click();
-			}
-			else if(e.keyCode == 39) { // right
-				$('#paginatorNext').click();
-			}
-		});
-	
+	$(document).ready(function() {		
 		var maximum_page = "<?php echo  $question_data_count ?>";
-		$( "#pageSelection_0" ).attr('checked', true);		
+		$( "#pageSelection_0" ).attr('checked', true);
+		
 		var question_data_count = <?php echo $question_data_count; ?>;
 		
 		$('.paginatorSelector').click( function () {
 			var page_number = $(this).val();
-			console.log(page_number);			
+			console.log(page_number);
+			
 			$('.questionModules').fadeOut(500);
 			$('#questionModule_'+page_number).delay(500).fadeIn();
 			$('#currentPaginatorstate').val(page_number);
-		});		
+		});
 		
-		// CHECKBOX CLICK
+		
 		$('.css-label').click( function () {
 			var choice_value = $(this).attr('value');
 			var question_id = $(this).siblings('.AnswerQuestionId').val();
@@ -194,80 +173,106 @@
 			});
 		});
 		
-		/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
-		// NEXT CLICK
-		$(document).on("click", '#paginatorNext', function () {			
+		
+		$(document).on("click", '#paginatorNext', function () {
+			
+			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
+			
 			var question_module_id = "";
 			$('.questionModules').each( function () {
 				if($(this).is(':visible')) {
 					question_module_id = $(this).attr('id');
 				}
-			});			
+			});
+			
 			//total  question count
-			var question_count = $('#'+question_module_id).children('tbody').children('.rankHolder').length;			
+			var question_count = $('#'+question_module_id).children('tbody').children('.rankHolder').length;
+			
 			// variable to check how many of the questions were answered
-			var checked_rank = 0;			
+			var checked_rank = 0;
+			
 			// check how many of the questions were anwered (incrmental count vor checked_rank variable)
-			$('#'+question_module_id).children('tbody').children('.rankHolder').each( function () {				
+			$('#'+question_module_id).children('tbody').children('.rankHolder').each( function () {
+				
 				// check per line if answered "variable"
-				var checked_per_line = 0;				
+				var checked_per_line = 0;
+				
 				// check per line if answered (if answered then increment the total answered questions)
 				$(this).children('td').children('input[type=radio].css-checkbox').each( function () {
 					if($(this).is(':checked')) { 
 						checked_rank++;
 						checked_per_line++;
 					}	
-				});				
+				});
+				
 				if(checked_per_line == 0) {
 					$(this).css("border", "1px solid red");
 				} else {
 					$(this).css("border", "none");
 				}
-			});			
+				
+			});
+			
 			if(checked_rank < question_count) {
 				alert('There are unanswered items in the form. Please address them before you continue');
 				return false;
-			}			
-			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */			
+			}
+			
+			/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
+			
+			
 			var currentPaginatorstate = $('#currentPaginatorstate').val();
-			currentPaginatorstate = parseInt(currentPaginatorstate);			
-			// console.log("current page = "+currentPaginatorstate)			
+			currentPaginatorstate = parseInt(currentPaginatorstate);
+			
+			// console.log("current page = "+currentPaginatorstate)
+			
 			var next_page = currentPaginatorstate+1;
-			// console.log('current_state = ' + next_page);			
+			// console.log('current_state = ' + next_page);
+			
 			if(next_page < maximum_page) {
 				$( "#pageSelection_"+next_page ).attr('checked', true);
 				$('.questionModules').fadeOut(500);
 				$('#questionModule_'+next_page).delay(500).fadeIn();
 				$('#currentPaginatorstate').val(next_page);	
-			}			
+			}
+			
+			$('#paginatorPrev').removeClass('disabled');
+			
 			if(next_page == (maximum_page-1)) {
-				$('.save-answer').fadeIn();				
-			}			
+				$('.save-answer').fadeIn();
+				$(this).addClass('disabled');
+			}
+			
 			return false;
-		});		
+		});
 		
-		// PREV CLICK
 		$(document).on('click', '#paginatorPrev', function () {
 			var currentPaginatorstate = $('#currentPaginatorstate').val();
-			currentPaginatorstate = parseInt(currentPaginatorstate);			
+			currentPaginatorstate = parseInt(currentPaginatorstate);
+			
 			var prev_page = currentPaginatorstate-1;
-			console.log('current_state = ' + prev_page);			
-			$('.save-answer').hide();			
+			console.log('current_state = ' + prev_page);
+			
+			$('.save-answer').hide();
+			
 			if(prev_page >= 0) {
 				$( "#pageSelection_"+prev_page ).attr('checked', true);
 				$('.questionModules').fadeOut(500);
-				$('#questionModule_'+prev_page).delay(500).fadeIn(500,function(){
-					//MoveNextPrev();
-				});
+				$('#questionModule_'+prev_page).delay(500).fadeIn();
 				$('#currentPaginatorstate').val(prev_page);
-			}			
+				
+				$('#paginatorNext').removeClass('disabled');
+			} else {
+				$(this).addClass('disabled');
+			}
+			
 			return false;
-		});		
+		});
+		
 		if(question_data_count > 1) {
 			$('.save-answer').hide();
 		} else {
 			$('.save-answer').show();
 		}
 	});
-	
 </script>

@@ -1575,8 +1575,8 @@ div.factorNames { float: left; margin-top: 2px; }
 }
 /* QUESTION TABLE */
 .rankHolder td{
-	/*padding:6px 0 6px 0;*/
-	padding:0;
+	padding:6px 0 6px 0;
+	/*padding:0;*/
 	vertical-align: middle;
 	min-height: 50px;
 	/*float: left;*/
