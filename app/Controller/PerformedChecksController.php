@@ -145,20 +145,29 @@ class PerformedChecksController extends AppController {
 					$user_info = $this->User->findById($user_info['User']['parent_id']);
 				}
 				
-				$email = $user_info['User']['email'];
+				$send_alert = true;
+				$per_user_difference = strtotime($today) - strtotime($user_info['User']['last_alerted']);
 				
-				$data_modification = array();
-				$datetime = date("Y-m-d H:i:s");
-				$data_modification['User']['id'] = $user_id;
-				$data_modification['User']['last_alerted'] = $datetime;
+				$per_user_days_difference =  floor($per_user_difference/(60*60*24));
+				$per_user_hours_difference =  floor($per_user_difference/(60*60));
+				$per_user_minutes_difference =  floor($per_user_difference/60);
+			
+				// if in the last of alerted, script will check whether the usre has been alerted before and will check if the previous alert was 7 days ago
+				if($per_user_days_difference < 7 && !empty($user_info['User']['last_alerted'])) {
+					$send_alert = false;
+				}
 				
-				$result = $this->send($email, $name);
-				
-				echo $user_id;
-				echo "<br />";
-				
-				if($result) {
-					$this->User->save($data_modification);
+				if($send_alert) {
+					$email = $user_info['User']['email'];
+					$data_modification = array();
+					$datetime = date("Y-m-d H:i:s");
+					$data_modification['User']['id'] = $user_id;
+					$data_modification['User']['last_alerted'] = $datetime;
+					
+					$result = $this->send($email, $name);
+					if($result) {
+						$this->User->save($data_modification);
+					}
 				}
 			}
 		}
