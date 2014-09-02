@@ -114,10 +114,19 @@ class PerformedChecksController extends AppController {
 		
 		$today = date('Y-m-d');
 		
-		$user_to_send_email = $this->PerformedCheck->find('list', array('fields' => array('created', 'user_id'), 'conditions' => array('isComplete' => 0)));
+		$user_to_send_email = $this->PerformedCheck->find('all', array('fields' => array('created', 'user_id', 'url'), 'conditions' => array('isComplete' => 0)));
+		
+		echo "<pre>";
+			print_r($user_to_send_email);
+		echo "</pre>";
+		exit();
 		
 		$emails_to_send_alert = array();
-		foreach($user_to_send_email as $created_date => $user_id) {
+		foreach($user_to_send_email as $instance_key => $instance_info) {
+			
+			$user_id = $instance_info['PerformedCheck']['user_id'];
+			$created_date = $instance_info['PerformedCheck']['created'];
+			$url = $instance_info['PerformedCheck']['url'];
 			
 			$difference = strtotime($today) - strtotime($created_date);
 			
@@ -164,7 +173,7 @@ class PerformedChecksController extends AppController {
 					$data_modification['User']['id'] = $user_id;
 					$data_modification['User']['last_alerted'] = $datetime;
 					
-					$result = $this->send($email, $name);
+					$result = $this->send($email, $name, $url);
 					if($result) {
 						$this->User->save($data_modification);
 					}
@@ -176,7 +185,7 @@ class PerformedChecksController extends AppController {
 	}
 	
 	
-	function send($email, $name) { 
+	function send($email, $name, $url) { 
 		// endor('phpmailer'.DS.'class.phpmailer'); 
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		$mail = new PHPMailer(); 
@@ -199,9 +208,9 @@ class PerformedChecksController extends AppController {
 		$mail->WordWrap = 50;  // set word wrap to 50 characters
 
 		$mail->IsHTML(true);  // set email format to HTML 
-
+		
 		$mail->Subject = "Incomplete Questionnaire";
-		$mail->Body    = "You have an incomplete Nutrient Check please go back to the system to complete the check."; 
+		$mail->Body    = "You have an incomplete Nutrient Check please click <a href='".$url."'>here</a> to go back to the system and complete the check."; 
 
 		if($mail->Send()) {
 			return true;

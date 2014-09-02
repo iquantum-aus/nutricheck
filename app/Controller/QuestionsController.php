@@ -170,6 +170,13 @@ class QuestionsController extends AppController {
 	
 	public function nutrient_check( $method = null ) {
 		
+		if(!empty($method)) {
+			if($method != "factors") {
+				echo "<h1>This is an invalid address</h1>";
+				exit();
+			}
+		}
+		
 		$this->loadModel('PerformedCheck');
 		$this->loadModel('SelectedAnswerLog');
 		$this->loadModel('SelectedFactorLog');
@@ -198,13 +205,14 @@ class QuestionsController extends AppController {
 			$performed_check_data = array();
 			$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
 			$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
+			$performed_check_data['PerformedCheck']['url'] = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 				$performed_check_data['PerformedCheck']['user_id'] = $behalfUserId;
-				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId, 'url' => $_SERVER['REQUEST_URI'])));
 			} else {
 				$performed_check_data['PerformedCheck']['user_id'] = $user_info['id'];
-				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'], 'url' => $_SERVER['REQUEST_URI'])));
 			}
 			
 			
