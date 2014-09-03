@@ -33,7 +33,10 @@
 				}
 			?>
 			
-			<div id="headerScript">Welcome <strong><?php echo $strip_name; ?></strong></div>
+			<div id="headerScript">
+			<!--Welcome <strong><?php //echo $strip_name; ?></strong>-->
+			MENU
+			</div>
 			
 			<div class="nav-collapse collapse">
 				<ul class="nav secondary-nav pull-right">
@@ -43,6 +46,7 @@
 						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
 					<?php } ?>
 					
+					<li class="menu" style="color:black;padding: 10px 15px 10px;">Welcome <strong><?php echo $strip_name; ?></strong></li>
 					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About Nutricheck</a></li>
 					<li class="menu"><?php echo $this->Html->link('My Profile', '/users/edit_profile');?></li>
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
