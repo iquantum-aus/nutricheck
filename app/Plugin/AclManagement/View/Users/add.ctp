@@ -44,11 +44,46 @@
 		
 		<?php if($user_info['group_id'] == 2) { ?>
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'placeholder' => 'Age')); ?></div>
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.birthday', array('data-date-format' => 'yyyy-mm-dd', 'type' => 'text', 'div' => false, 'class' => 'hasDatepicker', 'id' => 'datepicker', 'placeholder' => 'Birthday')); ?></div>
+		
+		<div class="left span12 inputHolder">
+			<label>Birthday</label>
+			<select required name="data[UserProfile][birthday][month]">
+				<option value="">Select Month</option>
+				<option value="01">January</option>
+				<option value="02">February</option>
+				<option value="03">March</option>
+				<option value="04">April</option>
+				<option value="05">May</option>
+				<option value="06">June</option>
+				<option value="07">July</option>
+				<option value="08">August</option>
+				<option value="09">September</option>
+				<option value="10">October</option>
+				<option value="11">November</option>
+				<option value="12">December</option>
+			</select>
+			-
+			<select required name="data[UserProfile][birthday][day]">
+				<option value="">Select Day</option>
+				<?php  for($i=1; $i<=31; $i++) { ?>
+					<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+				<?php } ?>
+			</select>
+			-
+			<select required name="data[UserProfile][birthday][year]">
+				<option value="">Select Year</option>
+				<?php  for($y=1950; $y<=2014; $y++) { ?>
+					<option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+				<?php } ?>
+			</select>
+		</div>
+		
+		
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.nationality', array('type' => 'text', 'div' => false, 'placeholder' => 'Nationality')); ?></div>
 		<?php } ?>
 
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'placeholder' => 'Post Code')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
 		
 		<br /><br />

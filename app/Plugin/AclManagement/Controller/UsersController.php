@@ -143,7 +143,7 @@ class UsersController extends AclManagementAppController {
 		
 		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
-            
+			
 			$email = $this->request->data['User']['email'];
 			$this->User->unbindModelAll();
 			$user_existence = $this->User->findAllByEmail($email);
