@@ -1637,8 +1637,12 @@ div.factorNames { float: left; margin-top: 2px; }
 
 .navbar-fixed-top, .navbar-fixed-bottom{
 	-webkit-box-shadow: 0px 2px 10px 0px rgba(50, 50, 50, 0.3);
--moz-box-shadow:    0px 2px 10px 0px rgba(50, 50, 50, 0.3);
-box-shadow:         0px 2px 10px 0px rgba(50, 50, 50, 0.3);
+	-moz-box-shadow:    0px 2px 10px 0px rgba(50, 50, 50, 0.3);
+	box-shadow:         0px 2px 10px 0px rgba(50, 50, 50, 0.3);
+}
+
+.sb-submenu{
+	text-indent: 6px;
 }
 
 @media (max-width: 800px) {
