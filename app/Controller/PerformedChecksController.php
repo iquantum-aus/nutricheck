@@ -112,14 +112,9 @@ class PerformedChecksController extends AppController {
 		
 		$this->loadModel('User');	
 		
-		$today = date('Y-m-d');
+		$today = date("Y-m-d H:i:s");
 		
 		$user_to_send_email = $this->PerformedCheck->find('all', array('fields' => array('created', 'user_id', 'url'), 'conditions' => array('isComplete' => 0)));
-		
-		echo "<pre>";
-			print_r($user_to_send_email);
-		echo "</pre>";
-		exit();
 		
 		$emails_to_send_alert = array();
 		foreach($user_to_send_email as $instance_key => $instance_info) {
@@ -135,8 +130,10 @@ class PerformedChecksController extends AppController {
 			$minutes_difference =  floor($difference/60);
 			
 			// if($days_difference >= 7) {
-			if($minutes_difference >= 30) {
-			
+			if($minutes_difference >= 1) {
+				
+				echo $user_id."<br />";
+				
 				$this->User->unbindModel(
 					array(
 						'hasMany' => array('Answer'),
@@ -162,9 +159,9 @@ class PerformedChecksController extends AppController {
 				$per_user_minutes_difference =  floor($per_user_difference/60);
 			
 				// if in the last of alerted, script will check whether the usre has been alerted before and will check if the previous alert was 7 days ago
-				if($per_user_days_difference < 7 && !empty($user_info['User']['last_alerted'])) {
-					$send_alert = false;
-				}
+				// if($per_user_days_difference < 7 && !empty($user_info['User']['last_alerted'])) {
+					// $send_alert = false;
+				// };
 				
 				if($send_alert) {
 					$email = $user_info['User']['email'];
@@ -176,6 +173,7 @@ class PerformedChecksController extends AppController {
 					$result = $this->send($email, $name, $url);
 					if($result) {
 						$this->User->save($data_modification);
+						echo $email." = 1<br />";
 					}
 				}
 			}

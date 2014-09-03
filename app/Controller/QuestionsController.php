@@ -205,14 +205,16 @@ class QuestionsController extends AppController {
 			$performed_check_data = array();
 			$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
 			$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
-			$performed_check_data['PerformedCheck']['url'] = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+			
+			$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+			$performed_check_data['PerformedCheck']['url'] = $full_url;
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 				$performed_check_data['PerformedCheck']['user_id'] = $behalfUserId;
-				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId, 'url' => $_SERVER['REQUEST_URI'])));
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId, 'url' => $full_url)));
 			} else {
 				$performed_check_data['PerformedCheck']['user_id'] = $user_info['id'];
-				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'], 'url' => $_SERVER['REQUEST_URI'])));
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'], 'url' => $full_url)));
 			}
 			
 			
