@@ -11,8 +11,8 @@
 			<div class="left">
 				<form style="min-width: 420px;" method="POST">
 					<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
-					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $this->Session->read('behalfUserId'))); ?>
-					<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'empty' => 'Select patient to continue', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $this->Session->read('behalfUserId'))); ?>
+					<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
 				</form>
 			</div>
 		<?php } ?>
@@ -20,7 +20,7 @@
 		<?php if(!empty($method)) { ?>
 			<div class="left">
 				<form style="min-width: 680px;" method="POST">
-					<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>			
+					<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>
 					<input type="hidden" name="data[Factors][user_id]"  value="<?php echo $user_id; ?>">
 					<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
 					<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
@@ -171,10 +171,14 @@
 				$('#paginatorNext').click();
 			}
 		});
+		
+		$(".chosen-select").change( function () {
+			$(this).parent('form').submit();
+		});
 	
 		var maximum_page = "<?php echo  $question_data_count ?>";
 		$( "#pageSelection_0" ).attr('checked', true);		
-		var question_data_count = <?php echo $question_data_count; ?>;
+		var question_data_count = "<?php echo $question_data_count; ?>";
 		
 		$('.paginatorSelector').click( function () {
 			var page_number = $(this).val();

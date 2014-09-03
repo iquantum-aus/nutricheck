@@ -277,7 +277,7 @@ class QuestionsController extends AppController {
 					);
 				}
 				
-			} else if(isset($this->request->data['User']['submit'])) {				
+			} else if(isset($this->request->data['User']['id'])) {				
 				
 				$this->Session->write('behalfUserId', $this->request->data['User']['id']);
 				

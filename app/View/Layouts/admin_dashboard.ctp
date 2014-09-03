@@ -51,6 +51,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('jquery.fancybox');
 		echo $this->Html->css('style');
 		echo $this->Html->css('datepicker');
+		echo $this->Html->css('pace');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 	?>
@@ -84,6 +85,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('Chart.min');
 		echo $this->Html->script('jquery.fancybox');
 		echo $this->Html->script('bootstrap-datepicker');
+		echo $this->Html->script('pace');
 		echo $this->fetch('script');
  	?>
 </body>
