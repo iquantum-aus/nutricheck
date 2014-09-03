@@ -1645,6 +1645,11 @@ div.factorNames { float: left; margin-top: 2px; }
 	text-indent: 6px;
 }
 
+.table th, .table th a{
+	background:#f1f1f1;
+	/*text-transform:uppercase;*/
+}
+
 @media (max-width: 800px) {
 
 }

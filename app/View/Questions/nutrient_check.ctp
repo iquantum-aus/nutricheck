@@ -49,10 +49,10 @@
 						<tr class="headerHolder" style="width: 100%;">
 							<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
 							<th style="width: 53%;">Question</th>
-							<th style="width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
-							<th style="width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
-							<th style="width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
-							<th style="width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
+							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">0<br />Never</span></th>
+							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
+							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
+							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
 						</tr>
 						
 						<?php foreach ($questions as $question) {

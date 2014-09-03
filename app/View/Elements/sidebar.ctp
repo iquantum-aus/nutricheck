@@ -56,7 +56,7 @@ $(document).ready(function(){
 						<a class="sb-toggle-submenu"><div class="sideIco" id="widgetsIco"></div>Videos<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 						<ul class="sb-submenu">
 							<li><a href="/videos">List Videos</a></li>
-							<li><a href="/videos/create">Create Videos</a></li>
+							<li><a href="/videos/add">Create Videos</a></li>
 						</ul>
 					</li>
 					
