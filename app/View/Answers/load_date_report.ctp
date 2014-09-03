@@ -136,7 +136,6 @@
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
-							
 							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background-color: <?php echo $graphColor; ?>;">
 								<?php // echo round($second_percentage_value[$list_key]); ?>
 							</div>

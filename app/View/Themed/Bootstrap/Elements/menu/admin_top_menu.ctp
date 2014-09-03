@@ -12,11 +12,11 @@
 				<span class="icon-bar"></span>
 			</button>
 			
-			<div class="sb-toggle-left navbar-left">
+			<!--<div class="sb-toggle-left navbar-left">
 				<div class="navicon-line"></div>
 				<div class="navicon-line"></div>
 				<div class="navicon-line"></div>
-			</div>
+			</div>-->
 			
 			<?php
 				$user_info = $this->Session->read('Auth');
@@ -35,21 +35,40 @@
 			
 			<div id="headerScript">
 			<!--Welcome <strong><?php //echo $strip_name; ?></strong>-->
-			MENU
+			<img src="/img/nutricheck-logo.png" style="max-height:80px;">
 			</div>
 			
 			<div class="nav-collapse collapse">
-				<ul class="nav secondary-nav pull-right">
-					
-					<?php if($user_info['User']['group_id'] == 2) { ?>
-						<li><a target="_blank" href="/questions/print_question_list">Print Question List</a></li>
-						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
-					<?php } ?>
-					
-					<li class="menu" style="color:black;padding: 10px 15px 10px;">Welcome <strong><?php echo $strip_name; ?></strong></li>
-					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About Nutricheck</a></li>
-					<li class="menu"><?php echo $this->Html->link('My Profile', '/users/edit_profile');?></li>
+
+				<?php
+				/*
+					NOTE
+					All li items must be float right
+				*/
+				?>
+				<ul class="nav small">
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
+					<li class="menu"><?php echo $this->Html->link('Contact', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('FAQ', '/users/edit_profile');?></li>
+					<li class="menu bolda" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
+				</ul>
+				
+				<ul class="nav secondary-nav big">
+					<li class="menu">
+						<a href="javascript:void(0);" onclick="" title="Adjust fonts smaller" class="fontchangesmall">T</a>
+						<a href="javascript:void(0);" onclick="" title="Adjust fonts bigger" class="fontchangebig">T</a>
+					</li>
+					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>
+					<li class="menu"><?php echo $this->Html->link('Widgets', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('Nutrition Guides', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('Customers', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('NutriCheck', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('Dashboard', '/users/dashboard');?></li>
+					
+					<?php if($user_info['User']['group_id'] == 2) { ?>						
+						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
+						<li><a target="_blank" href="/questions/print_question_list">Print Question List</a></li>
+					<?php } ?>			
 				</ul>
 
 				<ul class="nav">

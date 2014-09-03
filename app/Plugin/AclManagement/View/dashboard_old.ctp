@@ -1,8 +1,4 @@
 <div id="contentWrapper">
-		<div class="dashboardtopimg">
-		<img src="/img/dashboardtop.jpg" style="max-height:300px;">
-		</div>
-
 		<div class="sectionTitle">Dashboard</div>
 		
 		<div id="mainContentWrapper">

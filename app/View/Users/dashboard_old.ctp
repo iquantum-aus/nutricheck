@@ -1,8 +1,4 @@
 <div id="contentWrapper">
-		<div class="dashboardtopimg">
-		<img src="/img/dashboardtop.jpg" style="max-height:300px;">
-		</div>
-
 		<div class="sectionTitle">Dashboard</div>
 		
 		<div id="mainContentWrapper">
@@ -14,19 +10,16 @@
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item green">
-				<div class="textBelow">How and what is required in the questionnaire and what the process is</div>
+				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
+				<div class="textBelow">aHow and what is required in the questionnaire and what the process is</div>				
 			</div>
 			
-			<div style="height: 374px; width: 327px;" class="item green">
-				<div class="textBelow">How clients should access NutriCheck</div>
+			<div style="height: 374px; width: 327px;" class="item">
+				 How clients should access NutriCheck
 			</div>
 			
-			<div style="height: 374px; width: 327px;" class="item green">
-				<div class="textBelow">Training for staff</div>
-			</div>
-			
-			<div style="height: 374px; width: 327px;" class="item green">
-				<a href="#"><div class="textBelow">Nutrition Medicine</div></a>
+			<div style="height: 374px; width: 327px;" class="item">
+				Training for staff
 			</div>
 			
 			<?php if($this->Session->read('Auth.User.group_id') == 1 || $this->Session->read('Auth.User.group_id') == 2) { ?>
@@ -147,7 +140,7 @@
 					</video>
 			</div>
 			
-			<?php if(!empty($videos)) { ?>
+			<?php if(!empty($videos) && isset($videos)) { ?>
 				<?php foreach($videos as $video) { ?>
 					<div style="height: 281px; width: 500px;" class="item">
 						<?php

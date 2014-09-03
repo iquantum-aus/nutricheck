@@ -73,7 +73,12 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<?php echo $this->element('sidebar'); ?>
 		<?php echo $this->fetch('content'); ?>
 	</div>
-	<footer class="container"></footer><!-- /container -->
+	<div class="footerbottom">
+		Copyrighted (c) 2014 NutriCheck
+		<a href="#">Terms of Use</a>
+		<a href="#">Privacy</a>
+	</div>
+	<!-- /container -->
 
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
@@ -140,7 +145,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			
 			var minimum_height = $('#content').height();
 			minimum_height = minimum_height+65;
-			$('#sb-site').css('min-height', minimum_height);
+			//$('#sb-site').css('min-height', minimum_height);
 			
 		});
 		
