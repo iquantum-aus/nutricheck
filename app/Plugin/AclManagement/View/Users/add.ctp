@@ -7,36 +7,40 @@
 	<fieldset>
 		<legend><?php echo __('New User'); ?></legend>
 		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'placeholder' => 'Firstname')); ?></div>
+		<?php if($user_info['group_id'] != 1) { ?>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('div' => false, 'placeholder' => 'Firstname')); ?></div>
+			
+			<?php /*
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'placeholder' => 'Middlename')); ?></div>
+			*/ ?>
+			
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'placeholder' => 'Lastname')); ?></div>
+		<?php } ?>
 		
-		<?php /*
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'placeholder' => 'Middlename')); ?></div>
-		*/ ?>
-		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('div' => false, 'placeholder' => 'Lastname')); ?></div>
-		
-		<div class="left span12 inputHolder">
-			<label>Gender</label>
-			<div class="left">
-				<input name="data[UserProfile][gender]" id="UserProfileGender_" value="" type="hidden">
-				
+		<?php if($user_info['group_id'] != 1) { ?>
+			<div class="left span12 inputHolder">
+				<label>Gender</label>
 				<div class="left">
-					<input name="data[UserProfile][gender]" id="UserProfileGenderMale" value="male" type="radio">
-					<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderMale">male</label>
-				</div>
-				
-				<div class="left">
-					<input name="data[UserProfile][gender]" id="UserProfileGenderFemale" value="female" type="radio">
-					<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderFemale">female</label>
+					<input name="data[UserProfile][gender]" id="UserProfileGender_" value="" type="hidden">
+					
+					<div class="left">
+						<input name="data[UserProfile][gender]" id="UserProfileGenderMale" value="male" type="radio">
+						<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderMale">male</label>
+					</div>
+					
+					<div class="left">
+						<input name="data[UserProfile][gender]" id="UserProfileGenderFemale" value="female" type="radio">
+						<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderFemale">female</label>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'placeholder' => 'Contact Numbers', 'label' => 'Contact numbers - landline, mobile')); ?></div>
+		<?php } ?>
 		
 		<?php if($user_info['group_id'] == 1) { ?>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
 		<?php } ?>
+		
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'placeholder' => 'Contact Numbers', 'label' => 'Contact numbers - landline, mobile')); ?></div>
 		
 		<?php if($user_info['group_id'] == 2) { ?>
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'placeholder' => 'Age')); ?></div>
@@ -59,7 +63,7 @@
 		<div class="left span12 inputHolder">
 			<?php	
 				if($user_info['group_id'] == 1) {
-					echo $this->Form->input('group_id', array('div'=>false));
+					echo $this->Form->hidden('group_id', array('value' => 2));
 				} else {
 					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
 				}
