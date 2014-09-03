@@ -1645,9 +1645,22 @@ div.factorNames { float: left; margin-top: 2px; }
 	text-indent: 6px;
 }
 
-.table th, .table th a{
-	background:#f1f1f1;
+table tr th{
+	background-color:#f1f1f1 !important;
 	/*text-transform:uppercase;*/
+}
+.headerHolder th{
+	background-color:transparent !important;
+}
+tr:hover{
+	background:#FDFDFF;
+}
+
+.pagination ul li{
+	margin:0;
+}
+.pagination ul li.current{
+	color:gray;
 }
 
 @media (max-width: 800px) {
