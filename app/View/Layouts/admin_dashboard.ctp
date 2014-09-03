@@ -63,6 +63,10 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<script src="//vjs.zencdn.net/4.5/video.js"></script>
 	
 </head>
+<?php
+
+// style="zoom:1;-moz-transform:scale(1);"
+?>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<header>
 		<?php echo $this->element("menu/admin_top_menu"); ?>

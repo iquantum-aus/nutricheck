@@ -55,8 +55,8 @@
 				
 				<ul class="nav secondary-nav big">
 					<li class="menu">
-						<a href="javascript:void(0);" onclick="" title="Adjust fonts smaller" class="fontchangesmall">T</a>
-						<a href="javascript:void(0);" onclick="" title="Adjust fonts bigger" class="fontchangebig">T</a>
+						<a href="javascript:void(0);" onclick="ZoomPage('up');" title="Adjust fonts smaller" class="fontchangesmall">T-</a>
+						<a href="javascript:void(0);" onclick="ZoomPage('down');" title="Adjust fonts bigger" class="fontchangebig">T+</a>
 					</li>
 					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>
 					<li class="menu"><?php echo $this->Html->link('Widgets', '/users/edit_profile');?></li>
@@ -77,6 +77,38 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	var curzoom = 1;
+	function ZoomPage(upordown){
+		if (curzoom>=1.2 && upordown=="down"){
+			console.log("Zoom up not allowed");
+		}
+		else if (curzoom<=0.8 && upordown=="up"){
+			console.log("Zoom down not allowed");
+		}
+		else{
+			if (upordown=="up"){
+				curzoom = (curzoom-0.1);
+				console.log("Zoom up set to : " + curzoom);
+				$('body').css({
+					'zoom':curzoom,
+					'-moz-transform':'scale('+curzoom+')'			
+				});
+				//zoom:1;-moz-transform:scale(1);
+			}
+			else{
+				curzoom = (curzoom+0.1);
+				console.log("Zoom down set to : " + curzoom);
+				$('body').css({
+					'zoom':curzoom,
+					'-moz-transform':'scale('+curzoom+')'			
+				});
+			}
+		}
+		
+	}
+</script>
 
 <div class="hidden">
 	<div id="nutricheckProfile" style="width:600px;">
