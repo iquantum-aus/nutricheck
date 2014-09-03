@@ -48,7 +48,7 @@
 
 			
 			<br /><br />
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email', 'readonly' => true)); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.password', array('div' => false, 'placeholder' => 'Password')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.password2', array('type' => 'password', 'div' => false, 'placeholder' => 'Repeat Password', 'label' => 'Repeat Password')); ?></div>			
 

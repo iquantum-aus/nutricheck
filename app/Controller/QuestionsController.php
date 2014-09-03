@@ -393,7 +393,7 @@ class QuestionsController extends AppController {
 				// if progress gets completed, then will remove the instances of previous logs so that it will make the questionnaire fresh in view
 					
 					$this->SelectedAnswerLog->query('DELETE FROM selected_answer_logs where user_id = '.$return_user_id);
-					$this->SelectedFactorLog->query('DELETE FROM selected_factor_logs WHERE user_id = '.$this->request->data['Factors']['user_id']);
+					$this->SelectedFactorLog->query('DELETE FROM selected_factor_logs WHERE user_id = '.$return_user_id);
 				
 				/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 				

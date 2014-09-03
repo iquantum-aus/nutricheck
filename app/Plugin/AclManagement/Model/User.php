@@ -10,7 +10,7 @@ class User extends AclManagementAppModel {
     public $actsAs = array('Acl' => array('type' => 'requester'));
     public $validate = array(
 		
-		'email' => array(
+/* 		'email' => array(
             'email' => array(
                 'required' => true,
                 'allowEmpty' => false,
@@ -24,7 +24,7 @@ class User extends AclManagementAppModel {
                 'rule' => 'isUnique',
                 'message' => 'Email already in use.'
             )
-        )
+        ) */
 		
 //        'username' => array(
 //            'alphanumeric' => array(

@@ -9,7 +9,7 @@
 	<div style="margin: 0;" class="span12">
 		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 			<div class="left">
-				<form style="min-width: 420px;" method="POST">
+				<form style="min-width: 420px;" method="POST" id="UserSelect">
 					<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
 					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'empty' => 'Select patient to continue', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $this->Session->read('behalfUserId'))); ?>
 					<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
@@ -49,10 +49,10 @@
 						<tr class="headerHolder" style="width: 100%;">
 							<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
 							<th style="width: 53%;">Question</th>
-							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">0<br />Never</span></th>
-							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
-							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
-							<th style="width: 8%;vertical-align: top;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
+							<th style="width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
+							<th style="width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
+							<th style="width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
+							<th style="width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
 						</tr>
 						
 						<?php foreach ($questions as $question) {
@@ -172,7 +172,7 @@
 			}
 		});
 		
-		$(".chosen-select").change( function () {
+		$("#UserSelect .chosen-select").change( function () {
 			$(this).parent('form').submit();
 		});
 	
