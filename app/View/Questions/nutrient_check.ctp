@@ -146,7 +146,7 @@
 	<div class="hidden">
 		<div id="verifyAdminPass" style="width: 320px;">
 			<form style="width: 310px;" id="verifyPassword">
-				<h4>Admin Password</h4>
+				<h4>Moderator Password</h4>
 				<input type="passwod" name="data[User][password]" id="passwordValue" style="float: left; clear: none; width: 225px;">
 				<input type="button" value="Verify" id="verifyPassword" class="btn btn-success" style="float: left; clear: none; margin-left: 15px;">
 			</form>
