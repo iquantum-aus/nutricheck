@@ -43,19 +43,23 @@
 				<a href="#" class="dashbutton dashbutton5">REPORTS</a>
 			</div>
 			
+			<?php
+				$iconstyle = "margin:10px auto 10px auto;max-width:175px;";
+			?>
 			
-			<div style="height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox">
-				<div class="textBelowsmall">What is nutricheck</div>
+			
+			<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox">
+				<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
+				<div class="textBelowsmall blue">What is nutricheck</div>				
 				<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. 
 Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
 			</div>
 			
-			<div style="height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox">
-				<div class="textBelowsmall">Benefits</div>
+			<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox">
+				<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
+				<div class="textBelowsmall green">Benefits</div>				
 				<div class="textBelowcontent">
 				<ul class="biglist">
-					<li>Benefit</li>
-					<li>Benefit</li>
 					<li>Benefit</li>
 					<li>Benefit</li>
 					<li>3-4 points only</li>
@@ -63,12 +67,13 @@ Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</
 				</div>
 			</div>
 			
-			<div style="height: 374px; width: 26%;margin:0 0 40px 0;" class="dashboardbox">
+			<div style="min-height: 374px; width: 26%;margin:0 0 40px 0;" class="dashboardbox">
 				<img src="../img/happypeople.jpg" style="width:100%;height:100%;">
 			</div>
 			
-			<div style="height: 374px; width: 327px;" class="dashboardbox">
-				<div class="textBelowsmall">HELP & FAQ</div>
+			<div style="min-height: 374px; width: 327px;" class="dashboardbox">
+				<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+				<div class="textBelowsmall green">HELP & FAQ</div>				
 				<div class="textBelowcontent">				
 				Need help, or need to talk to us about something?<br><br>
 				Please check out the FAQ or contact the NutriCheck team on<br>
