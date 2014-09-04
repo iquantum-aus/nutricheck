@@ -159,7 +159,8 @@ class UsersController extends AclManagementAppController {
 				}
 				
 				if(isset($this->request->data['create_and_answer'])) {
-					$this->request->data['User']['status'] = 1;
+					$this->Session->write('isCreateAnswer', 1);
+					$this->request->data['User']['status'] = 0;
 				}
 				
 				$to_hash = time();

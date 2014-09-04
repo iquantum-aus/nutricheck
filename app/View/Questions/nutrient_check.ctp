@@ -5,16 +5,28 @@
 	$colorRowChecked = "#F1F1F1";
 ?>
 
-<div class="questions index">	
+<div class="questions index">
 	<div style="margin: 0;" class="span12">
 		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
-			<div class="left">
-				<form style="min-width: 420px;" method="POST" id="UserSelect">
-					<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
-					<?php echo $this->Form->input('User.id', array('options' => $users_list, 'empty' => 'Select patient to continue', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $this->Session->read('behalfUserId'))); ?>
-					<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
-				</form>
-			</div>
+			<?php if($iscreateAnswer != 1) { ?>
+				<div class="left">
+					<form style="min-width: 420px;" method="POST" id="UserSelect">
+						<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
+						<?php echo $this->Form->input('User.id', array('options' => $users_list, 'empty' => 'Select patient to continue', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $this->Session->read('behalfUserId'))); ?>
+						<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
+					</form>
+				</div>
+			<?php } else { ?>
+				<style>
+					.navbar { display: none; }
+					#signedAsHolder { position: absolute; top: 25px; font-size: 18px; color: #a2d52b; }
+				</style>
+				
+				<div id="signedAsHolder">
+					<strong style="color: #30aa39; text-transform: uppercase;">Welcome:</strong> <?php echo $users_list[$this->Session->read('behalfUserId')]; ?>
+				</div>
+				
+			<?php } ?>
 		<?php } ?>
 		
 		<?php if(!empty($method)) { ?>
@@ -32,7 +44,7 @@
 	<?php if(!empty($user_id)) { ?>
 		<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
 		
-		<form style="margin-bottom: 40px; float: left; max-width: 1080px;width:100%;" method="POST">
+		<form style="margin-bottom: 40px; float: left; max-width: 1080px;width:100%;" method="POST" id="nutricheckAnalysis">
 			<?php
 				$raw_questions = $questions;
 				$question_data = array_chunk($questions, 10);
@@ -98,7 +110,12 @@
 					</tbody>
 				</table>
 			<?php } ?>			
-			<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
+			
+			<?php if($iscreateAnswer != 1) { ?>
+				<input type="button" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
+			<?php } else { ?>
+				<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
+			<?php } ?>
 		</form>
 			
 		<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
@@ -124,6 +141,18 @@
 	<?php } ?>
 </div>
 
+<?php if($iscreateAnswer != 1) { ?>
+	<a href="#verifyAdminPass" class="hidden fancybox" id="verifyTrigger"></a>
+	<div class="hidden">
+		<div id="verifyAdminPass" style="width: 320px;">
+			<form style="width: 310px;" id="verifyPassword">
+				<h4>Admin Password</h4>
+				<input type="passwod" name="data[User][password]" id="passwordValue" style="float: left; clear: none; width: 225px;">
+				<input type="button" value="Verify" id="verifyPassword" class="btn btn-success" style="float: left; clear: none; margin-left: 15px;">
+			</form>
+		</div>
+	</div>
+<?php } ?>
 
 <?php /*
 <div class="actions">
@@ -161,7 +190,39 @@
 	}
 
 	$(document).ready(function() {
-	
+		
+		<?php if($iscreateAnswer != 1) { ?>
+			$('.save-answer').click( function () {
+				$('#verifyTrigger').click();
+			});
+			
+			$('input#verifyPassword').click( function () {
+				var passwordValue = $('#passwordValue').val();
+				if(passwordValue == "") {
+					alert('Password can not be empty');
+				} else {
+					
+					$.ajax({
+						async:true,
+						data:$('#passwordValue').serialize(),
+						dataType:'html',
+						success:function (data, textStatus) {						
+							if(data == 1) {
+								$("#nutricheckAnalysis").submit();
+							} else {
+								alert('Password is invalid');
+							}			
+						},
+						type:'post',
+						url:"../questions/verify_password/"
+					});
+					
+				}
+				
+				return false;
+			});
+		<?php } ?>
+		
 		// KEYBOARD NEXT prev
 		$("body").keydown(function(e) {
 			if(e.keyCode == 37) { // left

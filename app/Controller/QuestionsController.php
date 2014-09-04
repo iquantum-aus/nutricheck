@@ -15,7 +15,7 @@ class QuestionsController extends AppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
 		} else {
-			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list');
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password');
 		}
 	}
 	
@@ -170,6 +170,13 @@ class QuestionsController extends AppController {
 	
 	public function nutrient_check( $method = null ) {
 		
+		// $this->Session->write('isCreateAnswer', 1);
+		
+		$iscreateAnswer = 0;
+		if($this->Session->read('isCreateAnswer') != "") {
+			$iscreateAnswer = $this->Session->read('isCreateAnswer');
+		}
+		
 		if(!empty($method)) {
 			if($method != "factors") {
 				echo "<h1>This is an invalid address</h1>";
@@ -183,6 +190,7 @@ class QuestionsController extends AppController {
 		
 		$user_info = $this->Session->read('Auth.User');
 		$behalfUserId = $this->Session->read('behalfUserId');
+		$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 		
 		if($user_info['can_answer'] != 1) {
 			$this->Session->setFlash(__('Please wait for the notification through email that you can answer again.'));
@@ -206,7 +214,6 @@ class QuestionsController extends AppController {
 			$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
 			$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
 			
-			$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 			$performed_check_data['PerformedCheck']['url'] = $full_url;
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
@@ -287,6 +294,7 @@ class QuestionsController extends AppController {
 					$performed_check_data = array();
 					$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
 					$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
+					$performed_check_data['PerformedCheck']['url'] = $full_url;
 					
 					$performed_check_data['PerformedCheck']['user_id'] = $this->request->data['User']['id'];
 					$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $this->request->data['User']['id'])));
@@ -322,6 +330,9 @@ class QuestionsController extends AppController {
 					$this->Question->Answer->create();
 					$this->Question->Answer->save($answer);
 				}
+				
+				// to remove the session when the create and answer button is clicked when creating a user
+				$this->Session->delete('isCreateAnswer');
 				
 				if($user_info['group_id'] == 3) {
 					
@@ -459,6 +470,7 @@ class QuestionsController extends AppController {
 			$selected_factors = $flatten_selected_factors;
 		}
 		
+		$this->set('iscreateAnswer', $iscreateAnswer);
 		$this->set('selected_factors', $selected_factors);
 		$this->set('method', $method);
 		$this->set('users_list', $users_list);
@@ -689,5 +701,16 @@ class QuestionsController extends AppController {
 		$this->set(compact('questions'));
 	}
 
-
+	public function verify_password() {
+		$user_id = $this->Session->read('Auth.User.id');
+		$user_info = $this->Question->User->findById($user_id);
+		
+		if($user_info['User']['password'] == $this->Auth->password($this->request->data['User']['password'])) {
+			echo "1";
+		} else {	
+			echo "0";
+		}
+		
+		exit();
+	}
 }
