@@ -1860,6 +1860,16 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 .video-js{
 	position:absolute !important;
 }
+
+.ethnicityOptions label {
+	margin-top: 8px;
+	margin-left: 10px;
+	float: left;
+	width: auto;
+	margin-right: 70px;
+}
+
+
 @media (max-width: 800px) {
 
 }
