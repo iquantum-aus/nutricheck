@@ -9,7 +9,7 @@
 			
 			<div id="headerScript">
 				<!--Welcome <strong><?php //echo $strip_name; ?></strong>-->
-				<img src="/img/nutricheck-logo.png" style="max-height:80px;">
+				<a href="/users/dashboard"><img src="/img/nutricheck-logo.png" style="max-height:80px;"></a>
 			</div>
 			
 			<button type="button" style="position: relative;" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -64,8 +64,8 @@
 						<a href="javascript:void(0);" onclick="ZoomPage('down');" title="Adjust fonts bigger" class="fontchangebig">T+</a>
 					</li>
 					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>
-					<li class="menu"><?php echo $this->Html->link('Widgets', '/users/edit_profile');?></li>
-					<li class="menu"><?php echo $this->Html->link('Nutrition Guides', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('Widgets', '/Widgets');?></li>
+					<li class="menu"><?php echo $this->Html->link('Nutrition Guides', '/NutritionalGuides');?></li>
 					<li class="menu"><?php echo $this->Html->link('Customers', '/users/edit_profile');?></li>
 					<li class="menu"><?php echo $this->Html->link('NutriCheck', '/users/edit_profile');?></li>
 					<li class="menu"><?php echo $this->Html->link('Dashboard', '/users/dashboard');?></li>
