@@ -14,7 +14,7 @@
 			
 			<div style="height: 374px; width: 327px;" class="item green">
 				<a class="dashboardLink" href="#"><img src="../img/tick.png"></a>
-				<div class="textBelow">aHow and what is required in the questionnaire and what the process is</div>				
+				<div class="textBelow">How and what is required in the questionnaire and what the process is</div>				
 			</div>
 			
 			<div style="height: 374px; width: 327px;" class="item">

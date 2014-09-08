@@ -23,7 +23,7 @@
 				<?php } ?>
 			<?php } ?>
 		
-			<div style="min-height: 374px; width: 77%;margin:0 3% 40px 0;" class="dashboardbox">
+			<div style="min-height: 374px; width: 77%;margin:0 3% 40px 0;" class="dashboardbox video">
 				<video id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
 					  controls preload="auto"
 					  width="100%"
@@ -35,7 +35,7 @@
 					</video>
 			</div>
 		
-			<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;" class="dashboardbox noborder">
+			<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;" class="dashboardbox noborder buttons">
 				<a href="#" class="dashbutton dashbutton1">START NUTRICHECK</a>
 				<a href="#" class="dashbutton dashbutton2">SEND NUTRICHECK</a>
 				<a href="#" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
@@ -48,14 +48,14 @@
 			?>
 			
 			
-			<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox">
+			<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
 				<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
 				<div class="textBelowsmall blue">What is nutricheck</div>				
 				<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. 
 Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
 			</div>
 			
-			<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox">
+			<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
 				<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
 				<div class="textBelowsmall green">Benefits</div>				
 				<div class="textBelowcontent">
@@ -67,11 +67,11 @@ Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</
 				</div>
 			</div>
 			
-			<div style="min-height: 374px; width: 26%;margin:0 0 40px 0;" class="dashboardbox">
+			<div style="min-height: 0; width: 26%;margin:0 0 40px 0;" class="dashboardbox mason">
 				<img src="../img/happypeople.jpg" style="width:100%;height:100%;">
 			</div>
 			
-			<div style="min-height: 374px; width: 327px;" class="dashboardbox">
+			<div style="min-height: 374px; width: 327px;" class="dashboardbox mason">
 				<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
 				<div class="textBelowsmall green">HELP & FAQ</div>				
 				<div class="textBelowcontent">				
@@ -93,7 +93,9 @@ XX XXXX XXXX<br>or<br>emailaddress@email.com, and we will do our best to help yo
 
 <script>
 	$(document).ready(function() {
-		
-		
+		/*$('#mainContentWrapper').masonry({
+			//columnWidth: 200,
+			itemSelector: '.mason'
+		});*/
 	});
 </script>

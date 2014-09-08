@@ -6,11 +6,21 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			
+			<div id="headerScript">
+				<!--Welcome <strong><?php //echo $strip_name; ?></strong>-->
+				<img src="/img/nutricheck-logo.png" style="max-height:80px;">
+			</div>
+			
+			<button type="button" style="position: relative;" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<!--<span style="color:black;position:absolute;left:-50px;top:4px;">MENU</span>-->
+				<span>MENU</span>
+				<div style="float:right;max-width:40px;margin-top:3px;">
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
-			</button>
+				</div>
+			</button>			
 			
 			<!--<div class="sb-toggle-left navbar-left">
 				<div class="navicon-line"></div>
@@ -33,11 +43,6 @@
 				}
 			?>
 			
-			<div id="headerScript">
-			<!--Welcome <strong><?php //echo $strip_name; ?></strong>-->
-			<img src="/img/nutricheck-logo.png" style="max-height:80px;">
-			</div>
-			
 			<div class="nav-collapse collapse">
 
 				<?php
@@ -50,11 +55,11 @@
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
 					<li class="menu"><?php echo $this->Html->link('Contact', '/users/edit_profile');?></li>
 					<li class="menu"><?php echo $this->Html->link('FAQ', '/users/edit_profile');?></li>
-					<li class="menu bolda" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
+					<li class="menu bolda special" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
 				</ul>
 				
 				<ul class="nav secondary-nav big">
-					<li class="menu">
+					<li class="menu special">
 						<a href="javascript:void(0);" onclick="ZoomPage('up');" title="Adjust fonts smaller" class="fontchangesmall">T-</a>
 						<a href="javascript:void(0);" onclick="ZoomPage('down');" title="Adjust fonts bigger" class="fontchangebig">T+</a>
 					</li>
@@ -150,3 +155,26 @@
 		<?php echo $this->element('quick_entry'); ?>
 	</div>
 </div>
+
+
+<script>
+	$(document).ready(function() {
+		SetMobileMenu();
+		$(window).resize( function () {
+			SetMobileMenu();
+		});
+	});
+	
+	function SetMobileMenu(){
+		var getw = $(window).width();
+		console.log('getw : ' + getw);
+		if (getw<995){		
+			ul = $('.small'); // your parent ul element
+			ul.children().each(function(i,li){ul.prepend(li)})
+			ul = $('.big'); // your parent ul element
+			ul.children().each(function(i,li){ul.prepend(li)})		
+			ul = $('.nav-collapse'); // your parent ul element
+			ul.children().each(function(i,li){ul.prepend(li)})
+		}
+	}
+</script>

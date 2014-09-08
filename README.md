@@ -17,3 +17,10 @@ SETUP
 - Setup your IIS/Apache website to point to your NutriCheck folder
 - Edit web.config/.htaccess if needed (Default should work)
 - Run site
+
+
+===================================================
+LOCATIONS
+===================================================
+Dashboard : \app\Plugin\AclManagement\View\Users\dashboard.ctp
+Top Menu : \app\View\Themed\Bootstrap\Elements\menu\admin_top_menu.ctp
