@@ -111,8 +111,9 @@
 				</table>
 			<?php } ?>			
 			
-			<?php if($iscreateAnswer != 1) { ?>
+			<?php if($iscreateAnswer == 1) { ?>
 				<input type="button" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
+				<input type="button" value="LOGOUT" class="btn btn-warning logout-answer">
 			<?php } else { ?>
 				<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 			<?php } ?>
@@ -141,13 +142,13 @@
 	<?php } ?>
 </div>
 
-<?php if($iscreateAnswer != 1) { ?>
+<?php if($iscreateAnswer == 1) { ?>
 	<a href="#verifyAdminPass" class="hidden fancybox" id="verifyTrigger"></a>
 	<div class="hidden">
 		<div id="verifyAdminPass" style="width: 320px;">
 			<form style="width: 310px;" id="verifyPassword">
 				<h4>Moderator Password</h4>
-				<input type="passwod" name="data[User][password]" id="passwordValue" style="float: left; clear: none; width: 225px;">
+				<input type="password" name="data[User][password]" id="passwordValue" style="float: left; clear: none; width: 225px;">
 				<input type="button" value="Verify" id="verifyPassword" class="btn btn-success" style="float: left; clear: none; margin-left: 15px;">
 			</form>
 		</div>
@@ -191,8 +192,13 @@
 
 	$(document).ready(function() {
 		
-		<?php if($iscreateAnswer != 1) { ?>
+		<?php if($iscreateAnswer == 1) { ?>
 			$('.save-answer').click( function () {
+				$('#verifyTrigger').click();
+			});
+			
+			$('.logout-answer').click( function () {
+				$('#verifyPassword').append('<input type="hidden" id="logoutToggle" value="logout" name="data[User][logout]" value=1>');
 				$('#verifyTrigger').click();
 			});
 			
@@ -204,14 +210,16 @@
 					
 					$.ajax({
 						async:true,
-						data:$('#passwordValue').serialize(),
+						data:$('#verifyPassword').serialize(),
 						dataType:'html',
 						success:function (data, textStatus) {						
 							if(data == 1) {
 								$("#nutricheckAnalysis").submit();
 							} else {
 								alert('Password is invalid');
-							}			
+							}
+							
+							$('#logoutToggle').remove();
 						},
 						type:'post',
 						url:"../questions/verify_password/"

@@ -171,6 +171,7 @@ class QuestionsController extends AppController {
 	public function nutrient_check( $method = null ) {
 		
 		// $this->Session->write('isCreateAnswer', 1);
+		// $this->Session->write('behalfUserId', 16);
 		
 		$iscreateAnswer = 0;
 		if($this->Session->read('isCreateAnswer') != "") {
@@ -706,6 +707,12 @@ class QuestionsController extends AppController {
 		$user_info = $this->Question->User->findById($user_id);
 		
 		if($user_info['User']['password'] == $this->Auth->password($this->request->data['User']['password'])) {
+			
+			if(isset($this->request->data['User']['logout'])) {
+				$this->Session->delete('behalfUserId');
+				$this->Session->delete('isCreateAnswer');
+			}
+			
 			echo "1";
 		} else {	
 			echo "0";
