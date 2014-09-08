@@ -1,6 +1,5 @@
 <?php
 	$user_info = $this->Session->read('Auth.User');
-	$birthday = explode("-", $this->request->data['UserProfile']['birthday']);
 ?>
 
 <div class="users form">
@@ -42,64 +41,10 @@
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
 			<?php } ?>
 			
-			<?php if($user_info['group_id'] == 2) { ?>
-				<div class="left span12 inputHolder">
-					<label>Birthday</label>
-					<select required name="data[UserProfile][birthday][month]">
-						<option value="">Select Month</option>
-						
-						<?php
-							$months = array(
-								"01" => "January",
-								"02" => "February",
-								"03" => "March",
-								"04" => "April",
-								"05" => "May",
-								"06" => "June",
-								"07" => "July",
-								"08" => "August",
-								"09" => "September",
-								"10" => "October",
-								"11" => "November",
-								"12" => "December"
-							);
-						?>
-						
-						<?php foreach($months as $key_value => $month) { ?>
-							<option <?php if($birthday[1] == $key_value) { echo "selected"; } ?> value="<?php echo $key_value; ?>"><?php echo $month; ?></option>
-						<?php } ?>
-					</select>
-					-
-					<select required name="data[UserProfile][birthday][day]">
-						<option value="">Select Day</option>
-						<?php  for($i=1; $i<=31; $i++) { ?>
-							<option <?php if($birthday[2] == $i) { echo "selected"; } ?> value="<?php echo $i; ?>"><?php echo $i; ?></option>
-						<?php } ?>
-					</select>
-					-
-					<select required name="data[UserProfile][birthday][year]">
-						<option value="">Select Year</option>
-						<?php  for($y=1950; $y<=2014; $y++) { ?>
-							<option <?php if($birthday[0] == $y) { echo "selected"; } ?> value="<?php echo $y; ?>"><?php echo $y; ?></option>
-						<?php } ?>
-					</select>
-				</div>
-				
-				
-				<div class="left span12 inputHolder ethnicityOptions">
-					<label style="width: 15%; margin-right: 0;">Nationality</label>				
-					<?php
-						$ethnicity_options = array(
-							"Caucasian",
-							"Asian",
-							"African",
-							"Aboriginal / Torres Straight",
-							"Pacific Island /Mauri  "
-						);
-					?>
-					
-					<?php echo $this->Form->input('UserProfile.nationality', array('legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
-				</div>
+			<?php if($user_info['group_id'] == 3) { ?>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.age', array('type' => 'text', 'div' => false, 'placeholder' => 'Age')); ?></div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.birthday', array('data-date-format' => 'yyyy-mm-dd', 'type' => 'text', 'div' => false, 'class' => 'hasDatepicker', 'id' => 'datepicker', 'placeholder' => 'Birthday')); ?></div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.nationality', array('type' => 'text', 'div' => false, 'placeholder' => 'Nationality')); ?></div>
 			<?php } ?>
 			
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('type' => 'text', 'div' => false, 'placeholder' => 'Post Code')); ?></div>

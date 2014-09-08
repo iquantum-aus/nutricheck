@@ -43,6 +43,7 @@
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'placeholder' => 'Contact Numbers', 'label' => 'Contact numbers - landline, mobile')); ?></div>
 		
 		<?php if($user_info['group_id'] == 2) { ?>
+<<<<<<< HEAD
 			<div class="left span12 inputHolder">
 				<label>Birthday</label>
 				<select required name="data[UserProfile][birthday][month]">

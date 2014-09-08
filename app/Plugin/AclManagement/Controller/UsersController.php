@@ -160,8 +160,7 @@ class UsersController extends AclManagementAppController {
 				
 				if(isset($this->request->data['create_and_answer'])) {
 					$this->Session->write('isCreateAnswer', 1);
-					$this->request->data['User']['status'] = 1;
-					$this->request->data['User']['isCreateAnswer'] = 1;
+					$this->request->data['User']['status'] = 0;
 				}
 				
 				$to_hash = time();
@@ -197,11 +196,7 @@ class UsersController extends AclManagementAppController {
 					$this->User->UserProfile->create();
 					$this->User->UserProfile->save($this->request->data);
 					
-					if(isset($this->request->data['create_and_answer'])) {
-						
-					} else {
-						$this->Session->setFlash(__('The user has been saved'), 'alert/success');
-					}
+					$this->Session->setFlash(__('The user has been saved'), 'alert/success');
 					
 					if(isset($this->request->data['create_and_answer'])) {
 						$this->Session->write('behalfUserId', $user_id);
@@ -530,7 +525,7 @@ class UsersController extends AclManagementAppController {
 		if(!empty($hash)) {
 			$user_info = $this->User->findByHashValue($hash);		
 			
-			if($user_info['User']['status'] == 0 && $user_info['User']['isCreateAnswe'] == 0) {	
+			if($user_info['User']['status'] == 0) {	
 				$user_info['User']['status'] = 1;
 				$this->User->save($user_info);
 				

@@ -31,8 +31,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<meta http-equiv="Expires" content="0" />
 	
 	<title>
-		<?php echo $cakeDescription ?>:
-		<?php echo $title_for_layout; ?>
+		NutriCheck
 	</title>
 	
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
