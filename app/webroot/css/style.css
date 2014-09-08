@@ -314,7 +314,6 @@ th a.asc:after {
 	content: ' ?';
 }
 th a.desc:after {
-	content: ' ?';
 }
 
 table tr td.column_label {

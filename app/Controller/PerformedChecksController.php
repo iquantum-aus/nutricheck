@@ -26,7 +26,16 @@ class PerformedChecksController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->PerformedCheck->recursive = 0;
+		$user_id = $this->Session->read('Auth.User.id');
+		
+		$this->Paginator->settings = array(
+			'conditions' => array('PerformedCheck.isComplete' => 1, 'User.parent_id' => $user_id),
+			'limit' => 30,
+			'order' => array('modified' => 'DESC')
+		);
+		
 		$this->set('performedChecks', $this->Paginator->paginate());
 	}
 
