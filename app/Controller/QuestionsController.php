@@ -468,7 +468,25 @@ class QuestionsController extends AppController {
 			}
 			
 			$selected_factors = $flatten_selected_factors;
+			
+			$factor_ids = implode(",", $selected_factors);
+			
+			$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
+			$question_ids = $this->Question->query($sql);			
+			$flatten_qid = array();
+			
+			foreach($question_ids as $key => $question_id) {
+				$flatten_qid[$key] = $question_id['Question']['id'];
+			}
+			
+			$this->Paginator->settings = array(
+				'conditions' => array('Question.id' => $flatten_qid),
+				'limit' => -1
+			);
+			
+			$questions = $this->Paginator->paginate();
 		}
+		
 		
 		$this->set('iscreateAnswer', $iscreateAnswer);
 		$this->set('selected_factors', $selected_factors);
