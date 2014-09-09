@@ -40,9 +40,14 @@
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
 		<?php } ?>
 		
+		<?php if($user_info['group_id'] != 3) { ?>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
+		<?php } ?>
+		
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('type' => 'text', 'div' => false, 'placeholder' => 'Contact Numbers', 'label' => 'Contact numbers - landline, mobile')); ?></div>
 		
 		<?php if($user_info['group_id'] == 2) { ?>
+			
 			<div class="left span12 inputHolder">
 				<label>Birthday</label>
 				<select required name="data[UserProfile][birthday][month]">

@@ -53,8 +53,8 @@
 				?>
 				<ul class="nav small">
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
-					<li class="menu"><?php echo $this->Html->link('Contact', '/users/edit_profile');?></li>
-					<li class="menu"><?php echo $this->Html->link('FAQ', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('Contact', '#');?></li>
+					<li class="menu"><?php echo $this->Html->link('FAQ', '#');?></li>
 					<li class="menu bolda special" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
 				</ul>
 				
@@ -64,10 +64,10 @@
 						<a href="javascript:void(0);" onclick="ZoomPage('down');" title="Adjust fonts bigger" class="fontchangebig">T+</a>
 					</li>
 					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>
-					<li class="menu"><?php echo $this->Html->link('Widgets', '/Widgets');?></li>
+					<li class="menu"><?php echo $this->Html->link('Widgets', '/qgroups');?></li>
 					<li class="menu"><?php echo $this->Html->link('Nutrition Guides', '/NutritionalGuides');?></li>
-					<li class="menu"><?php echo $this->Html->link('Customers', '/users/edit_profile');?></li>
-					<li class="menu"><?php echo $this->Html->link('NutriCheck', '/users/edit_profile');?></li>
+					<li class="menu"><?php echo $this->Html->link('Customers', '/admin/users/');?></li>
+					<li class="menu"><?php echo $this->Html->link('NutriCheck', '/questions/nutrient_check');?></li>
 					<li class="menu"><?php echo $this->Html->link('Dashboard', '/users/dashboard');?></li>
 					
 					<?php if($user_info['User']['group_id'] == 2) { ?>						
@@ -122,8 +122,6 @@
 				<div id="logoHolder">
 					<a class="homeLink" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/dashboard">
 						<img src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/img/nutricheck-logo.png" alt="Slidebars">
-						<h1 class="siteName">NutriCheck</h1>
-						<h4 class="slogan">Slogan Here</h4>
 					</a>
 				</div>
 			</div>

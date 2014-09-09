@@ -13,7 +13,7 @@
 				<div class="textBelow">Start Questionaire</div>
 			</div>
 			
-			<div style="height: 374px; width: 327px;" class="item green">
+			// <div style="height: 374px; width: 327px;" class="item green">
 				<div class="textBelow">How and what is required in the questionnaire and what the process is</div>
 			</div>
 			

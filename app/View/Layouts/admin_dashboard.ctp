@@ -51,6 +51,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('style');
 		echo $this->Html->css('datepicker');
 		echo $this->Html->css('pace');
+		echo $this->Html->css('chosen');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 	?>
@@ -93,6 +94,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('Chart.min');
 		echo $this->Html->script('jquery.fancybox');
 		echo $this->Html->script('bootstrap-datepicker');
+		echo $this->Html->script('chosen.jquery.min');
 		echo $this->Html->script('pace');
 		echo $this->fetch('script');
  	?>
@@ -102,6 +104,19 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <script>
 	(function($) {
 		$(document).ready(function() {
+			
+			var config = {
+			  '.chosen-select'           : {},
+			  '.chosen-select-deselect'  : {allow_single_deselect:true},
+			  '.chosen-select-no-single' : {disable_search_threshold:10},
+			  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+			  '.chosen-select-width'     : {width:"95%"}
+			}
+			
+			for (var selector in config) {
+			  $(selector).chosen(config[selector]);
+			}
+
 			
 			$('.fancybox').fancybox();
 			$.slidebars();

@@ -171,6 +171,10 @@ class QuestionsController extends AppController {
 	public function nutrient_check( $method = null ) {
 		
 		// $this->Session->write('isCreateAnswer', 1);
+		// $this->Session->write('behalfUserId', 16);
+		
+		// $this->Session->delete('isCreateAnswer');
+		// $this->Session->delete('behalfUserId');
 		
 		$iscreateAnswer = 0;
 		if($this->Session->read('isCreateAnswer') != "") {
@@ -461,32 +465,33 @@ class QuestionsController extends AppController {
 		
 		$selected_factors = $this->SelectedFactorLog->find('all', array('conditions' => array('SelectedFactorLog.user_id' => $return_user_id), 'fields' => array('factor_id')));
 		
-		if(!empty($selected_factors)) {
-			$flatten_selected_factors = array();
-			foreach($selected_factors as $selected_factor_key => $factor) {
-				$flatten_selected_factors[$selected_factor_key] = $factor['SelectedFactorLog']['factor_id'];
+		if(!empty($method)) {
+			if(!empty($selected_factors)) {
+				$flatten_selected_factors = array();
+				foreach($selected_factors as $selected_factor_key => $factor) {
+					$flatten_selected_factors[$selected_factor_key] = $factor['SelectedFactorLog']['factor_id'];
+				}
+				
+				$selected_factors = $flatten_selected_factors;
+				
+				$factor_ids = implode(",", $selected_factors);
+				
+				$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
+				$question_ids = $this->Question->query($sql);			
+				$flatten_qid = array();
+				
+				foreach($question_ids as $key => $question_id) {
+					$flatten_qid[$key] = $question_id['Question']['id'];
+				}
+				
+				$this->Paginator->settings = array(
+					'conditions' => array('Question.id' => $flatten_qid),
+					'limit' => -1
+				);
+				
+				$questions = $this->Paginator->paginate();
 			}
-			
-			$selected_factors = $flatten_selected_factors;
-			
-			$factor_ids = implode(",", $selected_factors);
-			
-			$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
-			$question_ids = $this->Question->query($sql);			
-			$flatten_qid = array();
-			
-			foreach($question_ids as $key => $question_id) {
-				$flatten_qid[$key] = $question_id['Question']['id'];
-			}
-			
-			$this->Paginator->settings = array(
-				'conditions' => array('Question.id' => $flatten_qid),
-				'limit' => -1
-			);
-			
-			$questions = $this->Paginator->paginate();
 		}
-		
 		
 		$this->set('iscreateAnswer', $iscreateAnswer);
 		$this->set('selected_factors', $selected_factors);
@@ -724,6 +729,11 @@ class QuestionsController extends AppController {
 		$user_info = $this->Question->User->findById($user_id);
 		
 		if($user_info['User']['password'] == $this->Auth->password($this->request->data['User']['password'])) {
+			if(isset($this->request->data['User']['logout'])) {
+				$this->Session->delete('behalfUserId');
+				$this->Session->delete('isCreateAnswer');
+			}
+			
 			echo "1";
 		} else {	
 			echo "0";
