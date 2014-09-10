@@ -11,13 +11,13 @@
 		<?php echo $this->Form->input('User.id'); ?>
 		<?php echo $this->Form->input('UserProfile.id'); ?>
 		<?php if($user_info['group_id'] != 1) { ?>
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'class' => 'alphaNumeric', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
 			
 			<?php /*
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'placeholder' => 'Middlename')); ?></div>
 			*/ ?>
 			
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('required' => true, 'class' => 'alphaNumeric', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
 		<?php } ?>
 		
 		<?php if($user_info['group_id'] != 1) { ?>
@@ -106,8 +106,8 @@
 			</div>
 		<?php } ?>
 
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('class' => 'numberOnly', 'required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
+		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('class' => 'textOnly', 'required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
 		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
 		
 		<br /><br />
