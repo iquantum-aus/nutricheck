@@ -116,6 +116,39 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		$.slidebars();
 		$('.fancybox').fancybox();
 		
+		$('.alphaNumeric').keypress( function (e) {
+			var regex = new RegExp("^[a-zA-Z0-9]+$");
+			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+			if (regex.test(str)) {
+				return true;
+			}
+
+			e.preventDefault();
+			return false;
+		});
+		
+		$('.textOnly').keypress( function (e) {
+			var regex = new RegExp("^[a-zA-Z]+$");
+			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+			if (regex.test(str)) {
+				return true;
+			}
+
+			e.preventDefault();
+			return false;
+		});
+		
+		$('.numberOnly').keypress( function (e) {
+			var regex = new RegExp("^[0-9]+$");
+			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+			if (regex.test(str)) {
+				return true;
+			}
+
+			e.preventDefault();
+			return false;
+		});
+		
 		var document_height = $(document).height();
 		
 		$('#sb-site').css('height', document_height+"px");

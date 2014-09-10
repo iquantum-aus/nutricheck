@@ -255,32 +255,53 @@ class UsersController extends AclManagementAppController {
 		}
 		
 		$this->User->id = $id;
-        if (!$this->User->exists()) {
+        
+		if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
+		
         if ($this->request->is('post') || $this->request->is('put')) {
 			
-            if ($this->User->save($this->request->data)) {
+			$email = $this->request->data['User']['email'];
+			$old_email = $this->request->data['User']['old_email'];
 			
-				$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
+			$user_existence = array();
+			if($email != $old_email) {					
+				$this->User->unbindModelAll();
+				$user_existence = $this->User->findAllByEmail($email);
+			}
+			
+			if(count($user_existence) > 0) {
+				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
+			} else {
+				if ($this->User->save($this->request->data)) {
 				
-				if(empty($this->request->data['UserProfile']['id'])) {
-					$this->User->UserProfile->create();
-				}
-				
-				if($this->User->UserProfile->save($this->request->data)) {
-					$this->Session->setFlash(__('The user has been updated'), 'alert/success');
+					$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
+					
+					if(empty($this->request->data['UserProfile']['id'])) {
+						$this->User->UserProfile->create();
+					}
+					
+					if($this->User->UserProfile->save($this->request->data)) {
+						$this->Session->setFlash(__('The user has been updated'), 'alert/success');
+					} else {
+						$this->Session->setFlash(__("Something went wront"), 'alert/error');
+					}
+					
 				} else {
-					$this->Session->setFlash(__("Something went wront"), 'alert/error');
+					$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
 				}
-				
-            } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
-            }
-        } else {
-            $this->request->data = $this->User->read(null, $id);
-            $this->request->data['User']['password'] = null;
-        }
+			}
+        } 
+		
+		$this->request->data = $this->User->read(null, $id);
+		$this->request->data['User']['password'] = null;
+		
+		if(!empty($id) && isset($id)) {
+			$userprofile_info = $this->User->UserProfile->findByUserId($id);
+			$this->request->data['UserProfile'] = $userprofile_info['UserProfile'];
+			$this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
+		}
 		
         $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
         $this->set(compact('groups'));
