@@ -36,11 +36,11 @@
 			</div>
 		
 			<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;" class="dashboardbox noborder buttons">
-				<a href="#" class="dashbutton dashbutton1">START NUTRICHECK</a>
+				<a href="/questions/nutrient_check" class="dashbutton dashbutton1">START NUTRICHECK</a>
 				<a href="#" class="dashbutton dashbutton2">SEND NUTRICHECK</a>
-				<a href="#" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
-				<a href="#" class="dashbutton dashbutton4">QUICK ENTRY</a>
-				<a href="#" class="dashbutton dashbutton5">REPORTS</a>
+				<a target="_blank" href="/questions/print_question_list" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
+				<a class="fancybox dashbutton dashbutton4" href="#quickEntry">QUICK ENTRY</a>
+				<a href="/performed_checks" class="dashbutton dashbutton5">REPORTS</a>
 			</div>
 			
 			<?php

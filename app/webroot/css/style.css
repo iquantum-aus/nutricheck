@@ -190,7 +190,7 @@ h4 {
 	font-weight: normal;
 }
 ul, li {
-	margin: 0 12px;
+	/* margin: 0 12px; */
 }
 p {
 	margin: 0 0 1em 0;
@@ -622,9 +622,11 @@ p.error,
 	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+	width: 95%;
+	margin: 20px auto;
 }
 .success,
-.message,
+..message,
 .cake-error,
 p.error,
 .error-message {
@@ -640,6 +642,8 @@ p.error,
 	background-image: -o-linear-gradient(top, #ee5f5b, #c43c35);
 	background-image: linear-gradient(top, #ee5f5b, #c43c35);
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+	width: 95%;
+	margin: 20px auto;
 }
 .success {
 	clear: both;
@@ -654,6 +658,8 @@ p.error,
 	background-image: -o-linear-gradient(top, #76BF6B, #3B8230);
 	background-image: linear-gradient(top, #76BF6B, #3B8230);
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+	width: 95%;
+	margin: 20px auto;
 }
 p.error {
 	font-family: Monaco, Consolas, Courier, monospace;
@@ -1283,6 +1289,8 @@ ul.barGraph li {
 	background-position: 0px -6px;
 	margin-right: 15px;
 }
+
+.sb-toggle-submenu { cursor: pointer; }
 
 /* ------------------------------------------------------- DASHBOARD LINK ----------------------------------------- */
 

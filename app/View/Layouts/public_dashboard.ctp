@@ -117,7 +117,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		$('.fancybox').fancybox();
 		
 		$('.alphaNumeric').keypress( function (e) {
-			var regex = new RegExp("^[a-zA-Z0-9]+$");
+			var regex = new RegExp("^[a-zA-Z0-9 ]+$");
 			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 			if (regex.test(str)) {
 				return true;
@@ -128,7 +128,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		});
 		
 		$('.textOnly').keypress( function (e) {
-			var regex = new RegExp("^[a-zA-Z]+$");
+			var regex = new RegExp("^[a-zA-Z ]+$");
 			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 			if (regex.test(str)) {
 				return true;
@@ -139,7 +139,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		});
 		
 		$('.numberOnly').keypress( function (e) {
-			var regex = new RegExp("^[0-9]+$");
+			var regex = new RegExp("^[0-9 ]+$");
 			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 			if (regex.test(str)) {
 				return true;

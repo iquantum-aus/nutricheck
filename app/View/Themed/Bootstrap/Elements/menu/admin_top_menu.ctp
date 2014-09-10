@@ -1,3 +1,5 @@
+<?php $group_id = $this->Session->read('Auth.User.group_id'); ?>
+
 <?php
 	$current_plugin = $this->params['plugin'];
 	$current_page = $this->params['action'];
@@ -63,17 +65,91 @@
 						<a href="javascript:void(0);" onclick="ZoomPage('up');" title="Adjust fonts smaller" class="fontchangesmall">T-</a>
 						<a href="javascript:void(0);" onclick="ZoomPage('down');" title="Adjust fonts bigger" class="fontchangebig">T+</a>
 					</li>
-					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>
-					<li class="menu"><?php echo $this->Html->link('Widgets', '/qgroups');?></li>
-					<li class="menu"><?php echo $this->Html->link('Nutrition Guides', '/NutritionalGuides');?></li>
-					<li class="menu"><?php echo $this->Html->link('Customers', '/admin/users/');?></li>
-					<li class="menu"><?php echo $this->Html->link('NutriCheck', '/questions/nutrient_check');?></li>
-					<li class="menu"><?php echo $this->Html->link('Dashboard', '/users/dashboard');?></li>
+					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>					
+					
+					<?php if($group_id == 2) { ?>
+						<li class="menu">
+							<a class="sb-toggle-submenu">Widgets<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/qgroups">List Widgets</a></li>
+								<li><a href="/qgroups/add">Create Widgets</a></li>
+							</ul>
+						</li>
+					<?php } ?>					
+					
+					<?php if($group_id != 3) { ?>
+						<li class="menu">
+							<a class="sb-toggle-submenu">Nutritional Guides<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/nutritional_guides">List Nutritional Guides</a></li>
+								<li><a href="/nutritional_guides/add">Create Nutritional Guide</a></li>
+							</ul>
+						</li>
+					<?php } ?>
+					
+					<?php if($group_id != 3) { ?>
+						<li class="menu">
+							<a class="sb-toggle-submenu">Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/admin/users">List Users</a></li>
+								
+								<?php if($group_id == 1) { ?>
+									<li><a href="/admin/users/add">New Users</a></li>
+									<li><a href="/admin/user_permissions">User Permissions</a></li>
+								<?php } ?>
+							</ul>
+						</li>
+					<?php } ?>
+					
+					<?php if($group_id == 3) { ?>
+						<li class="menu"><?php echo $this->Html->link('NutriCheck', '/questions/nutrient_check');?></li>
+					<?php } else if($group_id == 2) { ?>
+						<li class="menu">
+							<a class="sb-toggle-submenu">Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/questions/nutrient_check">Nutrient Check</a></li>
+								<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
+							</ul>
+						</li>
+					<?php } ?>
+					
+					<?php if($group_id == 1) { ?>
+					
+						<li class="menu">
+							<a class="sb-toggle-submenu">Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/questions">List Questions</a></li>
+								<li><a href="/questions/add">New Question</a></li>
+								<li><a href="/FactorsQuestions">Associate Questions</a></li>
+								<!-- <li><a href="/questions/nutrient_check">Nutrient Check</a></li> -->
+								<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
+							</ul>
+						</li>
+					
+						<li class="menu">
+							<a class="sb-toggle-submenu">Settings<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/factors">Factors</a></li>
+								<li><a href="/factor_types">Factor Types</a></li>
+								<li><a href="/prescriptions">Prescriptions</a></li>
+							</ul>
+						</li>
+						
+						<li class="menu">
+							<a class="sb-toggle-submenu">Videos<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<ul class="sb-submenu">
+								<li><a href="/videos">List Videos</a></li>
+								<li><a href="/videos/add">Create Videos</a></li>
+							</ul>
+						</li>
+					<?php } ?>
 					
 					<?php if($user_info['User']['group_id'] == 2) { ?>						
 						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
 						<li><a target="_blank" href="/questions/print_question_list">Print Question List</a></li>
 					<?php } ?>			
+					
+					<li class="menu"><?php echo $this->Html->link('Dashboard', '/users/dashboard');?></li>
 				</ul>
 
 				<ul class="nav">
@@ -82,6 +158,33 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.sb-submenu {
+		position: absolute;
+		width: 200px;
+		border-radius: 5px;
+		background-color: #f3f3f3;
+		box-shadow: 0px 1px 5px #999;
+		margin-top: 20px;
+	}
+	
+	.sb-submenu li {
+		float: left;
+		width: 100%;
+		margin: 0;
+	}
+	
+	.sb-submenu li a {
+		float: left;
+		width: 100%;
+		padding: 5px;
+	}
+	
+	.sb-submenu li a:hover {
+		background: #eee;
+	}
+</style>
 
 <script>
 	var curzoom = 1;
