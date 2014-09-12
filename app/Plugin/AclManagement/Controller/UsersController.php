@@ -107,15 +107,85 @@ class UsersController extends AclManagementAppController {
         
 		$condition = array();
 		// if not admin then will filter the viewing of users
-		if($user_info['group_id'] != 1) {
-			$condition = array('User.parent_id' => $user_info['id']);
+		
+		if($this->request->is('post')) {
+			
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['User']['value'])) {
+				if(!isset($this->request->data['User']['reset'])) {
+					$this->Session->write('User.search', $this->request->data['User']['value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['User']['reset'])) {
+				$this->Session->delete('User.search');
+			}
 		}
 		
-		$this->paginate = array(
-            'limit' => 10
-        );
 		
-        $this->set('users', $this->paginate($condition));
+		/* ----------------------------------------------------------------------------------------- PAGINATION WITH SEARCH VALUE ------------------------------------------------------------------------*/
+		
+		$search_value = $this->Session->read('User.search');
+		
+		if(!empty($search_value)) {
+			
+			if($user_info['group_id'] != 1) {
+				$this->paginate = array(
+					'conditions' => array(
+						'or' => array (
+							'User.email LIKE "%'.$search_value.'%"',
+							'User.username LIKE "%'.$search_value.'%"',
+							'UserProfile.first_name LIKE "%'.$search_value.'%"',
+							'UserProfile.last_name LIKE "%'.$search_value.'%"',
+							'UserProfile.address LIKE "%'.$search_value.'%"',
+							'UserProfile.suburb LIKE "%'.$search_value.'%"',
+							'UserProfile.company LIKE "%'.$search_value.'%"',
+							'UserProfile.nationality LIKE "%'.$search_value.'%"',
+							'UserProfile.zip LIKE "%'.$search_value.'%"',
+							'UserProfile.gender LIKE "%'.$search_value.'%"'
+						),
+						'and' => array('User.status' => 1, 'User.parent_id' => $user_info['id'])
+					), 
+					'order' => array('User.first_name' => 'ASC'),
+					'limit' => 10
+				);
+			} else {
+				$this->paginate = array(
+					'conditions' => array(
+						'or' => array (
+							'User.email LIKE "%'.$search_value.'%"',
+							'User.username LIKE "%'.$search_value.'%"',
+							'UserProfile.first_name LIKE "%'.$search_value.'%"',
+							'UserProfile.last_name LIKE "%'.$search_value.'%"',
+							'UserProfile.address LIKE "%'.$search_value.'%"',
+							'UserProfile.suburb LIKE "%'.$search_value.'%"',
+							'UserProfile.company LIKE "%'.$search_value.'%"',
+							'UserProfile.nationality LIKE "%'.$search_value.'%"',
+							'UserProfile.zip LIKE "%'.$search_value.'%"',
+							'UserProfile.gender LIKE "%'.$search_value.'%"'
+						),
+						'and' => array('User.status' => 1)
+					), 
+					'order' => array('User.first_name' => 'ASC'),
+					'limit' => 10
+				);
+			}
+		
+		/* ------------------------------------------------------------------------------------------- DEFAULT PAGINATION HERE ----------------------------------------------------------------------------------*/
+		} else {		
+			if($user_info['group_id'] != 1) {
+				$condition = array('User.parent_id' => $user_info['id']);
+			}
+			
+			$this->paginate = array(
+				'limit' => 10
+			);
+		}
+		
+		$users = $this->paginate($condition);
+        $this->set('search_value', $search_value);
+        $this->set('users', $users);
     }
 
     /**

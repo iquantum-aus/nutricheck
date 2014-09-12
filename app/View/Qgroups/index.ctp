@@ -1,6 +1,14 @@
 <script src="/js/ZeroClipboard.js"></script>
 
 <div class="qgroups index">
+	
+	<form style="min-width: 420px;" method="POST" id="GroupSelect">
+		<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Group:</strong></label>
+		<?php echo $this->Form->input('Qgroup.id', array('options' => $group_list, 'empty' => 'Search Here', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $selected_group_id)); ?>
+		<input name="data[Qgroup][reset]" type="submit" value="RESET" class="btn btn-danger">
+		<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
+	</form>
+	
 	<h2><?php echo __('Widgets'); ?></h2>
 	<table class="table table-striped">
 	<tr>
@@ -19,7 +27,7 @@
 		<td><?php echo h($qgroup['Qgroup']['modified']); ?>&nbsp;</td>
 		<td>
 			<p>
-				<textarea style="font-size: 12px;" name="clipboard-text" id="clipboard-text" cols="30" rows="10"><script type="text/javascript" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/js/iframe-panel.js"></script><link rel="stylesheet" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/css/iframe-panel.css"><div id="leftbar" style="width='120px' height='690'"><div id="closeButton"></div><div id="panelContentHolder"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0" width="1110" height="690" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_questions/<?php echo $qgroup['Qgroup']['id']; ?>" name="imgbox"></iframe></div></div><a class="btn" id="panelToggle" href="#">Show Panel</a></textarea>
+				<textarea style="font-size: 12px;" name="clipboard-text" id="clipboard-text" cols="30" rows="10"><script type="text/javascript" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/js/iframe-panel.js"></script><link rel="stylesheet" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/css/iframe-panel.css"><div id="leftbar" style="width='120px' height='690'"><div id="closeButton"></div><div id="panelContentHolder"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0" width="1110" height="690" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?source=remote&group_id=<?php echo $qgroup['Qgroup']['id']; ?>" name="imgbox"></iframe></div></div><a class="btn" id="panelToggle" href="#">Show Panel</a></textarea>
 				<br />
 				<button class="btn btn-success" id="target-to-copy" data-clipboard-target="clipboard-text">Click To Copy</button><br/>
 			</p>
@@ -63,19 +71,21 @@
 	$(document).ready( function () {
 		
 		// main.js
-		var clientTarget = new ZeroClipboard( document.getElementById("target-to-copy"), {
+		var client = new ZeroClipboard( document.getElementById("target-to-copy"), {
 		  moviePath: "/js/ZeroClipboard.swf"
-		} );
+		});
 
-		clientTarget.on( "load", function(clientTarget){
+		client.on( "ready", function( readyEvent ) {
 			$('#flash-loaded').fadeIn();
 
-			clientTarget.on( "complete", function(clientTarget, args) {
-				clientTarget.setText( args.text );
-				$('#target-to-copy-text').fadeIn();
-			} );
-		} );
-
+			client.on( "aftercopy", function( event ) {
+				alert('Widget is succesfully copied');
+			});
+		});
+		
+		$(".chosen-select").change( function () {
+			$(this).parent('form').submit();
+		});
 		
 		$("a.fancybox").fancybox({
 			afterLoad: function(){

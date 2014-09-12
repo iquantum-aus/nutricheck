@@ -1,7 +1,7 @@
-<?php if($this->Session->read('Auth.User.id') == "") { ?>
+<?php if($this->Session->read('Auth.User.id') != "") { ?>
 	<?php if($this->Session->read('Auth.User.can_answer') == 0) { ?>
 		<h1>You can't Answer</h1>
-		<a href="">Logout</a>
+		<a href="/users/logout">Logout</a>
 	<?php } else { ?>
 		<div id="questionHolder" >
 			<div class="questions index">
@@ -15,7 +15,7 @@
 				
 				<div style="margin: 0;" class="sectionTitle">Questions</div>
 				
-				<form action = "/questions/remote_nutrient_check" style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
+				<form action = "/questions/nutrient_check?source=remote" style="height: 556px; margin-bottom: 40px; float: left; width: 1080px;" method="POST">
 					<?php
 						$raw_questions = $questions;
 						$question_data = array_chunk($questions, 10);

@@ -176,6 +176,23 @@ class QuestionsController extends AppController {
 		// $this->Session->delete('isCreateAnswer');
 		// $this->Session->delete('behalfUserId');
 		
+		if(isset($_GET['source']) && $_GET['source'] == "remote") {
+			$this->layout = "iframe-layout";
+		} else {
+			$this->layout = "public_dashboard";
+		}
+		
+		$group_questions_id = array();
+		if(isset($_GET['group_id'])) {
+			$widget = $this->Question->Qgroup->findById($_GET['group_id']);
+			
+			foreach($widget['Question'] as $qkey => $group_question_item) {
+				$group_questions_id[$qkey] = $group_question_item['id'];
+			}
+			
+			sort($group_questions_id);
+		}
+		
 		$iscreateAnswer = 0;
 		if($this->Session->read('isCreateAnswer') != "") {
 			$iscreateAnswer = $this->Session->read('isCreateAnswer');
@@ -198,11 +215,13 @@ class QuestionsController extends AppController {
 		
 		if($user_info['can_answer'] != 1) {
 			$this->Session->setFlash(__('Please wait for the notification through email that you can answer again.'));
-			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			
+			if(!isset($_GET['source'])) {
+				$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			}
 		}
 		
 		$this->Question->recursive = 0;
-		$this->layout = "public_dashboard";
 		$selected_factors = array();
 		
 		if($user_info['group_id'] != 1) {
@@ -248,10 +267,16 @@ class QuestionsController extends AppController {
 			}
 		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 		
-		
-		$this->Paginator->settings = array(
-			'limit' => 200
-		);
+		if(!empty($group_questions_id)) {
+			$this->Paginator->settings = array(			
+				'conditions' => array('Question.id' => $group_questions_id),
+				'limit' => -1
+			);
+		} else {
+			$this->Paginator->settings = array(
+				'limit' => -1
+			);
+		}
 
 		if($this->request->is('post')) {
 			
@@ -412,6 +437,11 @@ class QuestionsController extends AppController {
 				
 				/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 				
+				if(isset($_GET['source']) && $_GET['source'] == "remote") {
+					$this->deactivate_user_answer();
+					$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
+				}
+				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}
@@ -484,10 +514,20 @@ class QuestionsController extends AppController {
 					$flatten_qid[$key] = $question_id['Question']['id'];
 				}
 				
-				$this->Paginator->settings = array(
-					'conditions' => array('Question.id' => $flatten_qid),
-					'limit' => -1
-				);
+				$factored_qgroup = array_intersect($flatten_qid, $group_questions_id);
+				
+				if(empty($factored_qgroup)) {
+					$this->Paginator->settings = array(
+						'conditions' => array('Question.id' => $flatten_qid),
+						'limit' => -1
+					);
+				} else {
+					$this->Paginator->settings = array(
+						'conditions' => array('Question.id' => $factored_qgroup),
+						'limit' => -1
+					);
+				}
+				
 				
 				$questions = $this->Paginator->paginate();
 			}
@@ -503,71 +543,71 @@ class QuestionsController extends AppController {
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
 	
-	public function remote_nutrient_check() {
+	// public function remote_nutrient_check() {
 		
-		$user_id = $this->Session->read('Auth.User.id');
-		$this->Question->recursive = 0;
-		$this->layout = "iframe-layout";
-		$selected_factors = array();
+		// $user_id = $this->Session->read('Auth.User.id');
+		// $this->Question->recursive = 0;
+		// $this->layout = "iframe-layout";
+		// $selected_factors = array();
 		
-		$this->Paginator->settings = array(
-			'limit' => 200
-		);
+		// $this->Paginator->settings = array(
+			// 'limit' => 200
+		// );
 		
-		if($this->request->is('post')) {		
-			$answers = $this->request->data;
+		// if($this->request->is('post')) {		
+			// $answers = $this->request->data;
 			
-			// $this->Session->setFlash(__('You successfully saved your answers'));
+			// /* $this->Session->setFlash(__('You successfully saved your answers')); */
 			
-			if(!empty($user_id)) {
+			// if(!empty($user_id)) {
 				
-				$answers_remote_link = $answers['TempAnswer']['remoteLink'];
-				unset($answers['TempAnswer']['remoteLink']);
+				// $answers_remote_link = $answers['TempAnswer']['remoteLink'];
+				// unset($answers['TempAnswer']['remoteLink']);
 				
-				foreach($answers as $answer) {
-					if(!empty($answer['TempAnswer'])) {
-						$answer['Answer'] = $answer['TempAnswer'];
-						$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
-						$answer['Answer']['link'] = $answers_remote_link;
+				// foreach($answers as $answer) {
+					// if(!empty($answer['TempAnswer'])) {
+						// $answer['Answer'] = $answer['TempAnswer'];
+						// $answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
+						// $answer['Answer']['link'] = $answers_remote_link;
 						
-						$answer['Answer']['user_id'] = $user_id;
+						// $answer['Answer']['user_id'] = $user_id;
 						
-						unset($answers['TempAnswer']['remoteLink']);
+						// unset($answers['TempAnswer']['remoteLink']);
 						
-						$this->Question->Answer->create();
-						$this->Question->Answer->save($answer);
-					}
-				}
+						// $this->Question->Answer->create();
+						// $this->Question->Answer->save($answer);
+					// }
+				// }
 				
-				$this->deactivate_user_answer();
-				$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
+				// $this->deactivate_user_answer();
+				// $this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
 				
-			} else {
+			// } else {
 				
-				$temp_answer_array = array();
-				foreach($answers as $key => $answer) {
+				// $temp_answer_array = array();
+				// foreach($answers as $key => $answer) {
 				
-					$answer['TempAnswer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
-					$answer['TempAnswer']['link'] = $answers['TempAnswer']['remoteLink'];
+					// $answer['TempAnswer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
+					// $answer['TempAnswer']['link'] = $answers['TempAnswer']['remoteLink'];
 					
-					$temp_answer_array[$key]['Answer'] = $answer['TempAnswer'];
+					// $temp_answer_array[$key]['Answer'] = $answer['TempAnswer'];
 					
-					/* $this->Question->TempAnswer->create();
-					$this->Question->TempAnswer->save($answer); */
-				}
+					// /* $this->Question->TempAnswer->create();
+					// $this->Question->TempAnswer->save($answer); */
+				// }
 				
-				$this->Session->write('temp_answers', $temp_answer_array);
-				$temp_answer = $this->Session->read('temp_answers');
+				// $this->Session->write('temp_answers', $temp_answer_array);
+				// $temp_answer = $this->Session->read('temp_answers');
 				
-				$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=temp&action=login'));
-			}
-		}
+				// $this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=temp&action=login'));
+			// }
+		// }
 		
-		$questions = $this->Paginator->paginate();
+		// $questions = $this->Paginator->paginate();
 		
-		$this->set('selected_factors', $selected_factors);
-		$this->set('questions', $questions);
-	}
+		// $this->set('selected_factors', $selected_factors);
+		// $this->set('questions', $questions);
+	// }
 	
 	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */

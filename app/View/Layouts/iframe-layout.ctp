@@ -150,7 +150,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 				success:function (data, textStatus) {
 					if(data == 1) {
 						$('#loginWidget_holder').fadeOut('500');
-						window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_questions/<?php echo $id; ?>";
+						window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?source=remote&group_id=<?php echo $id; ?>";
 					} else {
 						if(data == 2) {
 							alert('Authentication Failed');

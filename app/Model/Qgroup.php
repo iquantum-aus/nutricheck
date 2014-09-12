@@ -50,7 +50,7 @@ class Qgroup extends AppModel {
 			'associationForeignKey' => 'question_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',
-			'fields' => '',
+			'fields' => 'id',
 			'order' => '',
 			'limit' => '',
 			'offset' => '',

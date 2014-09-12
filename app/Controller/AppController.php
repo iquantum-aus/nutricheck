@@ -86,4 +86,10 @@ class AppController extends Controller {
 		$this->Auth->loginRedirect = array('plugin'=>false,
 		'controller' => 'users', 'action' => 'dashboard');  
 	}
+	
+	public function var_debug($variable) {
+		echo "<pre>";
+			print_r($variable);
+		echo "</pre>";
+	}
 }

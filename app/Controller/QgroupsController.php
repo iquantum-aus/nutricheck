@@ -29,7 +29,15 @@ class QgroupsController extends AppController {
 		$user_info = $this->Session->read('Auth.User');
 		$this->layout = "public_dashboard";
 		$this->Qgroup->recursive = 0;
-		$this->set('qgroups', $this->Paginator->paginate(array('status' => 1, 'user_id' => $user_info['id'])));
+		
+		if($this->request->is('post') && !empty($this->request->data['Qgroup']['id']) && !isset($this->request->data['Qgroup']['reset'])) {
+			$this->set('qgroups', $this->Paginator->paginate(array('id' => $this->request->data['Qgroup']['id'])));
+		} else {
+			$this->set('qgroups', $this->Paginator->paginate(array('status' => 1, 'user_id' => $user_info['id'])));
+		}
+		
+		$group_list = $this->Qgroup->find('list', array('conditions' => array('status' => 1, 'user_id' => $user_info['id']), 'fields' => array('id', 'name')));		
+		$this->set('group_list', $group_list);
 	}
 
 /**
