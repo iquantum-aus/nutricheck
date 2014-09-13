@@ -23,8 +23,49 @@ class NutritionalGuidesController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->NutritionalGuide->recursive = 0;
-		$nutritional_guides = $this->Paginator->paginate();
 		
+		if($this->request->is('post')) {
+			
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['NutritionalGuide']['value'])) {
+				if(!isset($this->request->data['NutritionalGuide']['reset'])) {
+					$this->Session->write('NutritionalGuide.search', $this->request->data['NutritionalGuide']['value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['NutritionalGuide']['reset'])) {
+				$this->Session->delete('NutritionalGuide.search');
+			}
+		}
+		
+		
+		/* ----------------------------------------------------------------------------------------- PAGINATION WITH SEARCH VALUE ------------------------------------------------------------------------*/
+		
+		$search_value = $this->Session->read('NutritionalGuide.search');
+		
+		if(!empty($search_value)) {
+			
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'NutritionalGuide.title LIKE "%'.$search_value.'%"',
+						'NutritionalGuide.description LIKE "%'.$search_value.'%"',
+						'Factor.name LIKE "%'.$search_value.'%"',
+						'NutritionalGuideType.type LIKE "%'.$search_value.'%"',
+					)
+				), 
+				'order' => array('NutritionalGuide.title' => 'ASC')
+			);
+			
+			$nutritional_guides = $this->Paginator->paginate();
+		
+		/* ------------------------------------------------------------------------------------------- DEFAULT PAGINATION HERE ----------------------------------------------------------------------------------*/
+		} else {
+			$nutritional_guides = $this->Paginator->paginate();		
+		}
+		
+		$this->set('search_value', $search_value);
 		$this->set('nutritionalGuides', $nutritional_guides);
 	}
 
