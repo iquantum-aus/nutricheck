@@ -3,7 +3,7 @@
 <div class="qgroups index">
 	
 	<form style="min-width: 420px;" method="POST" id="GroupSelect">
-		<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Group:</strong></label>
+		<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Widget:</strong></label>
 		<?php echo $this->Form->input('Qgroup.id', array('options' => $group_list, 'empty' => 'Search Here', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $selected_group_id)); ?>
 		<input name="data[Qgroup][reset]" type="submit" value="RESET" class="btn btn-danger">
 		<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->

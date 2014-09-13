@@ -1,15 +1,25 @@
 <div class="questions index">
 	<h2><?php echo __('Questions'); ?></h2>
 	
-	<div id="qgroup_holder">
+	<div class="left" style="width: 40%;">
+		<form method="POST" id="GroupSelect" class="left full">
+			<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Question:</strong></label>
+			<?php echo $this->Form->input('Question.id', array('style' => "width: 50%; float: left;", 'options' => $question_list, 'empty' => 'Search Here', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $selected_question_id)); ?>
+			<input name="data[Question][reset]" type="submit" value="RESET" class="btn btn-danger">
+			<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
+		</form>
+	</div>
+	
+	<div id="qgroup_holder" class="right" style="width: 600px;">
 		<form id="qgroup_selector" method="POST">
-			<label class="left">Select Group:</label>
+			<label class="left">Select Widget:</label>
 			<div class = "left">
 				<?php echo $this->Form->input('Qgroup.id', array('options' => $qgroups, 'selected' => $selected_qgroup, 'empty' => 'Select a question list', 'div' => false, 'label' => false)); ?>
 			</div>
 			
-			<a href="#qgroup_creator_holder" class="fancybox btn btn-primary">Create</a>
-			<a id="qgroup_edit" href="#qgroup_editor_holder" class="fancybox btn btn-warning">Edit</a>
+			<a href="#qgroup_creator_holder" class="fancybox btn btn-primary left">CREATE</a>
+			<a id="qgroup_edit" href="#qgroup_editor_holder" class="fancybox btn btn-warning left">EDIT</a>
+			<input name="data[Qgroup][qgroupReset]" type="submit" class="btn btn-danger left" value="RESET">
 		</form>
 	</div>
 	
@@ -132,6 +142,10 @@
 			}
 		});
 		
+		$(".chosen-select").change( function () {
+			$(this).parent('form').submit();
+		});
+		
 		$(".addToGroup").on("click", function () {
 			
 			var id = $(this).attr('id');
@@ -192,10 +206,9 @@
 						var append_option = "<option value="+data+">"+add_qgroup_name+"</option>";
 						$('#QgroupId').append(append_option);
 						
-						$("#QgroupId option[value='"+data+"']").attr('selected', 'selected');
-						
 						$.fancybox.close();
-						alert('Question group was succesfully created');
+						alert('Widget was succesfully created');
+						window.location = "<?php echo "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']; ?>?selected="+data;
 					}
 				},
 				type:'post',

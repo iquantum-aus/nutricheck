@@ -1365,8 +1365,18 @@ ul.barGraph li {
 	margin-top: 30px;
 }
 
-#qgroup_holder .left { 
+#qgroup_holder a.left { 
+	margin-right: 5px;
+	padding: 6px 15px;
+}
+
+#qgroup_holder a.left:first-child {
+	margin-left: 10px;
+}
+
+#QgroupId {
 	margin-right: 10px;
+	height: 34px;
 }
 
 

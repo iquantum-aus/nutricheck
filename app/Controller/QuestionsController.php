@@ -36,7 +36,7 @@ class QuestionsController extends AppController {
 		$this->Question->recursive = 0;
 		
 		$qgroups = $this->Question->Qgroup->find('list');
-		$this->set('questions', $this->Paginator->paginate(array('Question.status' => 1)));
+		$condition = array('Question.status' => 1);
 		
 		/* $selected_questions = $this->Session->read('selected_questions');
 		$selected_qgroup = $this->Session->read('selected_qgroup');
@@ -46,19 +46,37 @@ class QuestionsController extends AppController {
 			$this->set('selected_group_details', $selected_group_details);
 		} */
 		
+		$selected_qgroup = "";
+		if ($this->request->is('post')) {
+			$questions_from_group = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' => $this->request->data['Qgroup']['id'])));
+			
+			if(isset($this->request->data['Question']['id']) && !empty($this->request->data['Question']['id']) && !isset($this->request->data['Question']['reset'])) {
+				$condition = array('Question.status' => 1, 'Question.id' => $this->request->data['Question']['id']);
+			}
+			
+			if(!empty($this->request->data['Qgroup']['id']) && !isset($this->request->data['Qgroup']['qgroupReset'])) {
+				$qgroup_id = $this->request->data['Qgroup']['id'];
+				$this->Session->write('selected_qgroup', $qgroup_id);
+			}
+			
+			if(isset($this->request->data['Qgroup']['qgroupReset'])) {
+				$this->Session->delete('selected_qgroup');	
+				$this->redirect(array('action' => 'index'));
+			}
+		}
+		
+		/* ----------------------------------------------------------------- this is the cause of creating a question group from the question list -------------------------------------------------------*/
+			
+			// this will basically auto select the newly created group from the question list
+			if(isset($_GET['selected'])) {
+				$this->Session->write('selected_qgroup', $_GET['selected']);
+				$this->redirect(array('action' => 'index'));
+			}
+		/* ----------------------------------------------------------------- this is the cause of creating a question group from the question list -------------------------------------------------------*/
 		
 		$selected_qgroup = $this->Session->read('selected_qgroup');
 		$selected_questions = array();
 		
-		if ($this->request->is('post')) {
-			$questions_from_group = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' => $this->request->data['Qgroup']['id'])));
-			
-			if(!empty($this->request->data['Qgroup']['id'])) {
-				$qgroup_id = $this->request->data['Qgroup']['id'];
-				$this->Session->write('selected_qgroup', $qgroup_id);
-				$this->redirect(array('action' => 'index'));
-			}	
-		}
 		
 		if (!empty($selected_qgroup)) {
 			$questions_from_group = $this->Question->Qgroup->find('all', array('conditions' => array('Qgroup.id' => $selected_qgroup)));
@@ -70,7 +88,9 @@ class QuestionsController extends AppController {
 			}
 		}
 		
-		$this->set(compact('selected_qgroup', 'qgroups', 'selected_questions', 'selected_qgroup'));
+		$question_list = $this->Question->find('list', array('fields' => array('id', 'question'), 'conditions' => array('status' => 1)));
+		$this->set('questions', $this->Paginator->paginate($condition));
+		$this->set(compact('qgroups', 'selected_questions', 'selected_qgroup', 'question_list'));
 	}
 
 /**
