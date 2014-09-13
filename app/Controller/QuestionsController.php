@@ -52,6 +52,8 @@ class QuestionsController extends AppController {
 			
 			if(isset($this->request->data['Question']['id']) && !empty($this->request->data['Question']['id']) && !isset($this->request->data['Question']['reset'])) {
 				$condition = array('Question.status' => 1, 'Question.id' => $this->request->data['Question']['id']);
+			} else {
+				unset($this->request->data['Question']['id']);
 			}
 			
 			if(!empty($this->request->data['Qgroup']['id']) && !isset($this->request->data['Qgroup']['qgroupReset'])) {
@@ -61,7 +63,7 @@ class QuestionsController extends AppController {
 			
 			if(isset($this->request->data['Qgroup']['qgroupReset'])) {
 				$this->Session->delete('selected_qgroup');	
-				$this->redirect(array('action' => 'index'));
+				unset($this->request->data['Qgroup']['id']);
 			}
 		}
 		
