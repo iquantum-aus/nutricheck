@@ -461,7 +461,7 @@ class QuestionsController extends AppController {
 				
 				if(isset($_GET['source']) && $_GET['source'] == "remote") {
 					$this->deactivate_user_answer();
-					$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved'));
+					$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved&source=remote'));
 				}
 				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
