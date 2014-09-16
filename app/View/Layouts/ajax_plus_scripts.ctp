@@ -25,10 +25,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
 	<?php echo $this->Html->charset(); ?>
-	<title>
-		<?php echo $cakeDescription ?>:
-		<?php echo $title_for_layout; ?>
-	</title>
+	<title>Identify - Enhance - Supervise</title>
 	<?php
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');

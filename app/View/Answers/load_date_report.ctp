@@ -90,7 +90,8 @@
 	?>
 	
 	<a class="btn btn-success" href="/admin/users">Back to User List</a>
-	<a class="btn btn-warning" target="_blank" href="/answers/report_print/<?php echo $date; ?>/<?php echo $user_id; ?>">Print Report</a>
+	<a class="btn btn-warning" target="_blank" href="/answers/report_print/<?php echo $date; ?>/<?php echo $user_id; ?>?mode=1">Print Graph and Summary</a>
+	<a class="btn btn-primary" target="_blank" href="/answers/report_print/<?php echo $date; ?>/<?php echo $user_id; ?>?mode=2">Print Full Report</a>
 	<br /><br />
 	
 	<div>		
@@ -186,7 +187,6 @@
 		</table>
 	</div>
 	
-	<br />
 	<h1>Detailed Nutrient Recommendation</h1>
 	<div class="prescription_report left full">
 		

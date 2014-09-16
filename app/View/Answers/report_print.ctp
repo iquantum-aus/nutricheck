@@ -1,5 +1,7 @@
 <style>
-	h1 { font-size: 20px; font-weight: bold; }
+	h1 { font-size: 18px; font-weight: bold; }
+	h1 span { font-size: 16px; font-weight: bold; color: green;  }
+	table tr td { padding: 3px; }
 </style>
 
 <?php
@@ -80,7 +82,7 @@
 
 <div class="index">
 	
-	<h1>Performed By: <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?><br />Date: <?php echo date("M. d, Y", $date); ?><br /></h1>
+	<h1>Performed By: <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?> &nbsp;<span>(Date: <?php echo date("M. d, Y", $date); ?>)</span></h1> 
 	
 	<?php 
 		foreach($factors as $key => $factor) {
@@ -114,7 +116,7 @@
 						<div class="hidden">
 							<div style="width: 1080px; padding: 0px 50px 0px 20px; height: 750px;" id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
 						</div>
-						<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
+						<div style="margin-top: 0;" class="factorNames"><a style="font-size: 12px;" class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
 					</td>
 					<td>
 						<?php
@@ -129,14 +131,14 @@
 							if($second_percentage_value[$list_key] >= 81) { $graphColor = "red"; }
 						?>
 						
-						<div class="graphContentHolder">
+						<div class="graphContentHolder" style="height: 10px;">
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
 							<div class="left levelerHolder"></div>
 							
-							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background-color: <?php echo $graphColor; ?>;">
+							<div class="left horGraph" style="padding-left: 0; height: 15px; width: <?php echo $second_percentage_value[$list_key]; ?>%; background-color: <?php echo $graphColor; ?>;">
 								<?php // echo round($second_percentage_value[$list_key]); ?>
 							</div>
 						</div>
@@ -186,42 +188,47 @@
 		</table>
 	</div>
 	
-	<br />
-	<h1>Detailed Nutrient Recommendation</h1>
-	<div class="prescription_report left full">
+	<?php if($_GET['mode'] == 2) { ?>
 		
-		<?php foreach($final_factor_grouped_by_type as $factor_type_id => $final_prescription_values) { ?>
+		<div style="float: left; width: 100%; height: 120px;" class="clearfix"></div>
+		
+		<h1>Detailed Nutrient Recommendation</h1>
+		<div class="prescription_report left full">
 			
-			<h2><?php echo $factor_types[$factor_type_id]; ?></h2>
-			
-			<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>			
+			<?php foreach($final_factor_grouped_by_type as $factor_type_id => $final_prescription_values) { ?>
 				
-				<h4><?php echo $factors[$factor_id]; ?></h4>
-				<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
-					<tbody>
-						<tr>
-							<th>Nutrient Disturbance</th>
-							<th>Recommended Dosage</th>
-						</tr>
-						
-						<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+				<h2><?php echo $factor_types[$factor_type_id]; ?></h2>
+				
+				<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>			
+					
+					<h4><?php echo $factors[$factor_id]; ?></h4>
+					<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+						<tbody>
 							<tr>
-								<td width="50%"><?php echo $functional_disturbance; ?></td>
-								<td width="50%"><?php echo $prescription['dosage'] ?></td>
+								<th>Nutrient Disturbance</th>
+								<th>Recommended Dosage</th>
 							</tr>
-						<?php } ?>
-					</tbody>
-				</table>
+							
+							<?php foreach($prescriptions as $functional_disturbance => $prescription) { ?>
+								<tr>
+									<td width="50%"><?php echo $functional_disturbance; ?></td>
+									<td width="50%"><?php echo $prescription['dosage'] ?></td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				<?php } ?>
+				
+				<br /><br /><br />
+				
 			<?php } ?>
-			
-			<br /><br /><br />
-			
-		<?php } ?>
-	</div>
+		</div>
+	<?php } ?>
+	
 </div>
 
 <script>
 	$(document).ready( function () {
-		window.print();
+		// window.print();
 	});	
 </script>
