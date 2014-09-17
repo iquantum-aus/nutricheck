@@ -15,7 +15,7 @@ class QuestionsController extends AppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
 		} else {
-			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password');
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password','nutricheckSender');
 		}
 	}
 	
@@ -25,12 +25,26 @@ class QuestionsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator');
+	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	public function dashboard() {
+		$this->layout = "public_dashboard";
+		$user_info = $this->Session->read('Auth.User');
+		
+		$user_condition = array('User.parent_id' => $user_info['id']);
+		
+		$factor_list = $this->Question->Factor->find('list', array('fields' => array('id', 'name')));
+		$email_list = $this->Question->User->find('list', array('fields' => array('hash_value', 'email'), 'conditions' => $user_condition));
+		
+		$this->set('factor_list', $factor_list);
+		$this->set('email_list', $email_list);
+	}
 
-/**
- * index method
- *
- * @return void
- */
+
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->Question->recursive = 0;
@@ -95,13 +109,9 @@ class QuestionsController extends AppController {
 		$this->set(compact('qgroups', 'selected_questions', 'selected_qgroup', 'question_list'));
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function view($id = null) {
 		$this->layout = "public_dashboard";
 		if (!$this->Question->exists($id)) {
@@ -111,11 +121,8 @@ class QuestionsController extends AppController {
 		$this->set('question', $this->Question->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function add() {
 		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
@@ -133,13 +140,9 @@ class QuestionsController extends AppController {
 		$this->set(compact('users', 'factors'));
 	}
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function edit($id = null) {
 		$this->layout = "public_dashboard";
 		if (!$this->Question->exists($id)) {
@@ -162,13 +165,9 @@ class QuestionsController extends AppController {
 		$this->set(compact('users', 'factors'));
 	}
 
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function delete($id = null) {
 		$this->Question->id = $id;
 		if (!$this->Question->exists()) {
@@ -761,6 +760,7 @@ class QuestionsController extends AppController {
 		$this->Question->User->save($user_data);
 	}
 	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
 	public function print_question_list() {
 		$this->layout = "ajax_plus_scripts";
@@ -786,6 +786,57 @@ class QuestionsController extends AppController {
 		$this->set(compact('questions'));
 	}
 
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	public function nutricheckSender() {
+		$hash_value = $_POST['hash_value'];
+		$selected_factors = $_POST['factors'];
+		
+		$selected_factors = str_replace(",", "+", $selected_factors);
+		
+		if(empty($selected_factors)) {
+			$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value;
+		} else {
+			$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?hash_value=".$hash_value."&factors=".$selected_factors;
+		}
+		
+		// endor('phpmailer'.DS.'class.phpmailer'); 
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
+		$mail = new PHPMailer(); 
+
+		$mail->IsSMTP(); // we are going to use SMTP
+		$mail->IsHTML(true);
+		$mail->Host = 'email-smtp.us-east-1.amazonaws.com';  // Specify main and backup server
+		$mail->SMTPAuth = true;                               // Enable SMTP authentication
+		$mail->Username = "AKIAIFE5UJ3F2OYW64CQ"; 
+		$mail->Password = "AiMbFeTu00PxAlzDl2Cn60zDlPoYdVfZBvwChnbB3C50"; 
+		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+
+		$mail->From = "noman@iquantum.com.au"; 
+		$mail->FromName = "noman@iquantum.com.au"; 
+		$mail->AddAddress($email, $email);
+		
+		$mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+
+		$mail->CharSet  = 'UTF-8'; 
+		$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+		$mail->IsHTML(true);  // set email format to HTML 
+		
+		$mail->Subject = "Nutricheck Invitation";
+		$mail->Body    = "You have have been sent an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test";
+
+		if($mail->Send()) {
+			return true;
+		} else {
+			return $mail->ErrorInfo; 
+		}
+		
+		exit();
+	}
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	public function verify_password() {
 		$user_id = $this->Session->read('Auth.User.id');
 		$user_info = $this->Question->User->findById($user_id);
