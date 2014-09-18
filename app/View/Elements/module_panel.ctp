@@ -22,7 +22,11 @@
 					data: "hash_value="+selectedUser+"&factors="+selectedFactor,
 					dataType:'html',
 					success:function (data, textStatus) {
-						console.log(data);
+						if(data == 1) {
+							alert('Nutricheck was succesfully sent');
+						} else {
+							alert(data);
+						}
 					},
 					type:'post',
 					url:"http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutricheckSender"

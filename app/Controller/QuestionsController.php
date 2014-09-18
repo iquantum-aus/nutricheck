@@ -13,7 +13,7 @@ class QuestionsController extends AppController {
 		
 		$user_id = $this->Session->read('Auth.User.id');
 		if(empty($user_id)) {
-			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check');
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check');
 		} else {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password','nutricheckSender');
 		}
@@ -191,28 +191,55 @@ class QuestionsController extends AppController {
 	
 	public function nutrient_check( $method = null ) {
 		
-		// $this->Session->write('isCreateAnswer', 1);
-		// $this->Session->write('behalfUserId', 16);
+		$this->loadModel('PerformedCheck');
+		$this->loadModel('SelectedAnswerLog');
+		$this->loadModel('SelectedFactorLog');
 		
-		// $this->Session->delete('isCreateAnswer');
-		// $this->Session->delete('behalfUserId');
-		
-		if(isset($_GET['source']) && $_GET['source'] == "remote") {
-			$this->layout = "iframe-layout";
-		} else {
-			$this->layout = "public_dashboard";
+		if(isset($_GET['hash_value'])) {
+			
+			$hash_value = $_GET['hash_value'];
+			$this->Question->User->unbindModelAll();
+			$url_user_info = $this->Question->User->findByHashValue($hash_value);
+			
+			if($this->Session->read('Auth.User.group_id') != 3) {
+				$this->Session->write('behalfUserId', $url_user_info['User']['id']);
+			} else {
+				$user = $url_user_info['User'];
+				if(!$this->Auth->login($user)) {
+					$this->Session->setFlash(__('Failed to auto-login'));
+					$this->redirect('/users/login');
+				}
+			}
 		}
 		
-		$group_questions_id = array();
-		if(isset($_GET['group_id'])) {
-			$widget = $this->Question->Qgroup->findById($_GET['group_id']);
-			
-			foreach($widget['Question'] as $qkey => $group_question_item) {
-				$group_questions_id[$qkey] = $group_question_item['id'];
+		$user_info = $this->Session->read('Auth.User');
+		$behalfUserId = $this->Session->read('behalfUserId');
+		$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];		
+		
+		// ------------------- layout changes depending if the source is directly to the system or if it's being accessed remotely -------------------------- //
+
+			if(isset($_GET['source']) && $_GET['source'] == "remote") {
+				$this->layout = "iframe-layout";
+			} else {
+				$this->layout = "public_dashboard";
 			}
 			
-			sort($group_questions_id);
-		}
+		// ------------------- layout changes depending if the source is directly to the system or if it's being accessed remotely -------------------------- //
+		
+		
+		// --------------------------------- if the group_id of the questions is defined, then will filter them based on it -------------------------------------------- //
+			$group_questions_id = array();
+			if(isset($_GET['group_id'])) {
+				$widget = $this->Question->Qgroup->findById($_GET['group_id']);
+				
+				foreach($widget['Question'] as $qkey => $group_question_item) {
+					$group_questions_id[$qkey] = $group_question_item['id'];
+				}
+				
+				sort($group_questions_id);
+			}
+		// --------------------------------- if the group_id of the questions is defined, then will filter them based on it -------------------------------------------- //
+		
 		
 		$iscreateAnswer = 0;
 		if($this->Session->read('isCreateAnswer') != "") {
@@ -225,14 +252,6 @@ class QuestionsController extends AppController {
 				exit();
 			}
 		}
-		
-		$this->loadModel('PerformedCheck');
-		$this->loadModel('SelectedAnswerLog');
-		$this->loadModel('SelectedFactorLog');
-		
-		$user_info = $this->Session->read('Auth.User');
-		$behalfUserId = $this->Session->read('behalfUserId');
-		$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 		
 		if($user_info['can_answer'] != 1) {
 			$this->Session->setFlash(__('Please wait for the notification through email that you can answer again.'));
@@ -514,17 +533,22 @@ class QuestionsController extends AppController {
 		/* -------------------------------------------------------------------- ALLOWING THE USER TO GO BACK TO THEIR PREVIOUOS PROGRESS ------------------------------------------------------------ */
 		
 		
-		$selected_factors = $this->SelectedFactorLog->find('all', array('conditions' => array('SelectedFactorLog.user_id' => $return_user_id), 'fields' => array('factor_id')));
+		$initial_selected_factors = $this->SelectedFactorLog->find('all', array('conditions' => array('SelectedFactorLog.user_id' => $return_user_id), 'fields' => array('factor_id')));
+		
+		if(!empty($initial_selected_factors)) {
+			$flatten_selected_factors = array();
+			foreach($selected_factors as $selected_factor_key => $factor) {
+				$flatten_selected_factors[$selected_factor_key] = $factor['SelectedFactorLog']['factor_id'];
+			}	
+			$selected_factors = $flatten_selected_factors;
+		}
+		
+		if(isset($_GET['factors'])) {
+			$selected_factors = explode(",", $_GET['factors']);
+		}
 		
 		if(!empty($method)) {
-			if(!empty($selected_factors)) {
-				$flatten_selected_factors = array();
-				foreach($selected_factors as $selected_factor_key => $factor) {
-					$flatten_selected_factors[$selected_factor_key] = $factor['SelectedFactorLog']['factor_id'];
-				}
-				
-				$selected_factors = $flatten_selected_factors;
-				
+			if(!empty($selected_factors)) {				
 				$factor_ids = implode(",", $selected_factors);
 				
 				$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
@@ -789,47 +813,54 @@ class QuestionsController extends AppController {
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
 	public function nutricheckSender() {
-		$hash_value = $_POST['hash_value'];
-		$selected_factors = $_POST['factors'];
-		
-		$selected_factors = str_replace(",", "+", $selected_factors);
-		
-		if(empty($selected_factors)) {
-			$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value;
-		} else {
-			$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?hash_value=".$hash_value."&factors=".$selected_factors;
-		}
-		
-		// endor('phpmailer'.DS.'class.phpmailer'); 
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
-		$mail = new PHPMailer(); 
-
-		$mail->IsSMTP(); // we are going to use SMTP
-		$mail->IsHTML(true);
-		$mail->Host = 'email-smtp.us-east-1.amazonaws.com';  // Specify main and backup server
-		$mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$mail->Username = "AKIAIFE5UJ3F2OYW64CQ"; 
-		$mail->Password = "AiMbFeTu00PxAlzDl2Cn60zDlPoYdVfZBvwChnbB3C50"; 
-		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
-
-		$mail->From = "noman@iquantum.com.au"; 
-		$mail->FromName = "noman@iquantum.com.au"; 
-		$mail->AddAddress($email, $email);
 		
-		$mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+		if($this->request->is('post')) {
+			$hash_value = $_POST['hash_value'];
+			$selected_factors = $_POST['factors'];
+			
+			$this->Question->User->unbindModelAll();
+			$user_info = $this->Question->User->findByHashValue($hash_value);
+			$email = $user_info['User']['email'];
+			
+			if(empty($selected_factors)) {
+				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value;
+			} else {
+				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?hash_value=".$hash_value."&factors=".$selected_factors;
+			}
+			
+			$mail = new PHPMailer(); 
 
-		$mail->CharSet  = 'UTF-8'; 
-		$mail->WordWrap = 50;  // set word wrap to 50 characters
+			$mail->IsSMTP(); // we are going to use SMTP
+			$mail->IsHTML(true);
+			$mail->Host = 'email-smtp.us-east-1.amazonaws.com';  // Specify main and backup server
+			$mail->SMTPAuth = true;                               // Enable SMTP authentication
+			$mail->Username = "AKIAIFE5UJ3F2OYW64CQ"; 
+			$mail->Password = "AiMbFeTu00PxAlzDl2Cn60zDlPoYdVfZBvwChnbB3C50"; 
+			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-		$mail->IsHTML(true);  // set email format to HTML 
-		
-		$mail->Subject = "Nutricheck Invitation";
-		$mail->Body    = "You have have been sent an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test";
+			$mail->From = "noman@iquantum.com.au"; 
+			$mail->FromName = "noman@iquantum.com.au"; 
+			$mail->AddAddress($email, $email);
+			
+			$mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 
-		if($mail->Send()) {
-			return true;
-		} else {
-			return $mail->ErrorInfo; 
+			$mail->CharSet  = 'UTF-8'; 
+			$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+			$mail->IsHTML(true);  // set email format to HTML 
+			
+			$mail->Subject = "Nutricheck Invitation";
+			$mail->Body    = "You have have been sent an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test";
+			
+			
+			if($mail->Send()) {
+				echo "1";
+				exit();
+			} else {
+				echo $mail->ErrorInfo; 
+				exit();
+			}
 		}
 		
 		exit();

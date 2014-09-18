@@ -83,8 +83,8 @@ class AppController extends Controller {
 		//Configure AuthComponent
 		$this->Auth->loginAction = '/users/login';
 		$this->Auth->logoutRedirect = '/users/login';
-		$this->Auth->loginRedirect = array('plugin'=>false,
-		'controller' => 'users', 'action' => 'dashboard');  
+		$this->Auth->loginRedirect = array('plugin'=>false,'controller' => 'users', 'action' => 'dashboard');  
+		$this->Auth->userScope = array('User.status' => 1);
 	}
 	
 	public function var_debug($variable) {
