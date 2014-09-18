@@ -871,6 +871,14 @@ class UsersController extends AclManagementAppController {
 	public function nutricheck_activity($user_id = null) {
 		$this->layout = 'public_dashboard';
 		
+		if(isset($_GET['hash_value'])) {
+			$hash_value = $_GET['hash_value'];
+			$this->User->unbindModelAll();
+			$url_user_info = $this->User->findByHashValue($hash_value);
+			
+			$user_id = $url_user_info['User']['id'];
+		}
+		
 		$user_info = $this->Session->read('Auth.User');
 		
 		// if admin/client
