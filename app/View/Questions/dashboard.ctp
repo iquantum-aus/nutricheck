@@ -112,6 +112,10 @@
 				$('#selectedFactor').val(selected_values);
 				var selected_factor = $('#selectedFactor').val();
 				
+				if(selected_factor != "") {
+					$('#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_factor);
+				}
+				
 				if(user_hash != "") {
 					if(selected_factor != "") {
 						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+user_hash+"&factors="+selected_values);

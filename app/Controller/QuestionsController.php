@@ -788,13 +788,20 @@ class QuestionsController extends AppController {
 	
 	public function print_question_list() {
 		$this->layout = "ajax_plus_scripts";
-
+		
 		if(!empty($this->request->data['Factors']['factors'])) {
 			$factor_ids = implode(",", $this->request->data['Factors']['factors']);
-			$selected_factors = $this->request->data['Factors']['factors'];
+			$selected_factors = $factor_ids;
+		}
+		
+		if(isset($_GET['factors'])) {
+			$selected_factors = $_GET['factors'];
+		}
+		
+		if(!empty($selected_factors)) {
 			$this->set('selected_factors', $selected_factors);
 			
-			$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($factor_ids)";
+			$sql = "SELECT Question.id from questions as Question LEFT JOIN factors_questions ON Question.id = factors_questions.question_id WHERE factor_id IN ($selected_factors)";
 			$question_ids = $this->Question->query($sql);
 			$flatten_qid = array();
 			
