@@ -115,7 +115,7 @@ input[type=radio].css-checkbox {
 						}
 						
 						label.css-label {
-							background-image:url(../img/checkboxes.png);
+							/* background-image:url(../img/checkboxes.png); */
 							-webkit-touch-callout: none;
 							-webkit-user-select: none;
 							-khtml-user-select: none;
@@ -123,12 +123,32 @@ input[type=radio].css-checkbox {
 							-ms-user-select: none;
 							user-select: none;
 						}
+						
+						label.css-label_0 { background-image:url(../img/checkboxesGreen.png); }
+						label.css-label_1 { background-image:url(../img/checkboxesPeach.png); }
+						label.css-label_2 { background-image:url(../img/checkboxesOrange.png); }
+						label.css-label_3 { background-image:url(../img/checkboxesRed.png); }
 
+						.greenLabel { color: #21ff04; }
+						.peachLabel { color: #ffa059; }
+						.orangeLabel { color: #ff7303;  }
+						.redLabel { color: #ff0202; }
+						
+						.questionPaginator:last-child {
+							border-right: 1px solid #000;
+						}
+						
+						.questionPaginator {
+							height: 40px;
+							background: #eee;
+							border-left: 1px solid #000;
+							border-top: 1px solid #000;
+							border-bottom: 1px solid #000;
+							text-align: center;
+							padding-top: 8px;
+						}
 
-
-
-
-
+						.activePage { background: #B0E6FF; }
 
 
 

@@ -48,14 +48,40 @@
 			<?php if(!empty($user_id)) { ?>
 				<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
 				
-				<form style="margin-bottom: 40px; float: left; max-width: 1080px;width:100%;" method="POST" id="nutricheckAnalysis">
+				<?php
+					$raw_questions = $questions;
+					$raw_count = count($raw_questions);
+					$question_data = array_chunk($questions, 23);
+					$question_data_count = count($question_data);
+					$pcount = 0;
+					$ptotal = count($question_data);
+					$button_width = 100/$question_data_count;
+				?>
+				
+				<div class="left full" style="margin-top: 20px; margin-bottom: 10px;">
+					<?php for($binc = 0; $binc < $question_data_count; $binc++) { ?>	
+							<div class="questionPaginator left"style="width: <?php echo $button_width; ?>%;">
+								<?php 
+									$to_display_end = ($binc+1)*23;
+									$final_end_display = 0;
+									$final_start_display = 0;
+									
+									if($to_display_end <= $raw_count) {
+										$final_end_display = $to_display_end;
+									} else {
+										$final_end_display = $raw_count;
+									}
+									
+									$final_start_display = $to_display_end-22;
+									echo $final_start_display." - ".$final_end_display;
+								?>
+							</div>
+					<?php } ?>
+				</div>
+				
+				<form style="margin-bottom: 40px; float: left; width:100%;" method="POST" id="nutricheckAnalysis">
+					
 					<?php
-						$raw_questions = $questions;
-						$question_data = array_chunk($questions, 10);
-						$question_data_count = count($question_data);
-						$pcount = 0;
-						$ptotal = count($question_data);
-						//echo count($question_data);
 						foreach($question_data as $key => $questions) {
 						$pcount++;
 					?>
@@ -65,10 +91,10 @@
 								<tr class="headerHolder" style="width: 100%;">
 									<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
 									<th style="width: 53%;">Question</th>
-									<th style="width: 8%;" class="actions"><span class="blue">0<br />Never</span></th>
-									<th style="width: 8%;" class="actions"><span class="blue">1<br />Occasional / Mild</span></th>
-									<th style="width: 8%;" class="actions"><span class="blue">2<br />Moderate / Frequently</span></th>
-									<th style="width: 8%;" class="actions"><span class="blue">3<br />Severe / Very Severe</span></th>
+									<th style="width: 8%;" class="actions"><span class="greenLabel">0<br />Never</span></th>
+									<th style="width: 8%;" class="actions"><span class="peachLabel">1<br />Occasional / Mild</span></th>
+									<th style="width: 8%;" class="actions"><span class="orangeLabel">2<br />Moderate / Frequently</span></th>
+									<th style="width: 8%;" class="actions"><span class="redLabel">3<br />Severe / Very Severe</span></th>
 								</tr>
 								
 								<?php foreach ($questions as $question) {
@@ -94,7 +120,7 @@
 														<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
 														<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
 														<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-														<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label"></label>
+														<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label css-label_<?php echo $i; ?>"></label>
 													</td>
 												<?php
 											}
@@ -104,10 +130,15 @@
 								<?php } ?>
 								<tr>
 										<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
-										Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
-										<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
-										<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">PREV</a>
-										<a href="#" id="paginatorNext" class="paginatorNext paginatorButton btn btn-primary <?php if ($pcount==$ptotal){ echo 'disabled'; } ?>">NEXT</a>
+										
+										<?php /*
+											Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
+											<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
+										*/ ?>
+										
+										<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
+										<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
+										<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary <?php if ($pcount==$ptotal){ echo 'disabled'; } ?>">NEXT ></a>
 										</span>
 										</td>								
 								</tr>
@@ -197,6 +228,8 @@
 			}
 
 			$(document).ready(function() {
+				
+				$('.questionPaginator:first-child').addClass('activePage');
 				
 				$('#nutricheckAnalysis').submit( function () {
 					
@@ -355,7 +388,8 @@
 				
 				/* --------------------------------------------------------- VERIFIER WHETHER ALL FIELDS WERE CHECKED --------------------------------------- */
 				// NEXT CLICK
-				$(document).on("click", '#paginatorNext', function () {			
+				$(document).on("click", '#paginatorNext', function () {
+					
 					var question_module_id = "";
 					$('.questionModules').each( function () {
 						if($(this).is(':visible')) {
@@ -397,7 +431,8 @@
 						$( "#pageSelection_"+next_page ).attr('checked', true);
 						$('.questionModules').fadeOut(500);
 						$('#questionModule_'+next_page).delay(500).fadeIn();
-						$('#currentPaginatorstate').val(next_page);	
+						$('#currentPaginatorstate').val(next_page);
+						$('.activePage').next().addClass('activePage');
 					}			
 					if(next_page == (maximum_page-1)) {
 						$('.save-answer').fadeIn();				
@@ -419,6 +454,7 @@
 							//MoveNextPrev();
 						});
 						$('#currentPaginatorstate').val(prev_page);
+						$('.activePage:last-child').removeClass('activePage');
 					}			
 					return false;
 				});	

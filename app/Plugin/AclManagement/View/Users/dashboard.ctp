@@ -1,11 +1,5 @@
-<div id="contentWrapper">
-		<div class="dashboardtopimg">
-			<div class="sectionTitle">Dashboard</div>
-			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
-		</div>
 		
-		
-		<div id="mainContentWrapper" class="mainContentWrapper">
+	<div id="mainContentWrapper" class="mainContentWrapper left full">
 		
 		<?php if(!empty($videos)) { ?>
 				<?php foreach($videos as $video) { ?>
@@ -89,7 +83,6 @@ XX XXXX XXXX<br>or<br>emailaddress@email.com, and we will do our best to help yo
 	<div id="aboutNutricheck" style="width: 500px;">
 		Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
 	</div>
-</div>
 
 <script>
 	$(document).ready(function() {

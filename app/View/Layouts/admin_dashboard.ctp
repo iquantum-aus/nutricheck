@@ -69,11 +69,17 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<header>
 		<?php echo $this->element("menu/admin_top_menu"); ?>
 	</header>
-	<div id="content">
-		<?php echo $this->Session->flash(); ?>
-		<?php echo $this->Session->flash('auth'); ?>
-		<?php echo $this->element('sidebar'); ?>
-		<?php echo $this->fetch('content'); ?>
+	<div id="content">		
+		<div class="dashboardtopimg">
+			<div class="sectionTitle">Dashboard</div>
+			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
+		</div>
+		<div id="contentWrapper">
+			<?php echo $this->Session->flash(); ?>
+			<?php echo $this->Session->flash('auth'); ?>
+			<?php echo $this->element('sidebar'); ?>
+			<?php echo $this->fetch('content'); ?>
+		</div>
 	</div>
 	<div class="footerbottom">
 		Copyrighted (c) 2014 NutriCheck
