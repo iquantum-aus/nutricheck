@@ -309,7 +309,11 @@
 								dataType:'html',
 								success:function (data, textStatus) {						
 									if(data == 1) {
-										$("#nutricheckAnalysis").submit();
+										if($('#logoutToggle').length > 0) {
+											window.location.href = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/dashboard";
+										} else {
+											$("#nutricheckAnalysis").submit();
+										}
 									} else {
 										alert('Password is invalid');
 									}
@@ -324,6 +328,7 @@
 						
 						return false;
 					});
+					
 				<?php } ?>
 				
 				// KEYBOARD NEXT prev
@@ -454,7 +459,7 @@
 							//MoveNextPrev();
 						});
 						$('#currentPaginatorstate').val(prev_page);
-						$('.activePage:last-child').removeClass('activePage');
+						$('.activePage').last().removeClass('activePage');
 					}			
 					return false;
 				});	

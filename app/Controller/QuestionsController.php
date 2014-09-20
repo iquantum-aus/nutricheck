@@ -15,7 +15,7 @@ class QuestionsController extends AppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check');
 		} else {
-			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password','nutricheckSender');
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password','nutricheckSender', 'quickentry_nutrient_check');
 		}
 	}
 	
@@ -186,6 +186,32 @@ class QuestionsController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 	
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	public function quickentry_nutrient_check() {
+		$this->loadModel('PerformedCheck');
+		$answers = $this->request->data;
+		
+		foreach($answers as $answer) {
+			$answer['Answer']['user_id'] = $this->request->data['User']['id'];
+			
+			$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
+			$this->Question->Answer->create();
+			$this->Question->Answer->save($answer);
+		}
+		
+		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
+		$performed_check_data = array();
+		$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
+		$performed_check_data['PerformedCheck']['isComplete'] = 1;
+		$performed_check_data['PerformedCheck']['user_id'] = $this->request->data['User']['id'];
+
+		$this->PerformedCheck->create();
+		$this->PerformedCheck->save($performed_check_data);		
+		
+		echo "1";
+		exit();
+	}
 	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
@@ -388,11 +414,17 @@ class QuestionsController extends AppController {
 					$return_user_id = $this->request->data['User']['id'];
 				}
 				
-				unset($this->request->data['User']['id']);
+				if(!isset($this->request->data['Question']['sourceForm'])) {
+					unset($this->request->data['User']['id']);
+				}
 				
 				foreach($answers as $answer) {					
 					if(!empty($behalfUserId)) {
 						$answer['Answer']['user_id'] = $behalfUserId;
+					}
+					
+					if(isset($this->request->data['Question']['sourceForm'])) {
+						$answer['Answer']['user_id'] = $this->request->data['User']['id'];
 					}
 					
 					$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];

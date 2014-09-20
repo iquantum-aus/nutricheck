@@ -35,9 +35,6 @@
 					</div>
 					
 					<div id="controlsHolder">
-						<a style="display: none;" id="startNutricheck" href="#"><input type="button" value="Start Nutricheck" class="btn btn-success"></a>
-						<a style="display: none;" id="userHistory" href="#"><input type="button" value="History" class="btn btn-warning"></a>
-						
 						<input type="hidden" id="selectedUser">
 						<input type="hidden" id="selectedFactor">
 					</div>
@@ -122,10 +119,8 @@
 					} else {
 						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+user_hash);
 					}
-					
-					$('#startNutricheck').fadeIn();
 				} else {
-					$('#startNutricheck').fadeOut();
+					$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
 				}
 				
 			}
@@ -133,21 +128,23 @@
 			if(id == "UserId") {
 				var selected_factors = $('#selectedFactor').val();
 				
-				$('#userHistory').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
-				
-				if(selected_factors == "") {
-					$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?hash_value="+chosen_value);
-				} else {
-					$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+chosen_value+"&factors="+selected_factors);
-				}
-				
 				$('#selectedUser').val(chosen_value);
 				if(chosen_value != "") {
-					$('#userHistory').fadeIn();
-					$('#startNutricheck').fadeIn();
+					$('#reportsNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
+					
+					if(selected_factors == "") {
+						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?hash_value="+chosen_value);
+					} else {
+						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+chosen_value+"&factors="+selected_factors);
+					}
 				} else {
-					$('#userHistory').fadeOut();
-					$('#startNutricheck').fadeOut();
+					$('#reportsNutricheck').attr("href", "#");
+					
+					if(selected_factors == "") {
+						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
+					} else {
+						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors");
+					}
 				}
 			}
 		});

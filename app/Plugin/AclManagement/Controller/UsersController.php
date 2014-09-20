@@ -241,7 +241,7 @@ class UsersController extends AclManagementAppController {
 				$this->User->create();
 				if ($this->User->save($this->request->data)) {
 					
-					if(!isset($this->request->data['create_and_answer'])) {
+					// if(!isset($this->request->data['create_and_answer'])) {
 						$to = $this->request->data['User']['email'];
 						$subject = "You've been added to the system";
 
@@ -258,7 +258,7 @@ class UsersController extends AclManagementAppController {
 						$message .= "</body></html>";
 						
 						mail($to, $subject, $message, $headers);
-					}
+					// }
 					
 					$user_id = $this->User->id;
 					$this->request->data['UserProfile']['user_id'] = $user_id;

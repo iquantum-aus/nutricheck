@@ -34,7 +34,7 @@
 	<h3>Quick Entry Form</h3>
 	
 	
-	<form style="margin: 0;" class="left span12" method="POST" action="/questions/nutrient_check" id="quickEntryForm">
+	<form style="margin: 0;" class="left span12" method="POST" action="/questions/quickentry_nutrient_check" id="quickEntryForm">
 		
 		<?php if($user_info['group_id'] == 2) { ?>
 			<div class="left span12">
@@ -120,8 +120,23 @@
 				alert('There are unanswered items in the form. Please address them before you continue');
 				return false;
 			} else {
-				console.log("complete");
+				$.ajax({
+					async:true,
+					data: $(this).serialize(),
+					dataType:'html',
+					success:function (data, textStatus) {
+						if(data == 1) {
+							$('#quickEntryForm')[0].reset();
+							alert('Quick Entry was Successfully Saved');
+							$.fancybox.close();
+						}
+					},
+					type:'post',
+					url:"http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_nutrient_check"
+				});
 			}
+			
+			return false;
 		});
 		
 		$(document).on("click", '#qe_paginatorNext', function () {	
