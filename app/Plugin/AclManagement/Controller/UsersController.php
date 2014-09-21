@@ -467,7 +467,7 @@ class UsersController extends AclManagementAppController {
 			
 			$to = $user_info['User']['email'];
 			
-			$subject = 'Reactivation of Nutrient Check ';
+			$subject = 'Reactivation of NutriCheck ';
 
 			$headers = "From: glenn@iquantum.com.au\r\n";
 			$headers .= "Reply-To: noreply@iquantum.com.au\r\n";
@@ -781,8 +781,6 @@ class UsersController extends AclManagementAppController {
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
-		
-		echo $this->Auth->password(1411205050);
 		
 		$user_id = $this->Session->read('Auth.User.id');
 		$group_id = $this->Session->read('Auth.User.group_id');

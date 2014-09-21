@@ -217,7 +217,7 @@ class PerformedChecksController extends AppController {
 		$mail->IsHTML(true);  // set email format to HTML 
 		
 		$mail->Subject = "Incomplete Questionnaire";
-		$mail->Body    = "You have an incomplete Nutrient Check please click <a href='".$url."'>here</a> to go back to the system and complete the check."; 
+		$mail->Body    = "You have an incomplete NutriCheck please click <a href='".$url."'>here</a> to go back to the system and complete the check."; 
 
 		if($mail->Send()) {
 			return true;

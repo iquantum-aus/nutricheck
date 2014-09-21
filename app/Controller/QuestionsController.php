@@ -443,7 +443,7 @@ class QuestionsController extends AppController {
 					
 					/* ------------------------------------------------------ Emailing the pharmacist if ever a patient performed nutricheck ------------------------------------------------- */
 						
-						$subject = "A patient just performed nutrient check";
+						$subject = "A patient just performed NutriCheck";
 
 						$headers = "From: nomail@nutricheck.com";
 						$headers .= "Reply-To: noreply@nutricheck.com";

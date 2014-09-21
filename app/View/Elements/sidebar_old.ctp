@@ -46,7 +46,7 @@ $(document).ready(function(){
 							<li><a href="/questions">List Questions</a></li>
 							<li><a href="/questions/add">New Question</a></li>
 							<li><a href="/FactorsQuestions">Associate Questions</a></li>
-							<!-- <li><a href="/questions/nutrient_check">Nutrient Check</a></li> -->
+							<!-- <li><a href="/questions/nutrient_check">NutriCheck</a></li> -->
 							<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
 						</ul>
 					</li>
@@ -111,7 +111,7 @@ $(document).ready(function(){
 					<li>
 						<a class="sb-toggle-submenu"><div class="sideIco" id="questionsIco"></div>Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 						<ul class="sb-submenu">
-							<li><a href="/questions/nutrient_check">Nutrient Check</a></li>
+							<li><a href="/questions/nutrient_check">NutriCheck</a></li>
 							<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
 						</ul>
 					</li>
