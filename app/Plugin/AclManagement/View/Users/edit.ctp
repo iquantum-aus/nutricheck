@@ -112,7 +112,11 @@
 		
 		<br /><br />
 		<div class="left span12 inputHolder">
-			<?php echo $this->Form->input('User.email', array('required' => true, 'div' => false, 'placeholder' => 'Email')); ?>
+			<?php echo $this->Form->input('User.username', array('div' => false, 'placeholder' => 'Username')); ?>
+		</div>
+		
+		<div class="left span12 inputHolder">
+			<?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email')); ?>
 			<?php echo $this->Form->input('User.old_email', array('type' => "hidden", "value" => $this->request->data['User']['email'])); ?>
 		</div>
 		

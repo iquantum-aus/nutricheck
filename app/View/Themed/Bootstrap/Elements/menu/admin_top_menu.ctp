@@ -93,9 +93,13 @@
 							<ul class="sb-submenu">
 								<li><a href="/admin/users">List Users</a></li>
 								
-								<?php if($group_id == 1) { ?>
+								<?php if($group_id != 3) { ?>
+									
 									<li><a href="/admin/users/add">New Users</a></li>
-									<li><a href="/admin/user_permissions">User Permissions</a></li>
+									
+									<?php if($group_id == 1) { ?>
+										<li><a href="/admin/user_permissions">User Permissions</a></li>
+									<?php } ?>
 								<?php } ?>
 							</ul>
 						</li>

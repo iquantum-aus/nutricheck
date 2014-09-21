@@ -2,8 +2,8 @@
 
 <div class="users index">
     
-	<form method="POST" style="width: 40%;">
-		<input placeholder = "Enter Search Here" type="text" name="data[User][value]" style="width: 70%; float: left; clear: none;" value="<?php echo $search_value; ?>">
+	<form method="POST" style="width: 50%;" action="/admin/users">
+		<input placeholder = "Enter Search Here" type="text" name="data[User][value]" style="width: 50%; float: left; clear: none;" value="<?php echo $search_value; ?>">
 		<input type="submit" value="SEARCH" class="btn btn-success" name="data[User][search]" style="float: left; clear: none; margin-left: 10px;">
 		<input type="submit" value="RESET" name="data[User][reset]" class="btn btn-danger" style="float: left; clear: none; margin-left: 5px;">
 	</form>

@@ -32,7 +32,7 @@
 				
 				<div class="form-box">
 					<form action="" method=""> 
-						<?php echo $this->Form->input('email', array('div' => false, 'label' => false, 'placeholder' => "Email")); ?>
+						<?php echo $this->Form->input('username', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => "Email/username")); ?>
 						<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
 						<button class="btn btn-info btn-block login" type="submit">Login</button>
 						
@@ -133,7 +133,6 @@
 
 	.form-box input[type="text"]{
 		border-radius: 5px 5px 0 0;
-		text-transform: lowercase;
 	}
 
 	.form-box input[type="password"]{

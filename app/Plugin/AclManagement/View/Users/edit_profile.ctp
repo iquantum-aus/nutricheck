@@ -108,6 +108,7 @@
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
 			
 			<br /><br />
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.username', array('div' => false, 'placeholder' => 'Username')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email', 'readonly' => true)); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.password', array('div' => false, 'placeholder' => 'Password', 'required' => false)); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.password2', array('required' => false, 'type' => 'password', 'div' => false, 'placeholder' => 'Repeat Password', 'label' => 'Repeat Password')); ?></div>			

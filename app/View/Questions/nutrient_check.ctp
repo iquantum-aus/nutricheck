@@ -138,7 +138,19 @@
 										
 										<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
 										<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
-										<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary <?php if ($pcount==$ptotal){ echo 'disabled'; } ?>">NEXT ></a>
+										
+										<?php if ($pcount!=$ptotal) { ?>
+										<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary">NEXT ></a>
+										<?php } ?>
+										
+										<?php if ($pcount==$ptotal) { ?>
+											<?php if($iscreateAnswer == 1) { ?>
+												<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+											<?php } else { ?>
+												<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+											<?php } ?>
+										<?php } ?>
+										
 										</span>
 										</td>								
 								</tr>
@@ -147,10 +159,7 @@
 					<?php } ?>			
 					
 					<?php if($iscreateAnswer == 1) { ?>
-						<input type="button" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 						<input type="button" value="LOGOUT" class="btn btn-warning logout-answer">
-					<?php } else { ?>
-						<input type="submit" value="SUBMIT" class="btn btn-danger save-answer" style="display:none;">
 					<?php } ?>
 					
 					<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
@@ -186,7 +195,7 @@
 					<form style="width: 310px;" id="verifyPassword">
 						<h4>Moderator Password</h4>
 						<input type="password" name="data[User][password]" id="passwordValue" style="float: left; clear: none; width: 225px;">
-						<input type="button" value="Verify" id="verifyPassword" class="btn btn-success" style="float: left; clear: none; margin-left: 15px;">
+						<input type="button" value="Verify" id="verifyPassword" class="btn btn-success" style="float: left; clear: none; margin-left: 15px; min-width: 50px;">
 					</form>
 				</div>
 			</div>

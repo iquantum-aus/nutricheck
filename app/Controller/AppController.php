@@ -38,7 +38,7 @@ class AppController extends Controller {
         'Auth' => array(
             'authenticate' => array(
                 'Form' => array(
-                    'fields' => array('username' => 'email'),
+                    'fields' => array('username' => 'username'),
                     'scope'  => array('User.status' => 1)
                 )
             ),
@@ -91,5 +91,15 @@ class AppController extends Controller {
 		echo "<pre>";
 			print_r($variable);
 		echo "</pre>";
+	}
+	
+	public function randomNumber($length) {
+		$result = '';
+
+		for($i = 0; $i < $length; $i++) {
+			$result .= mt_rand(0, 9);
+		}
+
+		return $result;
 	}
 }

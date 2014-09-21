@@ -100,7 +100,7 @@
 		
 		<br /><br />
 		<div class="left span12 inputHolder">
-			<?php echo $this->Form->input('User.email', array('required' => true, 'div' => false, 'placeholder' => 'Email')); ?>
+			<?php echo $this->Form->input('User.email', array('required' => false, 'div' => false, 'placeholder' => 'Email')); ?>
 			<span id="emailExist">Email Already Exist</span>
 		</div>
 		

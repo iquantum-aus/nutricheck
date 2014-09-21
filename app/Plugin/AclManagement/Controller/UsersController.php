@@ -65,6 +65,23 @@ class UsersController extends AclManagementAppController {
 		$this->layout = "ajax";
 		
 		if ($this->request->is('post')) {
+			
+			// ----------------------------------------------------- hack for loging in using username --------------------------------------------------- //
+				
+				$this->User->unbindModelAll();
+				// $user_existence_username = $this->User->find('first', array('conditions' => array('username' => $this->request->data['User']['email'], 'password' => $this->Auth->password($this->request->data['User']['password']))));
+				$user_existence_email = $this->User->find('first', array('conditions' => array('email' => $this->request->data['User']['username'], 'password' => $this->Auth->password($this->request->data['User']['password']))));
+				
+				// if(!empty($user_existence_username)) {
+					// $this->request->data['User']['username'] = $user_existence_username['User']['username'];
+				// }
+				
+				if(!empty($user_existence_email)) {
+					$this->request->data['User']['username'] = $user_existence_email['User']['username'];
+				}
+				
+			// ----------------------------------------------------- hack for loging in using username --------------------------------------------------- //
+			
 			if ($this->Auth->login()) {
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {					
 					echo $this->Session->read('Auth.User.can_answer');
@@ -214,11 +231,23 @@ class UsersController extends AclManagementAppController {
 		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
 			
-			$email = $this->request->data['User']['email'];
-			$this->User->unbindModelAll();
-			$user_existence = $this->User->findAllByEmail($email);
+			$suffix = $this->randomNumber(4);
+			$username = str_replace(" ", "", $this->request->data['UserProfile']['first_name']).str_replace(" ", "", $this->request->data['UserProfile']['last_name']).$suffix;
+			$this->request->data['User']['username'] = $username;
 			
-			if(count($user_existence) > 0) {
+			if(!empty($this->request->data['User']['email'])) {
+				$email = $this->request->data['User']['email'];
+				$this->User->unbindModelAll();
+				$user_existence = $this->User->find('first', 
+					array(
+						'conditions' => array(
+							'email' => $email, 'status' => 1
+						)
+					)
+				);
+			}
+			
+			if(isset($user_existence)) {
 				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
 			} else {
 				$this->loadModel('AclManagement.User');
@@ -230,19 +259,29 @@ class UsersController extends AclManagementAppController {
 				
 				if(isset($this->request->data['create_and_answer'])) {
 					$this->Session->write('isCreateAnswer', 1);
-					$this->request->data['User']['status'] = 0;
+					$this->request->data['User']['status'] = 1;
 				}
 				
 				$to_hash = time();
 				$this->request->data['User']['hash_value'] = $this->Auth->password($to_hash);
+				
+				if(isset($this->request->data['create_and_answer'])) {
+					$this->request->data['User']['password'] = "nutriPass";
+				}
 				
 				$raw_password = $this->request->data['User']['password'];
 				
 				$this->User->create();
 				if ($this->User->save($this->request->data)) {
 					
-					// if(!isset($this->request->data['create_and_answer'])) {
-						$to = $this->request->data['User']['email'];
+					if(!isset($this->request->data['create_and_answer'])) {
+						
+						if(empty($this->request->data['User']['email'])) {
+							$to = $this->Session->read('Auth.User.email');
+						} else {
+							$to = $this->request->data['User']['email'];
+						}
+						
 						$subject = "You've been added to the system";
 
 						$headers = "From: nomail@nutricheck.com\r\n";
@@ -253,12 +292,12 @@ class UsersController extends AclManagementAppController {
 						$message = '<html><body>';
 						
 						$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-						$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
+						$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
 						
 						$message .= "</body></html>";
 						
 						mail($to, $subject, $message, $headers);
-					// }
+					}
 					
 					$user_id = $this->User->id;
 					$this->request->data['UserProfile']['user_id'] = $user_id;
@@ -266,12 +305,11 @@ class UsersController extends AclManagementAppController {
 					$this->User->UserProfile->create();
 					$this->User->UserProfile->save($this->request->data);
 					
-					$this->Session->setFlash(__('The user has been saved'), 'alert/success');
-					
 					if(isset($this->request->data['create_and_answer'])) {
 						$this->Session->write('behalfUserId', $user_id);
 						$this->redirect('../../questions/nutrient_check');
 					} else {
+						$this->Session->setFlash(__('The user has been saved'), 'alert/success');
 						$this->redirect(array('action' => 'index'));
 					}
 				} else {
@@ -617,10 +655,12 @@ class UsersController extends AclManagementAppController {
 			$user_info = $this->User->findByHashValue($hash);		
 			
 			if($user_info['User']['status'] == 0) {	
+				$user = $user_info['User'];
+				
+				unset($user_info['User']['password']);
 				$user_info['User']['status'] = 1;
 				$this->User->save($user_info);
 				
-				$user = $user_info['User'];
 				if(!$this->Auth->login($user)) {
 					$user_id = $user['id'];
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
@@ -741,6 +781,8 @@ class UsersController extends AclManagementAppController {
 	
 	public function dashboard() {
 		$this->layout = 'admin_dashboard';
+		
+		echo $this->Auth->password(1411205050);
 		
 		$user_id = $this->Session->read('Auth.User.id');
 		$group_id = $this->Session->read('Auth.User.group_id');
