@@ -1,5 +1,19 @@
+<?php $user_info = $this->Session->read('Auth.User'); ?>
 <?php
-	$user_info = $this->Session->read('Auth.User');
+	if($user_info['group_id'] == 1) {
+		?>
+			<style>
+				.memberFields { display: none; }
+				.clientFields { display: none; }
+			</style>
+		<?php
+	} else {
+		?>
+			<style>
+				.clientFields { display: none; }
+			</style>
+		<?php 
+	}
 ?>
 
 <div class="users form">
@@ -7,79 +21,100 @@
 	<fieldset>
 		<legend><?php echo __('New User'); ?></legend>
 		
-		<?php if($user_info['group_id'] != 1) { ?>
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
-			
-			<?php /*
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'placeholder' => 'Middlename')); ?></div>
-			*/ ?>
-			
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
-		<?php } ?>
+				
+		<div class="left span12 inputHolder">
+			<?php	
+				if($user_info['group_id'] == 1) {
+					echo $this->Form->input('group_id', array('div' => false, 'empty' => 'Select Group'));
+				} else {
+					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
+				}
+			?>
+		</div>
 		
-		<?php if($user_info['group_id'] != 1) { ?>
-			<div class="left span12 inputHolder">
-				<label>Gender</label>
-				<div class="left">
-					<input name="data[UserProfile][gender]" id="UserProfileGender_" value="" type="hidden">
-					
+		<div id="formFieldsHolder">
+			<div class="memberFields">
+			
+				<div class="left span12 inputHolder">
+					<?php
+						if($user_info['group_id'] == 1) {
+							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist'));
+						}
+					?>
+				</div>
+				
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => 'false', 'label' => 'Firstname<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('label' => 'Lastname<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
+			</div>
+			
+			<div class="memberFields">
+				<div class="left span12 inputHolder">
+					<label>Gender<span>*</span></label>
 					<div class="left">
-						<input name="data[UserProfile][gender]" id="UserProfileGenderMale" value="male" type="radio" required="required">
-						<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderMale">male</label>
-					</div>
-					
-					<div class="left">
-						<input name="data[UserProfile][gender]" id="UserProfileGenderFemale" value="female" type="radio" required="required">
-						<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderFemale">female</label>
+						<input name="data[UserProfile][gender]" id="UserProfileGender_" value="" type="hidden">
+						
+						<div class="radioHolder left full">
+							<div class="left">
+								<input name="data[UserProfile][gender]" id="UserProfileGenderMale" value="male" type="radio" class="requiredField">
+								<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderMale">male</label>
+							</div>
+							
+							<div class="left">
+								<input name="data[UserProfile][gender]" id="UserProfileGenderFemale" value="female" type="radio" class="requiredField">
+								<label style="margin-top: 6px; margin-left: 10px;" class="left" for="UserProfileGenderFemale">female</label>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		<?php } ?>
-		
-		<?php if($user_info['group_id'] == 1) { ?>
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
-		<?php } ?>
-		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Contact Numbers', 'label' => 'Contact numbers - landline, mobile')); ?></div>
-		
-		<?php if($user_info['group_id'] == 2) { ?>
 			
-			<div class="left span12 inputHolder">
-				<label>Birthday</label>
-				<select required name="data[UserProfile][birthday][month]">
-					<option value="">Select Month</option>
-					<option value="01">January</option>
-					<option value="02">February</option>
-					<option value="03">March</option>
-					<option value="04">April</option>
-					<option value="05">May</option>
-					<option value="06">June</option>
-					<option value="07">July</option>
-					<option value="08">August</option>
-					<option value="09">September</option>
-					<option value="10">October</option>
-					<option value="11">November</option>
-					<option value="12">December</option>
-				</select>
-				-
-				<select required name="data[UserProfile][birthday][day]">
-					<option value="">Select Day</option>
-					<?php  for($i=1; $i<=31; $i++) { ?>
-						<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-					<?php } ?>
-				</select>
-				-
-				<select required name="data[UserProfile][birthday][year]">
-					<option value="">Select Year</option>
-					<?php  for($y=1950; $y<=2014; $y++) { ?>
-						<option value="<?php echo $y; ?>"><?php echo $y; ?></option>
-					<?php } ?>
-				</select>
+			<?php if($user_info['group_id'] == 1) { ?>
+				<div class="clientFields">
+					<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('label' => 'Company<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
+				</div>
+			<?php } ?>
+			
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.contact', array('class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Contact Numbers', 'label' => 'Contact numbers - landline, mobile<span>*</span>')); ?></div>
+			
+			<div class="memberFields">
+				<div class="left span12 inputHolder">
+					<label>Birthday<span>*</span></label>
+					<select class="requiredField" name="data[UserProfile][birthday][month]">
+						<option value="">Select Month</option>
+						<option value="01">January</option>
+						<option value="02">February</option>
+						<option value="03">March</option>
+						<option value="04">April</option>
+						<option value="05">May</option>
+						<option value="06">June</option>
+						<option value="07">July</option>
+						<option value="08">August</option>
+						<option value="09">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+					</select>
+					-
+					<select class="requiredField" name="data[UserProfile][birthday][day]">
+						<option value="">Select Day</option>
+						<?php  for($i=1; $i<=31; $i++) { ?>
+							<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+						<?php } ?>
+					</select>
+					-
+					<select class="requiredField" name="data[UserProfile][birthday][year]">
+						<option value="">Select Year</option>
+						<?php  for($y=1950; $y<=2014; $y++) { ?>
+							<option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+						<?php } ?>
+					</select>
+				</div>
+				
+				
 			</div>
 			
-			
 			<div class="left span12 inputHolder ethnicityOptions">
-				<label style="margin: 0; width: 15%; margin-right: 0;">Nationality</label>	
+				<label for="UserProfileNationality" style="margin: 0; width: 15%; margin-right: 0;">Nationality<span>*</span></label>
 				<?php
 					$ethnicity_options = array(
 						"Caucasian",
@@ -90,37 +125,31 @@
 					);
 				?>
 				
-				<?php echo $this->Form->input('UserProfile.nationality', array('required' => true, 'legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
+				<div class="left">
+					<div id="UserProfileNationality" class="radioHolder left full">
+						<?php echo $this->Form->input('UserProfile.nationality', array('class' => 'requiredField', 'legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
+					</div>
+				</div>
 			</div>
-		<?php } ?>
 
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('class' => 'numberOnly', 'required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('class' => 'textOnly', 'required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('required' => true, 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('label' => 'Zip Code<span>*</span>', 'class' => 'numberOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('label' => 'Suburb<span>*</span>', 'class' => 'textOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('label' => 'Address<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
+			
+			<br /><br />
+			<div class="left span12 inputHolder">
+				<?php echo $this->Form->input('User.email', array('div' => false, 'placeholder' => 'Email')); ?>
+				<span id="emailExist">Email Already Exist</span>
+			</div>
+			
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('password', array('type' => "hidden", 'value' => time())); ?></div>
 		
-		<br /><br />
-		<div class="left span12 inputHolder">
-			<?php echo $this->Form->input('User.email', array('required' => false, 'div' => false, 'placeholder' => 'Email')); ?>
-			<span id="emailExist">Email Already Exist</span>
+			<div class="left span12">
+				<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
+				<input type="submit" value="Create and Answer" class="btn btn-warning" name="create_and_answer">
+				<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
+			</div>
 		</div>
-		
-		<div class="left span12 inputHolder"><?php echo $this->Form->input('password', array('type' => "hidden", 'value' => time())); ?></div>
-		
-		<div class="left span12 inputHolder">
-			<?php	
-				if($user_info['group_id'] == 1) {
-					echo $this->Form->hidden('group_id', array('value' => 2));
-				} else {
-					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
-				}
-			?>
-		</div>
-	
-        <div class="left span12">
-            <?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
-            <input type="submit" value="Create and Answer" class="btn btn-warning" name="create_and_answer">
-            <?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
-        </div>
 	</fieldset>
 <?php echo $this->Form->end();?>
 </div>
@@ -129,6 +158,27 @@
 	$(document).ready( function () {
 		
 		$( "#datepicker" ).datepicker();
+		
+		<?php if($user_info['group_id'] == 1) { ?>
+			$('#formFieldsHolder').find("*").prop("disabled", true);
+		<?php } ?>
+		
+		$('#UserGroupId').change( function () {
+			var group_id = $("#UserGroupId option:selected").val();
+			if(group_id != "") {
+				$('#formFieldsHolder').find("*").prop("disabled", false);
+				$('#formFieldsHolder input').not(':button, :submit, :reset, :hidden').val('').removeAttr('checked').removeAttr('selected');
+				if(group_id == 2) {
+					$('.memberFields').hide();
+					$('.clientFields').show();
+				} else {
+					$('.clientFields').hide();
+					$('.memberFields').show();
+				}
+			} else {
+				$('#formFieldsHolder').find("*").prop("disabled", true);
+			}
+		});
 		
 		$('#UserEmail').focusout( function () {
 			var email = $('#UserEmail').val();
@@ -150,6 +200,42 @@
 		
 		$('#UserAddForm').submit( function () {
 			if($('#emailExist').is(':visible')) {
+				return false;
+			}
+		});
+		
+		$('#UserAddForm').submit( function () {
+			var empty_field = 0;
+			
+			$('.requiredField').each( function () {
+				if($(this).is(':visible')) {
+					
+					var input_name = $(this).attr('name');
+					var input_id = $(this).attr('id');
+					
+					if ($(this).is(':radio')) {
+						
+						if($("input:radio[name='"+input_name+"']").is(":checked")) {
+							$(this).closest('.radioHolder').css('border', 'none');
+						} else {
+							empty_field++;
+							$(this).closest('.radioHolder').css('border', '1px solid red');
+							console.log(input_id);
+						}
+						
+					} else {
+						if($(this).val() == "") {
+							empty_field++;
+							$(this).css('border', '1px solid red');
+						} else {
+							$(this).css('border', '1px solid #ccc');
+						}
+					}
+				}
+			});
+			
+			if(empty_field > 0) {
+				alert('There are fields that were left empty.');
 				return false;
 			}
 		});

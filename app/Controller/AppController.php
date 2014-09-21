@@ -93,6 +93,21 @@ class AppController extends Controller {
 		echo "</pre>";
 	}
 	
+	public function pharmacists() {
+        $pharmacists = $this->User->find('list', array('conditions' => array('group_id' => '2'), 'fields' => array('id', 'id')));
+		$this->User->UserProfile->unbindModelAll();
+		
+		$pharmacists_name = array();
+		foreach($pharmacists as $pharmacist_id => $pharmacist) {
+			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $pharmacist), 'fields' => array('first_name', 'last_name')));
+			if(!empty($user_profile)) {
+				$pharmacists_name[$pharmacist_id] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['first_name'];
+			}
+		}
+		
+		return $pharmacists_name;
+	}
+	
 	public function randomNumber($length) {
 		$result = '';
 

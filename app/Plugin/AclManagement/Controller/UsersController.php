@@ -277,26 +277,36 @@ class UsersController extends AclManagementAppController {
 					if(!isset($this->request->data['create_and_answer'])) {
 						
 						if(empty($this->request->data['User']['email'])) {
-							$to = $this->Session->read('Auth.User.email');
+							
+							if($this->Session->read('Auth.User.group_id') == 2) {
+								$to = $this->Session->read('Auth.User.email');
+							} else {
+								$parent_id = $this->request->data['User']['parent_id'];
+								$parent_info = $this->User->findById($parent_id);
+								$to = $parent_info['User']['email'];
+							}
+							
 						} else {
 							$to = $this->request->data['User']['email'];
 						}
 						
-						$subject = "You've been added to the system";
+						if(!empty($to)) {
+							$subject = "You've been added to the system";
 
-						$headers = "From: nomail@nutricheck.com\r\n";
-						$headers .= "Reply-To: noreply@nutricheck.com\r\n";
-						$headers .= "MIME-Version: 1.0\r\n";
-						$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-						
-						$message = '<html><body>';
-						
-						$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-						$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
-						
-						$message .= "</body></html>";
-						
-						mail($to, $subject, $message, $headers);
+							$headers = "From: nomail@nutricheck.com\r\n";
+							$headers .= "Reply-To: noreply@nutricheck.com\r\n";
+							$headers .= "MIME-Version: 1.0\r\n";
+							$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+							
+							$message = '<html><body>';
+							
+							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
+							
+							$message .= "</body></html>";
+							
+							mail($to, $subject, $message, $headers);
+						}
 					}
 					
 					$user_id = $this->User->id;
@@ -318,8 +328,9 @@ class UsersController extends AclManagementAppController {
 			}
         }
 		
+		$pharmacists = $this->pharmacists();		
         $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
-        $this->set(compact('groups'));
+        $this->set(compact('groups', 'pharmacists'));
     }
 
     /**
@@ -411,8 +422,9 @@ class UsersController extends AclManagementAppController {
 			$this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
 		}
 		
+		$pharmacists = $this->pharmacists();
         $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
-        $this->set(compact('groups'));
+        $this->set(compact('groups', 'pharmacists'));
     }
 
     /**

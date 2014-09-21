@@ -61,6 +61,8 @@ input {
 	font-weight: bold;
 }
 
+.inputHolder label span { color: red; }
+
 .inputHolder label, .inputHolder input {
 	float: left;
 	clear: none;
@@ -297,7 +299,7 @@ div.form,
 div.index,
 div.view {
 	float: left;
-	width: 90%;
+	width: 100%;
 	/* border-left: 1px solid #666; */
 	padding: 10px 2%;
 }
@@ -1918,6 +1920,10 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	margin-right: 70px;
 }
 
+.ethnicityOptions label:last-child {
+	margin-right: 0px;
+}
+
 .moduleInputHolder {
 	margin-bottom: 5px;
 }
@@ -1926,10 +1932,9 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	margin-top: 25px;
 }
 
-.moduleSearchHolder {
-	border-right: 1px solid #000;
+#UserProfileNationality {
+	margin-left: 13px;
 }
-
 
 @media (max-width: 800px) {
 
