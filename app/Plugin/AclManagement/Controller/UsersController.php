@@ -792,132 +792,30 @@ class UsersController extends AclManagementAppController {
 	##############################################################################################################################################
 	
 	public function dashboard() {
-		$this->layout = 'admin_dashboard';
+		$this->loadModel('Factor');
+		$this->layout = "public_dashboard";
+		$user_info = $this->Session->read('Auth.User');
 		
-		$user_id = $this->Session->read('Auth.User.id');
-		$group_id = $this->Session->read('Auth.User.group_id');
-		
-		$external_flash_message = $this->Session->read('Message.flash.message');
-		
-		$this->User->unBindModel(
-			array(
-				'hasMany' => array('Answer'),
-				'hasAndBelongsToMany' => array('Vitamin')
-			)
-		);
-		
-		$user_info = $this->User->findById($user_id);
-		if($group_id != 1) {
-			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
-				
-				$this->Session->setFlash('Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
-				if(!empty($external_flash_message)) {
-					$this->Session->setFlash($external_flash_message.'<br />Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
-				}
-			}
-		}
-		
-		
-		// remove the unnecessary model from user so that it will be lighter for the query
-		$this->User->unBindModel(
-			array(
-				'hasAndBelongsToMany' => array('Vitamin')
-			)
-		);
-		
-		// gell all users that belong to your domain
-		if($group_id == 2) {
-			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
+		if($user_info['group_id'] == 2) {
+			$user_condition = array('User.parent_id' => $user_info['id'], 'User.hash_value !=' => "");
 		} else {
-			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3)));
+			$user_condition = array('User.group_id' => 3, 'User.hash_value !=' => "");
 		}
 		
-		$questions_answers = array();
+		$factor_list = $this->Factor->find('list', array('fields' => array('id', 'name')));
+		$user_list = $this->User->find('list', array('fields' => array('hash_value', 'id'), 'conditions' => $user_condition));
 		
-		$females = 0;
-		$males = 0;
-		
-		
-		//get total number of maes and females as well as getting the total scores that each question got
-		foreach($users_list as $key => $user) {
-			
-			// getting scores per question
-			foreach($user['Answer'] as $answer) {
-				
-				if(!isset($questions_answers[$answer['question_id']])) {
-					$questions_answers[$answer['question_id']] = 0;
-				} else {
-					$questions_answers[$answer['question_id']] = $questions_answers[$answer['question_id']] + $answer['rank'];
-				}
-				
-			}
-			
-			// getting total of each gender
-			if($user['UserProfile']['gender'] == "male") {
-				$males++;
-			} else if($user['UserProfile']['gender'] == "female") {
-				$females++;
+		foreach($user_list as $key => $user_id) {
+			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $user_id), 'fields' => array('first_name', 'last_name')));
+			if(empty($user_profile['UserProfile']['first_name']) && empty($user_profile['UserProfile']['last_name'])) {
+				unset($user_list[$key]);
+			} else {
+				$user_list[$key] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
 			}
 		}
 		
-		// remove unnecesary model from factor
-		$this->User->Answer->Question->Factor->unBindModel(
-			array(
-				'belongsTo' => array('User'),
-				'hasMany' => array('Prescription')
-			)
-		);
-		
-		if($group_id != 3) {
-			// get all factors
-			$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('Factor.status' => 1)));
-			
-			// pr($factors);
-			
-			// group questions by factor
-			$questions_per_factors = array();
-			$factors_list = array();
-			foreach($factors as $factor_key => $factor) {
-				
-				$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
-				
-				foreach($factor['Question'] as $question_key => $question) {
-					// echo $questions_answers[$question['id']];
-					$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
-				}
-			}
-			
-			// add scores per factor and also get total scores of all factors (will be used for its percentage)
-			$factor_per_percentage = array();
-			$total_factors_score = 0;
-			foreach($questions_per_factors as $factor_key => $questions_per_factor) {
-				$factor_value_sum = array_sum($questions_per_factor);
-				$factor_value_count = count($questions_per_factor);
-				
-				$perfect_score = 0;
-				$perfect_score = (3 * $factor_value_count) * count($users_list);
-		
-				
-				$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
-			}
-			
-			$videos = $this->User->Group->Video->find('all', array('conditions' => array('group_id' => $group_id)));
-		
-			arsort($factor_per_percentage);
-			// array_splice($factor_per_percentage, 16);
-			
-			$genders = array();
-			$genders['males'] = $males;
-			$genders['females'] = $females;
-			
-			$this->set("videos", $videos);
-			$this->set("factors_list", $factors_list);
-			$this->set("users_list", $users_list);			
-			$this->set("factor_per_percentage", $factor_per_percentage);
-			$this->set('genders', $genders);
-		}
-		
-		$this->set('external_flash_message', $external_flash_message);
+		$this->set('factor_list', $factor_list);
+		$this->set('user_list', $user_list);
 	}
 	
 	public function nutricheck_activity($user_id = null) {

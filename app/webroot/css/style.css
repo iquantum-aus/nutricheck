@@ -1936,6 +1936,10 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	margin-left: 13px;
 }
 
+.moduleSearchHolder {
+	border-right: 1px solid #999;
+}
+
 @media (max-width: 800px) {
 
 }
