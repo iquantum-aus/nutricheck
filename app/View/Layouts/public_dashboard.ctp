@@ -27,11 +27,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	
 	<?php echo $this->Html->charset(); ?>
 	<title>Identify - Enhance - Supervise</title>
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 	
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	
@@ -77,7 +74,8 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	
 	<div id="content">		
 		<div class="dashboardtopimg">
-			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
+			<div class="sectionTitle">Dashboard</div>
+			<img src="/img/nutricheck_banner2.png" style="max-height:300px;">
 		</div>
 		<div id="contentWrapper">
 			
@@ -98,22 +96,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		}
 	?>
 	
-	<footer>
-		<div id="footerContentHolder" class="left full">
-			<div id="footerContent">
-				<div class="left">Copyrighted &copy; 2014 NutriCheck Pty Ltd</div>
-				<div class="right">
-					<a class="fancybox" href="#privacyPolicy">Privacy Policy</a>
-					<div class="hidden">
-						<div id="privacyPolicy" style="width: 850px; padding: 20px;">
-							<?php Configure::load('general'); ?>
-							<?php echo Configure::read('General.privacy_policy'); ?>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer><!-- /container -->
+	<footer class="container"></footer><!-- /container -->
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
@@ -217,9 +200,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 		// Slidebars Submenus
 		$('.sb-toggle-submenu').off('click').on('click', function() {
-			$submenu = $(this).parent().children('.sb-submenu');
-			$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+			// HIDE ANY OPEN
+			$('ul.sb-submenu-active:visible').slideUp(200,function(){
+				$(this).toggleClass('sb-submenu-active');
+			});
 			
+			$submenu = $(this).parent().children('.sb-submenu');
+			$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.			
 			if ($submenu.hasClass('sb-submenu-active')) {
 				$submenu.slideDown(200);
 			} else {

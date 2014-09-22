@@ -1,7 +1,4 @@
 <?php
-	$group_id = $this->Session->read('Auth.User.group_id');
-?>
-<?php
 /**
  *
  * PHP 5
@@ -27,11 +24,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	
 	<?php echo $this->Html->charset(); ?>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	
 	<title>Identify - Enhance - Supervise</title>
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 	
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	
@@ -39,27 +38,22 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
 
+		// echo $this->Html->script('libs/jquery');
 		echo $this->Html->css('bootstrap.min');
-		echo $this->Html->css('bootstrap-responsive.min');
 		echo $this->Html->css('bootstrap-responsive.min');
 		// docs.css is only for this exapmple, remove for app dev
 		echo $this->Html->css('backend');
 		echo $this->Html->css('slidebars.min');
 		echo $this->Html->css('slidebars-theme');
-		echo $this->Html->css('style');
-		echo $this->Html->css('chosen');
 		echo $this->Html->css('jquery.fancybox');
-		echo $this->Html->css('jquery-ui-1.10.4.min');
+		echo $this->Html->css('style');
 		echo $this->Html->css('datepicker');
 		echo $this->Html->css('pace');
+		echo $this->Html->css('chosen');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
-		
-		// echo $this->Html->script('jquery');
 	?>
 
-	<?php  ?>
-	
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	
@@ -67,46 +61,33 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<script src="//vjs.zencdn.net/4.5/video.js"></script>
 	
 </head>
+<?php
+
+// style="zoom:1;-moz-transform:scale(1);"
+?>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<header>
-		<?php  
-			if(!empty($group_id)) {
-				echo $this->element("menu/admin_top_menu"); 
-			}
-		?>
+		<?php echo $this->element("menu/admin_top_menu"); ?>
 	</header>
-	
 	<div id="content">		
 		<div class="dashboardtopimg">
+			<div class="sectionTitle">Dashboard</div>
 			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
 		</div>
 		<div id="contentWrapper">
-			
 			<?php echo $this->Session->flash(); ?>
 			<?php echo $this->Session->flash('auth'); ?>
-			<?php 
-				if($this->Session->read('Auth.User.id')) {
-					echo $this->element('sidebar'); 
-				}
-			?>
+			<?php echo $this->element('sidebar'); ?>
 			<?php echo $this->fetch('content'); ?>
 		</div>
 	</div>
-	
-	<?php 
-		if($group_id == 1) {
-			// echo $this->element("flat-global-menu");
-		}
-	?>
-	
-	<footer>
-		<div id="footerContentHolder">
-			<div id="footerContent">
-				<div class="left">Copyrighted &copy; 2014 NutriCheck Pty Ltd</div>
-				<div class="right">Privacy Policy</div>
-			</div>
-		</div>
-	</footer><!-- /container -->
+	<div class="footerbottom">
+		Copyrighted (c) 2014 NutriCheck
+		<a href="#">Terms of Use</a>
+		<a href="#">Privacy</a>
+	</div>
+	<!-- /container -->
+
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
@@ -115,11 +96,9 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('slidebars.min');
 		echo $this->Html->script('masonry.pkgd.min');
 		echo $this->Html->script('Chart.min');
-		echo $this->Html->script('chosen.jquery.min');
 		echo $this->Html->script('jquery.fancybox');
-		echo $this->Html->script('jquery-ui-1.10.4.min');
-		echo $this->Html->script('ckeditor/ckeditor');
 		echo $this->Html->script('bootstrap-datepicker');
+		echo $this->Html->script('chosen.jquery.min');
 		echo $this->Html->script('pace');
 		echo $this->fetch('script');
  	?>
@@ -127,88 +106,76 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 </html>
 
 <script>
-	$(document).ready(function() {
-		
-		$.slidebars();
-		$('.fancybox').fancybox();
-		
-		$('.alphaNumeric').keypress( function (e) {
-			var regex = new RegExp("^[a-zA-Z0-9 ]+$");
-			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-			if (regex.test(str)) {
-				return true;
-			}
-
-			e.preventDefault();
-			return false;
-		});
-		
-		$('.textOnly').keypress( function (e) {
-			var regex = new RegExp("^[a-zA-Z ]+$");
-			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-			if (regex.test(str)) {
-				return true;
-			}
-
-			e.preventDefault();
-			return false;
-		});
-		
-		$('.numberOnly').keypress( function (e) {
-			var regex = new RegExp("^[0-9 ]+$");
-			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-			if (regex.test(str)) {
-				return true;
-			}
-
-			e.preventDefault();
-			return false;
-		});
-		
-		var document_height = $(document).height();
-		
-		$('#sb-site').css('height', document_height+"px");
-		
-		var $container = $('#mainContentWrapper');
-
-		$('#sidebar-main-menu li a').bind({
-			mouseenter: function() {
-				$(this).children('.sideIco').toggleClass('active');
-				$(this).children('.active-sidebar-menu').toggleClass('active');
-			},
-			mouseleave: function() {
-				$(this).children('.sideIco').toggleClass('active');
-				$(this).children('.active-sidebar-menu').toggleClass('active');
-			}
-		});
-		
-		var minimum_height = $('#content').height();
-		minimum_height = minimum_height+65;
-		//$('#sb-site').css('min-height', minimum_height);
-		
-		var config = {
-		  '.chosen-select'           : {},
-		  '.chosen-select-deselect'  : {allow_single_deselect:true},
-		  '.chosen-select-no-single' : {disable_search_threshold:10},
-		  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-		  '.chosen-select-width'     : {width:"95%"}
-		}
-		
-		for (var selector in config) {
-		  $(selector).chosen(config[selector]);
-		}
-		
-		// Slidebars Submenus
-		$('.sb-toggle-submenu').off('click').on('click', function() {
-			$submenu = $(this).parent().children('.sb-submenu');
-			$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+	(function($) {
+		$(document).ready(function() {
 			
-			if ($submenu.hasClass('sb-submenu-active')) {
-				$submenu.slideDown(200);
-			} else {
-				$submenu.slideUp(200);
+			var config = {
+			  '.chosen-select'           : {},
+			  '.chosen-select-deselect'  : {allow_single_deselect:true},
+			  '.chosen-select-no-single' : {disable_search_threshold:10},
+			  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+			  '.chosen-select-width'     : {width:"95%"}
 			}
+			
+			for (var selector in config) {
+			  $(selector).chosen(config[selector]);
+			}
+
+			
+			$('.fancybox').fancybox();
+			$.slidebars();
+			
+			// Slidebars Submenus
+			$('.sb-toggle-submenu').off('click').on('click', function() {
+				$submenu = $(this).parent().children('.sb-submenu');
+				$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+				
+				if ($submenu.hasClass('sb-submenu-active')) {
+					$submenu.slideDown(200);
+				} else {
+					$submenu.slideUp(200);
+				}
+			});
+			
+			var document_height = $(document).height();
+			
+			var $container = $('#mainContentWrapper');
+			
+			// initialize
+			$container.masonry({
+				columnWidth: 20,
+				itemSelector: '.item'
+			});
+		
+			$('#sidebar-main-menu li a').bind({
+				mouseenter: function() {
+					$(this).children('.sideIco').toggleClass('active');
+					$(this).children('.active-sidebar-menu').toggleClass('active');
+				},
+				mouseleave: function() {
+					$(this).children('.sideIco').toggleClass('active');
+					$(this).children('.active-sidebar-menu').toggleClass('active');
+				}
+			});
+
+			$container.masonry( 'on', 'layoutComplete', function( msnryInstance, laidOutItems ) { 
+				var minimum_height = $('#content').height();
+				minimum_height = minimum_height+65;
+				$('#sb-site').css('min-height', minimum_height);
+			});
+			
+			
+			var minimum_height = $('#content').height();
+			minimum_height = minimum_height+65;
+			//$('#sb-site').css('min-height', minimum_height);
+			
 		});
 		
-	});		
+		$(window).resize( function () {
+			var minimum_height = $('#content').height();
+			minimum_height = minimum_height+65;
+			$('#sb-site').css('min-height', minimum_height);		
+		});
+		
+	}) (jQuery);
 </script>

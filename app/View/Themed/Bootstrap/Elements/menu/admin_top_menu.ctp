@@ -65,11 +65,11 @@
 						<a href="javascript:void(0);" onclick="ZoomPage('up');" title="Adjust fonts smaller" class="fontchangesmall">T-</a>
 						<a href="javascript:void(0);" onclick="ZoomPage('down');" title="Adjust fonts bigger" class="fontchangebig">T+</a>
 					</li>
-					<li class="menu"><a class="fancybox" href="#nutricheckProfile">About</a></li>					
+					<li class="menu"><a class="fancybox" href="#nutricheckProfile"><img src="/img/topmenu_about.jpg" />About</a></li>					
 					
 					<?php if($group_id == 2) { ?>
 						<li class="menu">
-							<a class="sb-toggle-submenu">Widgets<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<a class="sb-toggle-submenu"><img src="/img/topmenu_widgets.jpg" />Widgets<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 							<ul class="sb-submenu">
 								<li><a href="/qgroups">List Widgets</a></li>
 								<li><a href="/qgroups/add">Create Widgets</a></li>
@@ -79,7 +79,7 @@
 					
 					<?php if($group_id != 3) { ?>
 						<li class="menu">
-							<a class="sb-toggle-submenu">Nutritional Guides<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<a class="sb-toggle-submenu"><img src="/img/topmenu_nutriguide.jpg" />Nutritional Guides<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 							<ul class="sb-submenu">
 								<li><a href="/nutritional_guides">List Nutritional Guides</a></li>
 								<li><a href="/nutritional_guides/add">Create Nutritional Guide</a></li>
@@ -89,7 +89,7 @@
 					
 					<?php if($group_id != 3) { ?>
 						<li class="menu">
-							<a class="sb-toggle-submenu">Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<a class="sb-toggle-submenu"><img src="/img/topmenu_users.jpg" />Users<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 							<ul class="sb-submenu">
 								<li><a href="/admin/users">List Users</a></li>
 								
@@ -109,7 +109,7 @@
 						<li class="menu"><?php echo $this->Html->link('NutriCheck', '/questions/nutrient_check');?></li>
 					<?php } else if($group_id == 2) { ?>
 						<li class="menu">
-							<a class="sb-toggle-submenu">Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<a class="sb-toggle-submenu"><img src="/img/topmenu_questions.jpg" />Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 							<ul class="sb-submenu">
 								<li><a href="/questions/nutrient_check">NutriCheck</a></li>
 								<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
@@ -120,7 +120,7 @@
 					<?php if($group_id == 1) { ?>
 					
 						<li class="menu">
-							<a class="sb-toggle-submenu">Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
+							<a class="sb-toggle-submenu"><img src="/img/topmenu_questions.jpg" />Questions<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 							<ul class="sb-submenu">
 								<li><a href="/questions">List Questions</a></li>
 								<li><a href="/questions/add">New Question</a></li>
@@ -149,11 +149,13 @@
 					<?php } ?>
 					
 					<?php if($user_info['User']['group_id'] == 2) { ?>						
-						<li class="menu"><a class="fancybox" href="#quickEntry">Quick Entry</a></li>
-						<li><a target="_blank" href="/questions/print_question_list">Print Question List</a></li>
+						<li class="menu"><a class="fancybox" href="#quickEntry"><img src="/img/topmenu_quick.jpg" />Quick Entry</a></li>
+						<li><a target="_blank" href="/questions/print_question_list"><img src="/img/topmenu_print.jpg" />Print Question List</a></li>
 					<?php } ?>			
 					
-					<li class="menu"><?php echo $this->Html->link('Dashboard', '/users/dashboard');?></li>
+					<li class="menu">
+						<a href="/users/dashboard/"><img src="/img/topmenu_dashboard.jpg" />Dashboard</a>					
+					</li>
 				</ul>
 
 				<ul class="nav">
