@@ -17,7 +17,9 @@
 			<?php } ?>
 		<?php } ?>
 
-		<div style="min-height: 374px; width: 77%;margin:0 3% 40px 0;" class="dashboardbox video">
+		<div class="videoandbuttons">
+		
+		<div style="" class="dashboardbox noborder video">
 			<form method="POST" style="margin: 0;" id="linkSending">			
 				<div class="left span12" style="padding: 20px;">
 					<h1>Welcome! Let's get started and on our way to better health.</h1>
@@ -49,19 +51,19 @@
 		</div>
 		
 		<?php echo $this->element('module_panel'); ?>
-		
+		</div>
 		<?php
 			$iconstyle = "margin:10px auto 10px auto;max-width:175px;";
 		?>
 		
 		
-		<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
+		<div style="min-height: 374px; width: 34%;margin:30px 3% 30px 0;" class="dashboardbox mason">
 			<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
 			<div class="textBelowsmall blue">What is nutricheck</div>				
 			<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
 		</div>
 		
-		<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
+		<div style="min-height: 374px; width: 34%;margin:30px 3% 30px 0;" class="dashboardbox mason">
 			<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
 			<div class="textBelowsmall green">Benefits</div>				
 			<div class="textBelowcontent">
@@ -73,7 +75,7 @@
 			</div>
 		</div>
 		
-		<div style="min-height: 0; width: 26%;margin:0 0 40px 0;" class="dashboardbox mason">
+		<div style="min-height: 0; width: 26%;margin:30px 0 30px 0;" class="dashboardbox mason">
 			<img src="../img/happypeople.jpg" style="width:100%;height:100%;">
 		</div>
 		
@@ -219,7 +221,7 @@
 					<?php } ?>
 				<?php } ?>
 			
-				<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
+				<div style="" class="dashboardbox video">
 					<video id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
 						  controls preload="auto"
 						  width="100%"

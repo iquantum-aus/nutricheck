@@ -276,7 +276,9 @@ p {
 	text-decoration: underline;
 }
 #content{
-	background: #fff;
+	/*background: #fbf9f8;*/
+	/* TEST BG */
+	background:black;
 	clear: both;
 	color: #333;
 	float: left;
@@ -1159,7 +1161,7 @@ min-height:374px;
 #mainContentWrapper {
 	/*border: 1px solid #000;*/
 	margin-top: 30px;
-	padding: 40px 0 40px 0;
+	padding: 0 0 30px 0;
 }
 
 #dashboardIco { background-position: 0px -6px; }
@@ -1777,6 +1779,7 @@ tr:hover{
 	min-height:100px;
 	max-width: 1280px;
 	margin: 0 auto;
+	border:0;
 }
 .bolda a{
 	font-weight:bold;
@@ -1861,16 +1864,25 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 .dashboardtopimg{
 	position:relative;
 	width:100%;
-	/*float:left;*/
+	float:left;
+	background:white;
+	text-align:center;
+}
+.dashboardtopimginner{
+	/*position:relative;*/
+	width:100%;	
 	max-width: 1280px;
 	margin: 0 auto;
+	background:white;
 }
-.dashboardtopimg .sectionTitle{
+.dashboardtopimginner .sectionTitle{
 	position:absolute;
 	bottom:30px;
+	z-index:100;
 }
-.dashboardtopimg img{
+.dashboardtopimginner img{
 	/*width:100%;*/
+	float:left;
 }
 
 .dashboardbox{
@@ -1878,12 +1890,23 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	float:left;
 	margin:0;
 	padding:0;
-	outline:1px solid black;
+	/*outline:1px solid black;*/
 }
 .dashboardbox.noborder{
 	outline:0px solid black;
 }
-
+.dashboardbox.video{
+	min-height: 374px;
+	width: 70%;
+	margin:0 3% 40px 0;
+}
+.dashboardbox.buttons{
+	min-height: 374px;
+	width: 27%%;
+	margin:0 0 40px 0;
+	border-left:1px solid #ECE9E6;
+	padding:0 0 0 80px;
+}
 .biglist li{
 	line-height:40px;
 	-font-size:15px;
@@ -2083,7 +2106,17 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 }
 .dashbutton-orange-big{
 }
-
+.videoandbuttons{
+	position: relative;
+	float: left;
+	min-width: 100%;
+	padding: 30px;
+	margin: 0;
+	background: white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
 
 @media (max-width: 800px) {
 
