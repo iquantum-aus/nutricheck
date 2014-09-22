@@ -44,7 +44,10 @@
 					</div>
 					
 					<div class="left span5" style="padding: 30px;">
-						<a href="/admin/users/add"><input type="button" class="btn btn-primary" value="New Customer"></a>
+						<a href="/admin/users/add" id="startNutricheck" class="dashbutton-big dashgreen">
+							<div><img src="/img/button_icon_user.png" /></div>
+							<span>NEW COSTUMER</span>
+						</a>
 					</div>
 				</div>
 			</form>
@@ -236,40 +239,33 @@
 				<?php
 					$iconstyle = "margin:10px auto 10px auto;max-width:175px;";
 				?>
-				
-				
-				<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
-					<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
-					<div class="textBelowsmall blue">What is nutricheck</div>				
-					<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. 
-	Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
-				</div>
-				
-				<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
-					<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
-					<div class="textBelowsmall green">Benefits</div>				
-					<div class="textBelowcontent">
-					<ul class="biglist">
-						<li>Benefit</li>
-						<li>Benefit</li>
-						<li>3-4 points only</li>
-					</ul>
-					</div>
-				</div>
-				
-				<div style="min-height: 0; width: 26%;margin:0 0 40px 0;" class="dashboardbox mason">
-					<img src="../img/happypeople.jpg" style="width:100%;height:100%;">
-				</div>
-				
-				<div style="min-height: 374px; width: 327px;" class="dashboardbox mason">
-					<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
-					<div class="textBelowsmall green">HELP & FAQ</div>				
-					<div class="textBelowcontent">				
-					Need help, or need to talk to us about something?<br><br>
-					Please check out the FAQ or contact the NutriCheck team on<br>
-	XX XXXX XXXX<br>or<br>emailaddress@email.com, and we will do our best to help you!
-					</div>
-				</div>		
+				<div style="width: 20%;margin:30px 3.33% 30px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">What is nutricheck</div>				
+			<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
+		</div>		
+		<div style="width: 20%;margin:30px 3.33% 30px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">Benefits</div>				
+			<div class="textBelowcontent">
+			<ul class="biglist">
+				<li>Benefit</li>
+				<li>Benefit</li>
+				<li>3-4 points only</li>
+			</ul>
+			</div>
+		</div>		
+		<div style="width: 20%;margin:30px 3.33% 30px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">HELP & FAQ</div>				
+			<div class="textBelowcontent">				
+			Need help, or need to talk to us about something?<br><br>
+			Please check out the FAQ or contact the NutriCheck team on XX XXXX XXXX or emailaddress@email.com, and we will do our best to help you!
+			</div>
+		</div>
+		<div style="min-height: 0; width: 30%;margin:30px 0 30px 0;" class="dashboardboxsmall nobg mason">
+			<img src="../img/happypeople.jpg" class="round5" style="">
+		</div>
 				
 			</div>
 	</div>

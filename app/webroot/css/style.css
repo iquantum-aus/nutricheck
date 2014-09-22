@@ -1828,7 +1828,15 @@ tr:hover{
 }
 
 .nav.big li a img{
-	margin-right:5px;	
+	margin-right:5px;
+	
+	/*
+	ICONS ON TOP 
+	*/
+	/*display: block;
+	text-align: center;
+	vertical-align: baseline;
+	margin: 0 auto;*/
 }
 .nav.big li:first-child{
 	
@@ -2039,10 +2047,7 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	-webkit-box-shadow: 0px 1px 5px 1px 4px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.3);
 }
-.dashbutton-big:hover{
-	background-color:#e06745;
-	color:white;
-}
+
 .dashbutton-big div{
 	/*padding: 0 30px 0 30px;*/
 	display: inline-block;
@@ -2136,14 +2141,31 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 .dashred{
 	background-color:#E55F3A;
 }
+.dashred span{
+	border-left: 1px solid #e16a47;
+}
+.dashred div{
+	border-right: 1px solid #d55936;
+}
+.dashred:hover{
+	background-color:#e06745;
+	color:white;
+}
+
 .dashgreen{
 	background-color:#4DB07A;
 }
+.dashgreen span{
+	border-left: 1px solid #53ae7c;
+}
+.dashgreen div{
+	border-right: 1px solid #459b6d;
+}
+.dashgreen:hover{
+	background-color:#4DB07A;
+	color:white;
+}
 
-.dashbutton-green-big{
-}
-.dashbutton-orange-big{
-}
 .videoandbuttons{
 	position: relative;
 	float: left;
