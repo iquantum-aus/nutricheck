@@ -1,43 +1,8 @@
 <style>
 	#quickEntryForm .chosen-single { width: 300px; }
 	#quickEntryForm .chosen-drop { width: 300px; }
+	.chosen-container .chosen-results li { color: #000; }
 </style>
-
-<?php
-	// The same as require('Controller/UsersController.php');
-	App::import('Controller', 'Questions');
-	$user_info = $this->Session->read('Auth.User');
-	
-	// We need to load the class
-	$Questions = new QuestionsController();
-
-	// If we want the model associations, components, etc to be loaded
-	$Questions->constructClasses();
-	
-	$Questions->Question->unbindModelAll();
-	$qe_questions = $Questions->Question->find('all');	
-	
-	$qe_questions = array_chunk($qe_questions, 30, true);
-	$behalfUserId = $this->Session->read('behalfUserId');
-	
-	if($user_info['group_id'] != 1) {
-		$condition = array('User.parent_id' => $user_info['id'], 'User.status' => 1, 'User.parent_id' => $user_info['id']);
-	} else {
-		$condition = array('User.status' => 1, 'User.parent_id' => $user_info['id']);
-	}
-	
-	$users_list = $Questions->Question->User->find('list', array('fields' => array('hash_value', 'id'), 'conditions' => $condition));
-	$name_list = array();
-	
-	foreach($users_list as $hash_value => $user_id) {
-		$user_profile = $Questions->Question->User->UserProfile->findByUserId($user_id);
-		
-		if(!empty($user_profile['UserProfile']['first_name']) || !empty($user_profile['UserProfile']['last_name'])) {
-			$name_list[$hash_value] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
-		}
-	}
-	
-?>
 
 <div style="width: 420px;">
 	<h3>Quick Entry Form</h3>
@@ -45,11 +10,11 @@
 	
 	<form style="margin: 0;" class="left span12" method="POST" action="/questions/quickentry_nutrient_check" id="quickEntryForm">
 		
-		<?php if($user_info['group_id'] == 2) { ?>
+		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 			<div class="left span12" id="quickEntryHolder">
-				<label style="float: left; margin-right: 20px; padding-top: 10px;">Perform As:</label>
+				<label style="float: left; margin-right: 20px; padding-top: 10px; color: #000;">Perform As:</label>
 				<?php echo $this->Form->input('User.id', array('options' => $name_list, 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $behalfUserId)); ?>
-				<input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]">
+				<?php /* <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> */ ?>
 			</div>
 		<?php } ?>
 		
@@ -61,13 +26,6 @@
 							<?php
 								foreach($question_group as $question_item) {
 								
-									$factors = $Questions->Question->query('SELECT FactorsQuestion.question_id, Factor.id  FROM factors_questions as FactorsQuestion LEFT JOIN factors as Factor ON Factor.id = FactorsQuestion.factor_id WHERE FactorsQuestion.question_id = '.$question_item['Question']['id']);
-									$factor_raw_id = "";
-									
-									foreach($factors as $factor) {
-										$factor_raw_id .= $factor['Factor']['id']." ";
-									}
-									
 									?>
 										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][question_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $question_item['Question']['id']; ?>">
 										<input type="hidden" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][user_id]" id="AnswerQuestionId<?php echo $question_item['Question']['id']; ?>" value="<?php echo $this->Session->read('Auth.User.id'); ?>">
@@ -76,7 +34,7 @@
 										<input class="qe_itemInstance" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][rank]" type="number" id="qe_question_<?php echo $question_item['Question']['id']; ?>" placeholder="Q. #<?php echo $question_item['Question']['id']; ?>">
 										-->
 										
-										<select class="qe_itemInstance <?php echo $factor_raw_id; ?>" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][rank]" id="qe_question_<?php echo $question_item['Question']['id']; ?>">
+										<select class="qe_itemInstance" name="data[<?php echo $question_item['Question']['id']; ?>][Answer][rank]" id="qe_question_<?php echo $question_item['Question']['id']; ?>">
 											<option>Q. #<?php echo $question_item['Question']['id']; ?></option>
 											<option value="0">0</option>
 											<option value="1">1</option>
@@ -99,7 +57,7 @@
 		$qe_question_data_count = count($qe_questions);
 	?>
 	
-	<div id="quickEntry_description" class="left span12">0 - Never, 1 - Mild/Occasionally, 2 - Moderate/Frequently, 3 - Severe/Very Severely</div>
+	<div id="quickEntry_description" class="left span12" style="color: #000;">0 - Never, 1 - Mild/Occasionally, 2 - Moderate/Frequently, 3 - Severe/Very Severely</div>
 	
 	<div id="array_paginator">
 		<input id="qe_currentPaginatorstate" type="hidden" value="0">
@@ -145,7 +103,7 @@
 						if(data == 1) {
 							$('#quickEntryForm')[0].reset();
 							alert('Quick Entry was Successfully Saved');
-							$.fancybox.close();
+							parent.jQuery.fancybox.close();
 						}
 					},
 					type:'post',

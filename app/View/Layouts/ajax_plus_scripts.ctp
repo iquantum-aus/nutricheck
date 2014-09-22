@@ -145,6 +145,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('masonry.pkgd.min');
 		echo $this->Html->script('Chart.min');
 		echo $this->Html->script('jquery.fancybox');
+		echo $this->Html->script('chosen.jquery.min');
 		echo $this->fetch('script');
  	?>
 	
@@ -158,6 +159,18 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 		var document_height = $(document).height();
 		var $container = $('#mainContentWrapper');
+		
+		var config = {
+		  '.chosen-select'           : {},
+		  '.chosen-select-deselect'  : {allow_single_deselect:true},
+		  '.chosen-select-no-single' : {disable_search_threshold:10},
+		  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+		  '.chosen-select-width'     : {width:"95%"}
+		}
+		
+		for (var selector in config) {
+		  $(selector).chosen(config[selector]);
+		}
 		
 		// Slidebars Submenus
 		$('.sb-toggle-submenu').off('click').on('click', function() {

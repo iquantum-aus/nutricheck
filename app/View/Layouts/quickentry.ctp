@@ -56,8 +56,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 		// echo $this->Html->script('jquery');
 	?>
-
-	<?php  ?>
 	
 	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -66,139 +64,27 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<script src="//vjs.zencdn.net/4.5/video.js"></script>
 	
 </head>
-<body data-spy="scroll" data-target=".subnav" data-offset="50">
-	<header>
-		<?php  
-			if(!empty($group_id)) {
-				echo $this->element("menu/admin_top_menu"); 
-			}
-		?>
-	</header>
+<body>
 	
-	<div id="content">		
-		<div class="dashboardtopimg">
-			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
-		</div>
-		<div id="contentWrapper">
-			
-			<?php echo $this->Session->flash(); ?>
-			<?php echo $this->Session->flash('auth'); ?>
-			<?php 
-				if($this->Session->read('Auth.User.id')) {
-					echo $this->element('sidebar'); 
-				}
-			?>
-			<?php echo $this->fetch('content'); ?>
-		</div>
-	</div>
 	
-	<?php 
-		if($group_id == 1) {
-			// echo $this->element("flat-global-menu");
-		}
-	?>
-	
-	<footer>
-		<div id="footerContentHolder" class="left full">
-			<div id="footerContent">
-				<div class="left">Copyrighted &copy; 2014 NutriCheck Pty Ltd</div>
-				<div class="right">
-					<a class="fancybox" href="#privacyPolicy">Privacy Policy</a>
-					<div class="hidden">
-						<div id="privacyPolicy" style="width: 850px; padding: 20px;">
-							<?php Configure::load('general'); ?>
-							<?php echo Configure::read('General.privacy_policy'); ?>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+	<?php echo $this->fetch('content'); ?>
 	</footer><!-- /container -->
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php
 		echo $this->Html->script('libs/modernizr.min');
 		echo $this->Html->script('libs/bootstrap.min');
-		echo $this->Html->script('slidebars.min');
-		echo $this->Html->script('masonry.pkgd.min');
-		echo $this->Html->script('Chart.min');
 		echo $this->Html->script('chosen.jquery.min');
 		echo $this->Html->script('jquery.fancybox');
 		echo $this->Html->script('jquery-ui-1.10.4.min');
-		echo $this->Html->script('ckeditor/ckeditor');
-		echo $this->Html->script('bootstrap-datepicker');
-		echo $this->Html->script('pace');
 		echo $this->fetch('script');
  	?>
 </body>
+
 </html>
 
 <script>
 	$(document).ready(function() {
-		
-		$.slidebars();
-		$('.fancybox').fancybox();
-		
-		$("a.iframefancybox").fancybox({
-			'type': 'iframe', 
-			'scrolling': 'no', 
-			'iframe': {'scrolling': 'no'},
-			'autoSize': false,
-			'width'  : 450,
-			'height' : 500
-		}); // fancybox
-		
-		
-		$('.alphaNumeric').keypress( function (e) {
-			var regex = new RegExp("^[a-zA-Z0-9 ]+$");
-			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-			if (regex.test(str)) {
-				return true;
-			}
-
-			e.preventDefault();
-			return false;
-		});
-		
-		$('.textOnly').keypress( function (e) {
-			var regex = new RegExp("^[a-zA-Z ]+$");
-			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-			if (regex.test(str)) {
-				return true;
-			}
-
-			e.preventDefault();
-			return false;
-		});
-		
-		$('.numberOnly').keypress( function (e) {
-			var regex = new RegExp("^[0-9 ]+$");
-			var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-			if (regex.test(str)) {
-				return true;
-			}
-
-			e.preventDefault();
-			return false;
-		});
-		
-		var document_height = $(document).height();
-		
-		$('#sb-site').css('height', document_height+"px");
-		
-		var $container = $('#mainContentWrapper');
-
-		$('#sidebar-main-menu li a').bind({
-			mouseenter: function() {
-				$(this).children('.sideIco').toggleClass('active');
-				$(this).children('.active-sidebar-menu').toggleClass('active');
-			},
-			mouseleave: function() {
-				$(this).children('.sideIco').toggleClass('active');
-				$(this).children('.active-sidebar-menu').toggleClass('active');
-			}
-		});
-		
 		var minimum_height = $('#content').height();
 		minimum_height = minimum_height+65;
 		//$('#sb-site').css('min-height', minimum_height);

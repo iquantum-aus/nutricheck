@@ -9,7 +9,7 @@
 		<a target="_blank" id="printNutricheck" href="/questions/print_question_list<?php if($this->Session->read('Auth.User.group_id') == 3) {  echo "?hash_value=".$this->Session->read('Auth.User.hash_value'); } ?>" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
 		
 		<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>
-			<a class="fancybox dashbutton dashbutton4" href="#quickEntry">QUICK ENTRY</a>
+			<a id="quickEntry" class="fancybox fancybox.iframe dashbutton dashbutton4 iframefancybox" data-width="450" data-height="590" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe">QUICK ENTRY</a>
 			<a href="#" id="reportsNutricheck" class="dashbutton dashbutton5">REPORTS</a>
 		<?php } ?>
 	<?php } ?>
@@ -17,6 +17,7 @@
 
 <script>
 	$(document).ready( function () {
+		
 		$('#sendNutricheckButton').click( function () {
 			
 			var selectedUser = $('#selectedUser').val();

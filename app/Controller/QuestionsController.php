@@ -15,7 +15,7 @@ class QuestionsController extends AppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check');
 		} else {
-			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password','nutricheckSender', 'quickentry_nutrient_check');
+			$this->Auth->allow('remote_nutrient_check', 'save_remote_nutrient_check', 'nutrient_check', 'print_question_list', 'verify_password','nutricheckSender', 'quickentry_nutrient_check','quickentry_iframe');
 		}
 	}
 	
@@ -188,9 +188,63 @@ class QuestionsController extends AppController {
 	
 	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	public function quickentry_iframe() {
+		$this->layout = "quickentry";
+		$this->loadModel('UserProfile');
+		
+		$behalfUserId = $this->Session->read('behalfUserId');
+		if(!empty($behalfUserId)) {
+			$user_info = $this->Question->User->findById($behalfUserId);
+			$behalfUserId = $user_info['User']['hash_value'];
+		}
+		
+		if(isset($_GET['hash_value'])) {
+			$behalfUserId = $_GET['hash_value'];
+		}
+		
+		if(isset($_GET['factors'])) {
+			$question_ids = $this->Question->query('SELECT FactorsQuestion.question_id  FROM factors_questions as FactorsQuestion WHERE FactorsQuestion.factor_id IN ('.$_GET['factors'].')');
+		
+			$raw_question_ids = array();
+			foreach($question_ids as $key => $question_id) {
+				$raw_question_ids[$key] = $question_id['FactorsQuestion']['question_id'];
+			}
+		}
+		
+		$this->Question->unbindModelAll();
+		$qe_questions = $this->Question->find('all');	
+		
+		if(isset($raw_question_ids)) {
+			$question_ids = array_unique($raw_question_ids);
+			$this->Question->unbindModelAll();
+			$qe_questions = $this->Question->find('all', array('conditions' => array('id' => $question_ids)));	
+		}
+		
+		$qe_questions = array_chunk($qe_questions, 30, true);
+		
+		
+		$condition = array('User.status' => 1, 'User.parent_id' => $this->Session->read('Auth.User.id'));
+		$users_list = $this->Question->User->find('list', array('fields' => array('hash_value', 'id'), 'conditions' => $condition));
+		$name_list = array();
+		
+		foreach($users_list as $hash_value => $user_id) {
+			$user_profile = $this->UserProfile->findByUserId($user_id);
+			
+			if(!empty($user_profile['UserProfile']['first_name']) || !empty($user_profile['UserProfile']['last_name'])) {
+				$name_list[$hash_value] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
+			}
+		}
+		
+		$this->set(compact('behalfUserId','name_list','qe_questions'));
+	}
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	public function quickentry_nutrient_check() {
 		$this->loadModel('PerformedCheck');
 		$answers = $this->request->data;
+		
+		$user_info = $this->Question->User->findByHashValue($this->request->data['User']['id']);
+		$this->request->data['User']['id'] = $user_info['User']['id'];
 		
 		foreach($answers as $answer) {
 			$answer['Answer']['user_id'] = $this->request->data['User']['id'];
@@ -609,6 +663,11 @@ class QuestionsController extends AppController {
 				$questions = $this->Paginator->paginate();
 			}
 		}
+		
+		// $factors = $this->Question->query('SELECT FactorsQuestion.question_id, Factor.id  FROM factors_questions as FactorsQuestion LEFT JOIN factors as Factor ON Factor.id = FactorsQuestion.factor_id WHERE FactorsQuestion.question_id = 1');
+		// $this->var_debug($factors);
+		// exit();
+									
 		
 		$this->set('iscreateAnswer', $iscreateAnswer);
 		$this->set('selected_factors', $selected_factors);
