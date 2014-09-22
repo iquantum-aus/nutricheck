@@ -1157,9 +1157,8 @@ min-height:374px;
 }
 
 #mainContentWrapper {
-	/*border: 1px solid #000;*/
+	border: 1px solid #000;
 	margin-top: 30px;
-	padding: 40px 0 40px 0;
 }
 
 #dashboardIco { background-position: 0px -6px; }
@@ -1750,10 +1749,6 @@ div.factorNames { float: left; margin-top: 2px; }
 .sb-submenu{
 	text-indent: 6px;
 }
-.sb-submenu li{
-	border-bottom:1px dotted lightgray;
-	line-height:30px;
-}
 
 table tr th{
 	background-color:#f1f1f1 !important;
@@ -1798,12 +1793,7 @@ tr:hover{
 }
 .nav.big li a{
 	/*font-weight:bold;*/
-	/*color:black;*/
-	color:#5d90af;
-	font-weight:bold;
-}
-.nav.big li a img{
-	margin-right:5px;	
+	color:black;
 }
 .nav.big li:first-child{
 	
@@ -1851,7 +1841,7 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	bottom:30px;
 }
 .dashboardtopimg img{
-	/*width:100%;*/
+	width:100%;
 }
 
 .dashboardbox{
@@ -1864,7 +1854,36 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 .dashboardbox.noborder{
 	outline:0px solid black;
 }
-
+.dashbutton {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding:15px 0 15px 0;
+	float:left;
+	width:100%;
+	margin:0 0 15px 0;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+}
+.dashbutton1{
+	background-color:#6ECFF5;
+	min-height:60px;
+	line-height:60px;
+	margin:0 0 35px 0;
+}
+.dashbutton2{
+	background-color:#1AB8F3;	
+}
+.dashbutton3{
+	background-color:#33CCCC;
+}
+.dashbutton4{
+	background-color:#58CB73;
+}
+.dashbutton5{
+	background-color:#00CC66;
+}
 .biglist li{
 	line-height:40px;
 	-font-size:15px;
@@ -1920,151 +1939,6 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 .moduleSearchHolder {
 	border-right: 1px solid #999;
 }
-
-.sb-caret{
-	background-image:url('/img/arrowdownlightblue.jpg');
-	min-width:17px;
-	min-height:10px;
-	border:0 !important;
-}
-
-.sb-submenu{
-	margin-top:5px !important;
-	-moz-border-radius: 0 0 5px 5px !important;
-	-webkit-border-radius: 0 0 5px 5px !important;
-	border-radius: 0 0 5px 5px !important;
-	z-index:-1 !important;
-	min-width:200px !important;
-	/*width:auto !important;*/
-	padding: 10px 0 10px 0 !important;
-}
-
-/* BIG BUTTON */
-.dashbutton-big{
-	background-color:#E55F3A;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	padding:15px 0 15px 0;
-	float:left;
-	width:100%;
-	text-align:center;
-	color:white;
-	font-weight:bold;
-	min-height:90px;
-	line-height:60px;
-	margin:0 0 35px 0;
-	position:relative;
-	-moz-box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.3);
-	-webkit-box-shadow: 0px 1px 5px 1px 4px rgba(0, 0, 0, 0.3);
-	box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.3);
-}
-.dashbutton-big:hover{
-	background-color:#e06745;
-	color:white;
-}
-.dashbutton-big div{
-	/*padding: 0 30px 0 30px;*/
-	display: inline-block;
-	height: 100%;
-	/* min-height: 100%; */
-	border-right: 1px solid #d55936;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	width: 20%;
-}
-.dashbutton-big div img{
-	position:absolute;
-	padding:0;
-	top:0;
-	bottom:0;
-	left:0;
-	right:0;
-	margin:auto;
-}
-.dashbutton-big span{
-	display: inline-block;
-	width: 80%;
-	position: absolute;
-	/*top: 0;
-	bottom: 0;*/
-	margin:auto;
-	right: 0;
-	border-left: 1px solid #e16a47;
-	vertical-align:baseline;
-}
-
-/* SMALL BUTTON */
-.dashbutton-small{
-	background-color:#4DB07A;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	/*padding:15px 0 15px 0;*/
-	float:left;
-	width:100%;
-	margin:0 0 15px 0;
-	min-height:50px;
-	line-height:50px;
-	text-align:center;
-	color:white;
-	font-weight:bold;
-	position:relative;
-	-moz-box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.3);
-	-webkit-box-shadow: 0px 1px 5px 1px 4px rgba(0, 0, 0, 0.3);
-	box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.3);
-}
-.dashbutton-small:hover{
-	background-color:#4DB07A;
-	color:white;
-}
-.dashbutton-small div{
-	/*padding: 0 30px 0 30px;*/
-	display: inline-block;
-	height: 100%;
-	/* min-height: 100%; */
-	border-right: 1px solid #459b6d;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	width: 20%;
-}
-.dashbutton-small div img{
-	position:absolute;
-	padding:0;
-	top:0;
-	bottom:0;
-	left:0;
-	right:0;
-	margin:auto;
-}
-.dashbutton-small span{
-	display: inline-block;
-	width: 80%;
-	position: absolute;
-	/*top: 0;
-	bottom: 0;*/
-	margin:auto;
-	right: 0;
-	border-left: 1px solid #53ae7c;
-	vertical-align:baseline;
-}
-
-.dashred{
-	background-color:#E55F3A;
-}
-.dashgreen{
-	background-color:#4DB07A;
-}
-
-.dashbutton-green-big{
-}
-.dashbutton-orange-big{
-}
-
 
 @media (max-width: 800px) {
 

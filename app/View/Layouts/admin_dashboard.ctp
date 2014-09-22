@@ -71,7 +71,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	</header>
 	<div id="content">		
 		<div class="dashboardtopimg">
-			<div class="sectionTitle">1Dashboard</div>
+			<div class="sectionTitle">Dashboard</div>
 			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
 		</div>
 		<div id="contentWrapper">
