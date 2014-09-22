@@ -76,7 +76,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<div id="content">		
 		<div class="dashboardtopimg">
 			<div class="sectionTitle">Dashboard</div>
-			<img src="/img/dashboardtop.jpg" style="max-height:300px;">
+			<img src="/img/nutricheck_banner2.png" style="max-height:300px;">
 		</div>
 		<div id="contentWrapper">
 			
@@ -191,9 +191,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 		// Slidebars Submenus
 		$('.sb-toggle-submenu').off('click').on('click', function() {
-			$submenu = $(this).parent().children('.sb-submenu');
-			$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.
+			// HIDE ANY OPEN
+			$('ul.sb-submenu-active:visible').slideUp(200,function(){
+				$(this).toggleClass('sb-submenu-active');
+			});
 			
+			$submenu = $(this).parent().children('.sb-submenu');
+			$(this).add($submenu).toggleClass('sb-submenu-active'); // Toggle active class.			
 			if ($submenu.hasClass('sb-submenu-active')) {
 				$submenu.slideDown(200);
 			} else {
