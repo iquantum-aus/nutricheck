@@ -48,7 +48,7 @@
 		</form>
 	</div>
 	<?php } else { ?>		
-		<div style="min-height: 374px; width: 77%;margin:0 3% 40px 0;" class="dashboardbox video">
+		<div style="width: 77%;margin:0 3% 40px 0;" class="dashboardbox video">
 			<video id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
 				  controls preload="auto"
 				  width="100%"
@@ -68,7 +68,7 @@
 	?>
 	
 	
-	<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
+	<div style="width: 30%;" class="dashboardbox mason">
 		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall blue">What is nutricheck</div>				
 		<div class="textBelowcontent">
@@ -78,7 +78,7 @@
 		</div>
 	</div>
 	
-	<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
+	<div style="width: 30%;"class="dashboardbox mason">
 		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall green">Benefits</div>				
 		<div class="textBelowcontent">
@@ -94,11 +94,13 @@
 		</div>
 	</div>
 	
-	<div style="min-height: 0; width: 26%;margin:0 0 40px 0;" class="dashboardbox mason">
+	<?php /*
+	<div style="width: 22%;" class="dashboardbox mason">
 		<img src="../img/happypeople.jpg" style="width:100%;height:100%;">
 	</div>
+	*/ ?>
 	
-	<div style="min-height: 374px; width: 327px;" class="dashboardbox mason">
+	<div style="width: 30%;" class="dashboardbox mason">
 		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall green">HELP & FAQ</div>				
 		<div class="textBelowcontent">				

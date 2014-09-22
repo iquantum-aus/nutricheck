@@ -284,6 +284,7 @@ p {
 	height: 100%;
 	/*margin-top:50px;*/
 	margin-top:100px;
+	margin-bottom: 120px;
 }
 #footer {
 	clear: both;
@@ -292,6 +293,14 @@ p {
 }
 #header a, #footer a {
 	color: #fff;
+}
+
+#footerContentHolder {
+	height: 60px;
+	padding: 20px;
+	background: rgba(255,255,255,0.8);
+	border-top: 1px solid black;
+	color: black;
 }
 
 /** containers **/
@@ -1236,7 +1245,6 @@ min-height:374px;
 .half {
 	float: left;
 	width: 50%;
-	text-align: center;
 	position: relative;
 }
 
@@ -1850,6 +1858,8 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	margin:0;
 	padding:0;
 	outline:1px solid black;
+	margin-right: 3%;
+	min-height: 715px;
 }
 .dashboardbox.noborder{
 	outline:0px solid black;
@@ -1885,8 +1895,7 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	background-color:#00CC66;
 }
 .biglist li{
-	line-height:40px;
-	-font-size:15px;
+	line-height: 20px;
 }
 .mainContentWrapper{
 	height:auto !important;
