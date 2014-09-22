@@ -99,9 +99,14 @@ class AppController extends Controller {
 		
 		$pharmacists_name = array();
 		foreach($pharmacists as $pharmacist_id => $pharmacist) {
-			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $pharmacist), 'fields' => array('first_name', 'last_name')));
+			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $pharmacist), 'fields' => array('company', 'first_name', 'last_name')));
+			
 			if(!empty($user_profile)) {
-				$pharmacists_name[$pharmacist_id] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['first_name'];
+				if(!empty($user_profile['UserProfile']['company'])) {
+					$pharmacists_name[$pharmacist_id] = $user_profile['UserProfile']['company'];
+				} else {
+					$pharmacists_name[$pharmacist_id] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['first_name'];
+				}
 			}
 		}
 		

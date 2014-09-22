@@ -26,6 +26,9 @@
 	<fieldset>
 		<legend><?php echo __('Edit User'); ?></legend>
 		
+		<?php echo $this->Form->input('User.id'); ?>
+		<?php echo $this->Form->input('UserProfile.id'); ?>
+		
 		<div class="left span12 inputHolder">
 			<?php	
 				if($user_info['group_id'] == 1) {

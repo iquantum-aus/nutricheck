@@ -1,9 +1,18 @@
-<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;" class="dashboardbox noborder buttons">
-	<a href="/questions/nutrient_check" id="startNutricheck" class="dashbutton dashbutton1">START NUTRICHECK</a>
-	<a href="" id="sendNutricheckButton" class="dashbutton dashbutton2">SEND NUTRICHECK</a>
-	<a target="_blank" id="printNutricheck" href="/questions/print_question_list" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
-	<a class="fancybox dashbutton dashbutton4" href="#quickEntry">QUICK ENTRY</a>
-	<a href="#" id="reportsNutricheck" class="dashbutton dashbutton5">REPORTS</a>
+<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;" class="dashboardbox noborder buttons">	
+	<?php if($this->Session->read('Auth.User.group_id') != 1) { ?>
+		<a href="/questions/nutrient_check" id="startNutricheck" class="dashbutton dashbutton1">START NUTRICHECK</a>
+		
+		<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>
+			<a href="" id="sendNutricheckButton" class="dashbutton dashbutton2">SEND NUTRICHECK</a>
+		<?php } ?>
+		
+		<a target="_blank" id="printNutricheck" href="/questions/print_question_list<?php if($this->Session->read('Auth.User.group_id') == 3) {  echo "?hash_value=".$this->Session->read('Auth.User.hash_value'); } ?>" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
+		
+		<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>
+			<a class="fancybox dashbutton dashbutton4" href="#quickEntry">QUICK ENTRY</a>
+			<a href="#" id="reportsNutricheck" class="dashbutton dashbutton5">REPORTS</a>
+		<?php } ?>
+	<?php } ?>
 </div>
 
 <script>

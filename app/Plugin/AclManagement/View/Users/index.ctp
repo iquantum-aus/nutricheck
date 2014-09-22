@@ -29,10 +29,27 @@
     foreach ($users as $user) { ?>
 		<tr>
 				<td><?php echo h($user['User']['id']); ?></td>
-				<td><?php echo $user['UserProfile']['first_name']." ".$user['UserProfile']['last_name']; ?></td>
+				<td>
+					<?php 
+						if($user['User']['group_id'] == 3) {
+							echo $user['UserProfile']['first_name']." ".$user['UserProfile']['last_name']; 
+						}
+					?>
+				</td>
 				<td><?php echo h($user['User']['email']); ?></td>
 				
-				<td><?php echo h($user['UserProfile']['company']); ?></td>
+				<td>
+					<?php 
+						if($user['User']['group_id'] == 2) {
+							if(!empty($user['UserProfile']['company'])) {
+								echo h($user['UserProfile']['company']); 
+							} else {
+								echo "N/A";
+							}
+						}
+					?>
+				</td>
+				
 				<?php if($group_id == 1) { ?>
 					<td><?php echo h($user['Group']['name']); ?></td>
 				<?php } ?>
@@ -41,22 +58,24 @@
 			
 				<td style="text-align:center;">
 					<?php
-						$adminRoleName = array('admin', 'administrator');
-						if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin
-							echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
-						}else{
-							echo '<span style="cursor: pointer">';
-							echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['can_answer']) . '.png',
-								array('onclick' => 'published.toggle("can_answer-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
-									  'id' => 'can_answer-'.$user['User']['id']
-									));
-							echo '</span>';
+						if($user['User']['group_id'] == 3) {
+							$adminRoleName = array('admin', 'administrator');
+							if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin
+								echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
+							}else{
+								echo '<span style="cursor: pointer">';
+								echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['can_answer']) . '.png',
+									array('onclick' => 'published.toggle("can_answer-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
+										  'id' => 'can_answer-'.$user['User']['id']
+										));
+								echo '</span>';
+							}
 						}
 					?>
 				</td>				
 				
 				<td style="text-align:center;">
-						<?php
+					<?php
 						$adminRoleName = array('admin', 'administrator');
 						if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin
 							echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
@@ -68,15 +87,15 @@
 									));
 							echo '</span>&nbsp;';
 						}
-						?>
+					?>
 				</td>
 				<td class="center" style="text-align:center;">
-					<div class="btn-group">
+					<div class="btn-group right">
 					  <?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id']), array('class'=>'btn')); ?>
 					  
-					  <?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+					<?php if($user['User']['group_id'] == 3) { ?>
 						<?php echo $this->Html->link(__('Report'), array('plugin' => '', 'controller' => 'users', 'action' => 'nutricheck_activity', $user['User']['id']), array('class' => 'btn')); ?>
-					  <?php } ?>
+					<?php } ?>
 					  
 					  <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id']), array('class'=>'btn')); ?>
 					  <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $user['User']['id']), array('class'=>'btn'), __('Are you sure you want to delete # %s?', $user['User']['id'])); ?>
