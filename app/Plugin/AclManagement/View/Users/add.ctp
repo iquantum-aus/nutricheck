@@ -113,25 +113,27 @@
 				
 			</div>
 			
-			<div class="left span12 inputHolder ethnicityOptions">
-				<label for="UserProfileNationality" style="margin: 0; width: 15%; margin-right: 0;">Nationality<span>*</span></label>
-				<?php
-					$ethnicity_options = array(
-						"Caucasian",
-						"Asian",
-						"African",
-						"Aboriginal / Torres Straight",
-						"Pacific Island /Mauri  "
-					);
-				?>
-				
-				<div class="left">
-					<div id="UserProfileNationality" class="radioHolder left full">
-						<?php echo $this->Form->input('UserProfile.nationality', array('class' => 'requiredField', 'legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
+			<div class="memberFields">
+				<div class="left span12 inputHolder ethnicityOptions">
+					<label for="UserProfileNationality" style="margin: 0; width: 15%; margin-right: 0;">Are you:<span>*</span></label>
+					<?php
+						$ethnicity_options = array(
+							"Caucasian",
+							"Asian",
+							"African",
+							"Aboriginal / Torres Strait",
+							"Pacific Islander /Maori"
+						);
+					?>
+					
+					<div class="left">
+						<div id="UserProfileNationality" class="radioHolder left full">
+							<?php echo $this->Form->input('UserProfile.nationality', array('class' => 'requiredField', 'legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
+						</div>
 					</div>
 				</div>
 			</div>
-
+				
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('label' => 'Zip Code<span>*</span>', 'class' => 'numberOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('label' => 'Suburb<span>*</span>', 'class' => 'textOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('label' => 'Address<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
@@ -146,7 +148,11 @@
 		
 			<div class="left span12">
 				<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
-				<input type="submit" value="Create and Answer" class="btn btn-warning" name="create_and_answer">
+				
+				<?php if($user_info['group_id'] == 2) { ?>
+					<input type="submit" value="Create and Answer" class="btn btn-warning" name="create_and_answer">
+				<?php } ?>
+				
 				<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
 			</div>
 		</div>

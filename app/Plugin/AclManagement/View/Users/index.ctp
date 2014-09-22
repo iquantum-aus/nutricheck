@@ -13,6 +13,7 @@
         <th class="header"><?php echo $this->Paginator->sort('id');?></th>
         <th class="header">Name</th>
         <th class="header"><?php echo $this->Paginator->sort('email');?></th>
+        <th class="header">Company</th>
         
 		<?php if($group_id == 1) { ?>
 			<th class="header"><?php echo $this->Paginator->sort('group_id');?></th>
@@ -31,6 +32,7 @@
 				<td><?php echo $user['UserProfile']['first_name']." ".$user['UserProfile']['last_name']; ?></td>
 				<td><?php echo h($user['User']['email']); ?></td>
 				
+				<td><?php echo h($user['UserProfile']['company']); ?></td>
 				<?php if($group_id == 1) { ?>
 					<td><?php echo h($user['Group']['name']); ?></td>
 				<?php } ?>
@@ -71,7 +73,11 @@
 				<td class="center" style="text-align:center;">
 					<div class="btn-group">
 					  <?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id']), array('class'=>'btn')); ?>
-					  <?php echo $this->Html->link(__('Report'), array('plugin' => '', 'controller' => 'users', 'action' => 'nutricheck_activity', $user['User']['id']), array('class' => 'btn')); ?>
+					  
+					  <?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+						<?php echo $this->Html->link(__('Report'), array('plugin' => '', 'controller' => 'users', 'action' => 'nutricheck_activity', $user['User']['id']), array('class' => 'btn')); ?>
+					  <?php } ?>
+					  
 					  <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id']), array('class'=>'btn')); ?>
 					  <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $user['User']['id']), array('class'=>'btn'), __('Are you sure you want to delete # %s?', $user['User']['id'])); ?>
 					</div>

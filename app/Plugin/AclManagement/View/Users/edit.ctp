@@ -126,21 +126,23 @@
 				
 			</div>
 			
-			<div class="left span12 inputHolder ethnicityOptions">
-				<label for="UserProfileNationality" style="margin: 0; width: 15%; margin-right: 0;">Nationality<span>*</span></label>
-				<?php
-					$ethnicity_options = array(
-						"Caucasian",
-						"Asian",
-						"African",
-						"Aboriginal / Torres Straight",
-						"Pacific Island /Mauri  "
-					);
-				?>
-				
-				<div class="left">
-					<div id="UserProfileNationality" class="radioHolder left full">
-						<?php echo $this->Form->input('UserProfile.nationality', array('class' => 'requiredField', 'legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
+			<div class="memberFields">
+				<div class="left span12 inputHolder ethnicityOptions">
+					<label for="UserProfileNationality" style="margin: 0; width: 15%; margin-right: 0;">Are you:<span>*</span></label>
+					<?php
+						$ethnicity_options = array(
+							"Caucasian",
+							"Asian",
+							"African",
+							"Aboriginal / Torres Strait",
+							"Pacific Islander /Maori"
+						);
+					?>
+					
+					<div class="left">
+						<div id="UserProfileNationality" class="radioHolder left full">
+							<?php echo $this->Form->input('UserProfile.nationality', array('class' => 'requiredField', 'legend' => false, 'type' => 'radio', 'div' => false, 'placeholder' => 'Nationality', 'options' => $ethnicity_options)); ?>
+						</div>
 					</div>
 				</div>
 			</div>

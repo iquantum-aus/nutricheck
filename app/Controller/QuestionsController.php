@@ -224,7 +224,7 @@ class QuestionsController extends AppController {
 		if(isset($_GET['hash_value'])) {
 			
 			$hash_value = $_GET['hash_value'];
-			$this->Question->User->unbindModelAll();
+			// $this->Question->User->unbindModelAll();
 			$url_user_info = $this->Question->User->findByHashValue($hash_value);
 			
 			if($this->Session->read('Auth.User.group_id') != 3) {
@@ -821,6 +821,9 @@ class QuestionsController extends AppController {
 	public function print_question_list() {
 		$this->layout = "ajax_plus_scripts";
 		
+		$this->loadModel('User');
+		$this->loadModel('UserProfile');
+		
 		if(!empty($this->request->data['Factors']['factors'])) {
 			$factor_ids = implode(",", $this->request->data['Factors']['factors']);
 			$selected_factors = $factor_ids;
@@ -844,6 +847,16 @@ class QuestionsController extends AppController {
 			$questions = $this->Question->find('list', array('fields' => array('id', 'question'), 'conditions' => array('Question.id' => $flatten_qid)));
 		} else {
 			$questions = $this->Question->find('list', array('fields' => array('id', 'question')));
+		}
+		
+		
+		if(isset($_GET['hash_value'])) {
+			$user_info = $this->User->findByHashValue($_GET['hash_value']);
+			$user_id = $user_info['User']['id'];
+			$user_profile = $this->UserProfile->find('first', array('conditions' => array('user_id' => $user_id)));
+			$user_full_name = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
+			
+			$this->set('user_full_name',  $user_full_name);
 		}
 		
 		$this->set(compact('questions'));

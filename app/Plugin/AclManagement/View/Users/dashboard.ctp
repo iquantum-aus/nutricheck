@@ -132,6 +132,7 @@
 					$('#selectedUser').val(chosen_value);
 					if(chosen_value != "") {
 						$('#reportsNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
+						$('#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+chosen_value);
 						
 						if(selected_factors == "") {
 							$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?hash_value="+chosen_value);
@@ -140,6 +141,7 @@
 						}
 					} else {
 						$('#reportsNutricheck').attr("href", "#");
+						$('#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list");
 						
 						if(selected_factors == "") {
 							$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");

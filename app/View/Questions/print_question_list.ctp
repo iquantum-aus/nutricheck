@@ -1,4 +1,6 @@
-<h2>Full Question List</h2>
+<h2>
+	Full Question List <?php if (isset($user_full_name) && !empty($user_full_name)) { ?><span style="font-size: 15px; color: green;">(<?php echo $user_full_name; ?>)</span><?php } ?>
+</h2>
 
 <table>
 	<?php

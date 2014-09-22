@@ -241,13 +241,14 @@ class UsersController extends AclManagementAppController {
 				$user_existence = $this->User->find('first', 
 					array(
 						'conditions' => array(
-							'email' => $email, 'status' => 1
+							'email' => $email
+							// , 'status' => 1
 						)
 					)
 				);
 			}
 			
-			if(isset($user_existence)) {
+			if(isset($user_existence) && !empty($user_existence)) {
 				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
 			} else {
 				$this->loadModel('AclManagement.User');
