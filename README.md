@@ -18,9 +18,25 @@ SETUP
 - Edit web.config/.htaccess if needed (Default should work)
 - Run site
 
-
 ===================================================
 LOCATIONS
 ===================================================
-Dashboard : \app\Plugin\AclManagement\View\Users\dashboard.ctp
-Top Menu : \app\View\Themed\Bootstrap\Elements\menu\admin_top_menu.ctp
+Dashboard : \app\View\Layouts\public_dashboard.ctp
+Dashboard Admin main : \app\Plugin\AclManagement\View\Users\dashboard.ctp
+Modules_panel: \app\View\Elements\module_panel.ctp
+Top Menu : \app\View\Themed\Bootstrap\Elements\menu\admin_top_menu.ctp\
+
+===================================================
+LEVELS & LOGIN
+===================================================
+ADMIN
+admin@admin.com
+admin123
+
+CLIENT
+client@client.com
+client123
+
+1 = admin
+2 = client (pharmacist)
+3 = member (patient)

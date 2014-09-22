@@ -210,7 +210,7 @@
 					<?php } ?>
 				<?php } ?>
 			
-				<div style="min-height: 374px; width: 77%;margin:0 3% 40px 0;" class="dashboardbox video">
+				<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
 					<video id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
 						  controls preload="auto"
 						  width="100%"

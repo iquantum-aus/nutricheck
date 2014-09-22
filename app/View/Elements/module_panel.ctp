@@ -1,16 +1,42 @@
-<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;" class="dashboardbox noborder buttons">	
+<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;border-left:1px solid black;" class="dashboardbox noborder buttons">	
+<?php
+//echo "gid : ".$this->Session->read('Auth.User.group_id');
+/*
+1 = admin
+ - no buttons
+2 = client (pharmacist)
+- all
+3 = member (patient)
+- start + print
+*/
+?>
 	<?php if($this->Session->read('Auth.User.group_id') != 1) { ?>
-		<a href="/questions/nutrient_check" id="startNutricheck" class="dashbutton dashbutton1">START NUTRICHECK</a>
+		<a href="/questions/nutrient_check" id="startNutricheck" class="dashbutton-big dashred">
+			<div><img src="/img/button_icon_start.png" /></div>
+			<span>START NUTRICHECK</span>
+		</a>
 		
 		<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>
-			<a href="" id="sendNutricheckButton" class="dashbutton dashbutton2">SEND NUTRICHECK</a>
+			<a href="" id="sendNutricheckButton" class="dashbutton-small dashgreen">
+			<div><img src="/img/button_icon_send.png" /></div>
+			<span>SEND NUTRICHECK</span>
+			</a>
 		<?php } ?>
 		
-		<a target="_blank" id="printNutricheck" href="/questions/print_question_list<?php if($this->Session->read('Auth.User.group_id') == 3) {  echo "?hash_value=".$this->Session->read('Auth.User.hash_value'); } ?>" class="dashbutton dashbutton3">PRINT NUTRICHECK</a>
+		<a target="_blank" id="printNutricheck" href="/questions/print_question_list<?php if($this->Session->read('Auth.User.group_id') == 3) {  echo "?hash_value=".$this->Session->read('Auth.User.hash_value'); } ?>" class="dashbutton-small dashgreen">
+			<div><img src="/img/button_icon_print.png" /></div>
+			<span>PRINT NUTRICHECK</span>
+		</a>
 		
 		<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>
-			<a class="fancybox dashbutton dashbutton4" href="#quickEntry">QUICK ENTRY</a>
-			<a href="#" id="reportsNutricheck" class="dashbutton dashbutton5">REPORTS</a>
+			<a class="fancybox dashbutton-small dashgreen" href="#quickEntry">
+			<div><img src="/img/button_icon_quick.png" /></div>
+			<span>QUICK ENTRY</span>
+			</a>
+			<a href="#" id="reportsNutricheck" class="dashbutton-small dashgreen">
+			<div><img src="/img/button_icon_report.png" /></div>
+			<span>REPORTS</span>
+			</a>
 		<?php } ?>
 	<?php } ?>
 </div>
