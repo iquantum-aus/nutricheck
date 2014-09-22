@@ -76,7 +76,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<div class="dashboardtopimg">
 		<div class="dashboardtopimginner">
 			<div class="sectionTitle">Dashboard</div>
-			<img src="/img/nutricheck_banner2.png" style="max-height:300px;">
+			<img src="/img/nutricheck_banner3.png" style="max-height:300px;">
 			</div>
 		</div>
 		<div id="contentWrapper">

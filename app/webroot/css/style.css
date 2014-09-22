@@ -276,9 +276,9 @@ p {
 	text-decoration: underline;
 }
 #content{
-	/*background: #fbf9f8;*/
+	background: #fbf9f8;
 	/* TEST BG */
-	background:black;
+	/*background:black;*/
 	clear: both;
 	color: #333;
 	float: left;
@@ -1113,16 +1113,27 @@ pre {
 	margin:0 0 0 0;
 	padding:5px 0 5px 0;
 	/*text-indent:20px;*/
-	font-size: 25px;
+	font-size: 22px;
 	text-align:center;
-	border-bottom:1px solid lightgray;
-	border-top:1px solid lightgray;
+	color:#64584c;
+	/*border-bottom:1px solid lightgray;
+	border-top:1px solid lightgray;*/
  }
  .iconholder{
 	/*background:rgba(255,255,255, 0.5);*/
-	background:#ECECFB;
 	margin:0;
 	padding:0;
+	min-height:165px;
+	position:relative;
+ }
+ .iconholder img{
+	max-height:100px;
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	margin:auto;
  }
  .gradientbg1{
  background: rgb(255,255,255); /* Old browsers */
@@ -1138,8 +1149,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
  .textBelowcontent{	
 	line-height: 20px;
 	margin:0;
-	padding:20px 20px 20px 20px;	
+	padding:0 20px 20px 20px;	
 	font-size: 14px;
+	color:#c6bdb4;
  }
 .item { 
 width: 25%; 
@@ -1196,7 +1208,7 @@ min-height:374px;
 	/*font-style: italic;*/
 	color: #2598c8;
 	font-size: 20px;
-	margin-left: 15px;
+	/*margin-left: 15px;*/
 	text-align: left;
 }
 
@@ -1878,7 +1890,10 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 .dashboardtopimginner .sectionTitle{
 	position:absolute;
 	bottom:30px;
+	left:0;
+	right:0;
 	z-index:100;
+	text-align:center;
 }
 .dashboardtopimginner img{
 	/*width:100%;*/
@@ -1906,6 +1921,29 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 	margin:0 0 40px 0;
 	border-left:1px solid #ECE9E6;
 	padding:0 0 0 80px;
+}
+.dashboardboxsmall{
+	position:relative;
+	float:left;
+	margin:0;
+	padding:0;
+	background:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	min-height:384px !important;
+}
+.dashboardboxsmall.nobg{
+	background:none;
+}
+.dashboardboxsmall.nobg img{
+	width:100%;
+	height:100%;
+}
+.round5{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 .biglist li{
 	line-height:40px;
