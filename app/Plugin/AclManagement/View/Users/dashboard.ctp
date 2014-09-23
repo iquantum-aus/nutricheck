@@ -59,17 +59,17 @@
 	<?php echo $this->element('module_panel'); ?>
 	
 	<?php
-		$iconstyle = "margin:10px auto 10px auto;max-width:175px;";
+		$iconstyle = ''; //''"margin:10px auto 10px auto;max-width:175px;";
 	?>
 	<div style="position:relative;float:left;width:100%;margin:0;padding:0;">
 	
-	<div style="min-height: 374px; width: 20%;margin:0 3% 40px 0;" class="dashboardboxsmall mason">
+	<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
 		<p style="text-align:center;" class="iconholder"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall">What is nutricheck</div>				
 		<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
 	</div>
 	
-	<div style="min-height: 374px; width:20%;margin:0 3% 40px 0;" class="dashboardboxsmall mason">
+	<div style="min-height: 374px; width:20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
 		<p style="text-align:center;" class="iconholder"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall">Benefits</div>				
 		<div class="textBelowcontent">
@@ -81,7 +81,7 @@
 		</div>
 	</div>
 	
-	<div style="min-height: 374px; width: 20%;" class="dashboardboxsmall mason">
+	<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
 		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall">HELP & FAQ</div>				
 		<div class="textBelowcontent">				
