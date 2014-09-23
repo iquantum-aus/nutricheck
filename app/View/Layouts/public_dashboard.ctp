@@ -72,10 +72,12 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		?>
 	</header>
 	
-	<div id="content">		
+	<div id="content">
 		<div class="dashboardtopimg">
+		<div class="dashboardtopimginner">
 			<div class="sectionTitle">Dashboard</div>
-			<img src="/img/nutricheck_banner2.png" style="max-height:300px;">
+			<img src="/img/nutricheck_banner3.png" style="max-height:300px;">
+			</div>
 		</div>
 		<div id="contentWrapper">
 			<?php echo $this->Session->flash(); ?>

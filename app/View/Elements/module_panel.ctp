@@ -1,4 +1,4 @@
-<div style="min-height: 374px; width: 20%;margin:0 0 40px 0;border-left:1px solid black;" class="dashboardbox noborder buttons">	
+<div style="" class="dashboardbox noborder buttons">	
 <?php
 //echo "gid : ".$this->Session->read('Auth.User.group_id');
 /*
