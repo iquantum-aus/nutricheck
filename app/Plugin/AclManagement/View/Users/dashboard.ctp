@@ -20,27 +20,22 @@
 		<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
 			<form method="POST" style="margin: 0;" id="linkSending">			
 				<div class="left span12" style="padding: 20px;">
-					<h1>Welcome! Let's get started and on our way to better health.</h1>
-					
+					<h1>Welcome! Let's get started and on our way to better health.</h1>					
 					<div class="left span7 moduleSearchHolder">
-						<h3>Who are we checking today?</h3>
-						
+						<h3>Who are we checking today?</h3>						
 						<div class="moduleInputs">
 							<div class="left full moduleInputHolder">
 								<?php echo $this->Form->input('User.id', array('style' => "width: 70%; float: left;", 'options' => $user_list, 'empty' => 'Select Patient', 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
-							</div>
-							
+							</div>							
 							<div class="left full moduleInputHolder">
 								<?php echo $this->Form->input('Factor.id', array('style' => "width: 70%; float: left;", 'multiple' => true,  'options' => $factor_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
 							</div>
-						</div>
-						
+						</div>						
 						<div id="controlsHolder">
 							<input type="hidden" id="selectedUser">
 							<input type="hidden" id="selectedFactor">
 						</div>
-					</div>
-					
+					</div>					
 					<div class="left span5" style="padding: 30px;">
 						<a href="/admin/users/add"><input type="button" class="btn btn-primary" value="New Customer"></a>
 					</div>
@@ -66,17 +61,17 @@
 	<?php
 		$iconstyle = "margin:10px auto 10px auto;max-width:175px;";
 	?>
+	<div style="position:relative;float:left;width:100%;margin:0;padding:0;">
 	
-	
-	<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
-		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall blue">What is nutricheck</div>				
+	<div style="min-height: 374px; width: 20%;margin:0 3% 40px 0;" class="dashboardboxsmall mason">
+		<p style="text-align:center;" class="iconholder"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
+		<div class="textBelowsmall">What is nutricheck</div>				
 		<div class="textBelowcontent">Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit lacus accumsan et justo commodo. Under 200 characters.</div>
 	</div>
 	
-	<div style="min-height: 374px; width: 34%;margin:0 3% 40px 0;" class="dashboardbox mason">
-		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall green">Benefits</div>				
+	<div style="min-height: 374px; width:20%;margin:0 3% 40px 0;" class="dashboardboxsmall mason">
+		<p style="text-align:center;" class="iconholder"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
+		<div class="textBelowsmall">Benefits</div>				
 		<div class="textBelowcontent">
 		<ul class="biglist">
 			<li>Benefit</li>
@@ -86,14 +81,19 @@
 		</div>
 	</div>
 	
-	<div style="min-height: 374px; width: 327px;" class="dashboardbox mason">
-		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall green">HELP & FAQ</div>				
+	<div style="min-height: 374px; width: 20%;" class="dashboardboxsmall mason">
+		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+		<div class="textBelowsmall">HELP & FAQ</div>				
 		<div class="textBelowcontent">				
 		Need help, or need to talk to us about something?<br><br>
 		Please check out the FAQ or contact the NutriCheck team on<br>XX XXXX XXXX<br>or<br>emailaddress@email.com, and we will do our best to help you!
 		</div>
-	</div>		
+	</div>
+	
+	<div style="min-height: 0; width: 30%;margin:0 0 40px 0;" class="dashboardbox mason">
+			<img src="../img/happypeople.jpg" class="round5" style="width:100%;height:100%;">
+	</div>
+	</div>
 	
 </div>
 
