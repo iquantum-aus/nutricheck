@@ -15,14 +15,17 @@
 			</div>
 		<?php } ?>
 	<?php } ?>
-
+<div style="position:relative;float:left;width:100%;margin:0 0 30px 0;padding:0;background:white;" class="round5">
+<div style="position:relative;padding:30px;">
 	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 		<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
 			<form method="POST" style="margin: 0;" id="linkSending">			
-				<div class="left span12" style="padding: 20px;">
-					<h1>Welcome! Let's get started and on our way to better health.</h1>					
-					<div class="left span7 moduleSearchHolder">
-						<h3>Who are we checking today?</h3>						
+				<div class="left span12" style="padding: 20px 20px 20px 20px;">
+					<h1 style="color: #64584c;margin:0;padding:0;font-weight:normal;">Welcome!</h1>
+					<h4 style="color: #c6bdb4;margin:0;padding:0 0 10px 0;font-weight:normal;border-bottom:1px solid #00b97b;">Let's get started and on our way to better health.</h4>
+					
+					<div class="left span6 moduleSearchHolder" style="margin-top:40px;">
+						<h4 style="color: #64584c;">Who are we checking today?</h4>						
 						<div class="moduleInputs">
 							<div class="left full moduleInputHolder">
 								<?php echo $this->Form->input('User.id', array('style' => "width: 70%; float: left;", 'options' => $user_list, 'empty' => 'Select Patient', 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
@@ -35,10 +38,17 @@
 							<input type="hidden" id="selectedUser">
 							<input type="hidden" id="selectedFactor">
 						</div>
-					</div>					
-					<div class="left span5" style="padding: 30px;">
-						<a href="/admin/users/add"><input type="button" class="btn btn-primary" value="New Customer"></a>
 					</div>
+					<div class="linewithor left span1">
+						<div>or</div>
+					</div>
+					<div class="left span5" style="padding: 73px 30px 30px 30px;">
+						<a href="/admin/users/add" class="dashbutton-big dashgreen">
+						<div><img src="/img/button_icon_user.png" /></div>
+						<span>NEW CUSTOMER</span>
+						</a>
+					</div>
+					
 				</div>
 			</form>
 		</div>
@@ -57,7 +67,8 @@
 	<?php } ?>
 	
 	<?php echo $this->element('module_panel'); ?>
-	
+	</div>
+	</div>
 	<?php
 		$iconstyle = ''; //''"margin:10px auto 10px auto;max-width:175px;";
 	?>
@@ -86,7 +97,7 @@
 		<div class="textBelowsmall">HELP & FAQ</div>				
 		<div class="textBelowcontent">				
 		Need help, or need to talk to us about something?<br><br>
-		Please check out the FAQ or contact the NutriCheck team on<br>XX XXXX XXXX<br>or<br>emailaddress@email.com, and we will do our best to help you!
+		Please check out the FAQ or contact the NutriCheck team on XX XXXX XXXX or emailaddress@email.com, and we will do our best to help you!
 		</div>
 	</div>
 	
