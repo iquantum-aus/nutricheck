@@ -296,6 +296,15 @@ p {
 	color: #fff;
 }
 
+#footerContentHolder {
+	height: 60px;
+	padding: 20px;
+	background: rgba(255,255,255,0.8);
+	border-top: 1px solid black;
+	color: black;
+}
+
+
 /** containers **/
 div.form,
 div.index,

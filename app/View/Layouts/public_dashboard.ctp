@@ -93,7 +93,22 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		}
 	?>
 	
-	<footer class="container"></footer><!-- /container -->
+	<footer>
+		<div id="footerContentHolder" class="left full">
+			<div id="footerContent">
+				<div class="left">Copyrighted &copy; 2014 NutriCheck Pty Ltd</div>
+				<div class="right">
+					<a class="fancybox" href="#privacyPolicy">Privacy Policy</a>
+					<div class="hidden">
+						<div id="privacyPolicy" style="width: 850px; padding: 20px;">
+							<?php Configure::load('general'); ?>
+							<?php echo Configure::read('General.privacy_policy'); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer><!-- /container -->
 
 	<?php // echo '<pre>'.$this->element('sql_dump').'</pre>'; ?>
 	<?php

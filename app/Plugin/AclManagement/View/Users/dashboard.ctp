@@ -17,7 +17,7 @@
 	<?php } ?>
 
 	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
-		<div style="min-height: 374px; width: 77%;margin:0 3% 40px 0;" class="dashboardbox video">
+		<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
 			<form method="POST" style="margin: 0;" id="linkSending">			
 				<div class="left span12" style="padding: 20px;">
 					<h1>Welcome! Let's get started and on our way to better health.</h1>
@@ -86,10 +86,6 @@
 		</div>
 	</div>
 	
-	<div style="min-height: 0; width: 26%;margin:0 0 40px 0;" class="dashboardbox mason">
-		<img src="../img/happypeople.jpg" style="width:100%;height:100%;">
-	</div>
-	
 	<div style="min-height: 374px; width: 327px;" class="dashboardbox mason">
 		<p style="text-align:center;" class="iconholder gradientbg1"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall green">HELP & FAQ</div>				
@@ -107,7 +103,6 @@
 		Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
 	</div>
 </div>
-
 
 <script>
 	$(document).ready(function() {
