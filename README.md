@@ -37,6 +37,10 @@ CLIENT
 client@client.com
 client123
 
+MEMBER
+member@member.com
+member123
+
 1 = admin
 2 = client (pharmacist)
 3 = member (patient)
