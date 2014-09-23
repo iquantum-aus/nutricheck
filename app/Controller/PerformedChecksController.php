@@ -36,7 +36,8 @@ class PerformedChecksController extends AppController {
 			'order' => array('modified' => 'DESC')
 		);
 		
-		$this->set('performedChecks', $this->Paginator->paginate());
+		$performed_checks = $this->Paginator->paginate();		
+		$this->set('performedChecks', $performed_checks);
 	}
 
 /**

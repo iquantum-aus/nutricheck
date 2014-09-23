@@ -78,14 +78,9 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			<img src="/img/nutricheck_banner2.png" style="max-height:300px;">
 		</div>
 		<div id="contentWrapper">
-			
 			<?php echo $this->Session->flash(); ?>
 			<?php echo $this->Session->flash('auth'); ?>
-			<?php 
-				if($this->Session->read('Auth.User.id')) {
-					echo $this->element('sidebar'); 
-				}
-			?>
+			<?php if($this->Session->read('Auth.User.id')) { echo $this->element('sidebar'); } ?>
 			<?php echo $this->fetch('content'); ?>
 		</div>
 	</div>

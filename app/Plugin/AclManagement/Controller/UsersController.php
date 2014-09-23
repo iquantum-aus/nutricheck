@@ -798,9 +798,9 @@ class UsersController extends AclManagementAppController {
 		$user_info = $this->Session->read('Auth.User');
 		
 		if($user_info['group_id'] == 2) {
-			$user_condition = array('User.parent_id' => $user_info['id'], 'User.hash_value !=' => "");
+			$user_condition = array('User.parent_id' => $user_info['id'], 'User.hash_value !=' => "", 'User.status' => 1);
 		} else {
-			$user_condition = array('User.group_id' => 3, 'User.hash_value !=' => "");
+			$user_condition = array('User.group_id' => 3, 'User.hash_value !=' => "", 'User.status' => 1);
 		}
 		
 		$factor_list = $this->Factor->find('list', array('fields' => array('id', 'name')));

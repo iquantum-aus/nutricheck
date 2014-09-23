@@ -33,7 +33,7 @@ class QuestionsController extends AppController {
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
 		
-		$user_condition = array('User.parent_id' => $user_info['id']);
+		$user_condition = array('User.parent_id' => $user_info['id'], 'User.status' => 1);
 		
 		$factor_list = $this->Question->Factor->find('list', array('fields' => array('id', 'name')));
 		$email_list = $this->Question->User->find('list', array('fields' => array('hash_value', 'email'), 'conditions' => $user_condition));
@@ -222,9 +222,13 @@ class QuestionsController extends AppController {
 		
 		$qe_questions = array_chunk($qe_questions, 30, true);
 		
+		if($this->Session->read('Auth.User.group_id') == 2) {
+			$user_condition = array('User.parent_id' => $this->Session->read('Auth.User.id'), 'User.hash_value !=' => "", 'User.status' => 1);
+		} else {
+			$user_condition = array('User.group_id' => 3, 'User.hash_value !=' => "", 'User.status' => 1);
+		}
 		
-		$condition = array('User.status' => 1, 'User.parent_id' => $this->Session->read('Auth.User.id'));
-		$users_list = $this->Question->User->find('list', array('fields' => array('hash_value', 'id'), 'conditions' => $condition));
+		$users_list = $this->Question->User->find('list', array('fields' => array('hash_value', 'id'), 'conditions' => $user_condition));
 		$name_list = array();
 		
 		foreach($users_list as $hash_value => $user_id) {
@@ -274,6 +278,7 @@ class QuestionsController extends AppController {
 		$this->loadModel('PerformedCheck');
 		$this->loadModel('SelectedAnswerLog');
 		$this->loadModel('SelectedFactorLog');
+		$this->loadModel('UserProfile');
 		
 		if(isset($_GET['hash_value'])) {
 			
@@ -344,13 +349,23 @@ class QuestionsController extends AppController {
 		$this->Question->recursive = 0;
 		$selected_factors = array();
 		
-		if($user_info['group_id'] != 1) {
-			$condition = array('User.parent_id' => $user_info['id'], 'User.status' => 1, 'User.parent_id' => $user_info['id']);
+		
+		if($user_info['group_id'] == 2) {
+			$user_condition = array('User.parent_id' => $this->Session->read('Auth.User.id'), 'User.hash_value !=' => "", 'User.status' => 1);
 		} else {
-			$condition = array('User.status' => 1, 'User.parent_id' => $user_info['id']);
+			$user_condition = array('User.group_id' => 3, 'User.hash_value !=' => "", 'User.status' => 1);
 		}
 		
-		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'email'), 'conditions' => $condition));
+		$users_list = $this->Question->User->find('list', array('fields' => array('id', 'id'), 'conditions' => $user_condition));
+		
+		$formatted_user_list = array();
+		foreach($users_list as $user) {
+			$user_profile = $this->UserProfile->findByUserId($user);
+			
+			if(!empty($user_profile['UserProfile']['first_name']) || !empty($user_profile['UserProfile']['last_name'])) {
+				$formatted_user_list[$user] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
+			}
+		}
 		
 		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 			$performed_check_data = array();
@@ -667,12 +682,11 @@ class QuestionsController extends AppController {
 		// $factors = $this->Question->query('SELECT FactorsQuestion.question_id, Factor.id  FROM factors_questions as FactorsQuestion LEFT JOIN factors as Factor ON Factor.id = FactorsQuestion.factor_id WHERE FactorsQuestion.question_id = 1');
 		// $this->var_debug($factors);
 		// exit();
-									
 		
 		$this->set('iscreateAnswer', $iscreateAnswer);
 		$this->set('selected_factors', $selected_factors);
 		$this->set('method', $method);
-		$this->set('users_list', $users_list);
+		$this->set('users_list', $formatted_user_list);
 		$this->set('questions', $questions);
 	}
 	
@@ -930,7 +944,7 @@ class QuestionsController extends AppController {
 			$hash_value = $_POST['hash_value'];
 			$selected_factors = $_POST['factors'];
 			
-			$this->Question->User->unbindModelAll();
+			// $this->Question->User->unbindModelAll();
 			$user_info = $this->Question->User->findByHashValue($hash_value);
 			$email = $user_info['User']['email'];
 			
