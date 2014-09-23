@@ -62,6 +62,11 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
 	<script src="//vjs.zencdn.net/4.5/video.js"></script>
 	
+	<script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
+	<style type="text/css" media="screen, projection">
+	  @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
+	</style>
+	
 </head>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<header>
@@ -75,7 +80,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<div id="content">
 		<div class="dashboardtopimg">
 		<div class="dashboardtopimginner">
-			<div class="sectionTitle">Dashboard</div>
 			<img src="/img/nutricheck_banner3.png" style="max-height:300px;">
 			</div>
 		</div>
@@ -125,13 +129,27 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('pace');
 		echo $this->fetch('script');
  	?>
+	
+	<script type="text/javascript">
+	  if (typeof(Zenbox) !== "undefined") {
+		Zenbox.init({
+		  dropboxID:   "20153095",
+		  url:         "https://iquantum1.zendesk.com",
+		  tabTooltip:  "Ask Us",
+		  tabImageURL: "https://p4.zdassets.com/external/zenbox/images/tab_ask_us_right.png",
+		  tabColor:    "#64584C",
+		  tabPosition: "Right"
+		});
+	  }
+	</script>
+	
 </body>
 </html>
 
 <script>
 	$(document).ready(function() {
 		
-		$.slidebars();
+		// $.slidebars();
 		$('.fancybox').fancybox();
 		
 		$("a.iframefancybox").fancybox({
