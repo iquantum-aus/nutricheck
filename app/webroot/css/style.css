@@ -300,7 +300,7 @@ p {
 	height: 60px;
 	padding: 20px;
 	background: rgba(255,255,255,0.8);
-	border-top: 1px solid lightgray;
+	border-top: 1px solid #dedede;
 	color: lightgray;
 }
 
