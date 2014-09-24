@@ -285,17 +285,21 @@
 			</div>
 			<div class="left span9" style="border-left: 1px solid #ddd;padding-left: 20px;">
 				<h4>NutriCheck:</h4>
-				<strong>Version: 6.0 January, 1999</strong>
+				<strong>Version: 1.0 September 2014 </strong>
 				<br>
-				<strong>Copyright: Nimrose Pty Ltd(Inc in Qld) ACN: 010952271 trading as Nutricheck - 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555</strong>
+				<strong>Copyright: Nimrose Pty Ltd (Inc in Qld) ACN: 010952271 Ph: (07)3879 6555 Fax: (07)32789776</strong>
 				<br>
 				<br>
 				<strong>This program is licensed to:</strong>
 				<br>
-				<span>Unlicensed Copy - Contact The Holistic Medical Centre<br>211 Given Tce, Paddington Q4064 Tel:(07)33696555 Fax: (07)33670061</span>
+				<span>This program is licensed to: 
+					NutriCheck - 961 Blunder Road, Doolandella, Q. 4077 Ph: (07) 3279 8137 Fax: (07)32789776
+					email: info@nutricheck.com.au
+				</span>
 				<br><br>
 				<strong>Distributor</strong><br>
-				<span>The Holistic Medical Centre Pty Ltd ACN: 010379209 Ph: (07)33696555<br>Fax: (07)33670061</span>
+				<span>NutriCheck - 961 Blunder Road, Doolandella, Q. 4077 Ph: (07) 3279 8137 Fax: (07)32789776
+email: info@nutricheck.com.au</span>
 			</div>
 			<hr>
 			<div class="left span12" style="border-top: 1px solid #ddd;">
