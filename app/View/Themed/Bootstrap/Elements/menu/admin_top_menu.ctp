@@ -56,7 +56,7 @@
 				<ul class="nav small">
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
 					<li class="menu"><?php echo $this->Html->link('Contact', '#');?></li>
-					<li class="menu"><?php echo $this->Html->link('FAQ', '#');?></li>
+					<li class="menu"><a href="#faqContent" class="fancybox">FAQ</a></li>
 					<li class="menu bolda special" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
 				</ul>
 				
@@ -165,6 +165,55 @@
 	</div>
 </div>
 
+<div class="hidden">
+	<div id="faqContent" style="width: 800px;">
+		
+		<h2>NutriCheck FAQ</h4>
+
+		<p>
+			<h4>What is NutriCheck?</h4>
+			NutriCheck is a support tool designed to help practitioners and pharmacists understand their patients’ probable nutrient status and common metabolic disturbances that affect health. 
+		</p>
+
+		<p>
+			<h4>What do the results tell you?</h4>
+			The results will provide you with your patient’s probable nutrient needs, what they’re getting enough of, and what they’re missing out on. This information can help you make better decisions about their diet and nutritional supplement purchases.
+		</p>
+
+		<p>
+			<h4>Can a patient complete NutriCheck without a Pharmacist or Doctor?</h4>
+			No. NutriCheck recommends patients seek the advice of a Pharmacist, Doctor or healthcare practitioner. We know that these professionals can provide patients with more information about the importance of nutrition, a good diet and nutritional supplements, if required. 
+		</p>
+
+		<p>
+			<h4>Can I charge patients to complete NutriCheck?</h4>
+			Yes you can. Good nutrition is a key to good health and nutrition is an issue that affects every patient. NutriCheck can provide your practice with an additional revenue stream for the Nutrition consultations you provide. 
+		</p>
+
+		<p>
+			<h4>Who invented NutriCheck?</h4>
+			<strong>NutriCheck was invented by Dr. Melvyn A Sydney-Smith KGSJ.</strong><br />
+			<p>MBBS. PhD. MHMS(prov). Grad Dip Clin Nutrit. Mast Pract NLP. Grad Dip Gestalt Ther. Grad Cert Hypnosis. FACNEM.</p>
+		</p>
+
+		<p>
+			In addition to patient care in private practice, Mel is a respected Medical Educator, being extensively involved for thirty years in both Undergraduate and Postgraduate Medical Nutrition Education in Australia, China and Asia. He was a Visiting Professor at the Open International University for Complementary Medicine and, in 1992, was inducted into the Knights of Malta (Asia) for his contribution to Graduate Medical Education in China and Asia. 
+		</p>
+
+		<p>Mel is an Adjunct Associate Professor (Nutrition Medicine) at Southern Cross University (NSW) and was Adjunct Professor (Nutrition Medicine) at RMIT University (Melbourne), where he authored, coordinated and taught the Master of Nutrition Medicine degree program.</p>
+		<p>Mel continues to write for and present at national and international medical seminars, whilst continuing in clinical practice in Doolandella, Brisbane.</p>
+
+		<h4>How do I find out more?</h4>
+		Talk to us on the NutriCheck website.
+
+		<p>
+			URL: www.nutricheck.com.au,<br />
+			Email: info@nutricheck.com.au,<br />
+			Tel: 617 3279 8137
+		</p>
+	</div>
+</div>
+
 <style>
 	.sb-submenu {
 		position: absolute;
@@ -235,7 +284,7 @@
 				</div>
 			</div>
 			<div class="left span9" style="border-left: 1px solid #ddd;padding-left: 20px;">
-				<h3>NutriCheck:</h3>
+				<h4>NutriCheck:</h4>
 				<strong>Version: 6.0 January, 1999</strong>
 				<br>
 				<strong>Copyright: Nimrose Pty Ltd(Inc in Qld) ACN: 010952271 trading as Nutricheck - 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555</strong>
