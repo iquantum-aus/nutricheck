@@ -54,7 +54,7 @@
 		</div>
 	<?php } else { ?>
 		<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
-<iframe width="560" height="315" src="//www.youtube.com/embed/BjwVkqrQTqs?rel=0" frameborder="0" allowfullscreen></iframe>
+<iframe width="700" height="420" src="//www.youtube.com/embed/BjwVkqrQTqs?rel=0" frameborder="0" allowfullscreen></iframe>
 		</div>
 	<?php } ?>
 	
