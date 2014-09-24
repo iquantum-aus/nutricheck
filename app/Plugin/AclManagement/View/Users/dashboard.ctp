@@ -15,7 +15,7 @@
 			</div>
 		<?php } ?>
 	<?php } ?>
-<!-- <div style="position:relative;float:left;width:100%;margin:0 0 30px 0;padding:0;background:white;" class="round5">
+<div style="position:relative;float:left;width:100%;margin:0 0 30px 0;padding:0;background:white;" class="round5">
 <div style="position:relative;padding:30px;">
 	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 		<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
@@ -68,7 +68,7 @@
 	
 	<?php echo $this->element('module_panel'); ?>
 	</div>
-</div> -->
+</div>
 	<?php
 		$iconstyle = ''; //''"margin:10px auto 10px auto;max-width:175px;";
 	?>
