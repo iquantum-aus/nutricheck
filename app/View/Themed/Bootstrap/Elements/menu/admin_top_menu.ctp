@@ -149,7 +149,7 @@
 					<?php } ?>
 					
 					<?php if($user_info['User']['group_id'] == 2) { ?>						
-						<li class="menu"><a id="quickEntry" class="fancybox fancybox.iframe iframefancybox" data-width="450" data-height="590" href="http://localnutricheck.com/questions/quickentry_iframe"><img src="/img/topmenu_quick.jpg" />Quick Entry</a></li>
+						<li class="menu"><a id="quickEntry" class="fancybox fancybox.iframe iframefancybox" data-width="450" data-height="590" href="http://app.nutricheck.com.au/questions/quickentry_iframe"><img src="/img/topmenu_quick.jpg" />Quick Entry</a></li>
 						<li><a target="_blank" href="/questions/print_question_list"><img src="/img/topmenu_print.jpg" />Print Question List</a></li>
 					<?php } ?>			
 					
