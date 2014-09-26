@@ -655,7 +655,8 @@ class UsersController extends AclManagementAppController {
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		if(isset($_GET['hash_value'])) {
-			$hash = $_GET['hash_value'];	
+			$hash = $_GET['hash_value'];
+			session_destroy();
 		} else {
 			// if hash vale is empty and the not logged in (you're unauthorized)
 			if(empty($user_id)) {
@@ -675,8 +676,9 @@ class UsersController extends AclManagementAppController {
 				$this->User->save($user_info);
 				
 				if(!$this->Auth->login($user)) {
-					$user_id = $user['id'];
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
+				} else {
+					$user_id = $user['id'];
 				}
 			} else {
 				if(empty($user_id)) {
@@ -738,7 +740,7 @@ class UsersController extends AclManagementAppController {
             }
 
         }else{
-            $this->request->data = $this->User->read(null, $this->Auth->user('id'));
+            $this->request->data = $this->User->read(null, $user_id);
             $this->request->data['User']['password'] = '';
         }
 		
