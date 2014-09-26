@@ -375,7 +375,6 @@ class UsersController extends AclManagementAppController {
 		}
 		
 		$this->User->id = $id;
-        
 		if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
@@ -420,7 +419,7 @@ class UsersController extends AclManagementAppController {
 		if(!empty($id) && isset($id)) {
 			$userprofile_info = $this->User->UserProfile->findByUserId($id);
 			$this->request->data['UserProfile'] = $userprofile_info['UserProfile'];
-			$this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
+			// $this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
 		}
 		
 		$pharmacists = $this->pharmacists();

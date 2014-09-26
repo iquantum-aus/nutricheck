@@ -1,4 +1,8 @@
-<?php $user_info = $this->Session->read('Auth.User'); ?>
+<?php 
+	$user_info = $this->Session->read('Auth.User'); 
+	$birthday = explode("-", $this->request->data['UserProfile']['birthday']);
+?>
+
 <?php
 	if($user_info['group_id'] == 1) {
 		?>
