@@ -638,11 +638,11 @@ class QuestionsController extends AppController {
 		
 		if(!empty($initial_selected_factors)) {
 			$flatten_selected_factors = array();
-			foreach($selected_factors as $selected_factor_key => $factor) {
+			foreach($initial_selected_factors as $selected_factor_key => $factor) {
 				$flatten_selected_factors[$selected_factor_key] = $factor['SelectedFactorLog']['factor_id'];
 			}	
 			$selected_factors = $flatten_selected_factors;
-		}
+		}		
 		
 		if(isset($_GET['factors'])) {
 			$selected_factors = explode(",", $_GET['factors']);
