@@ -1366,7 +1366,7 @@ ul.barGraph li {
 	font-size: 20px;
 }
 
-.questionModules:first-child {
+table.questionModules:first-child {
 	display:block;
 }
 

@@ -11,7 +11,7 @@
 		<td><?php echo h($performedCheck['User']['email']); ?>&nbsp;</td>
 		<td><?php echo h($performedCheck['PerformedCheck']['modified']); ?>&nbsp;</td>
 		<td>			
-			<a class="btn btn-info" href="/answers/load_date_report/<?php echo strtotime($performedCheck['PerformedCheck']['modified'])."/".$performedCheck['User']['id']; ?>">Report</a>
+			<a class="btn btn-info" href="/answers/load_date_report/<?php echo $performedCheck['PerformedCheck']['completion_time']."/".$performedCheck['User']['id']; ?>">Report</a>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $performedCheck['PerformedCheck']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $performedCheck['PerformedCheck']['id'])); ?>
 		</td>
 	</tr>

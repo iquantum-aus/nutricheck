@@ -18,7 +18,9 @@
 						?>
 							<tr>
 								<td>
-									<a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/answers/load_date_report/<?php echo strtotime($answer_per_date['Answer']['created']); ?>/<?php echo $user_id; ?>"><?php echo $answer_per_date['Answer']['created']; ?></a>
+									<a href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/answers/load_date_report/<?php echo $answer_per_date['PerformedCheck']['completion_time']; ?>/<?php echo $user_id; ?>">
+										<?php echo date("M d, Y H:i:s", $answer_per_date['PerformedCheck']['completion_time']); ?>
+									</a>
 								</td>
 							</tr>
 						<?php

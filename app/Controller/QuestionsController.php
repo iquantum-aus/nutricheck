@@ -250,8 +250,11 @@ class QuestionsController extends AppController {
 		$user_info = $this->Question->User->findByHashValue($this->request->data['User']['id']);
 		$this->request->data['User']['id'] = $user_info['User']['id'];
 		
+		$time = time();
+		
 		foreach($answers as $answer) {
 			$answer['Answer']['user_id'] = $this->request->data['User']['id'];
+			$answer['Answer']['completion_time'] = $time;
 			
 			$answer['Answer']['ip_address'] = $_SERVER['REMOTE_ADDR'];
 			$this->Question->Answer->create();
@@ -263,6 +266,7 @@ class QuestionsController extends AppController {
 		$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
 		$performed_check_data['PerformedCheck']['isComplete'] = 1;
 		$performed_check_data['PerformedCheck']['user_id'] = $this->request->data['User']['id'];
+		$performed_check_data['PerformedCheck']['completion_time'] = $time;
 
 		$this->PerformedCheck->create();
 		$this->PerformedCheck->save($performed_check_data);		
@@ -415,6 +419,7 @@ class QuestionsController extends AppController {
 
 		if($this->request->is('post')) {
 			
+			$completion_time = time();
 			if(isset($this->request->data['Factors']['submit'])) {
 				
 				$behalfUserId = $this->Session->read('behalfUserId');
@@ -488,6 +493,7 @@ class QuestionsController extends AppController {
 				}
 				
 				foreach($answers as $answer) {					
+					$answer['Answer']['completion_time'] = $completion_time;
 					if(!empty($behalfUserId)) {
 						$answer['Answer']['user_id'] = $behalfUserId;
 					}
@@ -520,9 +526,7 @@ class QuestionsController extends AppController {
 						$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 						
 						$message = '<html><body>';
-						
-						$message .= "The user with email address ".$user_info['email']." that has the ID# ".$user_info['id']." performed nutricheck.";
-						
+							$message .= "The user with email address ".$user_info['email']." that has the ID# ".$user_info['id']." performed nutricheck.";
 						$message .= "</body></html>";
 						
 						mail($to, $subject, $message, $headers);
@@ -534,42 +538,61 @@ class QuestionsController extends AppController {
 				}
 
 						
-				// means if the current user is a pharmacist - client
-				if($user_info['group_id'] == 2) {
-					if(!empty($behalfUserId)) {
-						$latest_answer_date = $this->Question->Answer->find('first', array('fields' => array('Answer.created'), 'group' => array('Answer.created'), 'limit' => 1, 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $behalfUserId)));
-						$latest_answer_date = strtotime($latest_answer_date['Answer']['created']);
-						
-						$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
-						$params = $latest_answer_date."/".$behalfUserId;
-						$return_user_id = $behalfUserId;
-					}
-				}
+				// ---------------------------------- means if the current user is a pharmacist - client ------------------------------ //
 				
-				if($user_info['group_id'] == 3) {
-					$this->Session->setFlash(__('You have successfully completed a NutriCheck as '.$user_info['email'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
-					$return_user_id = $user_info['id'];
-				}
-			
-				if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
-					$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
-					$return_user_id = $behalfUserId;
-					
-					foreach($logs_existence as $log_existence) {
-						$log_existence['PerformedCheck']['isComplete'] = 1;
-						$this->PerformedCheck->save($log_existence);
-					}
-				} else {
-					if(!empty($user_info['id'])) {
-						$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
-						$return_user_id = $user_info['id'];
-						
-						foreach($logs_existence as $log_existence) {
-							$log_existence['PerformedCheck']['isComplete'] = 1;
-							$this->PerformedCheck->save($log_existence);
+					if($user_info['group_id'] == 2) {
+						if(!empty($behalfUserId)) {
+							$latest_answer_date = $this->Question->Answer->find('first', array('fields' => array('Answer.created'), 'group' => array('Answer.created'), 'limit' => 1, 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $behalfUserId)));
+							$latest_answer_date = strtotime($latest_answer_date['Answer']['created']);
+							
+							$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
+							$params = $latest_answer_date."/".$behalfUserId;
+							$return_user_id = $behalfUserId;
 						}
 					}
+					
+				// ---------------------------------- means if the current user is a pharmacist - client ------------------------------ //
+				
+				// -------------------------------------------- means if the current user is a patient ------------------------------------- //
+				
+				if($user_info['group_id'] == 3) {
+					$this->Session->setFlash(__('You have successfully completed a NutriCheck as '.$user_info['username'].'. Your results will be delivered to your nominated pharmacy or health care professional within 48 hours.'));
+					$return_user_id = $user_info['id'];
 				}
+				
+				// -------------------------------------------- means if the current user is a patient ------------------------------------- //
+				
+				
+				// ------------------------ will determine the entry owner by user_group or by presence of behalfuserid ------------------------ //
+					
+					if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
+						$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
+						$return_user_id = $behalfUserId;
+					} else {
+						if(!empty($user_info['id'])) {
+							$logs_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
+							$return_user_id = $user_info['id'];
+						}
+					}				
+					
+				// ------------------------ will determine the entry owner by user_group or by presence of behalfuserid ------------------------ //
+				
+				
+				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
+					foreach($logs_existence as $log_existence) {
+						$this->PerformedCheck->delete($log_existence['PerformedCheck']['id']);
+					}
+					
+					$performed_completion_log = array();
+					$performed_completion_log['PerformedCheck']['date'] = date('Y-m-d');
+					$performed_completion_log['PerformedCheck']['isComplete'] = 1;
+					$performed_completion_log['PerformedCheck']['user_id'] = $return_user_id;
+					$performed_completion_log['PerformedCheck']['url'] = $this->request->data['PerformedCheck']['url'];
+					$performed_completion_log['PerformedCheck']['completion_time'] = $completion_time;
+					
+					$this->PerformedCheck->create();
+					$this->PerformedCheck->save($performed_completion_log);
+				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
 				
 				// if progress gets completed, then will remove the instances of previous logs so that it will make the questionnaire fresh in view
 					

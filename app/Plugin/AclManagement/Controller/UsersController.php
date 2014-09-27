@@ -795,6 +795,7 @@ class UsersController extends AclManagementAppController {
 	
 	public function dashboard() {
 		$this->loadModel('Factor');
+		$this->loadModel('PerformedCheck');
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
 		
@@ -822,6 +823,7 @@ class UsersController extends AclManagementAppController {
 	
 	public function nutricheck_activity($user_id = null) {
 		$this->layout = 'public_dashboard';
+		$this->loadModel('PerformedCheck');
 		
 		if(isset($_GET['hash_value'])) {
 			$hash_value = $_GET['hash_value'];
@@ -850,8 +852,9 @@ class UsersController extends AclManagementAppController {
 			$user_id = $this->Session->read('Auth.User.id');
 		}
 	
-		$this->User->Answer->unbindModelAll();
-		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $user_id)));
+		$this->PerformedCheck->unbindModelAll();
+		$answers_per_date = $this->PerformedCheck->find('all', array('group' => array('PerformedCheck.completion_time'), 'order' => array('PerformedCheck.created' => 'DESC'), 'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $user_id)));
+		
 		$this->set('answers_per_date', $answers_per_date);
 		$this->set('user_info', $user_info);
 		$this->set('user_id', $user_id);

@@ -212,12 +212,11 @@ class AnswersController extends AppController {
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
-	public function load_date_report($date, $user_id) {
+	public function load_date_report($completion_time, $user_id) {
 		$this->layout = "public_dashboard";
 		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
-		$latest_answer_date = date('Y-m-d H:i:s', $date);
 		$user_info = $this->Answer->User->findById($user_id);
 		
 		$reports_per_factor = array();
@@ -232,7 +231,7 @@ class AnswersController extends AppController {
 			$answers = $temp_answer;
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.completion_time' => $completion_time)));
 		}
 		
 		foreach($answers as $key => $answer) {
@@ -288,15 +287,16 @@ class AnswersController extends AppController {
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
 		
-		$this->set("date", $date);
+		$this->set("completion_time", $completion_time);
 		$this->set("user_info", $user_info);
 		$this->set("user_id", $user_id);
 	}
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
-	public function report_print($date, $user_id) {
+	public function report_print($completion_time, $user_id) {
 		$this->layout = "ajax_plus_scripts";
+		$this->loadModel('UserProfile');
 		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
@@ -314,7 +314,7 @@ class AnswersController extends AppController {
 			$answers = $temp_answer;
 		} else {
 			$this->Answer->unbindModelAll();
-			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.created <=' => $latest_answer_date, 'Answer.created >=' => $latest_answer_date)));
+			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.completion_time' => $completion_time)));
 		}
 		
 		foreach($answers as $key => $answer) {
@@ -365,6 +365,8 @@ class AnswersController extends AppController {
 	
 		
 		$user_info = $this->Answer->User->findById($user_id);
+		$user_profile = $this->UserProfile->findByUserId($user_id);
+		$user_info['UserProfile'] = $user_profile['UserProfile'];
 		
 		$this->set('factor_type_grouping', $factor_type_grouping);
 		$this->set('factor_types', $factor_types);

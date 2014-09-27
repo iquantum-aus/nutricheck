@@ -81,82 +81,86 @@
 				
 				<form style="margin-bottom: 40px; float: left; width:100%;" method="POST" id="nutricheckAnalysis">
 					
-					<?php
-						foreach($question_data as $key => $questions) {
-						$pcount++;
-					?>
-				
-						<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
-							<tbody style="width: 100%;">	
-								<tr class="headerHolder" style="width: 100%;">
-									<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
-									<th style="width: 53%;">Question</th>
-									<th style="width: 8%;" class="actions"><span class="greenLabel">0<br />Never</span></th>
-									<th style="width: 8%;" class="actions"><span class="peachLabel">1<br />Occasional / Mild</span></th>
-									<th style="width: 8%;" class="actions"><span class="orangeLabel">2<br />Moderate / Frequently</span></th>
-									<th style="width: 8%;" class="actions"><span class="redLabel">3<br />Severe / Very Severe</span></th>
-								</tr>
-								
-								<?php foreach ($questions as $question) {
-												$setstyle = "";
-												if (isset($return_progress[$question['Question']['id']])) {
-													$setstyle = "background:".$colorRowChecked.";";
-												}
-								?>
-									
-									<tr class="rankHolder" style="width:100%;<?php echo $setstyle; ?>" id="q<?php echo h($question['Question']['id']); ?>">
-										<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
-										<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
-										<?php
-											for($i = 0; $i<=3; $i++) {
-												
-												$radio_selected = "";
-												if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
-													$radio_selected = "checked=checked";
-												}
-												
-												?>
-													<td style="width:8%;" class="actions">
-														<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-														<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
-														<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-														<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label css-label_<?php echo $i; ?>"></label>
-													</td>
-												<?php
-											}
-										?>
+					<input name="data[PerformedCheck][url]" type="hidden" value="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" />
+					
+					<div class="left full">					
+						<?php
+							foreach($question_data as $key => $questions) {
+							$pcount++;
+						?>
+							
+							<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
+								<tbody style="width: 100%;">	
+									<tr class="headerHolder" style="width: 100%;">
+										<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
+										<th style="width: 53%;">Question</th>
+										<th style="width: 8%;" class="actions"><span class="greenLabel">0<br />Never</span></th>
+										<th style="width: 8%;" class="actions"><span class="peachLabel">1<br />Occasional / Mild</span></th>
+										<th style="width: 8%;" class="actions"><span class="orangeLabel">2<br />Moderate / Frequently</span></th>
+										<th style="width: 8%;" class="actions"><span class="redLabel">3<br />Severe / Very Severe</span></th>
 									</tr>
 									
-								<?php } ?>
-								<tr>
-										<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
+									<?php foreach ($questions as $question) {
+													$setstyle = "";
+													if (isset($return_progress[$question['Question']['id']])) {
+														$setstyle = "background:".$colorRowChecked.";";
+													}
+									?>
 										
-										<?php /*
-											Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
-											<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
-										*/ ?>
+										<tr class="rankHolder" style="width:100%;<?php echo $setstyle; ?>" id="q<?php echo h($question['Question']['id']); ?>">
+											<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
+											<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
+											<?php
+												for($i = 0; $i<=3; $i++) {
+													
+													$radio_selected = "";
+													if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
+														$radio_selected = "checked=checked";
+													}
+													
+													?>
+														<td style="width:8%;" class="actions">
+															<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+															<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
+															<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+															<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label css-label_<?php echo $i; ?>"></label>
+														</td>
+													<?php
+												}
+											?>
+										</tr>
 										
-										<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
-										<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
-										
-										<?php if ($pcount!=$ptotal) { ?>
-										<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary">NEXT ></a>
-										<?php } ?>
-										
-										<?php if ($pcount==$ptotal) { ?>
-											<?php if($iscreateAnswer == 1) { ?>
-												<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
-											<?php } else { ?>
-												<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+									<?php } ?>
+									<tr>
+											<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
+											
+											<?php /*
+												Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
+												<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
+											*/ ?>
+											
+											<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
+											<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
+											
+											<?php if ($pcount!=$ptotal) { ?>
+											<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary">NEXT ></a>
 											<?php } ?>
-										<?php } ?>
-										
-										</span>
-										</td>								
-								</tr>
-							</tbody>
-						</table>
-					<?php } ?>			
+											
+											<?php if ($pcount==$ptotal) { ?>
+												<?php if($iscreateAnswer == 1) { ?>
+													<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+												<?php } else { ?>
+													<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+												<?php } ?>
+											<?php } ?>
+											
+											</span>
+											</td>								
+									</tr>
+								</tbody>
+							</table>
+						<?php } ?>			
+					</div>
 					
 					<?php if($iscreateAnswer == 1) { ?>
 						<input type="button" value="LOGOUT" class="btn btn-warning logout-answer">
