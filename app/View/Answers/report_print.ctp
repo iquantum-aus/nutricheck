@@ -82,7 +82,7 @@
 
 <div class="index">
 	
-	<h1>Performed By: <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?> &nbsp;<span>(Date: <?php echo date("M. d, Y", $date); ?>)</span></h1> 
+	<h1>Performed By: <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?> &nbsp;<span>(Date: <?php echo date("M. d, Y", $completion_time); ?>)</span></h1> 
 	
 	<?php 
 		foreach($factors as $key => $factor) {

@@ -25,7 +25,7 @@
 		<div class="left span12 inputHolder">
 			<?php	
 				if($user_info['group_id'] == 1) {
-					echo $this->Form->input('group_id', array('div' => false, 'empty' => 'Select Group'));
+					echo $this->Form->input('group_id', array('label' => 'Group<span>*</span>', 'class' => 'requiredField', 'div' => false, 'empty' => 'Select Group'));
 				} else {
 					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
 				}
@@ -70,7 +70,7 @@
 			
 			<?php if($user_info['group_id'] == 1) { ?>
 				<div class="clientFields">
-					<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('label' => 'Company<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
+					<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('label' => 'Company<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Company')); ?></div>
 				</div>
 			<?php } ?>
 			

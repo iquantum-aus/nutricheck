@@ -378,7 +378,7 @@ class AnswersController extends AppController {
 		$this->set("user_id", $user_id);
 		$this->set("user_info", $user_info);
 		
-		$this->set("date", $date);
+		$this->set("completion_time", $completion_time);
 		$this->set("user_id", $user_id);
 	}
 }

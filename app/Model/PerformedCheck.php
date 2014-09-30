@@ -12,7 +12,7 @@ class PerformedCheck extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'date' => array(
+/* 		'date' => array(
 			'date' => array(
 				'rule' => array('date'),
 				//'message' => 'Your custom message here',
@@ -31,7 +31,7 @@ class PerformedCheck extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
+		), */
 	);
 	
 	public $belongsTo = array(

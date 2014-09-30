@@ -11,13 +11,15 @@
 			<?php echo $this->Form->input('UserProfile.id'); ?>
 			<?php echo $this->Form->input('User.id'); ?>
 			
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
-			
-			<?php /*
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'placeholder' => 'Middlename')); ?></div>
-			*/ ?>
-			
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
+			<?php if ($user_info['kgroup_id'] == 3) { ?>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
+				
+				<?php /*
+					<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.middle_name', array('div' => false, 'placeholder' => 'Middlename')); ?></div>
+				*/ ?>
+				
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
+			<?php } ?>
 			
 			<?php if($user_info['group_id'] == 3) { ?>
 				<div class="left span12 inputHolder">

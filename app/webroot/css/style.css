@@ -1686,6 +1686,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 	opacity: .8;
 	max-width: 100%;
 	min-width:1px;
+	border: 1px solid #000;
 }
 
 .levelerHolder:first-child {

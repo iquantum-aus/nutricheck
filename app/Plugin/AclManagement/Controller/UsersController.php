@@ -233,7 +233,12 @@ class UsersController extends AclManagementAppController {
 			
 			$suffix = $this->randomNumber(4);
 			$username = str_replace(" ", "", $this->request->data['UserProfile']['first_name']).str_replace(" ", "", $this->request->data['UserProfile']['last_name']).$suffix;
-			$this->request->data['User']['username'] = $username;
+			
+			if($this->request->data['User']['group_id'] == 2) {
+				$this->request->data['User']['username'] = $this->request->data['UserProfile']['company'].$suffix;
+			} else {
+				$this->request->data['User']['username'] = $username;
+			}
 			
 			if(!empty($this->request->data['User']['email'])) {
 				$email = $this->request->data['User']['email'];
@@ -853,7 +858,7 @@ class UsersController extends AclManagementAppController {
 		}
 	
 		$this->PerformedCheck->unbindModelAll();
-		$answers_per_date = $this->PerformedCheck->find('all', array('group' => array('PerformedCheck.completion_time'), 'order' => array('PerformedCheck.created' => 'DESC'), 'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $user_id)));
+		$answers_per_date = $this->PerformedCheck->find('all', array('fields' => array('PerformedCheck.*'), 'order' => array('PerformedCheck.created' => 'DESC'), 'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $user_id, 'PerformedCheck.completion_time !=' => "")));
 		
 		$this->set('answers_per_date', $answers_per_date);
 		$this->set('user_info', $user_info);
