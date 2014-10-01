@@ -21,7 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -925,6 +925,16 @@ class UsersController extends AclManagementAppController {
 		$checkExistEmail = $this->User->find('count', array('conditions'=>array('User.email' => $email)));
 		echo $checkExistEmail;
 		exit();
+	}
+	
+	public function delete_report($user_id, $completion_time) {
+		
+		$performed_check_data = $this->User->PerformedCheck->deleteAll(array('PerformedCheck.user_id' => $user_id, 'PerformedCheck.completion_time' => $completion_time));
+		$answer_data = $this->User->Answer->deleteAll(array('Answer.user_id' => $user_id, 'Answer.completion_time' => $completion_time));
+		
+		$this->Session->setFlash('You have successfully deleted the report', 'alert/success');
+		$redirection = "http://".$_SERVER['SERVER_NAME']."/users/nutricheck_activity/".$user_id;
+        $this->redirect($redirection);
 	}
 }
 ?>

@@ -96,6 +96,14 @@ class User extends AclManagementAppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		
+		'PerformedCheck' => array(
+			'className' => 'PerformedCheck',
+			'foreignKey' => 'user_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 
