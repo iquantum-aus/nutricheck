@@ -583,7 +583,7 @@ class QuestionsController extends AppController {
 						$this->PerformedCheck->delete($log_existence['PerformedCheck']['id']);
 					}
 					
-					$performed_completion_log = array();
+					/* $performed_completion_log = array();
 					$performed_completion_log['PerformedCheck']['date'] = date('Y-m-d');
 					$performed_completion_log['PerformedCheck']['isComplete'] = 1;
 					$performed_completion_log['PerformedCheck']['user_id'] = $return_user_id;
@@ -591,7 +591,14 @@ class QuestionsController extends AppController {
 					$performed_completion_log['PerformedCheck']['completion_time'] = $completion_time;
 					
 					$this->PerformedCheck->create();
-					$this->PerformedCheck->save($performed_completion_log);
+					$this->PerformedCheck->save($performed_completion_log); */
+					
+					$date = date('Y-m-d');
+					$datetime = date("Y-m-d H:i:s");
+					$url = $this->request->data['PerformedCheck']['url'];
+					$sql_query = "INSERT INTO `performed_checks` (date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ($date, 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
+					$this->PerformedCheck->query($sql_query);
+					
 				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
 				
 				// if progress gets completed, then will remove the instances of previous logs so that it will make the questionnaire fresh in view
