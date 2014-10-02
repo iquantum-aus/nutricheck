@@ -542,7 +542,7 @@ class QuestionsController extends AppController {
 						$mail->Body    = "The user with email address ".$user_info['email']." that has the ID# ".$user_info['id']." performed nutricheck."; 
 						
 						if($mail->Send()) {
-							return true;
+							// return true;
 						} else {
 							return $mail->ErrorInfo; 
 						}
@@ -1023,7 +1023,7 @@ class QuestionsController extends AppController {
 			$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test"; 
 			
 			if($mail->Send()) {
-				return true;
+				echo "1";
 			} else {
 				return $mail->ErrorInfo; 
 			}

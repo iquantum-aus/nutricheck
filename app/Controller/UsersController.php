@@ -21,7 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -54,6 +54,7 @@ class UsersController extends AclManagementAppController {
 //        echo "all done";
 //        exit;
 //    }
+
     /**
      * login method
      *
@@ -61,29 +62,40 @@ class UsersController extends AclManagementAppController {
      */
 	public function login() {
 		
-		$this->layout = "public_dashboard";
+		$this->layout = "ajax";
 		
 		if ($this->request->is('post')) {
+			
+			// ----------------------------------------------------- hack for loging in using username --------------------------------------------------- //
+				
+				$this->User->unbindModelAll();
+				// $user_existence_username = $this->User->find('first', array('conditions' => array('username' => $this->request->data['User']['email'], 'password' => $this->Auth->password($this->request->data['User']['password']))));
+				$user_existence_email = $this->User->find('first', array('conditions' => array('email' => $this->request->data['User']['username'], 'password' => $this->Auth->password($this->request->data['User']['password']))));
+				
+				// if(!empty($user_existence_username)) {
+					// $this->request->data['User']['username'] = $user_existence_username['User']['username'];
+				// }
+				
+				if(!empty($user_existence_email)) {
+					$this->request->data['User']['username'] = $user_existence_email['User']['username'];
+				}
+				
+			// ----------------------------------------------------- hack for loging in using username --------------------------------------------------- //
+			
 			if ($this->Auth->login()) {
 				if(isset($_GET['source']) && ($_GET['source'] == "remote")) {					
-					$temp_answer = $this->Session->read('temp_answers');
-					if(!empty($temp_answer)) {
-						// 2 means to redirect to answer's controller to save the session based answer
-						echo "2";
-						exit();
-					} else {					
-						echo "1";
-						exit();
-					}
+					echo $this->Session->read('Auth.User.can_answer');
+					exit();
 				} else {
 					return $this->redirect($this->Auth->redirect());
 				}
 			}
 			
 			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
-				echo "0";
+				echo "2";
+				exit();
 			} else {
-				$this->Session->setFlash(__('Invalid username or password, try again'));
+				$this->Session->setFlash(__('Invalid username or password, try again'), 'alert/error');
 			}
 		}
 	}
@@ -93,6 +105,7 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
     function logout() {
+		$this->Session->destroy();
         $this->Session->setFlash('Good-Bye', 'alert/success');
         $this->redirect($this->Auth->logout());
     }
@@ -111,15 +124,85 @@ class UsersController extends AclManagementAppController {
         
 		$condition = array();
 		// if not admin then will filter the viewing of users
-		if($user_info['group_id'] != 1) {
-			$condition = array('User.parent_id' => $user_info['id']);
+		
+		if($this->request->is('post')) {
+			
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['User']['value'])) {
+				if(!isset($this->request->data['User']['reset'])) {
+					$this->Session->write('User.search', $this->request->data['User']['value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['User']['reset'])) {
+				$this->Session->delete('User.search');
+			}
 		}
 		
-		$this->paginate = array(
-            'limit' => 10
-        );
 		
-        $this->set('users', $this->paginate($condition));
+		/* ----------------------------------------------------------------------------------------- PAGINATION WITH SEARCH VALUE ------------------------------------------------------------------------*/
+		
+		$search_value = $this->Session->read('User.search');
+		
+		if(!empty($search_value)) {
+			
+			if($user_info['group_id'] != 1) {
+				$this->paginate = array(
+					'conditions' => array(
+						'or' => array (
+							'User.email LIKE "%'.$search_value.'%"',
+							'User.username LIKE "%'.$search_value.'%"',
+							'UserProfile.first_name LIKE "%'.$search_value.'%"',
+							'UserProfile.last_name LIKE "%'.$search_value.'%"',
+							'UserProfile.address LIKE "%'.$search_value.'%"',
+							'UserProfile.suburb LIKE "%'.$search_value.'%"',
+							'UserProfile.company LIKE "%'.$search_value.'%"',
+							'UserProfile.nationality LIKE "%'.$search_value.'%"',
+							'UserProfile.zip LIKE "%'.$search_value.'%"',
+							'UserProfile.gender LIKE "%'.$search_value.'%"'
+						),
+						'and' => array('User.status' => 1, 'User.parent_id' => $user_info['id'])
+					), 
+					'order' => array('User.first_name' => 'ASC'),
+					'limit' => 10
+				);
+			} else {
+				$this->paginate = array(
+					'conditions' => array(
+						'or' => array (
+							'User.email LIKE "%'.$search_value.'%"',
+							'User.username LIKE "%'.$search_value.'%"',
+							'UserProfile.first_name LIKE "%'.$search_value.'%"',
+							'UserProfile.last_name LIKE "%'.$search_value.'%"',
+							'UserProfile.address LIKE "%'.$search_value.'%"',
+							'UserProfile.suburb LIKE "%'.$search_value.'%"',
+							'UserProfile.company LIKE "%'.$search_value.'%"',
+							'UserProfile.nationality LIKE "%'.$search_value.'%"',
+							'UserProfile.zip LIKE "%'.$search_value.'%"',
+							'UserProfile.gender LIKE "%'.$search_value.'%"'
+						),
+						'and' => array('User.status' => 1)
+					), 
+					'order' => array('User.first_name' => 'ASC'),
+					'limit' => 10
+				);
+			}
+		
+		/* ------------------------------------------------------------------------------------------- DEFAULT PAGINATION HERE ----------------------------------------------------------------------------------*/
+		} else {		
+			if($user_info['group_id'] != 1) {
+				$condition = array('User.parent_id' => $user_info['id']);
+			}
+			
+			$this->paginate = array(
+				'limit' => 10
+			);
+		}
+		
+		$users = $this->paginate($condition);
+        $this->set('search_value', $search_value);
+        $this->set('users', $users);
     }
 
     /**
@@ -142,17 +225,36 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
    public function add() {
-		
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		$this->layout = "public_dashboard";
 		
 		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
-            
-			$email = $this->request->data['User']['email'];
-			$this->User->unbindModelAll();
-			$user_existence = $this->User->findAllByEmail($email);
 			
-			if(count($user_existence) > 0) {
+			$suffix = $this->randomNumber(4);
+			$username = str_replace(" ", "", $this->request->data['UserProfile']['first_name']).str_replace(" ", "", $this->request->data['UserProfile']['last_name']).$suffix;
+			
+			if($this->request->data['User']['group_id'] == 2) {
+				$username = $this->request->data['UserProfile']['company'].$suffix;
+				$this->request->data['User']['username'] = $username;
+			} else {
+				$this->request->data['User']['username'] = $username;
+			}
+			
+			if(!empty($this->request->data['User']['email'])) {
+				$email = $this->request->data['User']['email'];
+				$this->User->unbindModelAll();
+				$user_existence = $this->User->find('first', 
+					array(
+						'conditions' => array(
+							'email' => $email
+							// , 'status' => 1
+						)
+					)
+				);
+			}
+			
+			if(isset($user_existence) && !empty($user_existence)) {
 				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
 			} else {
 				$this->loadModel('AclManagement.User');
@@ -163,33 +265,71 @@ class UsersController extends AclManagementAppController {
 				}
 				
 				if(isset($this->request->data['create_and_answer'])) {
+					$this->Session->write('isCreateAnswer', 1);
 					$this->request->data['User']['status'] = 1;
 				}
 				
 				$to_hash = time();
 				$this->request->data['User']['hash_value'] = $this->Auth->password($to_hash);
 				
+				if(isset($this->request->data['create_and_answer'])) {
+					$this->request->data['User']['password'] = "nutriPass";
+				}
+				
 				$raw_password = $this->request->data['User']['password'];
 				
 				$this->User->create();
 				if ($this->User->save($this->request->data)) {
 					
-					$to = $this->request->data['User']['email'];
-					$subject = "You've been added to the system";
+					if(!isset($this->request->data['create_and_answer'])) {
+						
+						if(empty($this->request->data['User']['email'])) {
+							
+							if($this->Session->read('Auth.User.group_id') == 2) {
+								$to = $this->Session->read('Auth.User.email');
+							} else {
+								$parent_id = $this->request->data['User']['parent_id'];
+								$parent_info = $this->User->findById($parent_id);
+								$to = $parent_info['User']['email'];
+							}
+							
+						} else {
+							$to = $this->request->data['User']['email'];
+						}
+						
+						if(!empty($to)) {
+							
+							$mail = new PHPMailer(); 
+							$mail->IsSMTP(); // we are going to use SMTP
+							$mail->IsHTML(true);
+							$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+							$mail->SMTPAuth = true;                               // Enable SMTP authentication
+							$mail->Username = "greg@iquantum.com.au"; 
+							$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+							$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-					$headers = "From: nomail@nutricheck.com\r\n";
-					$headers .= "Reply-To: noreply@nutricheck.com\r\n";
-					$headers .= "MIME-Version: 1.0\r\n";
-					$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-					
-					$message = '<html><body>';
-					
-					$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-					$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
-					
-					$message .= "</body></html>";
-					
-					mail($to, $subject, $message, $headers);
+							$mail->From = "nomail@nutricheck.com.au"; 
+							// $mail->FromName = "nomail@nutricheck.com.au"; 
+							// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+							$mail->AddAddress($email, $email);
+							
+							$mail->CharSet  = 'UTF-8'; 
+							$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+							$mail->IsHTML(true);  // set email format to HTML 
+							
+							$mail->Subject = "You've been added to the system";
+							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
+							$mail->Body    = $message; 
+							
+							if($mail->Send()) {
+								return true;
+							} else {
+								return $mail->ErrorInfo; 
+							}
+						}
+					}
 					
 					$user_id = $this->User->id;
 					$this->request->data['UserProfile']['user_id'] = $user_id;
@@ -197,12 +337,11 @@ class UsersController extends AclManagementAppController {
 					$this->User->UserProfile->create();
 					$this->User->UserProfile->save($this->request->data);
 					
-					$this->Session->setFlash(__('The user has been saved'), 'alert/success');
-					
 					if(isset($this->request->data['create_and_answer'])) {
 						$this->Session->write('behalfUserId', $user_id);
 						$this->redirect('../../questions/nutrient_check');
 					} else {
+						$this->Session->setFlash(__('The user has been saved'), 'alert/success');
 						$this->redirect(array('action' => 'index'));
 					}
 				} else {
@@ -211,8 +350,9 @@ class UsersController extends AclManagementAppController {
 			}
         }
 		
+		$pharmacists = $this->pharmacists();		
         $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
-        $this->set(compact('groups'));
+        $this->set(compact('groups', 'pharmacists'));
     }
 
     /**
@@ -256,34 +396,56 @@ class UsersController extends AclManagementAppController {
 		}
 		
 		$this->User->id = $id;
-        if (!$this->User->exists()) {
+		if (!$this->User->exists()) {
             throw new NotFoundException(__('Invalid user'));
         }
+		
         if ($this->request->is('post') || $this->request->is('put')) {
 			
-            if ($this->User->save($this->request->data)) {
+			$email = $this->request->data['User']['email'];
+			$old_email = $this->request->data['User']['old_email'];
 			
-				$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
+			$user_existence = array();
+			if($email != $old_email) {					
+				$this->User->unbindModelAll();
+				$user_existence = $this->User->findAllByEmail($email);
+			}
+			
+			if(count($user_existence) > 0) {
+				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
+			} else {
+				if ($this->User->save($this->request->data)) {
 				
-				if(empty($this->request->data['UserProfile']['id'])) {
-					$this->User->UserProfile->create();
-				}
-				
-				if($this->User->UserProfile->save($this->request->data)) {
-					$this->Session->setFlash(__('The user has been updated'), 'alert/success');
+					$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
+					
+					if(empty($this->request->data['UserProfile']['id'])) {
+						$this->User->UserProfile->create();
+					}
+					
+					if($this->User->UserProfile->save($this->request->data)) {
+						$this->Session->setFlash(__('The user has been updated'), 'alert/success');
+					} else {
+						$this->Session->setFlash(__("Something went wront"), 'alert/error');
+					}
+					
 				} else {
-					$this->Session->setFlash(__("Something went wront"), 'alert/error');
+					$this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
 				}
-				
-            } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'), 'alert/error');
-            }
-        } else {
-            $this->request->data = $this->User->read(null, $id);
-            $this->request->data['User']['password'] = null;
-        }
-        $groups = $this->User->Group->find('list');
-        $this->set(compact('groups'));
+			}
+        } 
+		
+		$this->request->data = $this->User->read(null, $id);
+		$this->request->data['User']['password'] = null;
+		
+		if(!empty($id) && isset($id)) {
+			$userprofile_info = $this->User->UserProfile->findByUserId($id);
+			$this->request->data['UserProfile'] = $userprofile_info['UserProfile'];
+			// $this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
+		}
+		
+		$pharmacists = $this->pharmacists();
+        $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
+        $this->set(compact('groups', 'pharmacists'));
     }
 
     /**
@@ -337,7 +499,7 @@ class UsersController extends AclManagementAppController {
 			$email_message = Configure::read('User.nutricheck_activated_message');
 			
 			$email = $user_info['User']['email'];
-
+			
 			$mail = new PHPMailer(); 
 			$mail->IsSMTP(); // we are going to use SMTP
 			$mail->IsHTML(true);
@@ -384,50 +546,79 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
     public function register() {
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
         if ($this->request->is('post')) {
             $this->loadModel('AclManagement.User');
             $this->User->create();
 			
 			$this->request->data['User']['name'] = $this->request->data['UserProfile']['first_name']." ".$this->request->data['UserProfile']['last_name'];
-			
             $this->request->data['User']['group_id']    = 3;//member
-            $this->request->data['User']['status']      = 1;//active user
+			$this->request->data['User']['can_answer']      = 0;//can't answer
+            $this->request->data['User']['status']      = 0;//inactive user
+			
+			$user_profile_info = array();
+			$user_profile_info['UserProfile'] = $this->request->data['UserProfile'];
+			$raw_password = $this->request->data['User']['password2'];
 			
             $token = md5(time());
-            $this->request->data['User']['token']         = $token;//key
+            $this->request->data['User']['hash_value'] = $token;//key
 			
             if ($this->User->save($this->request->data)) {
-               
-/* 			   $ident = $this->User->getLastInsertID();
-                $comfirm_link = Router::url("/acl_management/users/confirm_register/$ident/$token", true);
+		   
+				$email = $this->request->data['User']['email'];
+				$subject = "You've been added to the system";
+				
+				$mail = new PHPMailer(); 
+				$mail->IsSMTP(); // we are going to use SMTP
+				$mail->IsHTML(true);
+				$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+				$mail->SMTPAuth = true;                               // Enable SMTP authentication
+				$mail->Username = "greg@iquantum.com.au"; 
+				$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+				$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+				
+				$mail->From = "nomail@nutricheck.com.au"; 
+				// $mail->FromName = "nomail@nutricheck.com.au"; 
+				// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+				$mail->AddAddress($email, $email);
+				
+				$mail->CharSet  = 'UTF-8'; 
+				$mail->WordWrap = 50;  // set word wrap to 50 characters
 
-                $cake_email = new CakeEmail();
-                $cake_email->from(array('no-reply@example.com' => 'Please Do Not Reply'));
-                $cake_email->to($this->request->data['User']['email']);
-                $cake_email->subject(''.__('Register Confirm Email'));
-                $cake_email->viewVars(array('comfirm_link'=>$comfirm_link));
-                $cake_email->emailFormat('html');
-                $cake_email->template('AclManagement.register_confirm_email');
-                $cake_email->send();
-
-
-                $this->Session->setFlash(__('Thank you for sign up! Please check your email to complete registration.'), 'alert/success');
+				$mail->IsHTML(true);  // set email format to HTML 
+				
+				$mail->Subject = $subject;
+				
+				$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+				$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
+				$mail->Body    = $message; 
+				
+				if($mail->Send()) {
+					return true;
+				} else {
+					return $mail->ErrorInfo; 
+				}
+				
+                $this->Session->setFlash(__("An Activation email has been sent to your nominated email address. If you're having trouble locating it please check your Spam or Junk folders as the notification email might have been moved due to your Spam Settings"), 'alert/success');
                 $this->request->data = null;
-                $this->redirect(array('action' => 'login')); */
+				
 				
 				$user_id = $this->User->id;
-				$this->request->data['UserProfile']['user_id'] = $user_id;
+				$user_profile_info['UserProfile']['user_id'] = $user_id;
+				
 				
 				$this->User->UserProfile->create();
-				if($this->User->UserProfile->save($this->request->data)) {
-					$user = $this->User->findById($user_id);
+				if($this->User->UserProfile->save($user_profile_info)) {
+					$this->redirect(array('action' => 'login'));
 					
+					/* $user = $this->User->findById($user_id);
 					$user = $user['User'];
 					if($this->Auth->login($user)) {
 						$this->redirect('/users/nutricheck_activity');
 					} else {
 						$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
-					}
+					} */
+					
 				}
 				
 				
@@ -436,6 +627,7 @@ class UsersController extends AclManagementAppController {
                 $this->redirect(array('action' => 'login'));
             }
         }
+		
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
     }
@@ -516,7 +708,11 @@ class UsersController extends AclManagementAppController {
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		if(isset($_GET['hash_value'])) {
-			$hash = $_GET['hash_value'];	
+			$hash = $_GET['hash_value'];
+			
+			if($hash != $this->Session->read('Auth.User.hash_value')) {
+				session_destroy();
+			}
 		} else {
 			// if hash vale is empty and the not logged in (you're unauthorized)
 			if(empty($user_id)) {
@@ -528,22 +724,17 @@ class UsersController extends AclManagementAppController {
 		if(!empty($hash)) {
 			$user_info = $this->User->findByHashValue($hash);		
 			
-			if($user_info['User']['status'] == 0) {
-			
+			if($user_info['User']['status'] == 0) {	
+				$user = $user_info['User'];
+				
+				unset($user_info['User']['password']);
 				$user_info['User']['status'] = 1;
 				$this->User->save($user_info);
 				
-				$this->request->data['UserProfile']['user_id'] = $user_id;
-				
-				if(empty($this->request->data['UserProfile']['id'])) {
-					$this->User->UserProfile->create();
-				}
-				
-				$this->User->UserProfile->save($this->request->data);
-				
-				$user = $user_info['User'];
 				if(!$this->Auth->login($user)) {
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
+				} else {
+					$user_id = $user['id'];
 				}
 			} else {
 				if(empty($user_id)) {
@@ -562,12 +753,13 @@ class UsersController extends AclManagementAppController {
                 //do not check password validate
                 unset($this->request->data['User']['password']);
             }
-
-            $this->User->set($this->request->data);
+			
             if ($this->User->validates()) {
-                //check email change
-                if($this->request->data['User']['email'] != $this->Session->read('Auth.User.email')){
-                    $this->Session->write('Auth.User.needverify_email', $this->request->data['User']['email']);
+               
+			   //check email change
+				/*  if($this->request->data['User']['email'] != $this->Session->read('Auth.User.email')) {
+                    
+					$this->Session->write('Auth.User.needverify_email', $this->request->data['User']['email']);
                     $id = $this->Session->read('Auth.User.id');
                     $email = base64_encode($this->request->data['User']['email']);
                     $expiredTime = strtotime(date('Y-m-d H:i', strtotime('+24 hours')));
@@ -582,12 +774,14 @@ class UsersController extends AclManagementAppController {
                     $cake_email->send();
 
                     unset($this->request->data['User']['email']);
-                }
-
-
-                $this->request->data['User']['id'] = $this->Session->read('Auth.User.id');
-                if($this->User->saveAll($this->request->data['User'], array('validate'=>false))){
-					
+                } */
+				
+                // $this->request->data['User']['id'] = $this->Session->read('Auth.User.id');
+				
+				// $this->var_debug($this->request->data);
+				// exit();
+				
+                if($this->User->save($this->request->data)) {
 					if(empty($this->request->data['UserProfile']['id'])) {
 						$this->request->data['UserProfile']['user_id'] = $this->User->id;
 						$this->User->UserProfile->create();
@@ -600,17 +794,27 @@ class UsersController extends AclManagementAppController {
 						$this->Session->setFlash(__('Something wen\'t wrong'), 'alert/error');
 					}
                 }
-            }else{
+            } else{
                 $errors = $this->User->validationErrors;
                 $this->Session->setFlash(__('Something went wrong. Please, check your information.'), 'alert/error');
             }
 
         }else{
-            $this->request->data = $this->User->read(null, $this->Auth->user('id'));
+            $this->request->data = $this->User->read(null, $user_id);
             $this->request->data['User']['password'] = '';
         }
+		
+		if(!empty($user_id) && isset($user_id)) {
+			$userprofile_info = $this->User->UserProfile->findByUserId($user_id);
+			$this->request->data['UserProfile'] = $userprofile_info['UserProfile'];
+			$this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
+		}
+		
+		$this->User->set($this->request->data);
     }
-         /**
+	
+	
+	/**
     * confirm register
     * @return void
     */
@@ -651,132 +855,44 @@ class UsersController extends AclManagementAppController {
 	##############################################################################################################################################
 	
 	public function dashboard() {
-		$this->layout = 'admin_dashboard';
-			
-		$user_id = $this->Session->read('Auth.User.id');
-		$group_id = $this->Session->read('Auth.User.group_id');
+		$this->loadModel('Factor');
+		$this->loadModel('PerformedCheck');
+		$this->layout = "public_dashboard";
+		$user_info = $this->Session->read('Auth.User');
 		
-		$external_flash_message = $this->Session->read('Message.flash.message');
-		
-		$this->User->unBindModel(
-			array(
-				'hasMany' => array('Answer'),
-				'hasAndBelongsToMany' => array('Vitamin')
-			)
-		);
-		
-		$user_info = $this->User->findById($user_id);
-		if($group_id != 1) {
-			if(empty($user_info['UserProfile']['first_name']) || empty($user_info['UserProfile']['middle_name']) || empty($user_info['UserProfile']['last_name']) || empty($user_info['UserProfile']['birthday']) || empty($user_info['UserProfile']['contact'])) {
-				$this->Session->setFlash('Please complete your profile by clicking My Profile on the top right area of the screen', 'alert/error');
-			}
-		}
-		
-		
-		// remove the unnecessary model from user so that it will be lighter for the query
-		$this->User->unBindModel(
-			array(
-				'hasAndBelongsToMany' => array('Vitamin')
-			)
-		);
-		
-		// gell all users that belong to your domain
-		if($group_id == 2) {
-			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3, 'parent_id' => $user_id)));
+		if($user_info['group_id'] == 2) {
+			$user_condition = array('User.parent_id' => $user_info['id'], 'User.hash_value !=' => "", 'User.status' => 1);
 		} else {
-			$users_list = $this->User->find('all', array('fields' => array('UserProfile.gender'), 'conditions' => array('group_id' => 3)));
+			$user_condition = array('User.group_id' => 3, 'User.hash_value !=' => "", 'User.status' => 1);
 		}
 		
-		$questions_answers = array();
+		$factor_list = $this->Factor->find('list', array('fields' => array('id', 'name')));
+		$user_list = $this->User->find('list', array('fields' => array('hash_value', 'id'), 'conditions' => $user_condition));
 		
-		$females = 0;
-		$males = 0;
-		
-		
-		//get total number of maes and females as well as getting the total scores that each question got
-		foreach($users_list as $key => $user) {
-			
-			// getting scores per question
-			foreach($user['Answer'] as $answer) {
-				
-				if(!isset($questions_answers[$answer['question_id']])) {
-					$questions_answers[$answer['question_id']] = 0;
-				} else {
-					$questions_answers[$answer['question_id']] = $questions_answers[$answer['question_id']] + $answer['rank'];
-				}
-				
-			}
-			
-			// getting total of each gender
-			if($user['UserProfile']['gender'] == "male") {
-				$males++;
-			} else if($user['UserProfile']['gender'] == "female") {
-				$females++;
+		foreach($user_list as $key => $user_id) {
+			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $user_id), 'fields' => array('first_name', 'last_name')));
+			if(empty($user_profile['UserProfile']['first_name']) && empty($user_profile['UserProfile']['last_name'])) {
+				unset($user_list[$key]);
+			} else {
+				$user_list[$key] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
 			}
 		}
 		
-		// remove unnecesary model from factor
-		$this->User->Answer->Question->Factor->unBindModel(
-			array(
-				'belongsTo' => array('User'),
-				'hasMany' => array('Prescription')
-			)
-		);
-		
-		if($group_id != 3) {
-			// get all factors
-			$factors = $this->User->Answer->Question->Factor->find('all', array('conditions' => array('status' => 1)));
-			
-			// pr($factors);
-			
-			// group questions by factor
-			$questions_per_factors = array();
-			$factors_list = array();
-			foreach($factors as $factor_key => $factor) {
-				
-				$factors_list[$factor['Factor']['id']] = $factor['Factor']['name'];
-				
-				foreach($factor['Question'] as $question_key => $question) {
-					// echo $questions_answers[$question['id']];
-					$questions_per_factors[$factor['Factor']['id']][$question['id']] = $questions_answers[$question['id']];
-				}
-			}
-			
-			// add scores per factor and also get total scores of all factors (will be used for its percentage)
-			$factor_per_percentage = array();
-			$total_factors_score = 0;
-			foreach($questions_per_factors as $factor_key => $questions_per_factor) {
-				$factor_value_sum = array_sum($questions_per_factor);
-				$factor_value_count = count($questions_per_factor);
-				
-				$perfect_score = 0;
-				$perfect_score = (3 * $factor_value_count) * count($users_list);
-		
-				
-				$factor_per_percentage[$factor_key] = ($factor_value_sum/$perfect_score)*100;
-			}
-			
-			$videos = $this->User->Group->Video->find('all', array('conditions' => array('group_id' => $group_id)));
-		
-			arsort($factor_per_percentage);
-			// array_splice($factor_per_percentage, 16);
-			
-			$genders = array();
-			$genders['males'] = $males;
-			$genders['females'] = $females;
-			
-			$this->set("videos", $videos);
-			$this->set("factors_list", $factors_list);
-			$this->set("users_list", $users_list);			
-			$this->set("factor_per_percentage", $factor_per_percentage);
-			$this->set('genders', $genders);
-		}
-		
-		$this->set('external_flash_message', $external_flash_message);
+		$this->set('factor_list', $factor_list);
+		$this->set('user_list', $user_list);
 	}
 	
 	public function nutricheck_activity($user_id = null) {
 		$this->layout = 'public_dashboard';
+		$this->loadModel('PerformedCheck');
+		
+		if(isset($_GET['hash_value'])) {
+			$hash_value = $_GET['hash_value'];
+			$this->User->unbindModelAll();
+			$url_user_info = $this->User->findByHashValue($hash_value);
+			
+			$user_id = $url_user_info['User']['id'];
+		}
 		
 		$user_info = $this->Session->read('Auth.User');
 		
@@ -797,8 +913,9 @@ class UsersController extends AclManagementAppController {
 			$user_id = $this->Session->read('Auth.User.id');
 		}
 	
-		$this->User->Answer->unbindModelAll();
-		$answers_per_date = $this->User->Answer->find('all', array('group' => array('Answer.created'), 'order' => array('Answer.created' => 'DESC'), 'conditions' => array('Answer.user_id' => $user_id)));
+		$this->PerformedCheck->unbindModelAll();
+		$answers_per_date = $this->PerformedCheck->find('all', array('fields' => array('PerformedCheck.*'), 'order' => array('PerformedCheck.created' => 'DESC'), 'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $user_id, 'PerformedCheck.completion_time !=' => "")));
+		
 		$this->set('answers_per_date', $answers_per_date);
 		$this->set('user_info', $user_info);
 		$this->set('user_id', $user_id);
@@ -857,6 +974,16 @@ class UsersController extends AclManagementAppController {
 		$checkExistEmail = $this->User->find('count', array('conditions'=>array('User.email' => $email)));
 		echo $checkExistEmail;
 		exit();
+	}
+	
+	public function delete_report($user_id, $completion_time) {
+		
+		$performed_check_data = $this->User->PerformedCheck->deleteAll(array('PerformedCheck.user_id' => $user_id, 'PerformedCheck.completion_time' => $completion_time));
+		$answer_data = $this->User->Answer->deleteAll(array('Answer.user_id' => $user_id, 'Answer.completion_time' => $completion_time));
+		
+		$this->Session->setFlash('You have successfully deleted the report', 'alert/success');
+		$redirection = "http://".$_SERVER['SERVER_NAME']."/users/nutricheck_activity/".$user_id;
+        $this->redirect($redirection);
 	}
 }
 ?>

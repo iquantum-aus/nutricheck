@@ -290,14 +290,14 @@ class UsersController extends AclManagementAppController {
 							} else {
 								$parent_id = $this->request->data['User']['parent_id'];
 								$parent_info = $this->User->findById($parent_id);
-								$to = $parent_info['User']['email'];
+								$email = $parent_info['User']['email'];
 							}
 							
 						} else {
-							$to = $this->request->data['User']['email'];
+							$email = $this->request->data['User']['email'];
 						}
 						
-						if(!empty($to)) {
+						if(!empty($email)) {
 							
 							$mail = new PHPMailer(); 
 							$mail->IsSMTP(); // we are going to use SMTP
@@ -324,7 +324,7 @@ class UsersController extends AclManagementAppController {
 							$mail->Body    = $message; 
 							
 							if($mail->Send()) {
-								return true;
+								// nothing to do here...
 							} else {
 								return $mail->ErrorInfo; 
 							}
@@ -523,7 +523,7 @@ class UsersController extends AclManagementAppController {
 			$mail->Body    = $email_message; 
 			
 			if($mail->Send()) {
-				return true;
+				// echo "1"
 			} else {
 				return $mail->ErrorInfo; 
 			}
@@ -594,7 +594,7 @@ class UsersController extends AclManagementAppController {
 				$mail->Body    = $message; 
 				
 				if($mail->Send()) {
-					return true;
+					// return true;
 				} else {
 					return $mail->ErrorInfo; 
 				}
