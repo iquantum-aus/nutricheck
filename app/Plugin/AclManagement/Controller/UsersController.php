@@ -225,7 +225,7 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
    public function add() {
-		
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		$this->layout = "public_dashboard";
 		
 		$user_info = $this->Session->read('Auth.User');
@@ -298,21 +298,36 @@ class UsersController extends AclManagementAppController {
 						}
 						
 						if(!empty($to)) {
-							$subject = "You've been added to the system";
+							
+							$mail = new PHPMailer(); 
+							$mail->IsSMTP(); // we are going to use SMTP
+							$mail->IsHTML(true);
+							$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+							$mail->SMTPAuth = true;                               // Enable SMTP authentication
+							$mail->Username = "greg@iquantum.com.au"; 
+							$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+							$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-							$headers = "From: nomail@nutricheck.com\r\n";
-							$headers .= "Reply-To: noreply@nutricheck.com\r\n";
-							$headers .= "MIME-Version: 1.0\r\n";
-							$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+							$mail->From = "nomail@nutricheck.com.au"; 
+							// $mail->FromName = "nomail@nutricheck.com.au"; 
+							// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+							$mail->AddAddress($email, $email);
 							
-							$message = '<html><body>';
+							$mail->CharSet  = 'UTF-8'; 
+							$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+							$mail->IsHTML(true);  // set email format to HTML 
 							
+							$mail->Subject = "You've been added to the system";
 							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
 							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
+							$mail->Body    = $message; 
 							
-							$message .= "</body></html>";
-							
-							mail($to, $subject, $message, $headers);
+							if($mail->Send()) {
+								return true;
+							} else {
+								return $mail->ErrorInfo; 
+							}
 						}
 					}
 					
@@ -472,7 +487,7 @@ class UsersController extends AclManagementAppController {
 	
 	 /* CUSTOM CODE for allowing/disallwing users to answer the nutrient check */
     public function toggle_can_answer($user_id, $can_answer) {
-        
+        App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		Configure::load('general');
 		
 		$this->layout = "ajax";
@@ -483,20 +498,35 @@ class UsersController extends AclManagementAppController {
 			$user_info = $this->User->findById($user_id);
 			$email_message = Configure::read('User.nutricheck_activated_message');
 			
-			$to = $user_info['User']['email'];
+			$email = $user_info['User']['email'];
 			
-			$subject = 'Reactivation of NutriCheck ';
+			$mail = new PHPMailer(); 
+			$mail->IsSMTP(); // we are going to use SMTP
+			$mail->IsHTML(true);
+			$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+			$mail->SMTPAuth = true;                               // Enable SMTP authentication
+			$mail->Username = "greg@iquantum.com.au"; 
+			$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-			$headers = "From: glenn@iquantum.com.au\r\n";
-			$headers .= "Reply-To: noreply@iquantum.com.au\r\n";
-			$headers .= "MIME-Version: 1.0\r\n";
-			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+			$mail->From = "nomail@nutricheck.com.au"; 
+			// $mail->FromName = "nomail@nutricheck.com.au"; 
+			// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+			$mail->AddAddress($email, $email);
 			
-			$message = '<html><body>';
-			$message .= $email_message;
-			$message .= '</body></html>';
+			$mail->CharSet  = 'UTF-8'; 
+			$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+			$mail->IsHTML(true);  // set email format to HTML 
 			
-			mail($to, $subject, $message, $headers);
+			$mail->Subject = "Reactivation of NutriCheck";
+			$mail->Body    = $email_message; 
+			
+			if($mail->Send()) {
+				return true;
+			} else {
+				return $mail->ErrorInfo; 
+			}
 		}
 		
         if ($user_id) {
@@ -516,6 +546,7 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
     public function register() {
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
         if ($this->request->is('post')) {
             $this->loadModel('AclManagement.User');
             $this->User->create();
@@ -534,23 +565,40 @@ class UsersController extends AclManagementAppController {
 			
             if ($this->User->save($this->request->data)) {
 		   
-				$to = $this->request->data['User']['email'];
+				$email = $this->request->data['User']['email'];
 				$subject = "You've been added to the system";
-
-				$headers = "From: nomail@nutricheck.com\r\n";
-				$headers .= "Reply-To: noreply@nutricheck.com\r\n";
-				$headers .= "MIME-Version: 1.0\r\n";
-				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 				
-				$message = '<html><body>';
+				$mail = new PHPMailer(); 
+				$mail->IsSMTP(); // we are going to use SMTP
+				$mail->IsHTML(true);
+				$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+				$mail->SMTPAuth = true;                               // Enable SMTP authentication
+				$mail->Username = "greg@iquantum.com.au"; 
+				$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+				$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+				
+				$mail->From = "nomail@nutricheck.com.au"; 
+				// $mail->FromName = "nomail@nutricheck.com.au"; 
+				// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+				$mail->AddAddress($email, $email);
+				
+				$mail->CharSet  = 'UTF-8'; 
+				$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+				$mail->IsHTML(true);  // set email format to HTML 
+				
+				$mail->Subject = $subject;
 				
 				$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
 				$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Password:</strong> ".$raw_password;
+				$mail->Body    = $message; 
 				
-				$message .= "</body></html>";
+				if($mail->Send()) {
+					return true;
+				} else {
+					return $mail->ErrorInfo; 
+				}
 				
-				mail($to, $subject, $message, $headers);
-
                 $this->Session->setFlash(__("An Activation email has been sent to your nominated email address. If you're having trouble locating it please check your Spam or Junk folders as the notification email might have been moved due to your Spam Settings"), 'alert/success');
                 $this->request->data = null;
 				
