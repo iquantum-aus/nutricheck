@@ -196,8 +196,8 @@ class PerformedChecksController extends AppController {
 	function send($email, $name, $url) { 
 		// endor('phpmailer'.DS.'class.phpmailer'); 
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
-		$mail = new PHPMailer(); 
 
+		$mail = new PHPMailer(); 
 		$mail->IsSMTP(); // we are going to use SMTP
 		$mail->IsHTML(true);
 		$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
