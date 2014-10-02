@@ -235,7 +235,8 @@ class UsersController extends AclManagementAppController {
 			$username = str_replace(" ", "", $this->request->data['UserProfile']['first_name']).str_replace(" ", "", $this->request->data['UserProfile']['last_name']).$suffix;
 			
 			if($this->request->data['User']['group_id'] == 2) {
-				$this->request->data['User']['username'] = $this->request->data['UserProfile']['company'].$suffix;
+				$username = $this->request->data['UserProfile']['company'].$suffix;
+				$this->request->data['User']['username'] = $username;
 			} else {
 				$this->request->data['User']['username'] = $username;
 			}

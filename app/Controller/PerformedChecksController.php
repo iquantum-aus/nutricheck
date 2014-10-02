@@ -200,17 +200,17 @@ class PerformedChecksController extends AppController {
 
 		$mail->IsSMTP(); // we are going to use SMTP
 		$mail->IsHTML(true);
-		$mail->Host = 'email-smtp.us-east-1.amazonaws.com';  // Specify main and backup server
+		$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
 		$mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$mail->Username = "AKIAIFE5UJ3F2OYW64CQ"; 
-		$mail->Password = "AiMbFeTu00PxAlzDl2Cn60zDlPoYdVfZBvwChnbB3C50"; 
+		$mail->Username = "greg@iquantum.com.au"; 
+		$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-		$mail->From = "noman@iquantum.com.au"; 
-		$mail->FromName = "noman@iquantum.com.au"; 
+		$mail->From = "nomail@nutricheck.com.au"; 
+		// $mail->FromName = "nomail@nutricheck.com.au"; 
+		// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 		$mail->AddAddress($email, $email);
 		
-		$mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 
 		$mail->CharSet  = 'UTF-8'; 
 		$mail->WordWrap = 50;  // set word wrap to 50 characters
