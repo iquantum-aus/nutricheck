@@ -100,10 +100,28 @@
 		Please check out the FAQ or contact the NutriCheck team on<br>Tel: 617 3279 8137<br>or<br>Email: <a href="mailto:info@nutricheck.com.au">info@nutricheck.com.au</a>, and we will do our best to help you! 
 		</div>
 	</div>
+
+	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+	<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+		<div class="textBelowsmall">Tutorial Videos</div>				
+		<div class="textBelowcontent">		
+		<p>		
+			<ul>
+				<li><a href="https://vimeo.com/107670858" target="_blank">Completing a quick entry</a></li>
+				<li><a href="https://vimeo.com/107668582" target="_blank">Admin adding a pharmacy</a><li>
+				<li><a href="https://vimeo.com/107668581" target="_blank">Viewing reports</a></li>
+				<li><a href="https://vimeo.com/107668576" target="_blank">Adding a member and completing a NutriCheck.</a></li>
+			</ul>
+		</p>
+		</div>
+	</div>
+	<?php } else { ?>
 	
 	<div style="min-height: 0; width: 30%;margin:0 0 40px 0;" class="dashboardbox mason">
 			<img src="../../img/happypeople.jpg" class="round5" style="width:100%;height:100%;">
 	</div>
+	<? } ?>
 	</div>
 	
 </div>
