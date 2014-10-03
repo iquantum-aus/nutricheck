@@ -102,7 +102,7 @@
 	</div>
 
 	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
-	<div style="min-height: 374px; width: 30%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+	<div style="min-height: 374px; width: 25%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
 		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall">Tutorial Videos</div>				
 		<div class="textBelowcontent">		
