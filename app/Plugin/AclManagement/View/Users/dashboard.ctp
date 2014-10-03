@@ -93,7 +93,7 @@
 	</div>
 	
 	<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
-		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+		<p style="text-align:center;" class="iconholder"><img src="/img/medicine2.png" style="<?php echo $iconstyle; ?>"></p>
 		<div class="textBelowsmall">HELP & FAQ</div>				
 		<div class="textBelowcontent">				
 		Need help, or need to talk to us about something?<br><br>
