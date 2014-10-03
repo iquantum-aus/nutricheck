@@ -121,7 +121,7 @@
 	<div style="min-height: 0; width: 30%;margin:0 0 40px 0;" class="dashboardbox mason">
 			<img src="../../img/happypeople.jpg" class="round5" style="width:100%;height:100%;">
 	</div>
-	<? } ?>
+	<?php } ?>
 	</div>
 	
 </div>
