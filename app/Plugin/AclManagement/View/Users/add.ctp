@@ -104,7 +104,7 @@
 					-
 					<select class="requiredField" name="data[UserProfile][birthday][year]">
 						<option value="">Select Year</option>
-						<?php  for($y=1950; $y<=2014; $y++) { ?>
+						<?php  for($y=1900; $y<=2014; $y++) { ?>
 							<option value="<?php echo $y; ?>"><?php echo $y; ?></option>
 						<?php } ?>
 					</select>

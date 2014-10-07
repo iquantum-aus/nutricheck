@@ -81,8 +81,7 @@
 					},
 					type:'post',
 					url:"/questions/verify_password/"
-				});
-				
+				});	
 			}
 			
 			return false;
