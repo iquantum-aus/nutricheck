@@ -22,7 +22,7 @@ class BaseNutrient extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'daily_dosage' => array(
+	/* 	'daily_dosage' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -51,6 +51,6 @@ class BaseNutrient extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
+		), */
 	);
 }

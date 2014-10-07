@@ -22,6 +22,11 @@ class BaseNutrientsController extends AppController {
  */
 	public function index() {
 		$this->BaseNutrient->recursive = 0;
+		
+		$this->Paginator->settings = array(
+			'limit' => 200
+		);
+		
 		$this->set('baseNutrients', $this->Paginator->paginate());
 	}
 

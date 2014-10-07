@@ -256,9 +256,13 @@ class AnswersController extends AppController {
 		$factor_types = $this->Answer->Question->Factor->FactorType->find('list', array('conditions' => array('FactorType.status' => 1)));
 		$nutritional_guides = $this->Answer->Question->Factor->NutritionalGuide->find('list', array('fields' => array('factor_id', 'description'), 'conditions' => array('NutritionalGuide.factor_id <>' => 0, 'NutritionalGuide.status' => 1)));
 		
-		$this->Answer->Question->Factor->Prescription->unbindModelAll();
-		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		$this->Answer->Question->Factor->Prescription->unbindModel(
+			array(
+				"belongsTo" => array("Factor")
+			)
+		);
 		
+		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		

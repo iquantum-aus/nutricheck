@@ -6,7 +6,6 @@
 		echo $this->Form->input('base_nutrient_formula');
 		echo $this->Form->input('daily_dosage');
 		echo $this->Form->input('maximum_dosage');
-		echo $this->Form->input('status');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

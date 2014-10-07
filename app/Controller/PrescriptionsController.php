@@ -22,6 +22,11 @@ class PrescriptionsController extends AppController {
  */
 	public function index() {
 		$this->layout = "public_dashboard";
+		
+		$this->Paginator->settings = array(
+			'limit' => 1000
+		);
+		
 		$this->Prescription->recursive = 0;
 		$this->set('prescriptions', $this->Paginator->paginate(array('Prescription.status' => 1)));
 	}
