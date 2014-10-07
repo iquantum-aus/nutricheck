@@ -59,7 +59,8 @@ class PrescriptionsController extends AppController {
 			}
 		}
 		$factors = $this->Prescription->Factor->find('list');
-		$this->set(compact('factors'));
+		$base_nutrients = $this->Prescription->BaseNutrient->find('list', array('fields' => array('id', 'base_nutrient_formula')));				
+		$this->set(compact('factors', 'base_nutrients'));
 	}
 
 /**
@@ -87,7 +88,8 @@ class PrescriptionsController extends AppController {
 		}
 		
 		$factors = $this->Prescription->Factor->find('list');
-		$this->set(compact('factors'));
+		$base_nutrients = $this->Prescription->BaseNutrient->find('list', array('fields' => array('id', 'base_nutrient_formula')));				
+		$this->set(compact('factors', 'base_nutrients'));
 	}
 
 /**

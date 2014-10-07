@@ -6,12 +6,12 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('factor_id', array('empty' => 'Select Factor'));
 		echo $this->Form->input('functional_disturbance');
+		echo $this->Form->input('base_nutrient_id', array('options' => $base_nutrients, 'empty' => 'Select Nutrient'));
 		echo $this->Form->input('1_20', array('label' => '1 - 20'));
 		echo $this->Form->input('21_40', array('label' => '21 - 40'));
 		echo $this->Form->input('41_60', array('label' => '41 - 60'));
 		echo $this->Form->input('61_80', array('label' => '61 - 80'));
 		echo $this->Form->input('81_100', array('label' => '81 - 100'));
-		echo $this->Form->input('maximum_dosage');
 		echo $this->Form->submit('Submit', array('class' => "btn btn-success"));
 	?>
 	</fieldset>

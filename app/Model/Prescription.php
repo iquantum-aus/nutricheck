@@ -39,6 +39,14 @@ class Prescription extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		
+		'BaseNutrient' => array(
+			'className' => 'BaseNutrient',
+			'foreignKey' => 'base_nutrient_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 	
