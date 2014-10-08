@@ -301,10 +301,9 @@ class AnswersController extends AppController {
 	public function report_print($completion_time, $user_id) {
 		$this->layout = "ajax_plus_scripts";
 		$this->loadModel('UserProfile');
-		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
-		$latest_answer_date = date('Y-m-d H:i:s', $date);
+		$user_info = $this->Answer->User->findById($user_id);
 		
 		$reports_per_factor = array();
 		$previous_factor = 0;
@@ -343,9 +342,13 @@ class AnswersController extends AppController {
 		$factor_types = $this->Answer->Question->Factor->FactorType->find('list', array('conditions' => array('FactorType.status' => 1)));
 		$nutritional_guides = $this->Answer->Question->Factor->NutritionalGuide->find('list', array('fields' => array('factor_id', 'description'), 'conditions' => array('NutritionalGuide.factor_id <>' => 0, 'NutritionalGuide.status' => 1)));
 		
-		$this->Answer->Question->Factor->Prescription->unbindModelAll();
-		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		$this->Answer->Question->Factor->Prescription->unbindModel(
+			array(
+				"belongsTo" => array("Factor")
+			)
+		);
 		
+		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		
@@ -366,7 +369,6 @@ class AnswersController extends AppController {
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type'] = $factor_info['FactorType']['type'];
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_id'] = $grouped_key;
 		}
-	
 		
 		$user_info = $this->Answer->User->findById($user_id);
 		$user_profile = $this->UserProfile->findByUserId($user_id);
@@ -379,9 +381,7 @@ class AnswersController extends AppController {
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
 		
-		$this->set("user_id", $user_id);
 		$this->set("user_info", $user_info);
-		
 		$this->set("completion_time", $completion_time);
 		$this->set("user_id", $user_id);
 	}

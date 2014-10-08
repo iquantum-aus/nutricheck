@@ -9,6 +9,7 @@
 	$raw_score = array();
 	$percentage = array();
 	
+	// grouped answers by factor
 	foreach($reports_per_factor as $factor_key => $report_per_factor) {
 		$total_score[$factor_key] = 0;
 		$raw_score[$factor_key] = 0;
@@ -16,19 +17,15 @@
 		$highest_score = 3;
 		$question_per_disturbance = 0;
 		
+		// total percentage per factor
 		foreach($report_per_factor as $answer) {
 			$total_score[$factor_key] += ($highest_score * $answer['FactorsQuestion']['multiplier']);
 			$raw_score[$factor_key] += ($answer['Answer']['rank'] * $answer['FactorsQuestion']['multiplier']);
 			$question_count[$factor_key] = count($reports_per_factor[$factor_key]);
 			
 			$percentage[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
-			$second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * 3);
-			// $second_percentage_value[$factor_key] = ($raw_score[$factor_key]/$total_score[$factor_key]) * 100;
+			$second_percentage_value[$factor_key] = ($raw_score[$factor_key] * 100)/($question_count[$factor_key] * $highest_score);
 		}
-		
-		// echo $raw_score[$factor_key]." - ".$question_count[$factor_key];
-		// echo "<br />";
-		
 	}
 ?>
 
@@ -36,6 +33,9 @@
 <?php	
 	$final_prescription_values = array();
 	$groupBy_functionalDisturbance = array();
+	$groupBy_functionalDisturbance_maximumDosage = array();
+	
+	// group by factor (computed percentage of raw score vs. total score)
 	foreach($second_percentage_value as $key => $percentage_final_score) {
 		$factor_id = $key;
 		$percentage_final_score = round($percentage_final_score);
@@ -46,38 +46,32 @@
 				
 				$dosage = "";
 				
+				// defining the dosage [er factor depending on the score percentage (raw_score / total_score * 100)
 				if(($percentage_final_score >= 0) && ($percentage_final_score <= 20)) { $dosage = $prescription['Prescription']['1_20']; }
 				if(($percentage_final_score >= 21) && ($percentage_final_score <= 40)) { $dosage = $prescription['Prescription']['21_40']; }
 				if(($percentage_final_score >= 41) && ($percentage_final_score <= 60)) { $dosage = $prescription['Prescription']['41_60']; }
 				if(($percentage_final_score >= 61) && ($percentage_final_score <= 80)) { $dosage = $prescription['Prescription']['61_80']; }
 				if(($percentage_final_score >= 81)) {$dosage = $prescription['Prescription']['81_100']; }
 				
+				// values for the detailed prescription
+				$final_prescription_values[$factor_id][$prescription['BaseNutrient']['base_nutrient_formula']]['score'] = $percentage_final_score;
+				$final_prescription_values[$factor_id][$prescription['BaseNutrient']['base_nutrient_formula']]['dosage'] = $dosage;
+				$final_prescription_values[$factor_id][$prescription['BaseNutrient']['base_nutrient_formula']]['maximum_dosage'] = $prescription['BaseNutrient']['maximum_dosage'];
 				
-				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['score'] = $percentage_final_score;
-				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['dosage'] = $dosage;
-				$final_prescription_values[$factor_id][$prescription['Prescription']['functional_disturbance']]['maximum_dosage'] = $prescription['Prescription']['maximum_dosage'];
-				
-				$groupBy_functionalDisturbance[$prescription['Prescription']['functional_disturbance']][$factor_id] = $dosage;
+				// values for the grouped prescription
+				$groupBy_functionalDisturbance[$prescription['BaseNutrient']['base_nutrient_formula']][$factor_id] = $dosage;
+				$groupBy_functionalDisturbance_maximumDosage[$prescription['BaseNutrient']['base_nutrient_formula']] = $prescription['BaseNutrient']['maximum_dosage'];
 			}
 		}
 	}
 	
-	
 	$final_factor_grouped_by_type = array();
 	foreach($factor_type_grouping as $factor_group_key => $factors_type) {
-		
 		foreach($factors_type as $factor_in_type_key => $factor_in_type_item) {
 			$final_factor_grouped_by_type[$factor_group_key][$factor_in_type_key] = $final_prescription_values[$factor_in_type_key];
 		}
 	}
 	
-?>
-
-<?php
-	foreach($groupBy_functionalDisturbance as $key => $itemizedBy_functionalDisturbance) {
-		rsort($itemizedBy_functionalDisturbance);
-		$groupBy_functionalDisturbance[$key] = $itemizedBy_functionalDisturbance;
-	}
 ?>
 
 <div class="index">
@@ -171,16 +165,29 @@
 					<th>Nutrients</th>
 					<th>Recommended Daily Dosage</th>
 				</tr>
+				
 				<?php foreach($groupBy_functionalDisturbance as $name => $dosage) { ?>			
 					<tr>
 						<td><?php echo $name; ?></td>
-						<td><?php 
-							
-							if(empty($dosage[0])) {
-								$dosage[0] = "N/A";
-							}
-							
-							echo $dosage[0]; ?>
+						<td>
+							<?php
+								if(empty($dosage[0])) {
+									$dosage[0] = "N/A";
+								}
+								
+								$total_dosage = array_sum($dosage);
+								$prescription_maximum_dosage = $groupBy_functionalDisturbance_maximumDosage[$name];
+								
+								if($prescription_maximum_dosage > 0) {
+									if($total_dosage > $prescription_maximum_dosage) {
+										echo $prescription_maximum_dosage;
+									} else {
+										echo $total_dosage;
+									}
+								} else {
+									echo $total_dosage;
+								}
+							?>
 						</td>
 					</tr>
 				<?php } ?>
@@ -189,9 +196,6 @@
 	</div>
 	
 	<?php if($_GET['mode'] == 2) { ?>
-		
-		<div style="float: left; width: 100%; height: 120px;" class="clearfix"></div>
-		
 		<h1>Detailed Nutrient Recommendation</h1>
 		<div class="prescription_report left full">
 			
@@ -199,7 +203,7 @@
 				
 				<h2><?php echo $factor_types[$factor_type_id]; ?></h2>
 				
-				<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>			
+				<?php foreach($final_prescription_values as $factor_id => $prescriptions) { ?>
 					
 					<h4><?php echo $factors[$factor_id]; ?></h4>
 					<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
@@ -224,7 +228,6 @@
 			<?php } ?>
 		</div>
 	<?php } ?>
-	
 </div>
 
 <script>

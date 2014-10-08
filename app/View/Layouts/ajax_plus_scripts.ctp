@@ -25,7 +25,18 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
 	<?php echo $this->Html->charset(); ?>
-	<title>Identify - Enhance - Supervise</title>
+	
+	<?php
+		if($this->params['controller'] == "answers" && $this->params['action'] == "report_print") {
+			?>
+				<title>Nutricheck - <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?> - <?php echo  time(); ?></title>
+			<?php 
+		} else {
+			?>
+				<title>Identify - Enhance - Supervise</title>
+			<?php
+		}
+	?>
 	<?php
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
