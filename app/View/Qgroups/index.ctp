@@ -19,7 +19,24 @@
 			<th>IFrame Link</th>
 			<th>Actions</th>
 	</tr>
-	<?php foreach ($qgroups as $qgroup): ?>
+	<?php 
+		$totalGroupcount = count($qgroups);
+		$inc = 1;
+		$ids = "";
+		foreach ($qgroups as $key => $qgroup): ?>
+	
+	<?php
+		if(empty($ids)) {
+			$ids = "#target-to-copy".$key.", ";
+		} else {
+			if($totalGroupcount > $inc) {
+				$ids .= "#target-to-copy".$key.", ";
+			} else {
+				$ids .= "#target-to-copy".$key;
+			}
+		}
+	?>
+	
 	<tr>
 		<td><?php echo h($qgroup['Qgroup']['id']); ?>&nbsp;</td>
 		<td><?php echo h($qgroup['Qgroup']['name']); ?>&nbsp;</td>
@@ -27,9 +44,9 @@
 		<td><?php echo h($qgroup['Qgroup']['modified']); ?>&nbsp;</td>
 		<td>
 			<p>
-				<textarea style="font-size: 12px;" name="clipboard-text" id="clipboard-text" cols="30" rows="10"><script type="text/javascript" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/js/iframe-panel.js"></script><link rel="stylesheet" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/css/iframe-panel.css"><div id="leftbar" style="width='120px' height='690'"><div id="closeButton"></div><div id="panelContentHolder"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0" width="1110" height="690" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?source=remote&group_id=<?php echo $qgroup['Qgroup']['id']; ?>" name="imgbox"></iframe></div></div><a class="btn" id="panelToggle" href="#">Show Panel</a></textarea>
+				<textarea style="font-size: 12px;" name="clipboard-text" id="clipboard-text<?php echo $key; ?>" cols="30" rows="10"><script type="text/javascript" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/js/iframe-panel.js"></script><link rel="stylesheet" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/css/iframe-panel.css"><div id="leftbar" style="width='120px' height='690'"><div id="closeButton"></div><div id="panelContentHolder"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0" width="1110" height="690" src="http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?source=remote&group_id=<?php echo $qgroup['Qgroup']['id']; ?>" name="imgbox"></iframe></div></div><a class="btn" id="panelToggle" href="#">Show Panel</a></textarea>
 				<br />
-				<button class="btn btn-success" id="target-to-copy" data-clipboard-target="clipboard-text">Click To Copy</button><br/>
+				<button class="btn btn-success targetCopier" id="target-to-copy<?php echo $key; ?>" data-clipboard-target="clipboard-text<?php echo $key; ?>">Click To Copy</button><br/>
 			</p>
 			<p id="target-to-copy-text" style="display:none;">Text Copied.</p>
 		</td>
@@ -41,7 +58,7 @@
 			<a data-width="1080" href="http://<?php echo $_SERVER['SERVER_NAME']; ?>/qgroups/load_preview/<?php echo $qgroup['Qgroup']['id']; ?>" class="fancybox fancybox.iframe btn btn-success">Preview</a>
 		</td>
 	</tr>
-<?php endforeach; ?>
+<?php $inc++; endforeach; ?>
 	</table>
 	<p>
 	<?php
@@ -71,8 +88,12 @@
 	$(document).ready( function () {
 		
 		// main.js
-		var client = new ZeroClipboard( document.getElementById("target-to-copy"), {
-		  moviePath: "/js/ZeroClipboard.swf"
+		// var client = new ZeroClipboard( $("#target-to-copy0, #target-to-copy1"), {
+		  // moviePath: "/js/ZeroClipboard.swf"
+		// });
+		
+		var client = new ZeroClipboard($(".targetCopier").each(function () { }), {
+			moviePath: '/js/ZeroClipboard.swf'
 		});
 
 		client.on( "ready", function( readyEvent ) {

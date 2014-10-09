@@ -4,7 +4,7 @@
  * Copyright (c) 2014 Jon Rohan, James M. Greene
  * Licensed MIT
  * http://zeroclipboard.org/
- * v2.0.0-beta.6
+ * v2.1.6
  */
 (function(window, undefined) {
   "use strict";
@@ -12,7 +12,21 @@
  * Store references to critically important global functions that may be
  * overridden on certain web pages.
  */
-  var _window = window, _document = _window.document, _navigator = _window.navigator, _setTimeout = _window.setTimeout, _parseInt = _window.Number.parseInt || _window.parseInt, _parseFloat = _window.Number.parseFloat || _window.parseFloat, _isNaN = _window.Number.isNaN || _window.isNaN, _encodeURIComponent = _window.encodeURIComponent, _slice = _window.Array.prototype.slice, _keys = _window.Object.keys, _hasOwn = _window.Object.prototype.hasOwnProperty, _defineProperty = _window.Object.defineProperty, _Math = _window.Math, _Date = _window.Date, _ActiveXObject = _window.ActiveXObject;
+  var _window = window, _document = _window.document, _navigator = _window.navigator, _setTimeout = _window.setTimeout, _encodeURIComponent = _window.encodeURIComponent, _ActiveXObject = _window.ActiveXObject, _Error = _window.Error, _parseInt = _window.Number.parseInt || _window.parseInt, _parseFloat = _window.Number.parseFloat || _window.parseFloat, _isNaN = _window.Number.isNaN || _window.isNaN, _round = _window.Math.round, _now = _window.Date.now, _keys = _window.Object.keys, _defineProperty = _window.Object.defineProperty, _hasOwn = _window.Object.prototype.hasOwnProperty, _slice = _window.Array.prototype.slice, _unwrap = function() {
+    var unwrapper = function(el) {
+      return el;
+    };
+    if (typeof _window.wrap === "function" && typeof _window.unwrap === "function") {
+      try {
+        var div = _document.createElement("div");
+        var unwrappedDiv = _window.unwrap(div);
+        if (div.nodeType === 1 && unwrappedDiv && unwrappedDiv.nodeType === 1) {
+          unwrapper = _window.unwrap;
+        }
+      } catch (e) {}
+    }
+    return unwrapper;
+  }();
   /**
  * Convert an `arguments` object into an Array.
  *
@@ -21,29 +35,6 @@
  */
   var _args = function(argumentsObj) {
     return _slice.call(argumentsObj, 0);
-  };
-  /**
- * Get the index of an item in an Array.
- *
- * @returns The index of an item in the Array, or `-1` if not found.
- * @private
- */
-  var _inArray = function(item, array, fromIndex) {
-    if (typeof array.indexOf === "function") {
-      return array.indexOf(item, fromIndex);
-    }
-    var i, len = array.length;
-    if (typeof fromIndex === "undefined") {
-      fromIndex = 0;
-    } else if (fromIndex < 0) {
-      fromIndex = len + fromIndex;
-    }
-    for (i = fromIndex; i < len; i++) {
-      if (_hasOwn.call(array, i) && array[i] === item) {
-        return i;
-      }
-    }
-    return -1;
   };
   /**
  * Shallow-copy the owned, enumerable properties of one object over to another, similar to jQuery's `$.extend`.
@@ -59,10 +50,7 @@
           if (_hasOwn.call(arg, prop)) {
             src = target[prop];
             copy = arg[prop];
-            if (target === copy) {
-              continue;
-            }
-            if (copy !== undefined) {
+            if (target !== copy && copy !== undefined) {
               target[prop] = copy;
             }
           }
@@ -125,32 +113,11 @@
   var _omit = function(obj, keys) {
     var newObj = {};
     for (var prop in obj) {
-      if (_inArray(prop, keys) === -1) {
+      if (keys.indexOf(prop) === -1) {
         newObj[prop] = obj[prop];
       }
     }
     return newObj;
-  };
-  /**
- * Get all of an object's owned, enumerable property names. Does NOT include prototype properties.
- *
- * @returns An Array of property names.
- * @private
- */
-  var _objectKeys = function(obj) {
-    if (obj == null) {
-      return [];
-    }
-    if (_keys) {
-      return _keys(obj);
-    }
-    var keys = [];
-    for (var prop in obj) {
-      if (_hasOwn.call(obj, prop)) {
-        keys.push(prop);
-      }
-    }
-    return keys;
   };
   /**
  * Remove all owned, enumerable properties from an object.
@@ -169,36 +136,141 @@
     return obj;
   };
   /**
- * Mark an existing property as read-only.
+ * Determine if an element is contained within another element.
+ *
+ * @returns Boolean
  * @private
  */
-  var _makeReadOnly = function(obj, prop) {
-    if (prop in obj && typeof _defineProperty === "function") {
-      _defineProperty(obj, prop, {
-        value: obj[prop],
-        writable: false,
-        configurable: true,
-        enumerable: true
-      });
+  var _containedBy = function(el, ancestorEl) {
+    if (el && el.nodeType === 1 && el.ownerDocument && ancestorEl && (ancestorEl.nodeType === 1 && ancestorEl.ownerDocument && ancestorEl.ownerDocument === el.ownerDocument || ancestorEl.nodeType === 9 && !ancestorEl.ownerDocument && ancestorEl === el.ownerDocument)) {
+      do {
+        if (el === ancestorEl) {
+          return true;
+        }
+        el = el.parentNode;
+      } while (el);
     }
+    return false;
   };
   /**
- * Get the current time in milliseconds since the epoch.
+ * Get the URL path's parent directory.
  *
- * @returns Number
+ * @returns String or `undefined`
  * @private
  */
-  var _now = function(Date) {
-    return function() {
-      var time;
-      if (Date.now) {
-        time = Date.now();
+  var _getDirPathOfUrl = function(url) {
+    var dir;
+    if (typeof url === "string" && url) {
+      dir = url.split("#")[0].split("?")[0];
+      dir = url.slice(0, url.lastIndexOf("/") + 1);
+    }
+    return dir;
+  };
+  /**
+ * Get the current script's URL by throwing an `Error` and analyzing it.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getCurrentScriptUrlFromErrorStack = function(stack) {
+    var url, matches;
+    if (typeof stack === "string" && stack) {
+      matches = stack.match(/^(?:|[^:@]*@|.+\)@(?=http[s]?|file)|.+?\s+(?: at |@)(?:[^:\(]+ )*[\(]?)((?:http[s]?|file):\/\/[\/]?.+?\/[^:\)]*?)(?::\d+)(?::\d+)?/);
+      if (matches && matches[1]) {
+        url = matches[1];
       } else {
-        time = new Date().getTime();
+        matches = stack.match(/\)@((?:http[s]?|file):\/\/[\/]?.+?\/[^:\)]*?)(?::\d+)(?::\d+)?/);
+        if (matches && matches[1]) {
+          url = matches[1];
+        }
       }
-      return time;
-    };
-  }(_Date);
+    }
+    return url;
+  };
+  /**
+ * Get the current script's URL by throwing an `Error` and analyzing it.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getCurrentScriptUrlFromError = function() {
+    var url, err;
+    try {
+      throw new _Error();
+    } catch (e) {
+      err = e;
+    }
+    if (err) {
+      url = err.sourceURL || err.fileName || _getCurrentScriptUrlFromErrorStack(err.stack);
+    }
+    return url;
+  };
+  /**
+ * Get the current script's URL.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getCurrentScriptUrl = function() {
+    var jsPath, scripts, i;
+    if (_document.currentScript && (jsPath = _document.currentScript.src)) {
+      return jsPath;
+    }
+    scripts = _document.getElementsByTagName("script");
+    if (scripts.length === 1) {
+      return scripts[0].src || undefined;
+    }
+    if ("readyState" in scripts[0]) {
+      for (i = scripts.length; i--; ) {
+        if (scripts[i].readyState === "interactive" && (jsPath = scripts[i].src)) {
+          return jsPath;
+        }
+      }
+    }
+    if (_document.readyState === "loading" && (jsPath = scripts[scripts.length - 1].src)) {
+      return jsPath;
+    }
+    if (jsPath = _getCurrentScriptUrlFromError()) {
+      return jsPath;
+    }
+    return undefined;
+  };
+  /**
+ * Get the unanimous parent directory of ALL script tags.
+ * If any script tags are either (a) inline or (b) from differing parent
+ * directories, this method must return `undefined`.
+ *
+ * @returns String or `undefined`
+ * @private
+ */
+  var _getUnanimousScriptParentDir = function() {
+    var i, jsDir, jsPath, scripts = _document.getElementsByTagName("script");
+    for (i = scripts.length; i--; ) {
+      if (!(jsPath = scripts[i].src)) {
+        jsDir = null;
+        break;
+      }
+      jsPath = _getDirPathOfUrl(jsPath);
+      if (jsDir == null) {
+        jsDir = jsPath;
+      } else if (jsDir !== jsPath) {
+        jsDir = null;
+        break;
+      }
+    }
+    return jsDir || undefined;
+  };
+  /**
+ * Get the presumed location of the "ZeroClipboard.swf" file, based on the location
+ * of the executing JavaScript file (e.g. "ZeroClipboard.js", etc.).
+ *
+ * @returns String
+ * @private
+ */
+  var _getDefaultSwfPath = function() {
+    var jsDir = _getDirPathOfUrl(_getCurrentScriptUrl()) || _getUnanimousScriptParentDir() || "";
+    return jsDir + "ZeroClipboard.swf";
+  };
   /**
  * Keep track of the state of the Flash object.
  * @private
@@ -215,7 +287,8 @@
     ready: null
   };
   /**
- * 
+ * The minimum Flash Player version required to use ZeroClipboard completely.
+ * @readonly
  * @private
  */
   var _minimumFlashVersion = "11.0.0";
@@ -229,6 +302,11 @@
  * @private
  */
   var _currentElement;
+  /**
+ * Keep track of the element that was activated when a `copy` process started.
+ * @private
+ */
+  var _copyTarget;
   /**
  * Keep track of data for the pending clipboard transaction.
  * @private
@@ -254,70 +332,25 @@
     }
   };
   /**
- * The presumed location of the "ZeroClipboard.swf" file, based on the location
- * of the executing JavaScript file (e.g. "ZeroClipboard.js", etc.).
- * @private
- */
-  var _swfPath = function() {
-    var i, jsDir, tmpJsPath, jsPath, swfPath = "ZeroClipboard.swf";
-    if (!(_document.currentScript && (jsPath = _document.currentScript.src))) {
-      var scripts = _document.getElementsByTagName("script");
-      if ("readyState" in scripts[0]) {
-        for (i = scripts.length; i--; ) {
-          if (scripts[i].readyState === "interactive" && (jsPath = scripts[i].src)) {
-            break;
-          }
-        }
-      } else if (_document.readyState === "loading") {
-        jsPath = scripts[scripts.length - 1].src;
-      } else {
-        for (i = scripts.length; i--; ) {
-          tmpJsPath = scripts[i].src;
-          if (!tmpJsPath) {
-            jsDir = null;
-            break;
-          }
-          tmpJsPath = tmpJsPath.split("#")[0].split("?")[0];
-          tmpJsPath = tmpJsPath.slice(0, tmpJsPath.lastIndexOf("/") + 1);
-          if (jsDir == null) {
-            jsDir = tmpJsPath;
-          } else if (jsDir !== tmpJsPath) {
-            jsDir = null;
-            break;
-          }
-        }
-        if (jsDir !== null) {
-          jsPath = jsDir;
-        }
-      }
-    }
-    if (jsPath) {
-      jsPath = jsPath.split("#")[0].split("?")[0];
-      swfPath = jsPath.slice(0, jsPath.lastIndexOf("/") + 1) + swfPath;
-    }
-    return swfPath;
-  }();
-  /**
  * ZeroClipboard configuration defaults for the Core module.
  * @private
  */
   var _globalConfig = {
-    swfPath: _swfPath,
-    trustedDomains: _window.location.host ? [ _window.location.host ] : [],
+    swfPath: _getDefaultSwfPath(),
+    trustedDomains: window.location.host ? [ window.location.host ] : [],
     cacheBust: true,
     forceEnhancedClipboard: false,
     flashLoadTimeout: 3e4,
+    autoActivate: true,
+    bubbleEvents: true,
+    containerId: "global-zeroclipboard-html-bridge",
+    containerClass: "global-zeroclipboard-container",
+    swfObjectId: "global-zeroclipboard-flash-bridge",
+    hoverClass: "zeroclipboard-is-hover",
+    activeClass: "zeroclipboard-is-active",
     forceHandCursor: false,
     title: null,
-    zIndex: 999999999,
-    /**
-   * @deprecated in [v1.3.0], slated for removal in [v2.0.0]. See docs for alternatives.
-   */
-    hoverClass: "zeroclipboard-is-hover",
-    /**
-   * @deprecated in [v1.3.0], slated for removal in [v2.0.0]. See docs for alternatives.
-   */
-    activeClass: "zeroclipboard-is-active"
+    zIndex: 999999999
   };
   /**
  * The underlying implementation of `ZeroClipboard.config`.
@@ -325,7 +358,23 @@
  */
   var _config = function(options) {
     if (typeof options === "object" && options !== null) {
-      _extend(_globalConfig, options);
+      for (var prop in options) {
+        if (_hasOwn.call(options, prop)) {
+          if (/^(?:forceHandCursor|title|zIndex|bubbleEvents)$/.test(prop)) {
+            _globalConfig[prop] = options[prop];
+          } else if (_flashState.bridge == null) {
+            if (prop === "containerId" || prop === "swfObjectId") {
+              if (_isValidHtml4Id(options[prop])) {
+                _globalConfig[prop] = options[prop];
+              } else {
+                throw new Error("The specified `" + prop + "` value is not valid as an HTML4 Element ID");
+              }
+            } else {
+              _globalConfig[prop] = options[prop];
+            }
+          }
+        }
+      }
     }
     if (typeof options === "string" && options) {
       if (_hasOwn.call(_globalConfig, options)) {
@@ -407,7 +456,7 @@
   var _off = function(eventType, listener) {
     var i, len, foundIndex, events, perEventHandlers;
     if (arguments.length === 0) {
-      events = _objectKeys(_handlers);
+      events = _keys(_handlers);
     } else if (typeof eventType === "string" && eventType) {
       events = eventType.split(/\s+/);
     } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
@@ -423,10 +472,10 @@
         perEventHandlers = _handlers[eventType];
         if (perEventHandlers && perEventHandlers.length) {
           if (listener) {
-            foundIndex = _inArray(listener, perEventHandlers);
+            foundIndex = perEventHandlers.indexOf(listener);
             while (foundIndex !== -1) {
               perEventHandlers.splice(foundIndex, 1);
-              foundIndex = _inArray(listener, perEventHandlers, foundIndex);
+              foundIndex = perEventHandlers.indexOf(listener, foundIndex);
             }
           } else {
             perEventHandlers.length = 0;
@@ -459,7 +508,9 @@
     if (!event) {
       return;
     }
-    _preprocessEvent(event);
+    if (_preprocessEvent(event)) {
+      return;
+    }
     if (event.type === "ready" && _flashState.overdue === true) {
       return ZeroClipboard.emit({
         type: "error",
@@ -467,7 +518,7 @@
       });
     }
     eventCopy = _extend({}, event);
-    _dispatchCallbacks(eventCopy);
+    _dispatchCallbacks.call(this, eventCopy);
     if (event.type === "copy") {
       tmp = _mapClipDataToFlash(_clipData);
       returnVal = tmp.data;
@@ -508,7 +559,7 @@
  */
   var _destroy = function() {
     ZeroClipboard.clearData();
-    ZeroClipboard.deactivate();
+    ZeroClipboard.blur();
     ZeroClipboard.emit("destroy");
     _unembedSwf();
     ZeroClipboard.off();
@@ -547,20 +598,32 @@
     }
   };
   /**
- * The underlying implementation of `ZeroClipboard.activate`.
+ * The underlying implementation of `ZeroClipboard.getData`.
  * @private
  */
-  var _activate = function(element) {
+  var _getData = function(format) {
+    if (typeof format === "undefined") {
+      return _deepCopy(_clipData);
+    } else if (typeof format === "string" && _hasOwn.call(_clipData, format)) {
+      return _clipData[format];
+    }
+  };
+  /**
+ * The underlying implementation of `ZeroClipboard.focus`/`ZeroClipboard.activate`.
+ * @private
+ */
+  var _focus = function(element) {
     if (!(element && element.nodeType === 1)) {
       return;
     }
     if (_currentElement) {
-      _removeClass(_currentElement, _globalConfig.hoverClass);
       _removeClass(_currentElement, _globalConfig.activeClass);
+      if (_currentElement !== element) {
+        _removeClass(_currentElement, _globalConfig.hoverClass);
+      }
     }
     _currentElement = element;
     _addClass(element, _globalConfig.hoverClass);
-    _reposition();
     var newTitle = element.getAttribute("title") || _globalConfig.title;
     if (typeof newTitle === "string" && newTitle) {
       var htmlBridge = _getHtmlBridge(_flashState.bridge);
@@ -570,12 +633,13 @@
     }
     var useHandCursor = _globalConfig.forceHandCursor === true || _getStyle(element, "cursor") === "pointer";
     _setHandCursor(useHandCursor);
+    _reposition();
   };
   /**
- * The underlying implementation of `ZeroClipboard.deactivate`.
+ * The underlying implementation of `ZeroClipboard.blur`/`ZeroClipboard.deactivate`.
  * @private
  */
-  var _deactivate = function() {
+  var _blur = function() {
     var htmlBridge = _getHtmlBridge(_flashState.bridge);
     if (htmlBridge) {
       htmlBridge.removeAttribute("title");
@@ -591,6 +655,20 @@
     }
   };
   /**
+ * The underlying implementation of `ZeroClipboard.activeElement`.
+ * @private
+ */
+  var _activeElement = function() {
+    return _currentElement || null;
+  };
+  /**
+ * Check if a value is a valid HTML4 `ID` or `Name` token.
+ * @private
+ */
+  var _isValidHtml4Id = function(id) {
+    return typeof id === "string" && id && /^[A-Za-z][A-Za-z0-9_:\-\.]*$/.test(id);
+  };
+  /**
  * Create or update an `event` object, based on the `eventType`.
  * @private
  */
@@ -604,6 +682,9 @@
     }
     if (!eventType) {
       return;
+    }
+    if (!event.target && /^(copy|aftercopy|_click)$/.test(eventType.toLowerCase())) {
+      event.target = _copyTarget;
     }
     _extend(event, {
       type: eventType.toLowerCase(),
@@ -626,11 +707,15 @@
       });
     }
     if (event.type === "error") {
-      if (/^flash-(outdated|unavailable|deactivated|overdue)$/.test(event.name)) {
+      if (/^flash-(disabled|outdated|unavailable|deactivated|overdue)$/.test(event.name)) {
         _extend(event, {
           target: null,
-          version: _flashState.version,
           minimumVersion: _minimumFlashVersion
+        });
+      }
+      if (/^flash-(outdated|unavailable|deactivated|overdue)$/.test(event.name)) {
+        _extend(event, {
+          version: _flashState.version
         });
       }
     }
@@ -646,6 +731,7 @@
     if (event.target && !event.relatedTarget) {
       event.relatedTarget = _getRelatedTarget(event.target);
     }
+    event = _addMouseData(event);
     return event;
   };
   /**
@@ -657,7 +743,53 @@
     return relatedTargetId ? _document.getElementById(relatedTargetId) : null;
   };
   /**
- * Determine if an event's registered handlers should be execute synchronously or asynchronously. 
+ * Add element and position data to `MouseEvent` instances
+ * @private
+ */
+  var _addMouseData = function(event) {
+    if (event && /^_(?:click|mouse(?:over|out|down|up|move))$/.test(event.type)) {
+      var srcElement = event.target;
+      var fromElement = event.type === "_mouseover" && event.relatedTarget ? event.relatedTarget : undefined;
+      var toElement = event.type === "_mouseout" && event.relatedTarget ? event.relatedTarget : undefined;
+      var pos = _getDOMObjectPosition(srcElement);
+      var screenLeft = _window.screenLeft || _window.screenX || 0;
+      var screenTop = _window.screenTop || _window.screenY || 0;
+      var scrollLeft = _document.body.scrollLeft + _document.documentElement.scrollLeft;
+      var scrollTop = _document.body.scrollTop + _document.documentElement.scrollTop;
+      var pageX = pos.left + (typeof event._stageX === "number" ? event._stageX : 0);
+      var pageY = pos.top + (typeof event._stageY === "number" ? event._stageY : 0);
+      var clientX = pageX - scrollLeft;
+      var clientY = pageY - scrollTop;
+      var screenX = screenLeft + clientX;
+      var screenY = screenTop + clientY;
+      var moveX = typeof event.movementX === "number" ? event.movementX : 0;
+      var moveY = typeof event.movementY === "number" ? event.movementY : 0;
+      delete event._stageX;
+      delete event._stageY;
+      _extend(event, {
+        srcElement: srcElement,
+        fromElement: fromElement,
+        toElement: toElement,
+        screenX: screenX,
+        screenY: screenY,
+        pageX: pageX,
+        pageY: pageY,
+        clientX: clientX,
+        clientY: clientY,
+        x: clientX,
+        y: clientY,
+        movementX: moveX,
+        movementY: moveY,
+        offsetX: 0,
+        offsetY: 0,
+        layerX: 0,
+        layerY: 0
+      });
+    }
+    return event;
+  };
+  /**
+ * Determine if an event's registered handlers should be execute synchronously or asynchronously.
  *
  * @returns {boolean}
  * @private
@@ -722,9 +854,12 @@
  */
   var _preprocessEvent = function(event) {
     var element = event.target || _currentElement || null;
+    var sourceIsSwf = event._source === "swf";
+    delete event._source;
+    var flashErrorNames = [ "flash-disabled", "flash-outdated", "flash-unavailable", "flash-deactivated", "flash-overdue" ];
     switch (event.type) {
      case "error":
-      if (_inArray(event.name, [ "flash-disabled", "flash-outdated", "flash-deactivated", "flash-overdue" ])) {
+      if (flashErrorNames.indexOf(event.name) !== -1) {
         _extend(_flashState, {
           disabled: event.name === "flash-disabled",
           outdated: event.name === "flash-outdated",
@@ -748,6 +883,10 @@
       });
       break;
 
+     case "beforecopy":
+      _copyTarget = element;
+      break;
+
      case "copy":
       var textContent, htmlContent, targetEl = event.relatedTarget;
       if (!(_clipData["text/html"] || _clipData["text/plain"]) && targetEl && (htmlContent = targetEl.value || targetEl.outerHTML || targetEl.innerHTML) && (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)) {
@@ -768,6 +907,106 @@
         element.focus();
       }
       break;
+
+     case "_mouseover":
+      ZeroClipboard.focus(element);
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        if (element && element !== event.relatedTarget && !_containedBy(event.relatedTarget, element)) {
+          _fireMouseEvent(_extend({}, event, {
+            type: "mouseenter",
+            bubbles: false,
+            cancelable: false
+          }));
+        }
+        _fireMouseEvent(_extend({}, event, {
+          type: "mouseover"
+        }));
+      }
+      break;
+
+     case "_mouseout":
+      ZeroClipboard.blur();
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        if (element && element !== event.relatedTarget && !_containedBy(event.relatedTarget, element)) {
+          _fireMouseEvent(_extend({}, event, {
+            type: "mouseleave",
+            bubbles: false,
+            cancelable: false
+          }));
+        }
+        _fireMouseEvent(_extend({}, event, {
+          type: "mouseout"
+        }));
+      }
+      break;
+
+     case "_mousedown":
+      _addClass(element, _globalConfig.activeClass);
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+
+     case "_mouseup":
+      _removeClass(element, _globalConfig.activeClass);
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+
+     case "_click":
+      _copyTarget = null;
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+
+     case "_mousemove":
+      if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
+        _fireMouseEvent(_extend({}, event, {
+          type: event.type.slice(1)
+        }));
+      }
+      break;
+    }
+    if (/^_(?:click|mouse(?:over|out|down|up|move))$/.test(event.type)) {
+      return true;
+    }
+  };
+  /**
+ * Dispatch a synthetic MouseEvent.
+ *
+ * @returns `undefined`
+ * @private
+ */
+  var _fireMouseEvent = function(event) {
+    if (!(event && typeof event.type === "string" && event)) {
+      return;
+    }
+    var e, target = event.target || null, doc = target && target.ownerDocument || _document, defaults = {
+      view: doc.defaultView || _window,
+      canBubble: true,
+      cancelable: true,
+      detail: event.type === "click" ? 1 : 0,
+      button: typeof event.which === "number" ? event.which - 1 : typeof event.button === "number" ? event.button : doc.createEvent ? 0 : 1
+    }, args = _extend(defaults, event);
+    if (!target) {
+      return;
+    }
+    if (doc.createEvent && target.dispatchEvent) {
+      args = [ args.type, args.canBubble, args.cancelable, args.view, args.detail, args.screenX, args.screenY, args.clientX, args.clientY, args.ctrlKey, args.altKey, args.shiftKey, args.metaKey, args.button, args.relatedTarget ];
+      e = doc.createEvent("MouseEvents");
+      if (e.initMouseEvent) {
+        e.initMouseEvent.apply(e, args);
+        e._source = "js";
+        target.dispatchEvent(e);
+      }
     }
   };
   /**
@@ -776,8 +1015,8 @@
  */
   var _createHtmlBridge = function() {
     var container = _document.createElement("div");
-    container.id = "global-zeroclipboard-html-bridge";
-    container.className = "global-zeroclipboard-container";
+    container.id = _globalConfig.containerId;
+    container.className = _globalConfig.containerClass;
     container.style.position = "absolute";
     container.style.left = "0px";
     container.style.top = "-9999px";
@@ -804,7 +1043,7 @@
  * @private
  */
   var _embedSwf = function() {
-    var len, container = _document.getElementById("global-zeroclipboard-html-bridge"), flashBridge = _flashState.bridge;
+    var len, flashBridge = _flashState.bridge, container = _getHtmlBridge(flashBridge);
     if (!flashBridge) {
       var allowScriptAccess = _determineScriptAccess(_window.location.host, _globalConfig);
       var allowNetworking = allowScriptAccess === "never" ? "none" : "all";
@@ -816,14 +1055,14 @@
       _document.body.appendChild(container);
       var tmpDiv = _document.createElement("div");
       var oldIE = _flashState.pluginType === "activex";
-      tmpDiv.innerHTML = '<object id="global-zeroclipboard-flash-bridge" name="global-zeroclipboard-flash-bridge" ' + 'width="100%" height="100%" ' + (oldIE ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' : 'type="application/x-shockwave-flash" data="' + swfUrl + '"') + ">" + (oldIE ? '<param name="movie" value="' + swfUrl + '"/>' : "") + '<param name="allowScriptAccess" value="' + allowScriptAccess + '"/>' + '<param name="allowNetworking" value="' + allowNetworking + '"/>' + '<param name="menu" value="false"/>' + '<param name="wmode" value="transparent"/>' + '<param name="flashvars" value="' + flashvars + '"/>' + "</object>";
+      tmpDiv.innerHTML = '<object id="' + _globalConfig.swfObjectId + '" name="' + _globalConfig.swfObjectId + '" ' + 'width="100%" height="100%" ' + (oldIE ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' : 'type="application/x-shockwave-flash" data="' + swfUrl + '"') + ">" + (oldIE ? '<param name="movie" value="' + swfUrl + '"/>' : "") + '<param name="allowScriptAccess" value="' + allowScriptAccess + '"/>' + '<param name="allowNetworking" value="' + allowNetworking + '"/>' + '<param name="menu" value="false"/>' + '<param name="wmode" value="transparent"/>' + '<param name="flashvars" value="' + flashvars + '"/>' + "</object>";
       flashBridge = tmpDiv.firstChild;
       tmpDiv = null;
-      flashBridge.ZeroClipboard = ZeroClipboard;
+      _unwrap(flashBridge).ZeroClipboard = ZeroClipboard;
       container.replaceChild(flashBridge, divToBeReplaced);
     }
     if (!flashBridge) {
-      flashBridge = _document["global-zeroclipboard-flash-bridge"];
+      flashBridge = _document[_globalConfig.swfObjectId];
       if (flashBridge && (len = flashBridge.length)) {
         flashBridge = flashBridge[len - 1];
       }
@@ -994,7 +1233,8 @@
             continue;
           }
           if (domain === "*") {
-            trustedOriginsExpanded = [ domain ];
+            trustedOriginsExpanded.length = 0;
+            trustedOriginsExpanded.push(domain);
             break;
           }
           trustedOriginsExpanded.push.apply(trustedOriginsExpanded, [ domain, "//" + domain, _window.location.protocol + "//" + domain ]);
@@ -1006,6 +1246,9 @@
     }
     if (options.forceEnhancedClipboard === true) {
       str += (str ? "&" : "") + "forceEnhancedClipboard=true";
+    }
+    if (typeof options.swfObjectId === "string" && options.swfObjectId) {
+      str += (str ? "&" : "") + "swfObjectId=" + _encodeURIComponent(options.swfObjectId);
     }
     return str;
   };
@@ -1040,16 +1283,13 @@
  * @private
  */
   var _determineScriptAccess = function() {
-    var _extractAllDomains = function(origins, resultsArray) {
-      var i, len, tmp;
-      if (origins == null || resultsArray[0] === "*") {
-        return;
-      }
+    var _extractAllDomains = function(origins) {
+      var i, len, tmp, resultsArray = [];
       if (typeof origins === "string") {
         origins = [ origins ];
       }
-      if (!(typeof origins === "object" && typeof origins.length === "number")) {
-        return;
+      if (!(typeof origins === "object" && origins && typeof origins.length === "number")) {
+        return resultsArray;
       }
       for (i = 0, len = origins.length; i < len; i++) {
         if (_hasOwn.call(origins, i) && (tmp = _extractDomain(origins[i]))) {
@@ -1058,26 +1298,25 @@
             resultsArray.push("*");
             break;
           }
-          if (_inArray(tmp, resultsArray) === -1) {
+          if (resultsArray.indexOf(tmp) === -1) {
             resultsArray.push(tmp);
           }
         }
       }
+      return resultsArray;
     };
     return function(currentDomain, configOptions) {
       var swfDomain = _extractDomain(configOptions.swfPath);
       if (swfDomain === null) {
         swfDomain = currentDomain;
       }
-      var trustedDomains = [];
-      _extractAllDomains(configOptions.trustedOrigins, trustedDomains);
-      _extractAllDomains(configOptions.trustedDomains, trustedDomains);
+      var trustedDomains = _extractAllDomains(configOptions.trustedDomains);
       var len = trustedDomains.length;
       if (len > 0) {
         if (len === 1 && trustedDomains[0] === "*") {
           return "always";
         }
-        if (_inArray(currentDomain, trustedDomains) !== -1) {
+        if (trustedDomains.indexOf(currentDomain) !== -1) {
           if (len === 1 && currentDomain === swfDomain) {
             return "sameDomain";
           }
@@ -1101,8 +1340,6 @@
     }
   };
   /**
- * @deprecated
- *
  * Add a class to an element, if it doesn't already have it.
  *
  * @returns The element, with its new class added.
@@ -1137,8 +1374,6 @@
     return element;
   };
   /**
- * @deprecated
- *
  * Remove a class from an element, if it has it.
  *
  * @returns The element, with its class removed.
@@ -1167,26 +1402,6 @@
     return element;
   };
   /**
- * Convert standard CSS property names into the equivalent CSS property names
- * for use by oldIE and/or `el.style.{prop}`.
- *
- * NOTE: oldIE has other special cases that are not accounted for here,
- * e.g. "float" -> "styleFloat"
- *
- * @example _camelizeCssPropName("z-index") -> "zIndex"
- *
- * @returns The CSS property name for oldIE and/or `el.style.{prop}`
- * @private
- */
-  var _camelizeCssPropName = function() {
-    var matcherRegex = /\-([a-z])/g, replacerFn = function(match, group) {
-      return group.toUpperCase();
-    };
-    return function(prop) {
-      return prop.replace(matcherRegex, replacerFn);
-    };
-  }();
-  /**
  * Attempt to interpret the element's CSS styling. If `prop` is `"cursor"`,
  * then we assume that it should be a hand ("pointer") cursor if the element
  * is an anchor element ("a" tag).
@@ -1195,21 +1410,10 @@
  * @private
  */
   var _getStyle = function(el, prop) {
-    var value, camelProp, tagName;
-    if (_window.getComputedStyle) {
-      value = _window.getComputedStyle(el, null).getPropertyValue(prop);
-    } else {
-      camelProp = _camelizeCssPropName(prop);
-      if (el.currentStyle) {
-        value = el.currentStyle[camelProp];
-      } else {
-        value = el.style[camelProp];
-      }
-    }
+    var value = _window.getComputedStyle(el, null).getPropertyValue(prop);
     if (prop === "cursor") {
       if (!value || value === "auto") {
-        tagName = el.tagName.toLowerCase();
-        if (tagName === "a") {
+        if (el.nodeName === "A") {
           return "pointer";
         }
       }
@@ -1229,7 +1433,7 @@
       rect = _document.body.getBoundingClientRect();
       physicalWidth = rect.right - rect.left;
       logicalWidth = _document.body.offsetWidth;
-      zoomFactor = _Math.round(physicalWidth / logicalWidth * 100) / 100;
+      zoomFactor = _round(physicalWidth / logicalWidth * 100) / 100;
     }
     return zoomFactor;
   };
@@ -1254,8 +1458,8 @@
         pageYOffset = _window.pageYOffset;
       } else {
         zoomFactor = _getZoomFactor();
-        pageXOffset = _Math.round(_document.documentElement.scrollLeft / zoomFactor);
-        pageYOffset = _Math.round(_document.documentElement.scrollTop / zoomFactor);
+        pageXOffset = _round(_document.documentElement.scrollLeft / zoomFactor);
+        pageYOffset = _round(_document.documentElement.scrollTop / zoomFactor);
       }
       var leftBorderWidth = _document.documentElement.clientLeft || 0;
       var topBorderWidth = _document.documentElement.clientTop || 0;
@@ -1276,11 +1480,13 @@
     var htmlBridge;
     if (_currentElement && (htmlBridge = _getHtmlBridge(_flashState.bridge))) {
       var pos = _getDOMObjectPosition(_currentElement);
-      htmlBridge.style.width = pos.width + "px";
-      htmlBridge.style.height = pos.height + "px";
-      htmlBridge.style.top = pos.top + "px";
-      htmlBridge.style.left = pos.left + "px";
-      htmlBridge.style.zIndex = "" + _getSafeZIndex(_globalConfig.zIndex);
+      _extend(htmlBridge.style, {
+        width: pos.width + "px",
+        height: pos.height + "px",
+        top: pos.top + "px",
+        left: pos.left + "px",
+        zIndex: "" + _getSafeZIndex(_globalConfig.zIndex)
+      });
     }
   };
   /**
@@ -1417,8 +1623,12 @@
  * @readonly
  * @property {string}
  */
-  ZeroClipboard.version = "2.0.0-beta.6";
-  _makeReadOnly(ZeroClipboard, "version");
+  _defineProperty(ZeroClipboard, "version", {
+    value: "2.1.6",
+    writable: false,
+    configurable: true,
+    enumerable: true
+  });
   /**
  * Update or get a copy of the ZeroClipboard global configuration.
  * Returns a copy of the current/updated configuration.
@@ -1523,6 +1733,16 @@
     return _clearData.apply(this, _args(arguments));
   };
   /**
+ * Get a copy of the pending data for clipboard injection.
+ * If no `format` is provided, a copy of ALL pending data formats will be returned.
+ *
+ * @returns `String` or `Object`
+ * @static
+ */
+  ZeroClipboard.getData = function() {
+    return _getData.apply(this, _args(arguments));
+  };
+  /**
  * Sets the current HTML object that the Flash object should overlay. This will put the global
  * Flash object on top of the current element; depending on the setup, this may also set the
  * pending clipboard text data as well as the Flash object's wrapping element's title attribute
@@ -1531,8 +1751,8 @@
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.activate = function() {
-    return _activate.apply(this, _args(arguments));
+  ZeroClipboard.focus = ZeroClipboard.activate = function() {
+    return _focus.apply(this, _args(arguments));
   };
   /**
  * Un-overlays the Flash object. This will put the global Flash object off-screen; depending on
@@ -1542,8 +1762,17 @@
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.deactivate = function() {
-    return _deactivate.apply(this, _args(arguments));
+  ZeroClipboard.blur = ZeroClipboard.deactivate = function() {
+    return _blur.apply(this, _args(arguments));
+  };
+  /**
+ * Returns the currently focused/"activated" HTML element that the Flash object is wrapping.
+ *
+ * @returns `HTMLElement` or `null`
+ * @static
+ */
+  ZeroClipboard.activeElement = function() {
+    return _activeElement.apply(this, _args(arguments));
   };
   /**
  * Keep track of the ZeroClipboard client instance counter.
@@ -1576,8 +1805,11 @@
  *
  * Entry structure:
  *   _mouseHandlers[element.zcClippingId] = {
- *     mouseover: function(event) {},
- *     mouseout:  function(event) {}
+ *     mouseover:  function(event) {},
+ *     mouseout:   function(event) {},
+ *     mouseenter: function(event) {},
+ *     mouseleave: function(event) {},
+ *     mousemove:  function(event) {}
  *   };
  */
   var _mouseHandlers = {};
@@ -1663,7 +1895,7 @@
   var _clientOff = function(eventType, listener) {
     var i, len, foundIndex, events, perEventHandlers, handlers = _clientMeta[this.id] && _clientMeta[this.id].handlers;
     if (arguments.length === 0) {
-      events = _objectKeys(handlers);
+      events = _keys(handlers);
     } else if (typeof eventType === "string" && eventType) {
       events = eventType.split(/\s+/);
     } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
@@ -1679,10 +1911,10 @@
         perEventHandlers = handlers[eventType];
         if (perEventHandlers && perEventHandlers.length) {
           if (listener) {
-            foundIndex = _inArray(listener, perEventHandlers);
+            foundIndex = perEventHandlers.indexOf(listener);
             while (foundIndex !== -1) {
               perEventHandlers.splice(foundIndex, 1);
-              foundIndex = _inArray(listener, perEventHandlers, foundIndex);
+              foundIndex = perEventHandlers.indexOf(listener, foundIndex);
             }
           } else {
             perEventHandlers.length = 0;
@@ -1737,11 +1969,11 @@
           if (_globalConfig.autoActivate === true) {
             _addMouseHandlers(elements[i]);
           }
-        } else if (_inArray(this.id, _elementMeta[elements[i].zcClippingId]) === -1) {
+        } else if (_elementMeta[elements[i].zcClippingId].indexOf(this.id) === -1) {
           _elementMeta[elements[i].zcClippingId].push(this.id);
         }
         var clippedElements = _clientMeta[this.id] && _clientMeta[this.id].elements;
-        if (_inArray(elements[i], clippedElements) === -1) {
+        if (clippedElements.indexOf(elements[i]) === -1) {
           clippedElements.push(elements[i]);
         }
       }
@@ -1767,13 +1999,13 @@
     for (var i = elements.length; i--; ) {
       if (_hasOwn.call(elements, i) && elements[i] && elements[i].nodeType === 1) {
         arrayIndex = 0;
-        while ((arrayIndex = _inArray(elements[i], clippedElements, arrayIndex)) !== -1) {
+        while ((arrayIndex = clippedElements.indexOf(elements[i], arrayIndex)) !== -1) {
           clippedElements.splice(arrayIndex, 1);
         }
         var clientIds = _elementMeta[elements[i].zcClippingId];
         if (clientIds) {
           arrayIndex = 0;
-          while ((arrayIndex = _inArray(this.id, clientIds, arrayIndex)) !== -1) {
+          while ((arrayIndex = clientIds.indexOf(this.id, arrayIndex)) !== -1) {
             clientIds.splice(arrayIndex, 1);
           }
           if (clientIds.length === 0) {
@@ -1817,8 +2049,8 @@
     }
     var clippedEls = _clientMeta[this.id] && _clientMeta[this.id].elements;
     var hasClippedEls = !!clippedEls && clippedEls.length > 0;
-    var goodTarget = !event.target || hasClippedEls && _inArray(event.target, clippedEls) !== -1;
-    var goodRelTarget = event.relatedTarget && hasClippedEls && _inArray(event.relatedTarget, clippedEls) !== -1;
+    var goodTarget = !event.target || hasClippedEls && clippedEls.indexOf(event.target) !== -1;
+    var goodRelTarget = event.relatedTarget && hasClippedEls && clippedEls.indexOf(event.relatedTarget) !== -1;
     var goodClient = event.client && event.client === this;
     if (!(goodTarget || goodRelTarget || goodClient)) {
       return false;
@@ -1872,41 +2104,7 @@
     return typeof elements.length !== "number" ? [ elements ] : elements;
   };
   /**
- * Add an event listener to a DOM element (because IE<9 sucks).
- *
- * @returns The element.
- * @private
- */
-  var _addEventHandler = function(element, method, func) {
-    if (!element || element.nodeType !== 1) {
-      return element;
-    }
-    if (element.addEventListener) {
-      element.addEventListener(method, func, false);
-    } else if (element.attachEvent) {
-      element.attachEvent("on" + method, func);
-    }
-    return element;
-  };
-  /**
- * Remove an event listener from a DOM element (because IE<9 sucks).
- *
- * @returns The element.
- * @private
- */
-  var _removeEventHandler = function(element, method, func) {
-    if (!element || element.nodeType !== 1) {
-      return element;
-    }
-    if (element.removeEventListener) {
-      element.removeEventListener(method, func, false);
-    } else if (element.detachEvent) {
-      element.detachEvent("on" + method, func);
-    }
-    return element;
-  };
-  /**
- * Add `mouseover`, `mousedown`, `mouseup`, and `mouseout` handler functions for a clipped element.
+ * Add a `mouseover` handler function for a clipped element.
  *
  * @returns `undefined`
  * @private
@@ -1915,62 +2113,38 @@
     if (!(element && element.nodeType === 1)) {
       return;
     }
-    var _elementMouseOver, _elementMouseDown, _elementMouseUp, _elementMouseOut;
-    _elementMouseDown = function() {
-      _addClass(element, _globalConfig.activeClass);
-    };
-    _elementMouseUp = function() {
-      _removeClass(element, _globalConfig.activeClass);
-    };
-    _elementMouseOut = function(event) {
-      if (!event) {
-        event = _window.event;
-      }
-      if (!event) {
+    var _suppressMouseEvents = function(event) {
+      if (!(event || (event = _window.event))) {
         return;
       }
-      var relTarget = event.relatedTarget || event.toElement || null;
-      if (!(relTarget && relTarget.nodeType === 1)) {
-        return;
+      if (event._source !== "js") {
+        event.stopImmediatePropagation();
+        event.preventDefault();
       }
-      var htmlBridge;
-      if (_flashState.bridge != null && (relTarget === _flashState.bridge || (htmlBridge = _getHtmlBridge(_flashState.bridge)) && relTarget === htmlBridge)) {
-        return;
-      }
-      ZeroClipboard.deactivate();
-      _removeEventHandler(element, "mouseup", _elementMouseUp);
-      _removeEventHandler(element, "mousedown", _elementMouseDown);
-      _removeEventHandler(element, "mouseout", _elementMouseOut);
-      ZeroClipboard.off("mouseup", _elementMouseUp);
-      ZeroClipboard.off("mousedown", _elementMouseDown);
-      ZeroClipboard.off("mouseout", _elementMouseOut);
+      delete event._source;
     };
-    _elementMouseOver = function(event) {
-      if (!event) {
-        event = _window.event;
-      }
-      if (!event) {
+    var _elementMouseOver = function(event) {
+      if (!(event || (event = _window.event))) {
         return;
       }
-      ZeroClipboard.activate(element);
-      _addEventHandler(element, "mouseout", _elementMouseOut);
-      _addEventHandler(element, "mousedown", _elementMouseDown);
-      _addEventHandler(element, "mouseup", _elementMouseUp);
-      ZeroClipboard.on("mouseout", _elementMouseOut);
-      ZeroClipboard.on("mousedown", _elementMouseDown);
-      ZeroClipboard.on("mouseup", _elementMouseUp);
+      _suppressMouseEvents(event);
+      ZeroClipboard.focus(element);
     };
-    _addEventHandler(element, "mouseover", _elementMouseOver);
-    ZeroClipboard.on("mouseover", _elementMouseOver);
+    element.addEventListener("mouseover", _elementMouseOver, false);
+    element.addEventListener("mouseout", _suppressMouseEvents, false);
+    element.addEventListener("mouseenter", _suppressMouseEvents, false);
+    element.addEventListener("mouseleave", _suppressMouseEvents, false);
+    element.addEventListener("mousemove", _suppressMouseEvents, false);
     _mouseHandlers[element.zcClippingId] = {
       mouseover: _elementMouseOver,
-      mouseout: _elementMouseOut,
-      mousedown: _elementMouseDown,
-      mouseup: _elementMouseUp
+      mouseout: _suppressMouseEvents,
+      mouseenter: _suppressMouseEvents,
+      mouseleave: _suppressMouseEvents,
+      mousemove: _suppressMouseEvents
     };
   };
   /**
- * Remove `mouseover`, `mousedown`, `mouseup`, and `mouseout` handler functions for a clipped element.
+ * Remove a `mouseover` handler function for a clipped element.
  *
  * @returns `undefined`
  * @private
@@ -1983,22 +2157,14 @@
     if (!(typeof mouseHandlers === "object" && mouseHandlers)) {
       return;
     }
-    if (typeof mouseHandlers.mouseup === "function") {
-      _removeEventHandler(element, "mouseup", mouseHandlers.mouseup);
+    var key, val, mouseEvents = [ "move", "leave", "enter", "out", "over" ];
+    for (var i = 0, len = mouseEvents.length; i < len; i++) {
+      key = "mouse" + mouseEvents[i];
+      val = mouseHandlers[key];
+      if (typeof val === "function") {
+        element.removeEventListener(key, val, false);
+      }
     }
-    if (typeof mouseHandlers.mousedown === "function") {
-      _removeEventHandler(element, "mousedown", mouseHandlers.mousedown);
-    }
-    if (typeof mouseHandlers.mouseout === "function") {
-      _removeEventHandler(element, "mouseout", mouseHandlers.mouseout);
-    }
-    if (typeof mouseHandlers.mouseover === "function") {
-      _removeEventHandler(element, "mouseover", mouseHandlers.mouseover);
-    }
-    ZeroClipboard.off("mouseup", mouseHandlers.mouseup);
-    ZeroClipboard.off("mousedown", mouseHandlers.mousedown);
-    ZeroClipboard.off("mouseout", mouseHandlers.mouseout);
-    ZeroClipboard.off("mouseover", mouseHandlers.mouseover);
     delete _mouseHandlers[element.zcClippingId];
   };
   /**
@@ -2125,6 +2291,15 @@
     ZeroClipboard.clearData.apply(this, _args(arguments));
     return this;
   };
+  /**
+ * Gets a copy of the pending data to inject into the clipboard.
+ * If no `format` is provided, a copy of ALL pending data formats will be returned.
+ *
+ * @returns `String` or `Object`
+ */
+  ZeroClipboard.prototype.getData = function() {
+    return ZeroClipboard.getData.apply(this, _args(arguments));
+  };
   if (typeof define === "function" && define.amd) {
     define(function() {
       return ZeroClipboard;
@@ -2135,5 +2310,5 @@
     window.ZeroClipboard = ZeroClipboard;
   }
 })(function() {
-  return this;
+  return this || window;
 }());
