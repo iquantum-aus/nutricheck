@@ -29,7 +29,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<?php
 		if($this->params['controller'] == "answers" && $this->params['action'] == "report_print") {
 			?>
-				<title>Nutricheck - <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?> - <?php echo  time(); ?></title>
+				<title>Nutricheck - <?php echo $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name']; ?> - <?php echo date("M. d, Y", $completion_time); ?></title>
 			<?php 
 		} else {
 			?>

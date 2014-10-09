@@ -14,7 +14,6 @@
 	<body>
 
 		<?php echo $this->Form->create('User', array('action' => 'login', 'class'=>'form-horizontal')); ?>
-		
 			<div class="login-container">
 				
 				<div class="page-header">
@@ -141,7 +140,7 @@
 	}
 
 	.form-box button.login{
-		margin-top:15px;
+		margin-top:40px;
 		padding: 10px 20px;
 	}
 

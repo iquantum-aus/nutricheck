@@ -1,3 +1,102 @@
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+<style>	
+	#UserEditForm input[type="password"],#UserEditForm input[type="text"]{
+		position: relative;
+		z-index: 9;
+		border: 1px solid #ccc;
+		background: transparent;
+	}
+	
+	#UserEditForm input[type="password"]:focus,#UserEditForm input[type="text"]:focus{
+		outline:0;
+	}
+	
+	#UserEditForm{
+		margin: 0 auto;
+		position: relative;
+		margin-bottom:60px;
+	}
+	
+	.strength_meter {
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: 35px;
+		z-index: -0;
+		border-radius:5px;
+	}
+	
+	.button_strength {
+		text-decoration: none;
+		color: #FFF;
+		font-size: 13px;
+		display: none;
+	}
+	
+	.strength_meter div {
+		width:0%;
+		height: 35px;
+		text-align: right;
+		color: #000;
+		line-height: 40px;
+		-webkit-transition: all .3s ease-in-out;
+		-moz-transition: all .3s ease-in-out;
+		-o-transition: all .3s ease-in-out;
+		-ms-transition: all .3s ease-in-out;
+		transition: all .3s ease-in-out;
+		padding-right: 12px;
+		border-radius:5px;
+	}
+	
+	.strength_meter div p{
+		position: absolute;
+		top: -2px;
+		right: 20px;
+		color: #999;
+		font-size: 13px;
+	}
+
+	.veryweak{
+		background-color: #FFA0A0;
+		border-color: #F04040!important;
+		width:25%!important;
+	}
+	
+	.weak {
+		background-color: #FFB78C;
+		border-color: #FF853C!important;
+		width:50%!important;
+	}
+	
+	.medium{
+		background-color: #FFEC8B;
+		border-color: #FC0!important;
+		width:75%!important;
+	}
+	
+	.strong{
+		background-color: #C3FF88;
+		border-color: #8DFF1C!important;
+		width:100%!important;
+	}
+	
+	h1{
+		color:white;
+		font-size:50px;
+		text-align:center;
+		padding-top:30px;
+		margin-bottom:20px;
+	}
+	
+	h1 span{
+		font-weight:bold;
+		color:white;
+		opacity:.3;
+	}
+</style>
+
 <?php 
 	$user_info = $this->Session->read('Auth.User'); 
 	$birthday = explode("-", $this->request->data['UserProfile']['birthday']);
@@ -168,8 +267,14 @@
 				<?php echo $this->Form->input('User.old_email', array('type' => "hidden", "value" => $this->request->data['User']['email'])); ?>
 			</div>
 			
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('password', array('div' => false, 'placeholder' => 'Password')); ?></div>
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('password2', array('div' => false, 'type' =>'password', 'placeholder' => "Repeat Password")); ?></div>
+			<div class="left span12 inputHolder">
+				<label for="UserPassword">Password</label>
+				<div style="position: relative; float: left; width: 75%; clear: none;">
+					<?php echo $this->Form->input('User.password', array('div' => false, 'placeholder' => 'Password', 'required' => false, 'label' => false, 'style' => "width: 100%")); ?>
+				</div>
+			</div>
+			
+			<div class="left span12 inputHolder"><?php echo $this->Form->input('User.password2', array('div' => false, 'type' =>'password', 'placeholder' => "Repeat Password")); ?></div>
 		
 			<div class="left span12">
 				<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
@@ -180,8 +285,19 @@
 <?php echo $this->Form->end();?>
 </div>
 
+<script type="text/javascript" src="/js/strength.js"></script>
+<script type="text/javascript" src="/js/js.js"></script>
+
 <script>
 	$(document).ready( function () {
+		
+		$('#UserPassword').strength({
+			strengthClass: 'strength',
+			strengthMeterClass: 'strength_meter',
+			strengthButtonClass: 'button_strength',
+			strengthButtonText: 'Show Password',
+			strengthButtonTextToggle: 'Hide Password'
+		});
 		
 		$( "#datepicker" ).datepicker();
 		
@@ -255,6 +371,18 @@
 				if(user_password !== user_password2) {
 					alert('Passwords mismatch');
 					return false;
+				} else {
+					var strenghtClass = $('.strength_meter').children('div').attr('class');
+					console.log(strenghtClass);
+					if($('.strength_meter').children('div').hasClass("medium") || $('.strength_meter').children('div').hasClass("strong")) {
+						if($('#UserPassword').val().length < 9) {
+							alert('You need to have at least 9 characters for your password');
+							return false;
+						}
+					} else {
+						alert("Your password needs to be stronger than that");
+						return false;
+					}
 				}
 			}
 			
@@ -303,3 +431,4 @@
 		display: none;
 	}
 </style>
+

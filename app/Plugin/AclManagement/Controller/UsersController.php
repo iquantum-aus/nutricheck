@@ -62,8 +62,10 @@ class UsersController extends AclManagementAppController {
      */
 	public function login() {
 		
-		$this->layout = "ajax";
+		session_destroy();
+		unset($_COOKIE);
 		
+		$this->layout = "ajax";
 		if ($this->request->is('post')) {
 			
 			// ----------------------------------------------------- hack for loging in using username --------------------------------------------------- //
