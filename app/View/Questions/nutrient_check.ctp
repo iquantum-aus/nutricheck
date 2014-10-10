@@ -35,7 +35,7 @@
 				
 				<?php if(!empty($method)) { ?>
 					<div class="left">
-						<form style="min-width: 680px;" method="POST" action="<?php echo strtok($_SERVER["REQUEST_URI"],'?'); ?>">
+						<form style="min-width: 700px;" method="POST" action="<?php echo strtok($_SERVER["REQUEST_URI"],'?'); ?>">
 							<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>
 							<input type="hidden" name="data[Factors][user_id]"  value="<?php echo $user_id; ?>">
 							<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
@@ -204,6 +204,23 @@
 				</div>
 			</div>
 		<?php } ?>
+		
+		<div class="hidden">
+			<a id="privacyPolicyTrigger" href="#privacyConfirmationForm" class="fancybox"></a>
+			<div id="privacyConfirmationForm" style="width: 850px; padding: 20px;">
+				<form>
+					<?php Configure::load('general'); ?>
+					<?php echo Configure::read('General.privacy_policy'); ?>
+					
+					<div class="confirmarion_holder" style="width: 370px; margin: 35px auto 0px; text-align: center;">
+						<input type="checkbox" name="privacyPolicy_confirmation" value="1" id="privacyPolicyConfirmation">
+						<label style="font-weight: bold;">Click to confirm that you agree to the Privacy Policy</label>
+						
+						<input type="button" class="btn btn-success" value="AGREE" style="margin-top: 15px;" id="privacyPolicyButton">
+					</div>
+				</form>
+			</div>
+		</div>
 
 		<?php /*
 		<div class="actions">
@@ -242,10 +259,12 @@
 
 			$(document).ready(function() {
 				
+				// nutricheckAnalysis
+				// privacyPolicyConfirmation
+				
 				$('.questionPaginator:first-child').addClass('activePage');
 				
 				$('#nutricheckAnalysis').submit( function () {
-					
 					var question_count = "<?php echo count($raw_questions); ?>";
 					var checked_per_line = 0;	
 					
@@ -265,11 +284,37 @@
 						}
 					});
 					
-					console.log(question_count+" - "+checked_per_line);
+					// console.log(question_count+" - "+checked_per_line);
 					
 					if(question_count != checked_per_line) {
 						alert('There are unanswered items in the form. Please address them before you continue');
 						return false;
+					}
+					
+					<?php if($iscreateAnswer == 1) { ?>
+						// do nothing here...
+					<?php } else { ?>
+						$('#privacyPolicyTrigger').click();
+					<?php } ?>
+					
+					// will be generated id the confirm privacy policy is clicked
+					if($(this).find('#privacyConfirmation').length == 0) {
+						return false;
+					}
+				});
+				
+				$('#privacyPolicyButton').click( function () {
+					if($('#privacyPolicyConfirmation').is(":checked")) {
+						<?php if($iscreateAnswer == 1) { ?>
+							$('#nutricheckAnalysis').prepend('<input id="privacyConfirmation" type="hidden" value="1" name="data[PerformedCheck][confirmation]">');
+							$('#verifyTrigger').click();
+						<?php } else { ?>				
+							$('#nutricheckAnalysis').prepend('<input id="privacyConfirmation" type="hidden" value="1" name="data[PerformedCheck][confirmation]">');
+							$('#nutricheckAnalysis').submit();
+							$.fancybox.close();
+						<?php } ?>
+					} else {
+						alert('Please check the Privacy Policy confirmation to continue');
 					}
 				});
 				
@@ -295,13 +340,13 @@
 							}
 						});
 						
-						console.log(question_count+" - "+checked_per_line);
+						// console.log(question_count+" - "+checked_per_line);
 						
 						if(question_count != checked_per_line) {
 							alert('There are unanswered items in the form. Please address them before you continue');
 							return false;
 						} else {
-							$('#verifyTrigger').click();
+							$('#privacyPolicyTrigger').click();
 						}
 					});
 					
@@ -334,7 +379,7 @@
 									$('#logoutToggle').remove();
 								},
 								type:'post',
-								url:"../questions/verify_password/"
+								url:"http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/verify_password/"
 							});
 							
 						}

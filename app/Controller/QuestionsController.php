@@ -284,6 +284,7 @@ class QuestionsController extends AppController {
 		$this->loadModel('SelectedFactorLog');
 		$this->loadModel('UserProfile');
 		
+		// $this->Session->write('isCreateAnswer', 1);
 		
 		if(isset($_GET['hash_value'])) {
 			
@@ -375,8 +376,7 @@ class QuestionsController extends AppController {
 		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 			$performed_check_data = array();
 			$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
-			$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
-			
+			$performed_check_data['PerformedCheck']['isComplete'] = 0;
 			$performed_check_data['PerformedCheck']['url'] = $full_url;
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
@@ -463,7 +463,7 @@ class QuestionsController extends AppController {
 				/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 					$performed_check_data = array();
 					$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
-					$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
+					$performed_check_data['PerformedCheck']['isComplete'] = 0;
 					$performed_check_data['PerformedCheck']['url'] = $full_url;
 					
 					$performed_check_data['PerformedCheck']['user_id'] = $this->request->data['User']['id'];
@@ -612,7 +612,8 @@ class QuestionsController extends AppController {
 					$date = date('Y-m-d');
 					$datetime = date("Y-m-d H:i:s");
 					$url = $this->request->data['PerformedCheck']['url'];
-					$sql_query = "INSERT INTO `performed_checks` (date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ($date, 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
+					$performed_check_confirmation = $this->request->data['PerformedCheck']['confirmation'];
+					$sql_query = "INSERT INTO `performed_checks` (confirmation, date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ($performed_check_confirmation, $date, 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
 					$this->PerformedCheck->query($sql_query);
 					
 				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
