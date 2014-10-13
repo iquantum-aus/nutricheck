@@ -116,8 +116,19 @@
 		</p>
 		</div>
 	</div>
+	<?php } else if($this->Session->read('Auth.User.group_id') == 1) { ?>
+	<div style="min-height: 374px; width: 25%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+		<div class="textBelowsmall">Tutorial Videos</div>				
+		<div class="textBelowcontent">		
+		<p>		
+			<ul>
+				<li><a href="https://vimeo.com/107668582" target="_blank">Admin adding a pharmacy</a></li>
+			</ul>
+		</p>
+		</div>
+	</div>
 	<?php } else { ?>
-	
 	<div style="min-height: 0; width: 30%;margin:0 0 40px 0;" class="dashboardbox mason">
 			<img src="../../img/happypeople.jpg" class="round5" style="width:100%;height:100%;">
 	</div>
