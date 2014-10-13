@@ -134,7 +134,7 @@ class User extends AclManagementAppModel {
         return array('model' => 'Group', 'foreign_key' => $user['User']['group_id']);
     }
 
-/*    public function beforeValidate() {
+	/* public function beforeValidate() {
         if (isset($this->data['User']['id'])) {
             $this->validate['password']['allowEmpty'] = true;
         }
@@ -142,6 +142,99 @@ class User extends AclManagementAppModel {
         return true;
     }*/
 
+    public function get_last_access_time($ip_address) {
+		$existence_attempt_query = "SELECT datetime FROM nonexisting_user_login_logs WHERE ip_address = '".$ip_address."' ORDER BY id DESC LIMIT 1";
+		$result = $this->query($existence_attempt_query);
+		return $result[0]['nonexisting_user_login_logs']['datetime'];
+	}
+	
+    public function existence_attempt($data) {
+		$existence_attempt_query = "SELECT * FROM existing_user_login_logs WHERE user_id = '".$data['user_id']."'";
+		$result = $this->query($existence_attempt_query);
+		
+		return count($result);
+	}
+	
+    public function nonExistence_attempt($data) {
+		$non_existence_attempt_query = "SELECT * FROM nonexisting_user_login_logs WHERE ip_address = '".$data['ip_address']."'";
+		$result = $this->query($non_existence_attempt_query);
+		
+		return count($result);
+	}
+	
+    public function nonexisting_user_login_logs($data) {
+		$columns = "";
+		$values = "";
+		
+		$dataCount = count($data);
+		$inc = 1;
+		foreach($data as $column => $value) {
+			
+			if($inc < $dataCount) {
+				$columns .= $column.", ";
+				$values .= "'".$value."', ";
+			} else {
+				$columns .= $column;
+				$values .= "'".$value."'";
+			}
+			
+			$inc++;
+		}
+		
+		$insertNonexistence = "INSERT INTO nonexisting_user_login_logs (".$columns.") VALUES (".$values.")";
+		$this->query($insertNonexistence);
+	}
+	
+    public function existing_user_login_logs($data) {
+		$columns = "";
+		$values = "";
+		
+		$dataCount = count($data);
+		$inc = 1;
+		foreach($data as $column => $value) {
+			
+			if($inc < $dataCount) {
+				$columns .= $column.", ";
+				$values .= "'".$value."', ";
+			} else {
+				$columns .= $column;
+				$values .= "'".$value."'";
+			}
+			
+			$inc++;
+		}
+		
+		$insertNonexistence = "INSERT INTO existing_user_login_logs (".$columns.") VALUES (".$values.")";
+		$this->query($insertNonexistence);
+	}
+	
+    public function remove_existence_attempt_logs($user_id) {
+		$query = "DELETE FROM existing_user_login_logs WHERE user_id = '".$user_id."'";
+		$this->query($query);
+	}
+	
+    public function remove_nonexistence_attempt_logs($ip_address) {
+		$query = "DELETE FROM nonexisting_user_login_logs WHERE ip_address = '".$ip_address."'";
+		$this->query($query);
+	}
+	
+    public function get_id($username) {
+		$query_existence = "SELECT * FROM users WHERE username= '".$username."' OR email= '".$username."'";
+		$user_existence = $this->query($query_existence);
+		return $user_existence[0]['users']['id'];
+	}
+	
+    public function user_exist($username) {
+		$query_existence = "SELECT * FROM users WHERE username= '".$username."' OR email= '".$username."'";
+		$user_existence = $this->query($query_existence);
+		
+		if(!empty($user_existence)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
     public function beforeSave($options = array()) {
         App::uses('Security', 'Utility');
         App::uses('String', 'Utility');

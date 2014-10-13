@@ -61,15 +61,87 @@ class UsersController extends AclManagementAppController {
      * @return void
      */
 	public function login() {
-		
+		Configure::load('general');
 		session_destroy();
 		unset($_COOKIE);
+		
+		$maximum_attempt = 3;
+		$allowed_interval = 15;
+		$valid_maximum_attempt = 20;
 		
 		$this->layout = "ajax";
 		if ($this->request->is('post')) {
 			
 			// ----------------------------------------------------- hack for loging in using username --------------------------------------------------- //
 				
+				$user_existence = $this->User->user_exist($this->request->data['User']['username']);
+				$user_existence_id = $this->User->get_id($this->request->data['User']['username']);
+				
+				$data = array(
+					"user_id" => $user_existence_id,
+					"ip_address" => $_SERVER['REMOTE_ADDR'],
+					"datetime" => date("Y-m-d H:i:s")
+				);
+				
+				$existence_performedCheckCount = 0;
+				$nonExistence_performedCheckCount = 0;
+				
+				
+				
+				############################################ HANDLING OF LOGIN MULTIPLE ATTEMTPS ######################################
+				
+					if(!empty($user_existence_id)) {
+						$existence_performedCheckCount = $this->User->existence_attempt($data);
+					} else {
+						$nonExistence_performedCheckCount = $this->User->nonExistence_attempt($data);
+					}
+					
+					
+					// ------------------------------------- if account is valid but credentials is incorrect + when t reached the 20x allowed attemps ---------------------------------------- //
+					$existence_performedCheckCount = $valid_maximum_attempt;
+					if($existence_performedCheckCount >= $valid_maximum_attempt) {
+						$message = "The user with the ID# ".$user_existence_id." has been deactivated due to multiple attemps to login the account";
+						
+						//disabling of user
+						$user_deactivation = array();
+						$user_deactivation['User']['status'] = 0;
+						$user_deactivation['User']['id'] = $user_existence_id;
+						$this->User->save($user_deactivation);
+						
+						$to = Configure::read('Admin.email');
+						$subject = 'The user has been deactivated';
+
+						$headers = "From: info@nutricheck.com.au\r\n";
+						$headers .= "MIME-Version: 1.0\r\n";
+						$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+						
+						mail($to, $subject, $message, $headers);
+						
+						$this->User->remove_existence_attempt_logs($user_existence_id);
+					}
+					// ------------------------------------- if account is valid but credentials is incorrect + when t reached the 20x allowed attemps ---------------------------------------- //
+					
+					
+					// ------------------------------------------------------ if account is non existing and it already reaches the 3x attempts -------------------------------------------------------- //
+					if($nonExistence_performedCheckCount == $maximum_attempt) {
+						$last_access_time = strtotime($this->User->get_last_access_time($_SERVER['REMOTE_ADDR']));
+						$current_datetime = strtotime(date("Y-m-d H:i:s"));
+						
+						$time_difference = round(($current_datetime - $last_access_time)/60);
+						$remaining = $allowed_interval - $time_difference;
+						
+						if($remaining <= 0) {
+							$this->User->remove_nonexistence_attempt_logs($_SERVER['REMOTE_ADDR']);
+						} else {
+							$remaining_errorMessage =  "Please try again after ".$remaining." minutes";
+						}
+					}
+					// ------------------------------------------------------ if account is non existing and it already reaches the 3x attempts -------------------------------------------------------- //
+					
+				
+				############################################ HANDLING OF LOGIN MULTIPLE ATTEMTPS ######################################
+				
+
 				$this->User->unbindModelAll();
 				// $user_existence_username = $this->User->find('first', array('conditions' => array('username' => $this->request->data['User']['email'], 'password' => $this->Auth->password($this->request->data['User']['password']))));
 				$user_existence_email = $this->User->find('first', array('conditions' => array('email' => $this->request->data['User']['username'], 'password' => $this->Auth->password($this->request->data['User']['password']))));
@@ -91,13 +163,32 @@ class UsersController extends AclManagementAppController {
 				} else {
 					return $this->redirect($this->Auth->redirect());
 				}
+			} else {
+				########################################### THIS WILL ONLY HAPPEN IF IT FAILS TO LOGIN ######################################
+				
+				// if login fails and account is valid
+				if($user_existence) {
+					$this->User->existing_user_login_logs($data);
+					
+				// if login fails and account is invalid or doesnt exist - will only log 3x times/ the last will be the determining factor to alow attempt again
+				} else {
+					if($nonExistence_performedCheckCount != $maximum_attempt) {
+						$this->User->nonexisting_user_login_logs($data);
+					}
+				}
+				
+				########################################### THIS WILL ONLY HAPPEN IF IT FAILS TO LOGIN ######################################
 			}
 			
 			if(isset($_GET['source']) && ($_GET['source'] == "remote")) {
 				echo "2";
 				exit();
 			} else {
-				$this->Session->setFlash(__('Invalid username or password, try again'), 'alert/error');
+				if(isset($remaining_errorMessage)) {
+					$this->Session->setFlash(__($remaining_errorMessage));
+				} else {
+					$this->Session->setFlash(__('Invalid username or password, try again'));
+				}
 			}
 		}
 	}
