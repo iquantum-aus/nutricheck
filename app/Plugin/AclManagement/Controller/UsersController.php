@@ -21,7 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -60,6 +60,35 @@ class UsersController extends AclManagementAppController {
      *
      * @return void
      */
+	public function privacy_policy() {
+		$this->layout = "public_dashboard";
+		$behalfUserId = $this->Session->read('behalfUserId');
+		
+		if ($this->request->is('post')) {			
+			if(isset($this->request->data['privacyPolicy_confirmation'])) {
+				$privacy_confirmation = array();
+				$privacy_confirmation['User']['id'] = $behalfUserId;
+				$privacy_confirmation['User']['confirmed_PrivacyPolicy'] = 1;
+				$this->User->save($privacy_confirmation);
+				
+				if(isset($_GET['factors']) && $_GET['factors'] == "true") {
+					if(isset($_GET['selected_factors']) && !empty($_GET['selected_factors'])) {
+						$url_redirection = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?factors=".$_GET['selected_factors'];
+					} else {
+						$url_redirection = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors";
+					}
+				} else {
+					$url_redirection = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check";
+				}
+				
+				$this->redirect($url_redirection);
+				
+			} else {
+				$this->Session->setFlash('You need to confirm the Privacy Policy to Continue');
+			}
+		}
+	}
+	
 	public function login() {
 		Configure::load('general');
 		session_destroy();
@@ -87,7 +116,6 @@ class UsersController extends AclManagementAppController {
 				$nonExistence_performedCheckCount = 0;
 				
 				
-				
 				############################################ HANDLING OF LOGIN MULTIPLE ATTEMTPS ######################################
 				
 					if(!empty($user_existence_id)) {
@@ -98,7 +126,7 @@ class UsersController extends AclManagementAppController {
 					
 					
 					// ------------------------------------- if account is valid but credentials is incorrect + when t reached the 20x allowed attemps ---------------------------------------- //
-					$existence_performedCheckCount = $valid_maximum_attempt;
+					// $existence_performedCheckCount = $valid_maximum_attempt;
 					if($existence_performedCheckCount >= $valid_maximum_attempt) {
 						$message = "The user with the ID# ".$user_existence_id." has been deactivated due to multiple attemps to login the account";
 						
@@ -578,7 +606,7 @@ class UsersController extends AclManagementAppController {
         }
     }
 	
-	 /* CUSTOM CODE for allowing/disallwing users to answer the nutrient check */
+	/* CUSTOM CODE for allowing/disallwing users to answer the nutrient check */
     public function toggle_can_answer($user_id, $can_answer) {
         App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		Configure::load('general');
@@ -586,6 +614,14 @@ class UsersController extends AclManagementAppController {
 		$this->layout = "ajax";
         $can_answer = ($can_answer) ? 0 : 1;
         $this->set(compact('user_id', 'can_answer'));
+		
+        if ($user_id) {
+            $data = array();
+			$data['User']['id'] = $user_id;
+			$data['User']['can_answer'] = $can_answer;
+			$data['User']['confirmed_PrivacyPolicy'] = 0;			
+			$this->User->query("UPDATE users SET can_answer = '".$can_answer."', confirmed_PrivacyPolicy = '0' WHERE id = '".$user_id."'");
+        }
 		
 		if($can_answer == 1) {
 			$user_info = $this->User->findById($user_id);
@@ -621,11 +657,6 @@ class UsersController extends AclManagementAppController {
 				return $mail->ErrorInfo; 
 			}
 		}
-		
-        if ($user_id) {
-            $data['User'] = array('id'=>$user_id, 'can_answer'=>$can_answer);
-            $allowed = $this->User->saveAll($data["User"], array('validate'=>false));
-        }
 		
 		if(isset($_GET['source'])) {
 			echo "1";

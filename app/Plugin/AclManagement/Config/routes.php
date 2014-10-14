@@ -2,6 +2,7 @@
 //list user
 Router::connect('/admin/users', array('plugin' => 'acl_management', 'controller' => 'users', 'action'=>'index'));
 //register
+Router::connect('/users/privacy_policy', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'privacy_policy'));
 Router::connect('/users/delete_report/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'delete_report'));
 Router::connect('/users/register', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'register'));
 Router::connect('/users/confirm_register', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'confirm_register'));

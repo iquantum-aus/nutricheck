@@ -284,7 +284,6 @@ class QuestionsController extends AppController {
 		$this->loadModel('SelectedFactorLog');
 		$this->loadModel('UserProfile');
 		
-		// $this->Session->write('isCreateAnswer', 1);
 		
 		if(isset($_GET['hash_value'])) {
 			
@@ -306,6 +305,7 @@ class QuestionsController extends AppController {
 		$user_info = $this->Session->read('Auth.User');
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];		
+		$performingUser = $this->Question->User->findById($behalfUserId);
 		
 		// ------------------- layout changes depending if the source is directly to the system or if it's being accessed remotely -------------------------- //
 
@@ -376,7 +376,8 @@ class QuestionsController extends AppController {
 		/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 			$performed_check_data = array();
 			$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
-			$performed_check_data['PerformedCheck']['isComplete'] = 0;
+			$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
+			
 			$performed_check_data['PerformedCheck']['url'] = $full_url;
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
@@ -417,7 +418,9 @@ class QuestionsController extends AppController {
 				'limit' => -1
 			);
 		}
-
+		
+		
+		
 		if($this->request->is('post')) {
 			
 			$completion_time = time();
@@ -463,7 +466,7 @@ class QuestionsController extends AppController {
 				/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 					$performed_check_data = array();
 					$performed_check_data['PerformedCheck']['date'] = date('Y-m-d');
-					$performed_check_data['PerformedCheck']['isComplete'] = 0;
+					$performed_check_data['PerformedCheck']['isCOmplete'] = 0;
 					$performed_check_data['PerformedCheck']['url'] = $full_url;
 					
 					$performed_check_data['PerformedCheck']['user_id'] = $this->request->data['User']['id'];
@@ -612,8 +615,7 @@ class QuestionsController extends AppController {
 					$date = date('Y-m-d');
 					$datetime = date("Y-m-d H:i:s");
 					$url = $this->request->data['PerformedCheck']['url'];
-					$performed_check_confirmation = $this->request->data['PerformedCheck']['confirmation'];
-					$sql_query = "INSERT INTO `performed_checks` (confirmation, date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ($performed_check_confirmation, $date, 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
+					$sql_query = "INSERT INTO `performed_checks` (date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ($date, 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
 					$this->PerformedCheck->query($sql_query);
 					
 				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
@@ -735,6 +737,27 @@ class QuestionsController extends AppController {
 		$this->set('method', $method);
 		$this->set('users_list', $formatted_user_list);
 		$this->set('questions', $questions);
+		
+		if(!$performingUser['User']['confirmed_PrivacyPolicy']) {
+			if(!empty($method)) {
+				if(!empty($selected_factors)) {
+					$selected_factors = implode(",", $selected_factors);
+					$url_redirection = "http://".$_SERVER['SERVER_NAME']."/users/privacy_policy/?factors=true&selected_factors=".$selected_factors;
+					$this->redirect($url_redirection);
+				} else {
+					$url_redirection = "http://".$_SERVER['SERVER_NAME']."/users/privacy_policy/?factors=true";
+					$this->redirect($url_redirection);
+				}
+			} else {
+				$this->redirect(
+					array(
+						"plugin" => "acl_management",
+						"controller" => "users",
+						"action" => "privacy_policy"
+					)
+				);
+			}
+		}
 	}
 	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
