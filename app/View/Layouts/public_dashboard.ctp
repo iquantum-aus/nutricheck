@@ -1,5 +1,9 @@
 <?php
 	$group_id = $this->Session->read('Auth.User.group_id');
+	$IE6 = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 6')) ? true : false;
+	$IE7 = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 7')) ? true : false;
+	$IE8 = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 8')) ? true : false;
+	$IE9 = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 9')) ? true : false;
 ?>
 <?php
 /**
@@ -26,16 +30,17 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<head>
+<head>	
 	<?php echo $this->Html->charset(); ?>
 	<title>Identify - Enhance - Supervise</title>
 	
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	
 	<?php
+		
 		echo $this->Html->meta(array("name"=>"viewport","content"=>"width=device-width,  initial-scale=1.0"));
 		echo $this->Html->meta('icon');
-
+		
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
 		// docs.css is only for this exapmple, remove for app dev
@@ -47,7 +52,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('jquery.fancybox');
 		echo $this->Html->css('jquery-ui-1.10.4.min');
 		echo $this->Html->css('datepicker');
-		echo $this->Html->css('pace');
+		
+		if (($IE6 == 1) || ($IE7 == 1) || ($IE8 == 1) || ($IE9 == 1)) {
+			// do nothing
+		} else {
+			echo $this->Html->css('pace');
+		}
+		
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		
@@ -126,7 +137,13 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('jquery-ui-1.10.4.min');
 		echo $this->Html->script('ckeditor/ckeditor');
 		echo $this->Html->script('bootstrap-datepicker');
-		echo $this->Html->script('pace');
+		
+		if (($IE6 == 1) || ($IE7 == 1) || ($IE8 == 1) || ($IE9 == 1)) {
+			// do nothing
+		} else {
+			echo $this->Html->script('pace');
+		}
+		
 		echo $this->fetch('script');
  	?>
 	

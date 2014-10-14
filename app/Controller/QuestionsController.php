@@ -305,7 +305,12 @@ class QuestionsController extends AppController {
 		$user_info = $this->Session->read('Auth.User');
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];		
-		$performingUser = $this->Question->User->findById($behalfUserId);
+		
+		if($this->Session->read('Auth.User.group_id') == 2) {
+			$performingUser = $this->Question->User->findById($behalfUserId);
+		} else {
+			$performingUser = $this->Question->User->findById($this->Session->read('Auth.User.id'));
+		}
 		
 		// ------------------- layout changes depending if the source is directly to the system or if it's being accessed remotely -------------------------- //
 

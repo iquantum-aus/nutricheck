@@ -63,13 +63,23 @@ class UsersController extends AclManagementAppController {
 	public function privacy_policy() {
 		$this->layout = "public_dashboard";
 		$behalfUserId = $this->Session->read('behalfUserId');
+		$user_group = $this->Session->read('Auth.User.group_id');
 		
 		if ($this->request->is('post')) {			
 			if(isset($this->request->data['privacyPolicy_confirmation'])) {
 				$privacy_confirmation = array();
-				$privacy_confirmation['User']['id'] = $behalfUserId;
+				
+				if($user_group == 2) {
+					$privacy_confirmation['User']['id'] = $behalfUserId;
+				} else {
+					$privacy_confirmation['User']['id'] = $this->Session->read('Auth.User.id');
+				}
+				
 				$privacy_confirmation['User']['confirmed_PrivacyPolicy'] = 1;
 				$this->User->save($privacy_confirmation);
+				
+				//default redirection
+				$url_redirection = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check";
 				
 				if(isset($_GET['factors']) && $_GET['factors'] == "true") {
 					if(isset($_GET['selected_factors']) && !empty($_GET['selected_factors'])) {
@@ -82,7 +92,6 @@ class UsersController extends AclManagementAppController {
 				}
 				
 				$this->redirect($url_redirection);
-				
 			} else {
 				$this->Session->setFlash('You need to confirm the Privacy Policy to Continue');
 			}
@@ -90,6 +99,7 @@ class UsersController extends AclManagementAppController {
 	}
 	
 	public function login() {
+		$deactivation = false;
 		Configure::load('general');
 		session_destroy();
 		unset($_COOKIE);
@@ -105,6 +115,7 @@ class UsersController extends AclManagementAppController {
 				
 				$user_existence = $this->User->user_exist($this->request->data['User']['username']);
 				$user_existence_id = $this->User->get_id($this->request->data['User']['username']);
+				$user_existence_info = $this->User->findById($user_existence_id);
 				
 				$data = array(
 					"user_id" => $user_existence_id,
@@ -146,6 +157,7 @@ class UsersController extends AclManagementAppController {
 						mail($to, $subject, $message, $headers);
 						
 						$this->User->remove_existence_attempt_logs($user_existence_id);
+						$deactivation = true;
 					}
 					// ------------------------------------- if account is valid but credentials is incorrect + when t reached the 20x allowed attemps ---------------------------------------- //
 					
@@ -161,7 +173,7 @@ class UsersController extends AclManagementAppController {
 						if($remaining <= 0) {
 							$this->User->remove_nonexistence_attempt_logs($_SERVER['REMOTE_ADDR']);
 						} else {
-							$remaining_errorMessage =  "Please try again after ".$remaining." minutes";
+							$remaining_errorMessage =  "Please try again after ".$remaining." minute(s)";
 						}
 					}
 					// ------------------------------------------------------ if account is non existing and it already reaches the 3x attempts -------------------------------------------------------- //
@@ -196,9 +208,10 @@ class UsersController extends AclManagementAppController {
 				
 				// if login fails and account is valid
 				if($user_existence) {
-					$this->User->existing_user_login_logs($data);
-					
-				// if login fails and account is invalid or doesnt exist - will only log 3x times/ the last will be the determining factor to alow attempt again
+					if($user_existence_info['User']['status'] == 1) {
+						$this->User->existing_user_login_logs($data);
+					}
+					// if login fails and account is invalid or doesnt exist - will only log 3x times/ the last will be the determining factor to alow attempt again
 				} else {
 					if($nonExistence_performedCheckCount != $maximum_attempt) {
 						$this->User->nonexisting_user_login_logs($data);
@@ -212,10 +225,14 @@ class UsersController extends AclManagementAppController {
 				echo "2";
 				exit();
 			} else {
-				if(isset($remaining_errorMessage)) {
-					$this->Session->setFlash(__($remaining_errorMessage));
-				} else {
-					$this->Session->setFlash(__('Invalid username or password, try again'));
+				if($deactivation) {
+					$this->Session->setFlash(__("This account has been deactivated due to multiple failed attemps. Please contact your administrator"));
+				} else {				
+					if(isset($remaining_errorMessage)) {
+						$this->Session->setFlash(__($remaining_errorMessage));
+					} else {
+						$this->Session->setFlash(__('Invalid username or password, try again'));
+					}
 				}
 			}
 		}
@@ -283,7 +300,7 @@ class UsersController extends AclManagementAppController {
 							'UserProfile.zip LIKE "%'.$search_value.'%"',
 							'UserProfile.gender LIKE "%'.$search_value.'%"'
 						),
-						'and' => array('User.status' => 1, 'User.parent_id' => $user_info['id'])
+						'and' => array('User.parent_id' => $user_info['id'])
 					), 
 					'order' => array('User.first_name' => 'ASC'),
 					'limit' => 10
@@ -302,8 +319,7 @@ class UsersController extends AclManagementAppController {
 							'UserProfile.nationality LIKE "%'.$search_value.'%"',
 							'UserProfile.zip LIKE "%'.$search_value.'%"',
 							'UserProfile.gender LIKE "%'.$search_value.'%"'
-						),
-						'and' => array('User.status' => 1)
+						)
 					), 
 					'order' => array('User.first_name' => 'ASC'),
 					'limit' => 10

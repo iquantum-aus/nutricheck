@@ -1665,6 +1665,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 	text-align: center;
 }
 
+.navbar-inverse .navbar-inner {
+	filter: none !important;
+}
+
 /* ----------------------------------------------------------- BOOTSTRAP ---------------------------------------------------------------- */
 
 
@@ -1937,7 +1941,7 @@ a.fontchangesmall:hover, a.fontchangebig:hover{
 }
 .dashboardbox.buttons{
 	min-height: 374px;
-	width: 27%%;
+	width: 27%;
 	margin:0 0 40px 0;
 	border-left:1px solid #ECE9E6;
 	padding:0 0 0 80px;

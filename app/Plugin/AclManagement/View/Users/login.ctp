@@ -1,4 +1,4 @@
-<html lang="en-US"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<head>
 		
 		<title>Nutricheck</title>		
@@ -57,6 +57,11 @@
 		background: #eee url(http://subtlepatterns.com/patterns/halftone.png);
 	}
 
+	form {
+		width: 100%; 
+		float: left;
+	}
+	
 	.login-container{
 		position: relative;
 		width: 400px;
