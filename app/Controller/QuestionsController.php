@@ -743,24 +743,26 @@ class QuestionsController extends AppController {
 		$this->set('users_list', $formatted_user_list);
 		$this->set('questions', $questions);
 		
-		if(!$performingUser['User']['confirmed_PrivacyPolicy']) {
-			if(!empty($method)) {
-				if(!empty($selected_factors)) {
-					$selected_factors = implode(",", $selected_factors);
-					$url_redirection = "http://".$_SERVER['SERVER_NAME']."/users/privacy_policy/?factors=true&selected_factors=".$selected_factors;
-					$this->redirect($url_redirection);
+		if(!empty($performingUser)) {
+			if(!$performingUser['User']['confirmed_PrivacyPolicy']) {
+				if(!empty($method)) {
+					if(!empty($selected_factors)) {
+						$selected_factors = implode(",", $selected_factors);
+						$url_redirection = "http://".$_SERVER['SERVER_NAME']."/users/privacy_policy/?factors=true&selected_factors=".$selected_factors;
+						$this->redirect($url_redirection);
+					} else {
+						$url_redirection = "http://".$_SERVER['SERVER_NAME']."/users/privacy_policy/?factors=true";
+						$this->redirect($url_redirection);
+					}
 				} else {
-					$url_redirection = "http://".$_SERVER['SERVER_NAME']."/users/privacy_policy/?factors=true";
-					$this->redirect($url_redirection);
+					$this->redirect(
+						array(
+							"plugin" => "acl_management",
+							"controller" => "users",
+							"action" => "privacy_policy"
+						)
+					);
 				}
-			} else {
-				$this->redirect(
-					array(
-						"plugin" => "acl_management",
-						"controller" => "users",
-						"action" => "privacy_policy"
-					)
-				);
 			}
 		}
 	}

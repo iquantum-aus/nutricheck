@@ -320,7 +320,7 @@ class UsersController extends AclManagementAppController {
 							
 							$mail->Subject = "You've been added to the system";
 							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
+							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br>You need to change your password to overwrite the system generated one for your account security.<br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
 							$mail->Body    = $message; 
 							
 							if($mail->Send()) {
