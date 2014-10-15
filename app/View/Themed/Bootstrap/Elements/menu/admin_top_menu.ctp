@@ -77,7 +77,7 @@
 						</li>
 					<?php } ?>					
 					
-					<?php if($group_id != 3) { ?>
+					<?php if($group_id == 1) { ?>
 						<li class="menu">
 							<a class="sb-toggle-submenu"><img src="/img/topmenu_nutriguide.jpg" />Nutritional Guides<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
 							<ul class="sb-submenu">
