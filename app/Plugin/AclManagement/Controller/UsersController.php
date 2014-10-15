@@ -144,6 +144,7 @@ class UsersController extends AclManagementAppController {
 						//disabling of user
 						$user_deactivation = array();
 						$user_deactivation['User']['status'] = 0;
+						$user_deactivation['User']['isDeactivated'] = 1;
 						$user_deactivation['User']['id'] = $user_existence_id;
 						$this->User->save($user_deactivation);
 						
@@ -231,7 +232,11 @@ class UsersController extends AclManagementAppController {
 					if(isset($remaining_errorMessage)) {
 						$this->Session->setFlash(__($remaining_errorMessage));
 					} else {
-						$this->Session->setFlash(__('Invalid username or password, try again'));
+						if(($user_existence_info['User']['isDeactivated'] == 1) && ($user_existence_info['User']['status'] == 0)) {
+							$this->Session->setFlash(__("This account has been deactivated due to multiple failed attemps. Please contact your administrator"));
+						} else {
+							$this->Session->setFlash(__('Invalid username or password, try again'));
+						}
 					}
 				}
 			}
@@ -616,6 +621,16 @@ class UsersController extends AclManagementAppController {
         $this->layout = "ajax";
         $status = ($status) ? 0 : 1;
         $this->set(compact('user_id', 'status'));
+		
+		if ($user_id) {
+            if($status == 1) {
+				$data = array();
+				$data['User']['id'] = $user_id;
+				$data['User']['isDeactivated'] = 0;
+				$this->User->query("UPDATE users SET isDeactivated = 0 WHERE id = '".$user_id."'");
+			}
+        }
+		
         if ($user_id) {
             $data['User'] = array('id'=>$user_id, 'status'=>$status);
             $allowed = $this->User->saveAll($data["User"], array('validate'=>false));
