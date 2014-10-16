@@ -284,6 +284,7 @@ class QuestionsController extends AppController {
 		$this->loadModel('SelectedFactorLog');
 		$this->loadModel('UserProfile');
 		
+		// $this->Session->write('isCreateAnswer', 1);
 		
 		if(isset($_GET['hash_value'])) {
 			

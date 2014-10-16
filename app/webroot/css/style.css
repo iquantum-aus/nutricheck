@@ -1671,6 +1671,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 /* ----------------------------------------------------------- BOOTSTRAP ---------------------------------------------------------------- */
 
+.quickentry_question {
+	display: none;
+}
 
 .chosen-container-single .chosen-single {
 	padding: 5px 0 0 8px !important;
