@@ -42,4 +42,27 @@
 			</li>
 		</ol>
 	";
+	
+	$config['General']['privacy_consent'] = "
+		<h1 class='full left' style='text-align: center;'>PRIVACY CONSENT FORM</h1>
+		<p>&nbsp;</p>
+		<strong>
+			<p>This form is to be completed, given to and signed by or for each individual whose health information or other personal information is being collected for input into the NutriCheck system (and a copy of the signed form retained by you).</p>
+			<p>The form must be signed before entry into the NutriCheck system of any health information or other personal information about the relevant individual.</p>
+			
+			<p><u>Notice to:</u></p>
+			<p>Name of patient/individual: <u>member_name_replace</u></p>
+		</strong>
+
+		<p>You will be providing certain personal information about yourself to medical practice or practitioner who provides this form to you.  This purpose of this form is to seek your consent to entry by the medical practice / practitioner of that information into the NutriCheck computer system, which will then use that information to generate some reports for the medical practice / practitioner.</p>
+		<p>The NutriCheck system is owned by NutriCheck Pty Ltd.  We can be contacted on Telephone 617 3279 8137 or by Email on info@nutricheck.com.au or by post to 961 Blunder Road, Doolandella, Qld. 4077. Australia.</p>
+		<p>Collection of your personal information via the NutriCheck system is solely for the purpose of generating the reports referred to above for your medical practitioner.  We will not use your personal information for any other reason nor disclose the information to any other party whatsoever, other than as required by law or permitted under the Privacy Act 1988 (Cth).</p>
+		<p>If you do not consent to and allow the collection of that information into the NutriCheck system, we cannot generate reports with may assist your medical practitioner.</p>
+		<p>Our privacy policy can be found online at this address www.nutricheck.com.au and contains information about how you may access any personal information we hold about you, how you can complain about a breach of the Australian Privacy Principles and how we deal with any such complaint.</p>
+		<p>By checking and clicking the AGREE button below, you consent to collection of your personal information into the NutriCheck system.</p>
+		
+		<p>&nbsp;</p>
+		
+		<strong><p>Name of pharmacist/health practitioner: <u>pharmacist_name_replace</u></p></strong>
+	";
 ?>

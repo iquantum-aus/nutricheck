@@ -64,16 +64,21 @@ class UsersController extends AclManagementAppController {
 		$this->layout = "public_dashboard";
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$user_group = $this->Session->read('Auth.User.group_id');
+		$user_id = 0;
+		
+		if($user_group == 2) {
+			$user_id = $behalfUserId;
+		} else {
+			$user_id = $this->Session->read('Auth.User.id');
+		}
+		
+		$patient_info = $this->User->findById($user_id);
+		$phamacist_info = $this->User->findById($patient_info['User']['parent_id']);
 		
 		if ($this->request->is('post')) {			
 			if(isset($this->request->data['privacyPolicy_confirmation'])) {
 				$privacy_confirmation = array();
-				
-				if($user_group == 2) {
-					$privacy_confirmation['User']['id'] = $behalfUserId;
-				} else {
-					$privacy_confirmation['User']['id'] = $this->Session->read('Auth.User.id');
-				}
+				$privacy_confirmation['User']['id'] = $user_id;
 				
 				$privacy_confirmation['User']['confirmed_PrivacyPolicy'] = 1;
 				$this->User->save($privacy_confirmation);
@@ -96,6 +101,12 @@ class UsersController extends AclManagementAppController {
 				$this->Session->setFlash('You need to confirm the Privacy Policy to Continue');
 			}
 		}
+		
+		$patient_info = $this->User->findById($user_id);
+		$phamacist_info = $this->User->findById($patient_info['User']['parent_id']);
+		
+		$this->set("patient_info", $patient_info);
+		$this->set("pharmacist_info", $phamacist_info);
 	}
 	
 	public function login() {
