@@ -150,7 +150,7 @@
 				<?php echo $this->Form->submit(__('Submit'), array('class'=>'btn btn-primary', 'div'=>false));?>
 				
 				<?php if($user_info['group_id'] == 2) { ?>
-					<input type="submit" value="Create and Answer" class="btn btn-warning" name="create_and_answer">
+					<input type="submit" value="Start Nutricheck" class="btn btn-warning" name="create_and_answer">
 				<?php } ?>
 				
 				<?php echo $this->Form->reset(__('Cancel'), array('class'=>'btn', 'div'=>false));?>
