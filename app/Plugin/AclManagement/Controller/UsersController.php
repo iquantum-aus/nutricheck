@@ -861,6 +861,7 @@ class UsersController extends AclManagementAppController {
 		
 		$hash = "";
 		$user_id = $this->Session->read('Auth.User.id');
+		$alert_password = false;
 		
 		if(isset($_GET['hash_value'])) {
 			$hash = $_GET['hash_value'];
@@ -889,6 +890,7 @@ class UsersController extends AclManagementAppController {
 				if(!$this->Auth->login($user)) {
 					$this->Session->setFlash(__('Failed to auto-login'), 'alert/error');
 				} else {
+					$alert_password = true;
 					$user_id = $user['id'];
 				}
 			} else {
@@ -965,6 +967,7 @@ class UsersController extends AclManagementAppController {
 			$this->Session->write('Auth.User.UserProfile', $userprofile_info['UserProfile']);
 		}
 		
+		$this->set("alert_password", $alert_password);
 		$this->User->set($this->request->data);
     }
 	

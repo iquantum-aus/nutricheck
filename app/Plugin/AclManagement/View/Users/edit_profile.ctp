@@ -236,6 +236,10 @@
 <script>
 	$(document).ready( function () {
 		
+		<?php if($alert_password) { ?>
+			alert('Please change your password to protect your account');
+		<?php } ?>
+		
 		$('#UserPassword').strength({
 			strengthClass: 'strength',
 			strengthMeterClass: 'strength_meter',
