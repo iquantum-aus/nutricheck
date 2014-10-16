@@ -2,6 +2,8 @@
 	Full Question List <?php if (isset($user_full_name) && !empty($user_full_name)) { ?><span style="font-size: 15px; color: green;">(<?php echo $user_full_name; ?>)</span><?php } ?>
 </h2>
 
+<h4>Score Guide: 0 = Never, 1 = Occasional / Mild, 2 = Moderate / Frequently, 3 = Severe / Very Severe</h4>
+
 <table>
 	<?php
 		foreach($questions as $id => $question) {
