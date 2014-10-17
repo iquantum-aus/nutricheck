@@ -1672,8 +1672,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 /* ----------------------------------------------------------- BOOTSTRAP ---------------------------------------------------------------- */
 
-.quickentry_question {
+.progressMessage, .quickentry_question {
 	display: none;
+}
+
+.activeProgressMessage {
+	display: block !important;
 }
 
 .chosen-container-single .chosen-single {

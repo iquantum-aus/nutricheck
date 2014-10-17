@@ -39,7 +39,7 @@
 							<label style="float: left; margin-right: 20px; padding-top: 10px;">Select Functional Disturbance:</label>
 							<input type="hidden" name="data[Factors][user_id]"  value="<?php echo $user_id; ?>">
 							<?php echo $this->Form->input('Factors.factor', array('name' => 'data[Factors][factors]', 'data-placeholder' => 'select factors here...', 'class' => 'chosen-select', 'style' => 'width: 350px;', 'options' => $factors, 'multiple' => 'multiple', 'label' => false, 'div' => false, 'selected' => $selected_factors)); ?>
-							<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]">
+							<input type="submit" class="btn btn-success" value="GO" name="data[Factors][submit]" style="min-width: 70px;">
 						</form>
 					</div>
 				<?php } ?>
@@ -143,149 +143,166 @@
 				
 
 				<div class="full_question">
-					<?php
-						$raw_questions = $questions;
-						$raw_count = count($raw_questions);
-						$question_data = array_chunk($questions, 23);
-						$question_data_count = count($question_data);
-						$pcount = 0;
-						$ptotal = count($question_data);
-						$button_width = 100/$question_data_count;
-					?>
+					<?php if(!$method) { ?>
+						<div class="span9" style="border-right: 1px solid #ccc; padding-right: 35px;">
+					<?php } else { ?>
+						<div>
+					<?php } ?>
 					
-					<div class="left full" style="margin-top: 20px; margin-bottom: 10px;">
-						<?php for($binc = 0; $binc < $question_data_count; $binc++) { ?>	
-								<div class="questionPaginator left"style="width: <?php echo $button_width; ?>%;">
-									<?php 
-										$to_display_end = ($binc+1)*23;
-										$final_end_display = 0;
-										$final_start_display = 0;
-										
-										if($to_display_end <= $raw_count) {
-											$final_end_display = $to_display_end;
-										} else {
-											$final_end_display = $raw_count;
-										}
-										
-										$final_start_display = $to_display_end-22;
-										echo $final_start_display." - ".$final_end_display;
-									?>
-								</div>
-						<?php } ?>
-					</div>				
-					
-					
-					
-					<form style="margin-bottom: 40px; float: left; width:100%;" method="POST" id="nutricheckAnalysis">
-						<input name="data[PerformedCheck][url]" type="hidden" value="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" />
-
-						<div class="full_question">
-							<div class="left full">					
-								<?php
-									$pcount = 0;
-									foreach($question_data as $key => $questions) {
-									$pcount++;
-								?>
-									
-									<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
-										<tbody style="width: 100%;">	
-											<tr class="headerHolder" style="width: 100%;">
-												<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
-												<th style="width: 53%;">Question</th>
-												<th style="width: 8%;" class="actions"><span class="greenLabel">0<br />Never</span></th>
-												<th style="width: 8%;" class="actions"><span class="peachLabel">1<br />Occasional / Mild</span></th>
-												<th style="width: 8%;" class="actions"><span class="orangeLabel">2<br />Moderate / Frequently</span></th>
-												<th style="width: 8%;" class="actions"><span class="redLabel">3<br />Severe / Very Severe</span></th>
-											</tr>
+						<?php
+							$raw_questions = $questions;
+							$raw_count = count($raw_questions);
+							$question_data = array_chunk($questions, 23);
+							$question_data_count = count($question_data);
+							$pcount = 0;
+							$ptotal = count($question_data);
+							$button_width = 100/$question_data_count;
+						?>
+						
+						<div class="left full" style="margin-top: 20px; margin-bottom: 10px;">
+							<?php for($binc = 0; $binc < $question_data_count; $binc++) { ?>	
+									<div class="questionPaginator left"style="width: <?php echo $button_width; ?>%;">
+										<?php 
+											$to_display_end = ($binc+1)*23;
+											$final_end_display = 0;
+											$final_start_display = 0;
 											
-											<?php 
-												foreach ($questions as $question) {
-												$setstyle = "";
-												if (isset($return_progress[$question['Question']['id']])) {
-													$setstyle = "background:".$colorRowChecked.";";
-												}
-											?>
-												
-												<tr class="rankHolder" style="width:100%;<?php echo $setstyle; ?>" id="q<?php echo h($question['Question']['id']); ?>">
-													<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
-													<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
-													<?php
-														for($i = 0; $i<=3; $i++) {
-															
-															$radio_selected = "";
-															if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
-																$radio_selected = "checked=checked";
-															}
-															
-															?>
-																<td style="width:8%;" class="actions">
-																	<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
-																	<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
-																	<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
-																	<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label css-label_<?php echo $i; ?>"></label>
-																</td>
-															<?php
-														}
-													?>
+											if($to_display_end <= $raw_count) {
+												$final_end_display = $to_display_end;
+											} else {
+												$final_end_display = $raw_count;
+											}
+											
+											$final_start_display = $to_display_end-22;
+											echo $final_start_display." - ".$final_end_display;
+										?>
+									</div>
+							<?php } ?>
+						</div>				
+						
+						
+						
+						<form style="margin-bottom: 40px; float: left; width:100%;" method="POST" id="nutricheckAnalysis">
+							<input name="data[PerformedCheck][url]" type="hidden" value="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" />
+
+							<div class="full_question">
+								<div class="left full">					
+									<?php
+										$pcount = 0;
+										foreach($question_data as $key => $questions) {
+										$pcount++;
+									?>
+										
+										<table style="float: left; width: 100;" class="questionModules" id="questionModule_<?php echo $key; ?>" cellpadding="0" cellspacing="0">
+											<tbody style="width: 100%;">	
+												<tr class="headerHolder" style="width: 100%;">
+													<th style="width: 15%;text-align:center;"><span class="blue">Quest.  #</span></th>
+													<th style="width: 53%;">Question</th>
+													<th style="width: 8%;" class="actions"><span class="greenLabel">0<br />Never</span></th>
+													<th style="width: 8%;" class="actions"><span class="peachLabel">1<br />Occasional / Mild</span></th>
+													<th style="width: 8%;" class="actions"><span class="orangeLabel">2<br />Moderate / Frequently</span></th>
+													<th style="width: 8%;" class="actions"><span class="redLabel">3<br />Severe / Very Severe</span></th>
 												</tr>
 												
-											<?php } ?>
-											<tr>
-												<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
-													<?php /*
-														Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
-															<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
-														*/ ?>
-														
-														<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
-														<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
-														
-														<?php if ($pcount!=$ptotal) { ?>
-														<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary">NEXT ></a>
-														<?php } ?>
-														
-														<?php if ($pcount==$ptotal) { ?>
-															<?php if($iscreateAnswer == 1) { ?>
-																<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
-															<?php } else { ?>
-																<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+												<?php 
+													foreach ($questions as $question) {
+													$setstyle = "";
+													if (isset($return_progress[$question['Question']['id']])) {
+														$setstyle = "background:".$colorRowChecked.";";
+													}
+												?>
+													
+													<tr class="rankHolder" style="width:100%;<?php echo $setstyle; ?>" id="q<?php echo h($question['Question']['id']); ?>">
+														<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
+														<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
+														<?php
+															for($i = 0; $i<=3; $i++) {
+																
+																$radio_selected = "";
+																if(($i == $return_progress[$question['Question']['id']]) && isset($return_progress[$question['Question']['id']])) {
+																	$radio_selected = "checked=checked";
+																}
+																
+																?>
+																	<td style="width:8%;" class="actions">
+																		<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
+																		<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
+																		<input <?php echo $radio_selected; ?> class="css-checkbox" type="radio" name="data[<?php echo $question['Question']['id']; ?>][Answer][rank]" id="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>">
+																		<label for="AnswerRank<?php echo $question['Question']['id'].$i; ?>" value="<?php echo $i; ?>" class="css-label css-label_<?php echo $i; ?>"></label>
+																	</td>
+																<?php
+															}
+														?>
+													</tr>
+													
+												<?php } ?>
+												<tr>
+													<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
+														<?php /*
+															Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
+																<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
+															*/ ?>
+															
+															<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
+															<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
+															
+															<?php if ($pcount!=$ptotal) { ?>
+															<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary">NEXT ></a>
 															<?php } ?>
-														<?php } ?>
-													</span>
-												</td>								
-											</tr>
-										</tbody>
-									</table>
-								<?php } ?>			
+															
+															<?php if ($pcount==$ptotal) { ?>
+																<?php if($iscreateAnswer == 1) { ?>
+																	<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+																<?php } else { ?>
+																	<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+																<?php } ?>
+															<?php } ?>
+														</span>
+													</td>								
+												</tr>
+											</tbody>
+										</table>
+									<?php } ?>			
+								</div>
+							</div>
+							
+							<?php if($iscreateAnswer == 1) { ?>
+								<input type="button" value="LOGOUT" class="btn btn-warning logout-answer">
+							<?php } ?>
+							
+							<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
+						</form>
+						
+						<div class="full_question">				
+							<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
+								<form id="paginator_form" style="display:none;">
+									<input id="currentPaginatorstate" type="hidden" value="0">
+									
+									<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary disabled">PREV</a>
+										
+										<?php 
+											/* for($i=0; $i<$question_data_count; $i++) {
+												?>
+													<input name="pageSelected" id="pageSelection_<?php echo $i; ?>" class="paginatorSelector" type="radio" value="<?php echo $i; ?>">
+												<?php
+											} */
+										?>
+									
+									<a href="#" id="paginatorNext" class="paginatorNext paginatorButton btn btn-primary">NEXT</a>
+								</form>
 							</div>
 						</div>
-						
-						<?php if($iscreateAnswer == 1) { ?>
-							<input type="button" value="LOGOUT" class="btn btn-warning logout-answer">
-						<?php } ?>
-						
-						<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
-					</form>
-					
-					<div class="full_question">				
-						<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
-							<form id="paginator_form" style="display:none;">
-								<input id="currentPaginatorstate" type="hidden" value="0">
-								
-								<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary disabled">PREV</a>
-									
-									<?php 
-										/* for($i=0; $i<$question_data_count; $i++) {
-											?>
-												<input name="pageSelected" id="pageSelection_<?php echo $i; ?>" class="paginatorSelector" type="radio" value="<?php echo $i; ?>">
-											<?php
-										} */
-									?>
-								
-								<a href="#" id="paginatorNext" class="paginatorNext paginatorButton btn btn-primary">NEXT</a>
-							</form>
-						</div>
 					</div>
+					
+					<?php if(!$method) { ?>
+						<div class="span3 left" style="padding-left: 25px; margin-top: 75px; font-weight: bold; line-height: 25px; font-size: 15px; color: #999; font-style:italic;">
+							<div class="activeProgressMessage progressMessage span12">Welcome to your NutriCheck Assessment, Thank you for taking this important step to better well being. Be sure to answer every question, it will take approximately 5-10 minutes</div>
+							<div class="progressMessage span12">You are doing really well. You are 1/2 way through</div>
+							<div class="progressMessage span12">Great! You're almost there!</div>
+							<div class="progressMessage span12">You're all done matey</div>
+						</div>
+					<?php } ?>
+					
 				</div>
 				
 			<?php } else { ?>
@@ -554,6 +571,9 @@
 						$('#questionModule_'+next_page).delay(500).fadeIn();
 						$('#currentPaginatorstate').val(next_page);
 						$('.activePage').next().addClass('activePage');
+						
+						$('.activeProgressMessage').next().addClass('activeProgressMessage');
+						$('.activeProgressMessage').last().prev().removeClass('activeProgressMessage');
 					}			
 					if(next_page == (maximum_page-1)) {
 						$('.save-answer').fadeIn();				
@@ -576,6 +596,9 @@
 						});
 						$('#currentPaginatorstate').val(prev_page);
 						$('.activePage').last().removeClass('activePage');
+						
+						$('.activeProgressMessage').last().prev().addClass('activeProgressMessage');
+						$('.activeProgressMessage').last().removeClass('activeProgressMessage');
 					}			
 					return false;
 				});	
