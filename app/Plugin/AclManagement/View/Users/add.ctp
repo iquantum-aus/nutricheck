@@ -144,6 +144,10 @@
 				<span id="emailExist">Email Already Exist</span>
 			</div>
 			
+			<p>&nbsp;</p>
+			
+			<input type="checkbox" id="termsConditions"> <label style="float:left; font-weight: bold;">Agree to <a class="fancybox" href="#privacyPolicy">Terms and Conditions</a></label>
+			
 			<div class="left span12 inputHolder"><?php echo $this->Form->input('password', array('type' => "hidden", 'value' => time())); ?></div>
 		
 			<div class="left span12">
@@ -204,14 +208,18 @@
 			}
 		});
 		
-		$('#UserAddForm').submit( function () {
-			if($('#emailExist').is(':visible')) {
-				return false;
-			}
-		});
 		
 		$('#UserAddForm').submit( function () {
 			var empty_field = 0;
+			
+			if($('#emailExist').is(':visible')) {
+				return false;
+			}
+			
+			if(!$("#termsConditions").is(":checked")) {
+				alert('Please check the Terms and Conditions to continue');
+				return false;
+			}
 			
 			$('.requiredField').each( function () {
 				if($(this).is(':visible')) {
