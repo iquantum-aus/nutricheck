@@ -1,8 +1,8 @@
 <div class="nutritionalGuides index">
 	
 	<div class="full left">
-	<form method="POST" style="width: 40%;">
-		<input placeholder = "Enter Search Here" type="text" name="data[NutritionalGuide][value]" style="width: 70%; float: left; clear: none;" value="<?php echo $search_value; ?>">
+	<form method="POST" style="width: 50%;">
+		<input placeholder = "Enter Search Here" type="text" name="data[NutritionalGuide][value]" style="width: 47%; float: left; clear: none;" value="<?php echo $search_value; ?>">
 		<input type="submit" value="SEARCH" class="btn btn-success" name="data[NutritionalGuide][search]" style="float: left; clear: none; margin-left: 10px;">
 		<input type="submit" value="RESET" name="data[NutritionalGuide][reset]" class="btn btn-danger" style="float: left; clear: none; margin-left: 5px;">
 	</form>

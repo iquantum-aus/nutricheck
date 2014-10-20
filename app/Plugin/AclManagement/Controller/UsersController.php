@@ -387,7 +387,6 @@ class UsersController extends AclManagementAppController {
 			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
 			$age = round(abs(time() - strtotime($birthday))/31536000);
 			
-			return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
 			if($age <= 12) {
 				return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
 			}
@@ -566,7 +565,6 @@ class UsersController extends AclManagementAppController {
 			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
 			$age = round(abs(time() - strtotime($birthday))/31536000);
 			
-			return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
 			if($age <= 12) {
 				return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
 			}
@@ -934,7 +932,6 @@ class UsersController extends AclManagementAppController {
 			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
 			$age = round(abs(time() - strtotime($birthday))/31536000);
 			
-			return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
 			if($age <= 12) {
 				return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
 			}
