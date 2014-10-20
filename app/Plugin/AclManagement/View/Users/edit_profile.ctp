@@ -95,6 +95,30 @@
 		color:white;
 		opacity:.3;
 	}
+	
+	.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-dialog .ui-dialog-buttonpane button {
+		min-width: 20px;
+	}
+	
+	.ui-widget-content {
+		background: #fff;
+	}
+	
+	.ui-widget-header {
+		background: #aaa;
+		border: none;
+	}
+	
+	.ui-dialog .ui-dialog-titlebar-close { display: none }
+	
+	.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+		color: #999;
+	}
+	
+	.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+		border: 1px solid #ccc;
+		background: #eee;
+	}
 </style>
 
 <?php
@@ -110,7 +134,7 @@
 			<?php echo $this->Form->input('UserProfile.id'); ?>
 			<?php echo $this->Form->input('User.id'); ?>
 			
-			<?php if ($user_info['kgroup_id'] == 3) { ?>
+			<?php if ($user_info['group_id'] == 3) { ?>
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => true, 'class' => 'textOnly', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
 				
 				<?php /*
@@ -229,16 +253,20 @@
 <?php echo $this->Form->end();?>
 </div>
 
+<?php if($alert_password) { ?>
+	<div id="dialog-message" title="Security Alert">
+		Please change your password to protect your account
+	</div>
+<?php } ?>
+
+
+
 
 <script type="text/javascript" src="/js/strength.js"></script>
 <script type="text/javascript" src="/js/js.js"></script>
 
 <script>
 	$(document).ready( function () {
-		
-		<?php if($alert_password) { ?>
-			alert('Please change your password to protect your account');
-		<?php } ?>
 		
 		$('#UserPassword').strength({
 			strengthClass: 'strength',
@@ -283,5 +311,19 @@
 				}
 			}
 		});
+		
+		<?php if($alert_password) { ?>
+			$( "#dialog-message" ).dialog({
+				modal: true,
+				  buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				},
+				draggable: false,
+				width: 430,
+				closeOnEscape: false
+			});
+		<?php } ?>
 	});
 </script>

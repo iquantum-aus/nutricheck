@@ -67,6 +67,7 @@
 				<?php if($iscreateAnswer == 1) { ?>
 					<div class="quickentry_question">
 						<p>&nbsp;</p>
+						<h4>Score Guide: 0 = Never, 1 = Occasional / Mild, 2 = Moderate / Frequently, 3 = Severe / Very Severe</h4>
 						
 						<?php
 							$qe_raw_questions = $questions;
@@ -79,7 +80,7 @@
 							
 						?>
 						
-						<form style="margin: 0;" class="left span12" method="POST" action="/questions/quickentry_nutrient_check" id="qe_nutricheckAnalysis">
+						<form style="margin: 0;" class="left span12" method="POST" action="/questions/quickentry_nutrient_check?source=system" id="qe_nutricheckAnalysis">
 							<input name="data[PerformedCheck][url]" type="hidden" value="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" />
 							
 							<div class="quickentry_question">
@@ -574,6 +575,8 @@
 						
 						$('.activeProgressMessage').next().addClass('activeProgressMessage');
 						$('.activeProgressMessage').last().prev().removeClass('activeProgressMessage');
+						
+						$("html, body").animate({ scrollTop: 0 }, "slow");
 					}			
 					if(next_page == (maximum_page-1)) {
 						$('.save-answer').fadeIn();				
@@ -599,6 +602,8 @@
 						
 						$('.activeProgressMessage').last().prev().addClass('activeProgressMessage');
 						$('.activeProgressMessage').last().removeClass('activeProgressMessage');
+						
+						$("html, body").animate({ scrollTop: 0 }, "slow");
 					}			
 					return false;
 				});	

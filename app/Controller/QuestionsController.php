@@ -244,11 +244,21 @@ class QuestionsController extends AppController {
 	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	public function quickentry_nutrient_check() {
+		
 		$this->loadModel('PerformedCheck');
 		$answers = $this->request->data;
 		
-		$user_info = $this->Question->User->findByHashValue($this->request->data['User']['id']);
-		$this->request->data['User']['id'] = $user_info['User']['id'];
+		if(isset($_REQUEST['source']) && $_REQUEST['source'] == "system") {			
+			$user_info = $this->Session->read('Auth.User');
+			if($user_info['group_id'] == 2) {
+				$this->request->data['User']['id'] = $this->Session->read('behalfUserId');
+			} else {
+				$this->request->data['User']['id'] = $this->Session->read('Auth.User.id');
+			}
+		} else {
+			$user_info = $this->Question->User->findByHashValue($this->request->data['User']['id']);
+			$this->request->data['User']['id'] = $user_info['User']['id'];
+		}
 		
 		$time = time();
 		
@@ -271,7 +281,12 @@ class QuestionsController extends AppController {
 		$this->PerformedCheck->create();
 		$this->PerformedCheck->save($performed_check_data);		
 		
-		echo "1";
+		if(isset($_REQUEST['source']) && $_REQUEST['source'] == "system") {
+			$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
+			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+		} else {
+			echo "1";
+		}
 		exit();
 	}
 	
@@ -486,6 +501,7 @@ class QuestionsController extends AppController {
 				/* ------------------------------------------------------------------------------------------------------- LOGGING OF QUESTIONNIARE ACCESS -----------------------------------------------------------------------------------------------------*/
 				
 				$behalfUserId = $this->Session->read('behalfUserId');
+				$performingUser = $this->Question->User->findById($behalfUserId);
 				$this->set('user_id', $behalfUserId);
 				
 			} else {
