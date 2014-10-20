@@ -440,7 +440,7 @@ class QuestionsController extends AppController {
 			);
 		}
 		
-		
+		/******************************************************************************* POST ENTRY ****************************************************************************/
 		
 		if($this->request->is('post')) {
 			
@@ -448,6 +448,13 @@ class QuestionsController extends AppController {
 			if(isset($this->request->data['Factors']['submit'])) {
 				
 				$behalfUserId = $this->Session->read('behalfUserId');
+				if($this->Session->read('Auth.User.group_id') == 2) {
+					if(empty($behalfUserId)) {
+						$this->Session->setFlash(__("You need to select a user first before you can continue"));
+						$this->redirect($this->referer());
+					}
+				}
+				
 				if(empty($this->request->data['Factors']['factors'])) {
 					$this->Session->setFlash(__("You didn't select a functional disturbance"));
 				} else {
@@ -657,6 +664,8 @@ class QuestionsController extends AppController {
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}
+		
+		/******************************************************************************* POST ENTRY ****************************************************************************/
 		
 		if(empty($method)) {
 			$questions = $this->Paginator->paginate();
