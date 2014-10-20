@@ -1,3 +1,8 @@
+<?php
+	echo $this->Html->script('date');
+	echo $this->Html->script('strtotime');
+?>
+
 <?php $user_info = $this->Session->read('Auth.User'); ?>
 <?php
 	if($user_info['group_id'] == 1) {
@@ -79,7 +84,7 @@
 			<div class="memberFields">
 				<div class="left span12 inputHolder">
 					<label>Birthday<span>*</span></label>
-					<select class="requiredField" name="data[UserProfile][birthday][month]">
+					<select id="birthdayMonth" class="requiredField" name="data[UserProfile][birthday][month]">
 						<option value="">Select Month</option>
 						<option value="01">January</option>
 						<option value="02">February</option>
@@ -95,14 +100,14 @@
 						<option value="12">December</option>
 					</select>
 					-
-					<select class="requiredField" name="data[UserProfile][birthday][day]">
+					<select class="requiredField" id="birthdayDay" name="data[UserProfile][birthday][day]">
 						<option value="">Select Day</option>
 						<?php  for($i=1; $i<=31; $i++) { ?>
 							<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
 						<?php } ?>
 					</select>
 					-
-					<select class="requiredField" name="data[UserProfile][birthday][year]">
+					<select class="requiredField" id="birthdayYear" name="data[UserProfile][birthday][year]">
 						<option value="">Select Year</option>
 						<?php  for($y=1900; $y<=2014; $y++) { ?>
 							<option value="<?php echo $y; ?>"><?php echo $y; ?></option>
@@ -167,6 +172,7 @@
 <script>
 	$(document).ready( function () {
 		
+		var current_time = "<?php echo time(); ?>";
 		$( "#datepicker" ).datepicker();
 		
 		<?php if($user_info['group_id'] == 1) { ?>
@@ -212,6 +218,16 @@
 		$('#UserAddForm').submit( function () {
 			var empty_field = 0;
 			
+			var bmonth = $('#birthdayMonth').val();
+			var bday = $('#birthdayDay').val();
+			var byear = $('#birthdayYear').val();
+			
+			var birthday_date = byear+"/"+bmonth+"/"+bday;
+			var time_difference = current_time - strtotime(birthday_date);
+			
+			// 31536000 = seconds in a year
+			var year_difference = Math.round(Math.abs(time_difference) / 31536000);
+			
 			if($('#emailExist').is(':visible')) {
 				return false;
 			}
@@ -251,6 +267,13 @@
 			if(empty_field > 0) {
 				alert('There are fields that were left empty.');
 				return false;
+			}
+			
+			if(strtotime(birthday_date) > 0) {
+				if(year_difference <= 12) {
+					alert("Ages 12 and below isn't allowed in the system");
+					return false;
+				}
 			}
 		});
 	});

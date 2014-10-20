@@ -645,6 +645,7 @@ form .error-message {
 .notice,
 p.error,
 .error-message {
+	margin-top: 20px;
 	background: #ffcc00;
 	background-repeat: repeat-x;
 	background-image: -moz-linear-gradient(top, #ffcc00, #E6B800);

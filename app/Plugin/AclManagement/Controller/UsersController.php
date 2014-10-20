@@ -384,6 +384,14 @@ class UsersController extends AclManagementAppController {
 		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
 			
+			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
+			$age = round(abs(time() - strtotime($birthday))/31536000);
+			
+			return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
+			if($age <= 12) {
+				return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
+			}
+			
 			$suffix = $this->randomNumber(4);
 			$username = str_replace(" ", "", $this->request->data['UserProfile']['first_name']).str_replace(" ", "", $this->request->data['UserProfile']['last_name']).$suffix;
 			
@@ -554,6 +562,14 @@ class UsersController extends AclManagementAppController {
         }
 		
         if ($this->request->is('post') || $this->request->is('put')) {
+			
+			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
+			$age = round(abs(time() - strtotime($birthday))/31536000);
+			
+			return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
+			if($age <= 12) {
+				return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
+			}
 			
 			$email = $this->request->data['User']['email'];
 			$old_email = $this->request->data['User']['old_email'];
@@ -914,6 +930,14 @@ class UsersController extends AclManagementAppController {
 		
 		
         if ($this->request->is('post') || $this->request->is('put')) {
+		
+			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
+			$age = round(abs(time() - strtotime($birthday))/31536000);
+			
+			return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
+			if($age <= 12) {
+				return $this->Session->setFlash("Ages 12 and below isn't allowed in the system");
+			}
             
 			if(!empty($this->request->data['User']['password']) || !empty($this->request->data['User']['password2'])){
                 //do nothing

@@ -1,3 +1,8 @@
+<?php
+	echo $this->Html->script('date');
+	echo $this->Html->script('strtotime');
+?>
+
 <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
 <style>	
@@ -189,7 +194,7 @@
 			<div class="memberFields">
 				<div class="left span12 inputHolder">
 					<label>Birthday<span>*</span></label>
-					<select class="requiredField" name="data[UserProfile][birthday][month]">
+					<select id="birthdayMonth" class="requiredField" name="data[UserProfile][birthday][month]">
 						<option value="">Select Month</option>
 						
 						<?php
@@ -214,14 +219,14 @@
 						<?php } ?>
 					</select>
 					-
-					<select class="requiredField" name="data[UserProfile][birthday][day]">
+					<select class="requiredField" id="birthdayDay" name="data[UserProfile][birthday][day]">
 						<option value="">Select Day</option>
 						<?php  for($i=1; $i<=31; $i++) { ?>
 							<option <?php if($birthday[2] == $i) { echo "selected"; } ?> value="<?php echo $i; ?>"><?php echo $i; ?></option>
 						<?php } ?>
 					</select>
 					-
-					<select class="requiredField" name="data[UserProfile][birthday][year]">
+					<select class="requiredField" id="birthdayYear" name="data[UserProfile][birthday][year]">
 						<option value="">Select Year</option>
 						<?php  for($y=1900; $y<=2014; $y++) { ?>
 							<option <?php if($birthday[0] == $y) { echo "selected"; } ?> value="<?php echo $y; ?>"><?php echo $y; ?></option>
@@ -291,6 +296,7 @@
 <script>
 	$(document).ready( function () {
 		
+		var current_time = "<?php echo time(); ?>";
 		$('#UserPassword').strength({
 			strengthClass: 'strength',
 			strengthMeterClass: 'strength_meter',
@@ -356,8 +362,18 @@
 		$('#UserEditForm').submit( function () {
 			var empty_field = 0;
 			
+			var bmonth = $('#birthdayMonth').val();
+			var bday = $('#birthdayDay').val();
+			var byear = $('#birthdayYear').val();
+			
 			var user_password = $('#UserPassword').val();
 			var user_password2 = $('#UserPassword2').val();
+			
+			var birthday_date = byear+"/"+bmonth+"/"+bday;
+			var time_difference = current_time - strtotime(birthday_date);
+			
+			// 31536000 = seconds in a year
+			var year_difference = Math.round(Math.abs(time_difference) / 31536000);
 			
 			if((user_password !== "") && (user_password2 === "")) {
 				$('#UserPassword2').addClass('required');
@@ -417,6 +433,14 @@
 				alert('There are fields that were left empty.');
 				return false;
 			}
+			
+			if(strtotime(birthday_date) > 0) {
+				if(year_difference <= 12) {
+					alert("Ages 12 and below isn't allowed in the system");
+					return false;
+				}
+			}
+			
 		});
 	});
 </script>
