@@ -1,5 +1,4 @@
 <div id="mainContentWrapper" class="mainContentWrapper left full">
-
 <?php if(!empty($videos)) { ?>
 		<?php foreach($videos as $video) { ?>
 			<div style="height: 281px; width: 500px;" class="item">
@@ -27,8 +26,8 @@
 					<div class="left span6 moduleSearchHolder" style="margin-top:40px;">
 						<h4 style="color: #64584c;">Who are we checking today?</h4>						
 						<div class="moduleInputs">
-							<div class="left full moduleInputHolder">
-								<?php echo $this->Form->input('User.id', array('style' => "width: 70%; float: left;", 'options' => $user_list, 'empty' => 'Select Patient', 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+							<div class="left full moduleInputHolder">								
+								<?php echo $this->Form->input('User.id', array('style' => "width: 70%; float: left;", 'options' => $user_list, 'empty' => 'Select Patient', 'selected' => $behalfUserId, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
 							</div>							
 							<div class="left full moduleInputHolder">
 								<?php echo $this->Form->input('Factor.id', array('style' => "width: 70%; float: left;", 'multiple' => true,  'options' => $factor_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>

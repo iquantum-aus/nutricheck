@@ -1029,6 +1029,9 @@ class UsersController extends AclManagementAppController {
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
 		
+		$behalfUserId = $this->Session->read('behalfUserId');
+		$selected_user = $this->User->findById($behalfUserId);
+		
 		if($user_info['group_id'] == 2) {
 			$user_condition = array('User.parent_id' => $user_info['id'], 'User.hash_value !=' => "", 'User.status' => 1);
 		} else {
@@ -1049,6 +1052,7 @@ class UsersController extends AclManagementAppController {
 		
 		$this->set('factor_list', $factor_list);
 		$this->set('user_list', $user_list);
+		$this->set('behalfUserId', $selected_user['User']['hash_value']);
 	}
 	
 	public function nutricheck_activity($user_id = null) {
