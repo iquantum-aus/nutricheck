@@ -1,5 +1,5 @@
 <div class="factorsQuestions index">
-	<h2><?php echo __('Questions'); ?></h2>
+	<h2><?php echo __('Factors - Questions'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	<table class="full table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>

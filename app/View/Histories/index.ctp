@@ -1,5 +1,5 @@
 <div class="histories index">
-	<h2><?php echo __('Histories'); ?></h2>
+	<h2><?php echo __('Histories'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -7,23 +7,35 @@
 			<th><?php echo $this->Paginator->sort('diagnostics'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th><?php echo $this->Paginator->sort('status'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($histories as $history): ?>
 	<tr>
 		<td><?php echo h($history['History']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($history['Users']['id'], array('controller' => 'users', 'action' => 'view', $history['Users']['id'])); ?>
+			<?php
+				$display_data = "";
+				if(empty($history['UserProfile']['first_name']) && empty($history['UserProfile']['last_name'])) {				
+					if(!empty($history['User']['username'])) {
+						$display_data = $history['User']['username'];
+					} else {
+						$display_data = $history['User']['email'];
+					}
+				} else {
+					$display_data = $history['UserProfile']['first_name']." ".$history['UserProfile']['last_name'];
+				}
+				
+				echo $this->Html->link($display_data, array('controller' => 'users', 'action' => 'view', $history['User']['id'])); 
+			?>
 		</td>
 		<td><?php echo h($history['History']['diagnostics']); ?>&nbsp;</td>
 		<td><?php echo h($history['History']['created']); ?>&nbsp;</td>
 		<td><?php echo h($history['History']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($history['History']['status']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $history['History']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $history['History']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $history['History']['id']), null, __('Are you sure you want to delete # %s?', $history['History']['id'])); ?>
+		
+		<td>
+			<a href="/histories/view/<?php echo $history['History']['id']; ?>" class="btn btn-primary">View</a>
+			<a href="/histories/edit/<?php echo $history['History']['id']; ?>" class="btn btn-warning">Edit</a>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $history['History']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $history['History']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -41,12 +53,4 @@
 		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
 	?>
 	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New History'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Users'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-	</ul>
 </div>

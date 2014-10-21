@@ -5,10 +5,11 @@
 	<?php
 		echo $this->Form->input('title');
 		echo $this->Form->input('description', array('class' => 'ckeditor'));
-		echo $this->Form->input('nutritional_guide_type_id', array('options' => $nutritional_guide_types));
+		echo $this->Form->input('nutritional_guide_type_id', array('empty' => 'Select Guide Type', 'class' => 'chosen-select', 'options' => $nutritional_guide_types));
 	?>
+	<input type="submit" class="btn btn-success" value="Submit">
 	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+<?php echo $this->Form->end(); ?>
 </div>
 
 <?php /*

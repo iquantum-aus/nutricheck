@@ -52,8 +52,14 @@ class QgroupsController extends AppController {
 		if (!$this->Qgroup->exists($id)) {
 			throw new NotFoundException(__('Invalid qgroup'));
 		}
-		$options = array('conditions' => array('Qgroup.' . $this->Qgroup->primaryKey => $id));
-		$this->set('qgroup', $this->Qgroup->find('first', $options));
+		
+		$qgroup = $this->Qgroup->find('first', array('conditions' => array('Qgroup.id' => $id)));
+		foreach($qgroup['Question'] as $key => $question) {
+			$question = $this->Qgroup->Question->findById($question['id']);
+			$qgroup['Question'][$key] = $question['Question'];
+		}
+		
+		$this->set('qgroup', $qgroup);
 	}
 
 /**

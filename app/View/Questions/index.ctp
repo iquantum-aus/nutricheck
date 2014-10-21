@@ -1,10 +1,10 @@
 <div class="questions index">
-	<h2><?php echo __('Questions'); ?></h2>
+	<h2><?php echo __('Questions'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	
-	<div class="left" style="width: 40%;">
+	<div class="left" style="width: 50%;">
 		<form method="POST" id="GroupSelect" class="left full">
 			<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Question:</strong></label>
-			<?php echo $this->Form->input('Question.id', array('style' => "width: 50%; float: left;", 'options' => $question_list, 'empty' => 'Search Here', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $selected_question_id)); ?>
+			<?php echo $this->Form->input('Question.id', array('style' => "width: 40%; float: left;", 'options' => $question_list, 'empty' => 'Search Here', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $selected_question_id)); ?>
 			<input name="data[Question][reset]" type="submit" value="RESET" class="btn btn-danger">
 			<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
 		</form>
@@ -14,12 +14,12 @@
 		<form id="qgroup_selector" method="POST">
 			<label class="left">Select Widget:</label>
 			<div class = "left">
-				<?php echo $this->Form->input('Qgroup.id', array('options' => $qgroups, 'selected' => $selected_qgroup, 'empty' => 'Select a question list', 'div' => false, 'label' => false)); ?>
+				<?php echo $this->Form->input('Qgroup.id', array('options' => $qgroups, 'selected' => $selected_qgroup, 'empty' => 'Select a question list', 'class' => 'chosen-select', 'div' => false, 'label' => false)); ?>
 			</div>
 			
 			<a href="#qgroup_creator_holder" class="fancybox btn btn-primary left">CREATE</a>
 			<a id="qgroup_edit" href="#qgroup_editor_holder" class="fancybox btn btn-warning left">EDIT</a>
-			<input name="data[Qgroup][qgroupReset]" type="submit" class="btn btn-danger left" value="RESET">
+			<input name="data[Qgroup][qgroupReset]" type="submit" class="btn btn-danger left" value="RESET" style="min-width: 60px;">
 		</form>
 	</div>
 	

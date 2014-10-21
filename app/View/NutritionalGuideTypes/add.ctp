@@ -5,8 +5,9 @@
 	<?php
 		echo $this->Form->input('type');
 	?>
+	<input type="submit" value="SUBIMT" class="btn btn-success">
 	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+<?php echo $this->Form->end(); ?>
 </div>
 
 <?php /*
