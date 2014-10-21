@@ -34,7 +34,7 @@
 							</div>
 						</div>						
 						<div id="controlsHolder">
-							<input type="hidden" id="selectedUser">
+							<input type="hidden" id="selectedUser" value="<?php echo $behalfUserId; ?>">
 							<input type="hidden" id="selectedFactor">
 						</div>
 					</div>
