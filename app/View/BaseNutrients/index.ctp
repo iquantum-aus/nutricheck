@@ -1,5 +1,16 @@
 <div class="baseNutrients index">
 	<h2><?php echo __('Base Nutrients'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
+	
+	<div class="left" style="width: 100%;">
+		<form method="POST" id="GroupSelect" class="left full" action="/baseNutrients/index/">
+			<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Base Nutrient:</strong></label>
+			<?php echo $this->Form->input('BaseNutrient.id', array('style' => "width: 40%; float: left;", 'options' => $base_nutrient_list, 'multiple' => true, 'empty' => 'Search Here', 'label' => false, 'div' => false, 'class' => 'chosen-select', 'selected' => $selected_ids)); ?>
+			<input name="data[base_nutrient_list][submit]" type="submit" value="SUBMIT" class="btn btn-success">
+			<input name="data[base_nutrient_list][reset]" type="submit" value="RESET" class="btn btn-danger">
+			<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
+		</form>
+	</div>
+	
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>

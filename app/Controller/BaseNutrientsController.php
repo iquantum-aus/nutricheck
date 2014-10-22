@@ -24,11 +24,32 @@ class BaseNutrientsController extends AppController {
 		$this->layout = "public_dashboard";
 		$this->BaseNutrient->recursive = 0;
 		
-		$this->Paginator->settings = array(
-			'limit' => 200
-		);
+		$selected_ids = $this->Session->read("BaseNutrient.search_value");
+		if ($this->request->is('post')) {
+			
+			if(isset($this->request->data['BaseNutrient']['id'])) {
+				if(!empty($this->request->data['BaseNutrient']['id'])) {
+					$selected_ids = $this->request->data['BaseNutrient']['id'];
+				}
+			}
+			
+			if(isset($this->request->data['base_nutrient_list']['reset'])) {
+				$this->Session->delete("BaseNutrient.search_value");
+				$selected_ids = array();
+			}
+		}
 		
-		$this->set('baseNutrients', $this->Paginator->paginate());
+		if(!empty($selected_ids)) {
+			$condition = array('BaseNutrient.id' => $selected_ids);
+			$this->Session->write("BaseNutrient.search_value", $selected_ids);
+		}
+		
+		$this->Paginator->settings = array('limit' => 200);
+		$base_nutrient_list = $this->BaseNutrient->find('list', array('fields' => array('id', 'base_nutrient_formula')));
+		$this->set("base_nutrient_list", $base_nutrient_list);
+		
+		$this->set('selected_ids', $selected_ids);
+		$this->set('baseNutrients', $this->Paginator->paginate($condition));
 	}
 
 /**
