@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add Video'); ?></legend>
 	<?php
-		echo $this->Form->input('group_id');
+		echo $this->Form->input('group_id', array('class' => 'chosen-select'));
 		echo $this->Form->input('video_link');
 	?>
 	</fieldset>
