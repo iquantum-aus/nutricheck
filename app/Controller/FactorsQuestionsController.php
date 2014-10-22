@@ -102,10 +102,10 @@ class FactorsQuestionsController extends AppController {
 			}  else {			
 				$this->FactorsQuestion->create();
 				if ($this->FactorsQuestion->save($this->request->data)) {
-					$this->Session->setFlash(__('The factors question has been saved.'));
+					$this->Session->setFlash(__('The factors question has been saved'));
 					return $this->redirect(array('action' => 'index'));
 				} else {
-					$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+					$this->Session->setFlash(__('The factors question could not be saved Please, try again.'));
 				}
 			}
 		}
@@ -131,10 +131,10 @@ class FactorsQuestionsController extends AppController {
 			$this->request->data['FactorsQuestion']['question_id'] = $this->FactorsQuestion->Question->id;
 			
 			if ($this->FactorsQuestion->save($this->request->data)) {
-				$this->Session->setFlash(__('The question has been saved.'));
+				$this->Session->setFlash(__('The question has been saved'));
 				return $this->redirect(array('controller' => 'questions', 'action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The factors question could not be saved Please, try again.'));
 			}
 		}
 		$factors = $this->FactorsQuestion->Factor->find('list');
@@ -171,10 +171,10 @@ class FactorsQuestionsController extends AppController {
 				$this->Session->setFlash(__('Invalid Association. This already exists.'));
 			}  else {		
 				if ($this->FactorsQuestion->save($this->request->data)) {
-					$this->Session->setFlash(__('The factors question has been saved.'));
+					$this->Session->setFlash(__('The factors question has been saved'));
 					return $this->redirect(array('action' => 'index'));
 				} else {
-					$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+					$this->Session->setFlash(__('The factors question could not be saved Please, try again.'));
 				}
 			}
 		} else {
@@ -202,10 +202,10 @@ class FactorsQuestionsController extends AppController {
 		if ($this->request->is(array('post', 'put'))) {
 			$this->FactorsQuestion->Question->save($this->request->data);
 			if ($this->FactorsQuestion->save($this->request->data)) {
-				$this->Session->setFlash(__('The factors question has been saved.'));
+				$this->Session->setFlash(__('The factors question has been saved'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The factors question could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The factors question could not be saved Please, try again.'));
 			}
 		} else {
 			$options = array('conditions' => array('FactorsQuestion.' . $this->FactorsQuestion->primaryKey => $id));

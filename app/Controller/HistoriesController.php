@@ -23,8 +23,41 @@ class HistoriesController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->History->recursive = 0;
-		$histories = $this->Paginator->paginate();
 		
+		$search_value = $this->Session->read("History.search_value");
+		if($this->request->is('post')) {
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['History']['search_value'])) {
+				if(!isset($this->request->data['History']['reset'])) {
+					$search_value = $this->request->data['History']['search_value'];
+					$this->Session->write('History.search_value', $this->request->data['History']['search_value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['History']['reset'])) {
+				$this->Session->delete('History.search_value');
+				unset($this->request->data['History']['search_value']);
+				$search_value = "";
+			}
+		}
+		
+		if(!empty($search_value)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'History.diagnostics LIKE "%'.$search_value.'%"'
+					),
+					'and' => array (
+						'History.status' => 1
+					)
+				),
+			);
+			
+			$this->set("search_value", $search_value);
+		}
+		
+		$histories = $this->paginate();
 		foreach($histories as $key => $history) {
 			$user_profile = $this->History->User->UserProfile->findByUserId($history['User']['id']);
 			$histories[$key]['UserProfile'] = $user_profile['UserProfile'];

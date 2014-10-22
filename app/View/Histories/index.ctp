@@ -1,5 +1,15 @@
 <div class="histories index">
 	<h2><?php echo __('Histories'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
+	
+	<div class="left" style="width: 100%;">
+		<form method="POST" id="GroupSelect" class="left full" action="/histories/index/">
+			<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Diagnosis:</strong></label>
+			<?php echo $this->Form->input('History.search_value', array('value' => $search_value, 'style' => "width: 30%; float: left; margin-right: 10px;", 'label' => false, 'div' => false, 'class' => 'left')); ?>
+			<input name="data[History][submit]" type="submit" value="SUBMIT" class="btn btn-success left" style="margin-right: 5px;">
+			<input name="data[History][reset]" type="submit" value="RESET" class="btn btn-danger left">
+		</form>
+	</div>
+	
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -28,7 +38,7 @@
 				echo $this->Html->link($display_data, array('controller' => 'users', 'action' => 'view', $history['User']['id'])); 
 			?>
 		</td>
-		<td><?php echo h($history['History']['diagnostics']); ?>&nbsp;</td>
+		<td width="40%"><?php echo h($history['History']['diagnostics']); ?>&nbsp;</td>
 		<td><?php echo h($history['History']['created']); ?>&nbsp;</td>
 		<td><?php echo h($history['History']['modified']); ?>&nbsp;</td>
 		
