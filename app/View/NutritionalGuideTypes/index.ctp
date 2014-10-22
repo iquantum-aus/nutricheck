@@ -1,5 +1,5 @@
 <div class="nutritionalGuideTypes index">
-	<h2><?php echo __('Nutritional Guide Types'); ?></h2>
+	<h2><?php echo __('Nutritional Guide Types'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -7,7 +7,6 @@
 			<th><?php echo $this->Paginator->sort('type'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th><?php echo $this->Paginator->sort('status'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($nutritionalGuideTypes as $nutritionalGuideType): ?>
@@ -19,11 +18,11 @@
 		<td><?php echo h($nutritionalGuideType['NutritionalGuideType']['type']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuideType['NutritionalGuideType']['created']); ?>&nbsp;</td>
 		<td><?php echo h($nutritionalGuideType['NutritionalGuideType']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($nutritionalGuideType['NutritionalGuideType']['status']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $nutritionalGuideType['NutritionalGuideType']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $nutritionalGuideType['NutritionalGuideType']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $nutritionalGuideType['NutritionalGuideType']['id']), null, __('Are you sure you want to delete # %s?', $nutritionalGuideType['NutritionalGuideType']['id'])); ?>
+		
+		<td>
+			<a class="btn btn-primary" href="/nutritional_guide_types/view/<?php echo $nutritionalGuideType['NutritionalGuideType']['id']; ?>">View</a>
+			<a class="btn btn-warning" href="/nutritional_guide_types/edit/<?php echo $nutritionalGuideType['NutritionalGuideType']['id']; ?>">Edit</a>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $nutritionalGuideType['NutritionalGuideType']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $nutritionalGuideType['NutritionalGuideType']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

@@ -281,12 +281,17 @@ class QuestionsController extends AppController {
 		$this->PerformedCheck->create();
 		$this->PerformedCheck->save($performed_check_data);		
 		
+		
 		if(isset($_REQUEST['source']) && $_REQUEST['source'] == "system") {
+			// to remove the session when the create and answer button is clicked when creating a user
+			$this->Session->delete('isCreateAnswer');
+			
 			$this->Session->setFlash(__('Thank you for completing this NutriCheck assessment. This assessment report has been saved and sent to your patient database'));
 			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 		} else {
 			echo "1";
 		}
+		
 		exit();
 	}
 	

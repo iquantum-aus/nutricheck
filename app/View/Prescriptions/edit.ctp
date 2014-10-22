@@ -4,8 +4,8 @@
 		<legend><?php echo __('Edit Prescription'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('factor_id', array('empty' => 'Select Factor'));
-		echo $this->Form->input('base_nutrient_id', array('options' => $base_nutrients, 'empty' => 'Select Nutrient'));
+		echo $this->Form->input('factor_id', array('empty' => 'Select Factor', 'class' => 'chosen-select'));
+		echo $this->Form->input('base_nutrient_id', array('empty' => 'Select Nutrient', 'class' => 'chosen-select', 'options' => $base_nutrients, 'empty' => 'Select Nutrient'));
 		echo $this->Form->input('1_20', array('label' => '1 - 20'));
 		echo $this->Form->input('21_40', array('label' => '21 - 40'));
 		echo $this->Form->input('41_60', array('label' => '41 - 60'));

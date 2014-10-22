@@ -4,12 +4,11 @@
 		<legend><?php echo __('Edit Nutritional Guide Type'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('user_id');
 		echo $this->Form->input('type');
-		echo $this->Form->input('status');
 	?>
+	<input type="submit" value="SUBIMT" class="btn btn-success">
 	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+<?php echo $this->Form->end(); ?>
 </div>
 
 <?php /*

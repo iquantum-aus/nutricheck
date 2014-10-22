@@ -1,5 +1,5 @@
 <div class="factors index">
-	<h2><?php echo __('Factors'); ?></h2>
+	<h2><?php echo __('Factors'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	<table class="full table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>

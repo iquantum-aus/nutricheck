@@ -43,8 +43,8 @@ class History extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Users' => array(
-			'className' => 'Users',
+		'User' => array(
+			'className' => 'User',
 			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',

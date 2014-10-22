@@ -21,6 +21,7 @@ class UserProfilesController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->UserProfile->recursive = 0;
 		$this->set('userProfiles', $this->Paginator->paginate());
 	}
@@ -33,6 +34,7 @@ class UserProfilesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->UserProfile->exists($id)) {
 			throw new NotFoundException(__('Invalid user profile'));
 		}
@@ -46,6 +48,7 @@ class UserProfilesController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->UserProfile->create();
 			if ($this->UserProfile->save($this->request->data)) {
@@ -67,6 +70,7 @@ class UserProfilesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->UserProfile->exists($id)) {
 			throw new NotFoundException(__('Invalid user profile'));
 		}
@@ -93,6 +97,7 @@ class UserProfilesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+		$this->layout = "public_dashboard";
 		$this->UserProfile->id = $id;
 		if (!$this->UserProfile->exists()) {
 			throw new NotFoundException(__('Invalid user profile'));
@@ -104,4 +109,5 @@ class UserProfilesController extends AppController {
 			$this->Session->setFlash(__('The user profile could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+}

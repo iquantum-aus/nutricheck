@@ -1,5 +1,5 @@
 <div class="prescriptions index">
-	<h2><?php echo __('Prescriptions'); ?></h2>
+	<h2><?php echo __('Prescriptions'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	<table class="full table table-striped table">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>

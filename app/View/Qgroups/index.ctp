@@ -9,7 +9,7 @@
 		<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
 	</form>
 	
-	<h2><?php echo __('Widgets'); ?></h2>
+	<h2><?php echo __('Widgets'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
 	<table class="table table-striped">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>

@@ -21,6 +21,7 @@ class BaseNutrientsController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->layout = "public_dashboard";
 		$this->BaseNutrient->recursive = 0;
 		
 		$this->Paginator->settings = array(
@@ -38,6 +39,7 @@ class BaseNutrientsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->BaseNutrient->exists($id)) {
 			throw new NotFoundException(__('Invalid base nutrient'));
 		}
@@ -51,6 +53,7 @@ class BaseNutrientsController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
 			$this->BaseNutrient->create();
 			if ($this->BaseNutrient->save($this->request->data)) {
@@ -70,6 +73,7 @@ class BaseNutrientsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		$this->layout = "public_dashboard";
 		if (!$this->BaseNutrient->exists($id)) {
 			throw new NotFoundException(__('Invalid base nutrient'));
 		}
