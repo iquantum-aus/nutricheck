@@ -108,7 +108,6 @@
 		<p>		
 			<ul>
 				<li><a href="https://vimeo.com/107670858" target="_blank">Completing a quick entry</a></li>
-				<li><a href="https://vimeo.com/107668582" target="_blank">Admin adding a pharmacy</a></li>
 				<li><a href="https://vimeo.com/107668581" target="_blank">Viewing reports</a></li>
 				<li><a href="https://vimeo.com/107668576" target="_blank">Adding a member and completing a NutriCheck.</a></li>
 			</ul>
