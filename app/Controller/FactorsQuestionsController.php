@@ -23,7 +23,48 @@ class FactorsQuestionsController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->FactorsQuestion->recursive = 0;
-		$this->set('factorsQuestions', $this->Paginator->paginate());
+		
+		$search_value = $this->Session->read("FactorQuestion.search_value");
+		if ($this->request->is('post')) {			
+		
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['FactorQuestion']['search_value'])) {
+				if(!isset($this->request->data['FactorQuestion']['reset'])) {
+					$search_value = $this->request->data['FactorQuestion']['search_value'];
+					$this->Session->write('FactorQuestion.search_value', $this->request->data['FactorQuestion']['search_value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['FactorQuestion']['reset'])) {
+				$this->Session->delete('FactorQuestion.search_value');
+				unset($this->request->data['FactorQuestion']['search_value']);
+				$search_value = "";
+			}
+		}
+		
+		if(!empty($search_value)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'Factor.name LIKE "%'.$search_value.'%"',
+						'Question.question LIKE "%'.$search_value.'%"',
+					),
+					'and' => array (
+						'Factor.status' => 1,
+						'Question.status' => 1
+					)
+				),
+			);
+			
+			$this->set("search_value", $search_value);
+		}
+		
+		// echo $search_value;
+		// exit();
+		
+		$associations = $this->paginate();
+		$this->set('factorsQuestions', $associations);
 	}
 
 /**

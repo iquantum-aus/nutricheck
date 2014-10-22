@@ -193,7 +193,7 @@ Talk to us on the NutriCheck website.
 		<?php if(!empty($behalfUserId)) { ?>
 			$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value=<?php echo $behalfUserId; ?>");
 			$('#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value=<?php echo $behalfUserId; ?>");
-			$('#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/quickentry_iframe?hash_value=<?php echo $behalfUserId; ?>");
+			$('#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?hash_value=<?php echo $behalfUserId; ?>");
 			$('#reportsNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value=<?php echo $behalfUserId; ?>");
 		<?php } ?>
 		
