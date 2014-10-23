@@ -6,7 +6,7 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('title');
 		echo $this->Form->input('description', array('class' => 'ckeditor'));
-		echo $this->Form->input('factor_id', array('options' => $factors));
+		echo $this->Form->input('factor_id', array('options' => $factors, 'class' => 'chosen-select', 'empty' => 'Select Factor'));
 		echo $this->Form->input('nutritional_guide_type_id', array('empty' => 'Select Guide Type', 'class' => 'chosen-select', 'options' => $nutritional_guide_types));
 	?>
 	</fieldset>

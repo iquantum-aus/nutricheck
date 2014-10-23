@@ -23,7 +23,45 @@ class FactorsController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->Factor->recursive = 0;
-		$this->set('factors', $this->Paginator->paginate());
+		
+		$search_value = $this->Session->read("Factor.search_value");
+		if($this->request->is('post')) {
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['Factor']['search_value'])) {
+				if(!isset($this->request->data['Factor']['reset'])) {
+					$search_value = $this->request->data['Factor']['search_value'];
+					$this->Session->write('Factor.search_value', $this->request->data['Factor']['search_value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['Factor']['reset'])) {
+				$this->Session->delete('Factor.search_value');
+				unset($this->request->data['Factor']['search_value']);
+				$search_value = "";
+			}
+		}
+		
+		if(!empty($search_value)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'Factor.name LIKE "%'.$search_value.'%"',
+						'Factor.description LIKE "%'.$search_value.'%"',
+						'FactorType.type LIKE "%'.$search_value.'%"'
+					),
+					'and' => array (
+						'Factor.status' => 1,
+						'FactorType.status' => 1
+					)
+				)
+			);
+			
+			$this->set("search_value", $search_value);
+		}
+		
+		$factors = $this->paginate();
+		$this->set('factors', $factors);
 	}
 
 /**
