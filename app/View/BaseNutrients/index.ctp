@@ -17,8 +17,7 @@
 			<th><?php echo $this->Paginator->sort('base_nutrient_formula'); ?></th>
 			<th><?php echo $this->Paginator->sort('daily_dosage'); ?></th>
 			<th><?php echo $this->Paginator->sort('maximum_dosage'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
+			<th><?php echo $this->Paginator->sort('group'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($baseNutrients as $baseNutrient): ?>
@@ -27,8 +26,39 @@
 		<td><?php echo h($baseNutrient['BaseNutrient']['base_nutrient_formula']); ?>&nbsp;</td>
 		<td><?php echo h($baseNutrient['BaseNutrient']['daily_dosage']); ?>&nbsp;</td>
 		<td><?php echo h($baseNutrient['BaseNutrient']['maximum_dosage']); ?>&nbsp;</td>
-		<td><?php echo h($baseNutrient['BaseNutrient']['created']); ?>&nbsp;</td>
-		<td><?php echo h($baseNutrient['BaseNutrient']['modified']); ?>&nbsp;</td>
+		<td>
+			<?php 
+				switch($baseNutrient['BaseNutrient']['nutrient_group']) {
+					case "":
+						echo "";
+						break;
+						
+					case 0:
+						echo "Allergy";
+						break;
+					
+					case 1:
+						echo "Digestion";
+						break;
+					
+					case 2:
+						echo "Git Dysbiosis";
+						break;
+					
+					case 3:
+						echo "Vitamins";
+						break;
+						
+					case 4:
+						echo "Minerals";
+						break;
+						
+					case 5:
+						echo "Neurotransmitter Precursors";
+						break;
+				}
+			?>&nbsp;
+		</td>
 		
 		<td>
 			<a href="/base_nutrients/view/<?php echo $baseNutrient['BaseNutrient']['id']; ?>" class="btn btn-primary">View</a>

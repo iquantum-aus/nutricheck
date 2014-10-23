@@ -214,6 +214,7 @@ class AnswersController extends AppController {
 	
 	public function load_date_report($completion_time, $user_id) {
 		$this->layout = "public_dashboard";
+		$this->loadModel('BaseNutrient');
 		// $user_id = $this->Session->read('Auth.User.id');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
@@ -283,6 +284,9 @@ class AnswersController extends AppController {
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_type'] = $factor_info['FactorType']['type'];
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_id'] = $grouped_key;
 		}
+		
+		$base_nutrient = $this->BaseNutrient->find('all', array('fields' => array('id', 'base_nutrient_formula', 'nutrient_group', 'maximum_dosage'), 'order' => 'nutrient_group ASC'));
+		$this->set('base_nutrient', $base_nutrient);
 		
 		$this->set('factor_type_grouping', $factor_type_grouping);
 		$this->set('factor_types', $factor_types);
