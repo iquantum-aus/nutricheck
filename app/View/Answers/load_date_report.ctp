@@ -80,7 +80,11 @@
 			$base_nutrient[$key]['BaseNutrient']['nutrient_group'] = "AL";
 		}
 		
-		$grouped_base_nutrient[$base_nutrient[$key]['BaseNutrient']['nutrient_group']][$key] = $base_nutrient[$key];
+		$grouped_base_nutrient[$base_nutrient[$key]['BaseNutrient']['nutrient_group']][$base_nutrient[$key]['BaseNutrient']['order']] = $base_nutrient[$key];
+	}
+	
+	foreach($grouped_base_nutrient as $key => $nutrient) {
+		ksort($grouped_base_nutrient[$key]);
 	}
 	
 	$final_factor_grouped_by_type = array();
@@ -217,6 +221,7 @@
 	<h1>Detailed Nutrient Recommendation</h1>
 	<div class="prescription_report left full">
 		
+		<?php unset($grouped_base_nutrient['XX']) ?>
 		<?php foreach($grouped_base_nutrient as $group_key => $nutrient) { ?>
 			
 			<h2>
@@ -265,8 +270,7 @@
 							<td width="50%"><?php echo $item['BaseNutrient']['base_nutrient_formula']; ?></td>
 							<td width="50%">
 								<?php
-								
-									if(!empty($item['BaseNutrient']['maximum_dosage'] != "")) {										
+									if(!empty($item['BaseNutrient']['maximum_dosage'])) {										
 										if(($item['BaseNutrient']['prescription'] <= $item['BaseNutrient']['maximum_dosage'])) {
 											echo $item['BaseNutrient']['prescription'];
 										} else {

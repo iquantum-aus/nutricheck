@@ -48,6 +48,10 @@ class BaseNutrientsController extends AppController {
 		$base_nutrient_list = $this->BaseNutrient->find('list', array('fields' => array('id', 'base_nutrient_formula')));
 		$this->set("base_nutrient_list", $base_nutrient_list);
 		
+		$this->paginate = array(
+			'order' => 'nutrient_group ASC'
+		);
+		
 		$this->set('selected_ids', $selected_ids);
 		$this->set('baseNutrients', $this->Paginator->paginate($condition));
 	}
@@ -130,4 +134,5 @@ class BaseNutrientsController extends AppController {
 			$this->Session->setFlash(__('The base nutrient could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+}

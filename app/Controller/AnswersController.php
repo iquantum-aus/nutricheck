@@ -285,7 +285,7 @@ class AnswersController extends AppController {
 			$factor_type_grouping[$factor_info['FactorType']['id']][$grouped_key]['factor_id'] = $grouped_key;
 		}
 		
-		$base_nutrient = $this->BaseNutrient->find('all', array('fields' => array('id', 'base_nutrient_formula', 'nutrient_group', 'maximum_dosage'), 'order' => 'nutrient_group ASC'));
+		$base_nutrient = $this->BaseNutrient->find('all', array('fields' => array('id', 'base_nutrient_formula', 'nutrient_group', 'maximum_dosage', 'order'), 'order' => 'nutrient_group ASC'));
 		$this->set('base_nutrient', $base_nutrient);
 		
 		$this->set('factor_type_grouping', $factor_type_grouping);

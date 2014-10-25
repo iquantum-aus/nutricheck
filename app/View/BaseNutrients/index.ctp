@@ -18,6 +18,7 @@
 			<th><?php echo $this->Paginator->sort('daily_dosage'); ?></th>
 			<th><?php echo $this->Paginator->sort('maximum_dosage'); ?></th>
 			<th><?php echo $this->Paginator->sort('group'); ?></th>
+			<th><?php echo $this->Paginator->sort('order'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($baseNutrients as $baseNutrient): ?>
@@ -59,6 +60,7 @@
 				}
 			?>&nbsp;
 		</td>
+		<td><?php echo h($baseNutrient['BaseNutrient']['order']); ?>&nbsp;</td>
 		
 		<td>
 			<a href="/base_nutrients/view/<?php echo $baseNutrient['BaseNutrient']['id']; ?>" class="btn btn-primary">View</a>
