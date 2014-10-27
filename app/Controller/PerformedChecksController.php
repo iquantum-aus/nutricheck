@@ -29,14 +29,29 @@ class PerformedChecksController extends AppController {
 		$this->layout = "public_dashboard";
 		$this->PerformedCheck->recursive = 0;
 		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
 		
-		$this->Paginator->settings = array(
-			'conditions' => array('PerformedCheck.isComplete' => 1, 'User.parent_id' => $user_id),
-			'limit' => 30,
-			'order' => array('modified' => 'DESC')
-		);
+		if($group_id != 1) {
+			$this->Paginator->settings = array(
+				'conditions' => array('PerformedCheck.isComplete' => 1, 'User.parent_id' => $user_id, 'PerformedCheck.completion_time <>' => ""),
+				'limit' => 30,
+				'order' => array('completion_time' => 'DESC')
+			);
+		} else {
+			$this->Paginator->settings = array(
+				'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time <>' => ""),
+				'limit' => 30,
+				'order' => array('completion_time' => 'DESC')
+			);
+		}
 		
 		$performed_checks = $this->Paginator->paginate();		
+		
+		foreach($performed_checks as $key => $performed_check) {
+			$user_profile = $this->PerformedCheck->User->UserProfile->findByUserId($performed_check['User']['id']);
+			$performed_checks[$key]['UserProfile'] = $user_profile['UserProfile'];
+		}
+		
 		$this->set('performedChecks', $performed_checks);
 	}
 

@@ -23,12 +23,43 @@ class PrescriptionsController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		
-		$this->Paginator->settings = array(
-			'limit' => 1000
-		);
+		$this->Paginator->settings = array('limit' => 1000);
 		
-		$this->Prescription->recursive = 0;
-		$this->set('prescriptions', $this->Paginator->paginate(array('Prescription.status' => 1)));
+		$search_value = $this->Session->read("Prescription.search_value");
+		if($this->request->is('post')) {
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['Prescription']['search_value'])) {
+				if(!isset($this->request->data['Prescription']['reset'])) {
+					$search_value = $this->request->data['Prescription']['search_value'];
+					$this->Session->write('Prescription.search_value', $this->request->data['Prescription']['search_value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['Prescription']['reset'])) {
+				$this->Session->delete('Prescription.search_value');
+				unset($this->request->data['Prescription']['search_value']);
+				$search_value = "";
+			}
+		}
+		
+		$conditions = array('Prescription.status' => 1);
+		if(!empty($search_value)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'Prescription.functional_disturbance LIKE "%'.$search_value.'%"',
+						'Factor.name LIKE "%'.$search_value.'%"'
+					)
+				),
+				'limit' => 1000
+			);
+			
+			$this->set("search_value", $search_value);
+		}
+		
+		$prescriptions = $this->paginate($conditions);
+		$this->set('prescriptions', $prescriptions);
 	}
 
 /**

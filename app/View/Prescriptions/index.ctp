@@ -1,5 +1,15 @@
 <div class="prescriptions index">
 	<h2><?php echo __('Prescriptions'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
+	
+	<div class="left" style="width: 100%;">
+		<form method="POST" id="GroupSelect" class="left full" action="/prescriptions/index/">
+			<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Prescription:</strong></label>
+			<?php echo $this->Form->input('Prescription.search_value', array('value' => $search_value, 'style' => "width: 30%; float: left; margin-right: 10px;", 'label' => false, 'div' => false, 'class' => 'left')); ?>
+			<input name="data[Prescription][submit]" type="submit" value="SUBMIT" class="btn btn-success left" style="margin-right: 5px;">
+			<input name="data[Prescription][reset]" type="submit" value="RESET" class="btn btn-danger left">
+		</form>
+	</div>
+	
 	<table class="full table table-striped table">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>

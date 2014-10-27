@@ -305,6 +305,7 @@ class AnswersController extends AppController {
 	public function report_print($completion_time, $user_id) {
 		$this->layout = "ajax_plus_scripts";
 		$this->loadModel('UserProfile');
+		$this->loadModel('BaseNutrient');
 		
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
 		$user_info = $this->Answer->User->findById($user_id);
@@ -377,6 +378,9 @@ class AnswersController extends AppController {
 		$user_info = $this->Answer->User->findById($user_id);
 		$user_profile = $this->UserProfile->findByUserId($user_id);
 		$user_info['UserProfile'] = $user_profile['UserProfile'];
+		
+		$base_nutrient = $this->BaseNutrient->find('all', array('fields' => array('id', 'base_nutrient_formula', 'nutrient_group', 'maximum_dosage', 'order'), 'order' => 'nutrient_group ASC'));
+		$this->set('base_nutrient', $base_nutrient);
 		
 		$this->set('factor_type_grouping', $factor_type_grouping);
 		$this->set('factor_types', $factor_types);
