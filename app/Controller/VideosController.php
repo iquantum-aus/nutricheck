@@ -23,7 +23,44 @@ class VideosController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->Video->recursive = 0;
-		$this->set('videos', $this->Paginator->paginate());
+		
+		if($this->request->is('post')) {
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['Video']['search_value'])) {
+				if(!isset($this->request->data['Video']['reset'])) {
+					$this->Session->write('Video.search_value', $this->request->data['Video']['search_value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['Video']['reset'])) {
+				$this->Session->delete('Video.search_value');
+			}
+		}
+		
+		/* ----------------------------------------------------------------------------------------- PAGINATION WITH SEARCH VALUE ------------------------------------------------------------------------*/
+		
+		$search_value = $this->Session->read('Video.search_value');
+		$this->paginate = array('order' => array('Video.id' => 'ASC'));
+		
+		if(!empty($search_value)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'Video.video_link LIKE "%'.$search_value.'%"'
+					)
+				), 
+				'order' => array('Video.id' => 'ASC')
+			);
+			
+			$videos = $this->paginate();
+		/* ------------------------------------------------------------------------------------------- DEFAULT PAGINATION HERE ----------------------------------------------------------------------------------*/
+		} else {
+			$videos = $this->paginate();		
+		}
+		
+		$this->set('search_value', $search_value);
+		$this->set('videos', $videos);
 	}
 
 /**
