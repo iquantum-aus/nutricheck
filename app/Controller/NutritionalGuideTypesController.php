@@ -23,7 +23,40 @@ class NutritionalGuideTypesController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->NutritionalGuideType->recursive = 0;
-		$this->set('nutritionalGuideTypes', $this->Paginator->paginate());
+		
+		$conditions = array('NutritionalGuideType.status' => 1);
+		$selected_guide_type = $this->Session->read('NutritionalGuideType.selected_guide_type');
+		if ($this->request->is('post')) {
+			if(!empty($this->request->data['NutritionalGuideType']['id']) && !isset($this->request->data['NutritionalGuideType']['reset'])) {
+				$selected_guide_type = $this->request->data['NutritionalGuideType']['id'];
+				$this->Session->write('NutritionalGuideType.selected_guide_type', $selected_guide_type);
+			}
+			
+			if(isset($this->request->data['NutritionalGuideType']['reset'])) {
+				$this->Session->delete('NutritionalGuideType.selected_guide_type');	
+				unset($this->request->data['NutritionalGuideType']['id']);
+				$selected_guide_type = "";
+			}
+		}
+		
+		if(!empty($selected_guide_type)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'and' => array (
+						"NutritionalGuideType.id" => $selected_guide_type,
+						"NutritionalGuideType.status" => 1
+					)
+				)
+			);
+			
+			$this->set("selected_guide_type", $selected_guide_type);
+		}
+		
+		$nutrition_guide_type = $this->paginate($conditions);
+		$this->set('nutritionalGuideTypes', $nutrition_guide_type);
+		
+		$nutritional_guide_type_list = $this->NutritionalGuideType->find('list', array("conditions" => array('NutritionalGuideType.status' => 1), 'fields' => array('id', 'type')));
+		$this->set("nutritional_guide_type_list", $nutritional_guide_type_list);
 	}
 
 /**
