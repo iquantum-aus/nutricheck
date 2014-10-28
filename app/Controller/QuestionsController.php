@@ -565,7 +565,7 @@ class QuestionsController extends AppController {
 						$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-						$mail->From = "nomail@nutricheck.com.au"; 
+						$mail->From = "NutirCheck Info <info@nutricheck.com.au>";
 						// $mail->FromName = "nomail@nutricheck.com.au"; 
 						// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 						$mail->AddAddress($email, $email);
@@ -1062,18 +1062,18 @@ class QuestionsController extends AppController {
 				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?hash_value=".$hash_value."&factors=".$selected_factors;
 			}
 			
-			$mail = new PHPMailer(); 
+			$mail = new PHPMailer();
 			$mail->IsSMTP(); // we are going to use SMTP
 			$mail->IsHTML(true);
 			$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
-			$mail->SMTPAuth = true;                               // Enable SMTP authentication
-			$mail->Username = "greg@iquantum.com.au"; 
-			$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
-			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+			$mail->SMTPAuth = true; // Enable SMTP authentication
+			$mail->Username = "greg@iquantum.com.au";
+			$mail->Password = "eB67Z9BR9JWLCUCjsNstjg";
+			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "nomail@nutricheck.com.au"; 
-			// $mail->FromName = "nomail@nutricheck.com.au"; 
-			// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+			$mail->From = "Nutricheck Info <info@nutricheck.com.au>";
+			// $mail->FromName = "nomail@nutricheck.com.au";
+			// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au");
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 

@@ -110,6 +110,7 @@ class UsersController extends AclManagementAppController {
 	}
 	
 	public function login() {
+		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		$deactivation = false;
 		Configure::load('general');
 		session_destroy();
@@ -160,13 +161,30 @@ class UsersController extends AclManagementAppController {
 						$this->User->save($user_deactivation);
 						
 						$to = Configure::read('Admin.email');
-						$subject = 'The user has been deactivated';
-
-						$headers = "From: info@nutricheck.com.au\r\n";
-						$headers .= "MIME-Version: 1.0\r\n";
-						$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+						$subject = 'The user has been deactivated';			
 						
-						mail($to, $subject, $message, $headers);
+						$mail = new PHPMailer(); 
+						$mail->IsSMTP(); // we are going to use SMTP
+						$mail->IsHTML(true);
+						$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+						$mail->SMTPAuth = true;                               // Enable SMTP authentication
+						$mail->Username = "greg@iquantum.com.au"; 
+						$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+
+						$mail->From = 'NutriCheck Info <info@nutricheck.com.au>'; 
+						// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
+						// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+						$mail->AddAddress($to, $to);
+						
+						$mail->CharSet  = 'UTF-8'; 
+						$mail->WordWrap = 50;  // set word wrap to 50 characters
+
+						$mail->IsHTML(true);  // set email format to HTML 
+						
+						$mail->Subject = $subject;
+						$mail->Body = $message; 
+						$mail->Send();
 						
 						$this->User->remove_existence_attempt_logs($user_existence_id);
 						$deactivation = true;

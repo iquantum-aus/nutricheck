@@ -221,7 +221,7 @@ class PerformedChecksController extends AppController {
 		$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-		$mail->From = "nomail@nutricheck.com.au"; 
+		$mail->From = "Nutricheck Info <info@nutricheck.com.au>"; 
 		// $mail->FromName = "nomail@nutricheck.com.au"; 
 		// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 		$mail->AddAddress($email, $email);
