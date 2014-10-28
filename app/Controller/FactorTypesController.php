@@ -23,7 +23,44 @@ class FactorTypesController extends AppController {
 	public function index() {
 		$this->layout = "public_dashboard";
 		$this->FactorType->recursive = 0;
-		$this->set('factorTypes', $this->Paginator->paginate());
+		
+		if($this->request->is('post')) {
+			/* ------------------------------------------------------------ IF SUBMIT BUTTON IS HIT ------------------------------------------------------------*/
+			if(!empty($this->request->data['FactorType']['search_value'])) {
+				if(!isset($this->request->data['FactorType']['reset'])) {
+					$this->Session->write('FactorType.search_value', $this->request->data['FactorType']['search_value']);
+				}
+			}
+			
+			/* ------------------------------------------------------------ IF RESET BUTTON IS HIT ------------------------------------------------------------*/
+			if(isset($this->request->data['FactorType']['reset'])) {
+				$this->Session->delete('FactorType.search_value');
+			}
+		}
+		
+		/* ----------------------------------------------------------------------------------------- PAGINATION WITH SEARCH VALUE ------------------------------------------------------------------------*/
+		
+		$search_value = $this->Session->read('FactorType.search_value');
+		$this->paginate = array('order' => array('FactorType.id' => 'ASC'));
+		
+		if(!empty($search_value)) {
+			$this->paginate = array(
+				'conditions' => array(
+					'or' => array (
+						'FactorType.type LIKE "%'.$search_value.'%"'
+					)
+				), 
+				'order' => array('FactorType.id' => 'ASC')
+			);
+			
+			$factor_types = $this->paginate();
+		/* ------------------------------------------------------------------------------------------- DEFAULT PAGINATION HERE ----------------------------------------------------------------------------------*/
+		} else {
+			$factor_types = $this->paginate();		
+		}
+		
+		$this->set('search_value', $search_value);
+		$this->set('factorTypes', $factor_types);
 	}
 
 /**

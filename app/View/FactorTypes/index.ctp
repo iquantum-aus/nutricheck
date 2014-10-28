@@ -1,5 +1,16 @@
 <div class="factorTypes index">
 	<h2><?php echo __('Factor Types'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
+	
+	<div class="left" style="width: 100%;">
+		<form method="POST" id="GroupSelect" class="left full" action="/factor_types/index/">
+			<label style="float: left; margin-right: 20px; padding-top: 10px;"><strong>Search for a Type:</strong></label>
+			<?php echo $this->Form->input('FactorType.search_value', array('value' => $search_value, 'style' => "width: 30%; float: left; margin-right: 10px;", 'label' => false, 'div' => false, 'class' => 'left')); ?>
+			<input name="data[FactorType][submit]" type="submit" value="SUBMIT" class="btn btn-success left" style="margin-right: 5px;">
+			<input name="data[FactorType][reset]" type="submit" value="RESET" class="btn btn-danger left">
+			<!-- <input type="submit" class="btn btn-success" value="SELECT" name="data[User][submit]"> -->
+		</form>
+	</div>
+	
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
