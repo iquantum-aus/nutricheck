@@ -310,15 +310,28 @@ class QuestionsController extends AppController {
 			
 			$hash_value = $_GET['hash_value'];
 			// $this->Question->User->unbindModelAll();
-			$url_user_info = $this->Question->User->findByHashValue($hash_value);
+			$url_user_info = $this->Question->User->findByHashValue($hash_value); 
 			
-			if($this->Session->read('Auth.User.group_id') != 3 && $this->Session->read('Auth.User.id') != "") {
-				$this->Session->write('behalfUserId', $url_user_info['User']['id']);
-			} else {
+			if(isset($_GET['invitation'])) {
+				session_destroy();
 				$user = $url_user_info['User'];
 				if(!$this->Auth->login($user)) {
 					$this->Session->setFlash(__('Failed to auto-login'));
 					$this->redirect('/users/login');
+				} else {
+					$this->Question->User->UserProfile->unbindModelAll();
+					$userProfile = $this->Question->User->UserProfile->findByUserId($url_user_info['User']['id']);
+					$this->Session->write('Auth.User.UserProfile', $userProfile['UserProfile']);
+				}
+			} else {			
+				if($this->Session->read('Auth.User.group_id') != 3 && $this->Session->read('Auth.User.id') != "") {
+					$this->Session->write('behalfUserId', $url_user_info['User']['id']);
+				} else {
+					$user = $url_user_info['User'];
+					if(!$this->Auth->login($user)) {
+						$this->Session->setFlash(__('Failed to auto-login'));
+						$this->redirect('/users/login');
+					}
 				}
 			}
 		}
@@ -1057,9 +1070,9 @@ class QuestionsController extends AppController {
 			$email = $user_info['User']['email'];
 			
 			if(empty($selected_factors)) {
-				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value;
+				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value."&invitation=true";
 			} else {
-				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?hash_value=".$hash_value."&factors=".$selected_factors;
+				$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check/factors?hash_value=".$hash_value."&factors=".$selected_factors."&invitation=true";
 			}
 			
 			$mail = new PHPMailer();

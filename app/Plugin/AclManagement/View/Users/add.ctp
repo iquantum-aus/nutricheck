@@ -43,7 +43,7 @@
 				<div class="left span12 inputHolder">
 					<?php
 						if($user_info['group_id'] == 1) {
-							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist'));
+							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist', 'class' => 'chosen-select'));
 						}
 					?>
 				</div>
@@ -194,6 +194,8 @@
 			} else {
 				$('#formFieldsHolder').find("*").prop("disabled", true);
 			}
+			
+			$(".chosen-select").attr('disabled', false).trigger("chosen:updated");
 		});
 		
 		$('#UserEmail').focusout( function () {
@@ -292,5 +294,9 @@
 	.chosen-results {
 		float: left;
 		width: 100%;
+	}
+	
+	#UserParentId_chosen {
+		width: 220px !important;
 	}
 </style>

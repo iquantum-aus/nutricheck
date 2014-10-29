@@ -300,6 +300,7 @@
 							<div class="activeProgressMessage progressMessage span12">Welcome to your NutriCheck Assessment, Thank you for taking this important step to better well being. Be sure to answer every question, it will take approximately 5-10 minutes</div>
 							<div class="progressMessage span12">You are doing really well. You are 1/2 way through</div>
 							<div class="progressMessage span12">Great! You're almost there!</div>
+							<div class="progressMessage span12">Great! You're almost there!</div>
 							<div class="progressMessage span12">You're all done matey</div>
 						</div>
 					<?php } ?>

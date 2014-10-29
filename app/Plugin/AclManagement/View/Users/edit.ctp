@@ -338,6 +338,8 @@
 			} else {
 				$('#formFieldsHolder').find("*").prop("disabled", true);
 			}
+			
+			$(".chosen-select").attr('disabled', false).trigger("chosen:updated");
 		});
 		
 		$('#UserEmail').focusout( function () {
@@ -458,6 +460,10 @@
 		margin-bottom: 10px;
 		color: red;
 		display: none;
+	}
+	
+	#UserParentId_chosen {
+		width: 220px !important;
 	}
 </style>
 

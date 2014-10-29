@@ -1,7 +1,8 @@
 <style>
 	h1 { font-size: 18px; font-weight: bold; }
 	h1 span { font-size: 16px; font-weight: bold; color: green;  }
-	table tr td { padding: 3px; }
+	table tr td { padding: 5px; }
+	.factorNames a { font-size: 13px; }
 </style>
 
 <?php
