@@ -125,8 +125,10 @@
 								<li><a href="/questions">List Questions</a></li>
 								<li><a href="/questions/add">New Question</a></li>
 								<li><a href="/FactorsQuestions">Associate Questions</a></li>
-								<!-- <li><a href="/questions/nutrient_check">NutriCheck</a></li> -->
-								<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
+								<!-- 
+									<li><a href="/questions/nutrient_check">NutriCheck</a></li>
+									<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
+								-->
 							</ul>
 						</li>
 					
