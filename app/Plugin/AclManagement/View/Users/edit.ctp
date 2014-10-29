@@ -100,6 +100,11 @@
 		color:white;
 		opacity:.3;
 	}
+	
+	.chosen-results {
+		float:left;
+		width: 100%;
+	}
 </style>
 
 <?php 
@@ -140,7 +145,7 @@
 		<div class="left span12 inputHolder">
 			<?php	
 				if($user_info['group_id'] == 1) {
-					echo $this->Form->input('group_id', array('div' => false, 'empty' => 'Select Group'));
+					echo $this->Form->input('group_id', array('label' => 'Group<span>*</span>', 'class' => 'requiredField chosen-select', 'div' => false, 'empty' => 'Select Group'));
 				} else {
 					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
 				}
@@ -153,7 +158,7 @@
 				<div class="left span12 inputHolder">
 					<?php
 						if($user_info['group_id'] == 1) {
-							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist'));
+							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist', 'class' => 'chosen-select'));
 						}
 					?>
 				</div>

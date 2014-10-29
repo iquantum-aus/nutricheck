@@ -30,7 +30,7 @@
 		<div class="left span12 inputHolder">
 			<?php	
 				if($user_info['group_id'] == 1) {
-					echo $this->Form->input('group_id', array('label' => 'Group<span>*</span>', 'class' => 'requiredField', 'div' => false, 'empty' => 'Select Group'));
+					echo $this->Form->input('group_id', array('label' => 'Group<span>*</span>', 'class' => 'requiredField chosen-select', 'div' => false, 'empty' => 'Select Group', 'class' => 'chosen-select'));
 				} else {
 					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
 				}
@@ -287,5 +287,10 @@
 		margin-bottom: 10px;
 		color: red;
 		display: none;
+	}
+	
+	.chosen-results {
+		float: left;
+		width: 100%;
 	}
 </style>
