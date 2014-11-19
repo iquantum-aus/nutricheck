@@ -212,14 +212,16 @@ class AnswersController extends AppController {
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
-	public function load_date_report($completion_time, $user_id) {
+	public function load_date_report($completion_time, $user_id, $performed_check_id) {
 		$this->layout = "public_dashboard";
 		$this->loadModel('BaseNutrient');
+		$this->loadModel('SelectedFactor');
 		// $user_id = $this->Session->read('Auth.User.id');
 		
-		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
+		// $factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
 		$user_info = $this->Answer->User->findById($user_id);
 		
+		$selected_factors = $this->SelectedFactor->find('list', array('conditions' => array('performed_check_id' => $performed_check_id), 'fields' => array('id', 'factor_id')));
 		$reports_per_factor = array();
 		$previous_factor = 0;
 		$current_factor = 0;
@@ -242,12 +244,18 @@ class AnswersController extends AppController {
 			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('question_id' => $question_id)));
 			
 			foreach($associations as $association) {
-				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				
+				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				$factor_id = $answer['FactorsQuestion']['factor_id'];
 				$inc++;
 				
-				$reports_per_factor[$factor_id][$inc] = $answer;
+				if(!empty($selected_factors)) {
+					if(in_array($factor_id, $selected_factors)) {
+						$reports_per_factor[$factor_id][$inc] = $answer;
+					}
+				} else {
+					$reports_per_factor[$factor_id." - asdf"][$inc] = $answer;
+				}
 			}
 		}
 		
@@ -288,6 +296,7 @@ class AnswersController extends AppController {
 		$base_nutrient = $this->BaseNutrient->find('all', array('fields' => array('id', 'base_nutrient_formula', 'nutrient_group', 'maximum_dosage', 'order'), 'order' => 'nutrient_group ASC'));
 		$this->set('base_nutrient', $base_nutrient);
 		
+		$this->set('selected_factors', $selected_factors);
 		$this->set('factor_type_grouping', $factor_type_grouping);
 		$this->set('factor_types', $factor_types);
 		$this->set('factors', $factors);

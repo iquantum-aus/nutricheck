@@ -129,38 +129,54 @@
 			</tr>
 			
 			<?php foreach($factors as $list_key => $factor) { ?>
-				<tr>
-					<td width="27%">
-						<div class="hidden">
-							<div style="width: 1080px; padding: 0px 50px 0px 20px; height: 750px;" id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
-						</div>
-						<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
-					</td>
-					<td>
-						<?php
-							$graphColor = "";
-							
-							$second_percentage_value[$list_key] = round($second_percentage_value[$list_key]);
-							
-							if($second_percentage_value[$list_key] <= 20) { $graphColor = "green"; }
-							if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "yellow"; }
-							if($second_percentage_value[$list_key] >= 41 && $second_percentage_value[$list_key] <= 60) { $graphColor = "orange"; }
-							if($second_percentage_value[$list_key] >= 61 && $second_percentage_value[$list_key] <= 80) { $graphColor = "red"; }
-							if($second_percentage_value[$list_key] >= 81) { $graphColor = "red"; }
-						?>
-						
-						<div class="graphContentHolder">
-							<div class="left levelerHolder"></div>
-							<div class="left levelerHolder"></div>
-							<div class="left levelerHolder"></div>
-							<div class="left levelerHolder"></div>
-							<div class="left levelerHolder"></div>
-							<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background-color: <?php echo $graphColor; ?>;">
-								<?php // echo round($second_percentage_value[$list_key]); ?>
+				
+				<?php
+					$display = true;
+					if(!empty($selected_factors)) {
+						if(in_array($list_key, $selected_factors)) {
+							$display = true;
+						} else {
+							$display = false;
+						}
+					} else {
+						$display = false;
+					}
+				?>
+				
+				<?php if($display) { ?>
+					<tr>
+						<td width="27%">
+							<div class="hidden">
+								<div style="width: 1080px; padding: 0px 50px 0px 20px; height: 750px;" id="nutriGuide_<?php echo $list_key; ?>"><?php echo $nutritional_guides[$list_key]; ?></div>
 							</div>
-						</div>
-					</td>
-				</tr>
+							<div class="factorNames"><a class="fancybox" href="#nutriGuide_<?php echo $list_key; ?>"><?php echo $factor." (".round($second_percentage_value[$list_key])."%) "; ?></a></div>
+						</td>
+						<td>
+							<?php
+								$graphColor = "";
+								
+								$second_percentage_value[$list_key] = round($second_percentage_value[$list_key]);
+								
+								if($second_percentage_value[$list_key] <= 20) { $graphColor = "green"; }
+								if($second_percentage_value[$list_key] >= 21 && $second_percentage_value[$list_key] <= 40) { $graphColor = "yellow"; }
+								if($second_percentage_value[$list_key] >= 41 && $second_percentage_value[$list_key] <= 60) { $graphColor = "orange"; }
+								if($second_percentage_value[$list_key] >= 61 && $second_percentage_value[$list_key] <= 80) { $graphColor = "red"; }
+								if($second_percentage_value[$list_key] >= 81) { $graphColor = "red"; }
+							?>
+							
+							<div class="graphContentHolder">
+								<div class="left levelerHolder"></div>
+								<div class="left levelerHolder"></div>
+								<div class="left levelerHolder"></div>
+								<div class="left levelerHolder"></div>
+								<div class="left levelerHolder"></div>
+								<div class="left horGraph" style="width: <?php echo $second_percentage_value[$list_key]; ?>%; background-color: <?php echo $graphColor; ?>;">
+									<?php // echo round($second_percentage_value[$list_key]); ?>
+								</div>
+							</div>
+						</td>
+					</tr>
+				<?php } ?>
 			<?php } ?>
 			
 			<tr>
@@ -222,72 +238,94 @@
 	<div class="prescription_report left full">
 		
 		<?php unset($grouped_base_nutrient['XX']) ?>
+		
+		<?php foreach($grouped_base_nutrient as $group_key => $nutrient) { ?>
+			<?php foreach($nutrient as $item_key => $item) { ?>			
+				<?php
+					if(empty($item['BaseNutrient']['prescription'])) {
+						unset($grouped_base_nutrient[$group_key][$item_key]);
+					}
+				?>
+			<?php } ?>
+		<?php } ?>
+		
+		
 		<?php foreach($grouped_base_nutrient as $group_key => $nutrient) { ?>
 			
-			<h2>
-				<?php
-				switch($group_key) {
-					case "XX":
-						echo "Various";
-						break;
-						
-					case "AL":
-						echo "Allergy";
-						break;
-					
-					case 1:
-						echo "Digestion";
-						break;
-					
-					case 2:
-						echo "Git Dysbiosis";
-						break;
-					
-					case 3:
-						echo "Vitamins";
-						break;
-						
-					case 4:
-						echo "Minerals";
-						break;
-						
-					case 5:
-						echo "Neurotransmitter Precursors";
-						break;
-				}
-			?>&nbsp;
-			</h2>
+			<?php if(!empty($nutrient)) { ?>
 			
-			<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
-				<tbody>
-					<tr>
-						<th>Nutrient Disturbance</th>
-						<th>Recommended Dosage</th>
-					</tr>
-					
-					<?php foreach($nutrient as $item) { ?>
+				<h2>
+					<?php
+					switch($group_key) {
+						case "XX":
+							echo "Various";
+							break;
+							
+						case "AL":
+							echo "Allergy";
+							break;
+						
+						case 1:
+							echo "Digestion";
+							break;
+						
+						case 2:
+							echo "Git Dysbiosis";
+							break;
+						
+						case 3:
+							echo "Vitamins";
+							break;
+							
+						case 4:
+							echo "Minerals";
+							break;
+							
+						case 5:
+							echo "Neurotransmitter Precursors";
+							break;
+					}
+				?>&nbsp;
+				</h2>
+				
+				<table style="margin-bottom: 50px;" class="full left table table-striped table-bordered">
+					<tbody>
 						<tr>
-							<td width="50%"><?php echo $item['BaseNutrient']['base_nutrient_formula']; ?></td>
-							<td width="50%">
-								<?php
-									if(!empty($item['BaseNutrient']['maximum_dosage'])) {										
-										if(($item['BaseNutrient']['prescription'] <= $item['BaseNutrient']['maximum_dosage'])) {
-											echo $item['BaseNutrient']['prescription'];
-										} else {
-											echo $item['BaseNutrient']['maximum_dosage'];
-										}
-									} else {
-										echo $item['BaseNutrient']['prescription'];
-									}
-								?>
-							</td>
+							<th>Nutrient Disturbance</th>
+							<th>Recommended Dosage</th>
 						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
+						
+						<?php foreach($nutrient as $item_key => $item) { ?>
+							
+							<?php
+								if(empty($item['BaseNutrient']['prescription'])) {
+									unset($grouped_base_nutrient[$group_key]['$item_key']);
+								}
+							?>
+							
+							<tr>
+								<td width="50%"><?php echo $item['BaseNutrient']['base_nutrient_formula']; ?></td>
+								<td width="50%">
+									<?php
+										if(!empty($item['BaseNutrient']['maximum_dosage'])) {										
+											if(($item['BaseNutrient']['prescription'] <= $item['BaseNutrient']['maximum_dosage'])) {
+												echo $item['BaseNutrient']['prescription'];
+											} else {
+												echo $item['BaseNutrient']['maximum_dosage'];
+											}
+										} else {
+											echo $item['BaseNutrient']['prescription'];
+										}
+									?>
+								</td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				
+				<br /><br /><br />
 			
-			<br /><br /><br />
-			
+			<?php } ?>
 		<?php } ?>
 	</div>
 </div>

@@ -199,7 +199,7 @@
 			<div class="memberFields">
 				<div class="left span12 inputHolder">
 					<label>Birthday<span>*</span></label>
-					<select id="birthdayMonth" class="requiredField" name="data[UserProfile][birthday][month]">
+					<select id="birthdayMonth" class="chosen-select requiredField" name="data[UserProfile][birthday][month]">
 						<option value="">Select Month</option>
 						
 						<?php
@@ -224,14 +224,14 @@
 						<?php } ?>
 					</select>
 					-
-					<select class="requiredField" id="birthdayDay" name="data[UserProfile][birthday][day]">
+					<select class="chosen-select requiredField" id="birthdayDay" name="data[UserProfile][birthday][day]">
 						<option value="">Select Day</option>
 						<?php  for($i=1; $i<=31; $i++) { ?>
 							<option <?php if($birthday[2] == $i) { echo "selected"; } ?> value="<?php echo $i; ?>"><?php echo $i; ?></option>
 						<?php } ?>
 					</select>
 					-
-					<select class="requiredField" id="birthdayYear" name="data[UserProfile][birthday][year]">
+					<select class="chosen-select requiredField" id="birthdayYear" name="data[UserProfile][birthday][year]">
 						<option value="">Select Year</option>
 						<?php  for($y=1900; $y<=2014; $y++) { ?>
 							<option <?php if($birthday[0] == $y) { echo "selected"; } ?> value="<?php echo $y; ?>"><?php echo $y; ?></option>
@@ -462,7 +462,7 @@
 		display: none;
 	}
 	
-	#UserParentId_chosen {
+	.chosen-container {
 		width: 220px !important;
 	}
 </style>

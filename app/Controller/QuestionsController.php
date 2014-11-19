@@ -302,6 +302,7 @@ class QuestionsController extends AppController {
 		$this->loadModel('PerformedCheck');
 		$this->loadModel('SelectedAnswerLog');
 		$this->loadModel('SelectedFactorLog');
+		$this->loadModel('SelectedFactor');
 		$this->loadModel('UserProfile');
 		
 		// $this->Session->write('isCreateAnswer', 1);
@@ -650,7 +651,7 @@ class QuestionsController extends AppController {
 					}
 					
 					/* $performed_completion_log = array();
-					$performed_completion_log['PerformedCheck']['date'] = date('Y-m-d');
+					$performed_completion_log['PerformedCheck']['date'] = 
 					$performed_completion_log['PerformedCheck']['isComplete'] = 1;
 					$performed_completion_log['PerformedCheck']['user_id'] = $return_user_id;
 					$performed_completion_log['PerformedCheck']['url'] = $this->request->data['PerformedCheck']['url'];
@@ -662,8 +663,18 @@ class QuestionsController extends AppController {
 					$date = date('Y-m-d');
 					$datetime = date("Y-m-d H:i:s");
 					$url = $this->request->data['PerformedCheck']['url'];
-					$sql_query = "INSERT INTO `performed_checks` (date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ($date, 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
+					$sql_query = "INSERT INTO `performed_checks` (date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ('$date', 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
 					$this->PerformedCheck->query($sql_query);
+					
+					$performed_check_id = $this->PerformedCheck->getLastInsertId();
+					foreach($this->request->data['SelectedFactor']['factor_id'] as $selected_factor) {
+						$selected_factor_instance = array();
+						$selected_factor_instance['SelectedFactor']['factor_id'] = $selected_factor;
+						$selected_factor_instance['SelectedFactor']['performed_check_id'] = $performed_check_id;
+						
+						$this->SelectedFactor->create();
+						$this->SelectedFactor->save($selected_factor_instance);
+					}					
 					
 				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
 				

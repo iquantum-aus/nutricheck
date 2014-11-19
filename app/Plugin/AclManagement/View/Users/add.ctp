@@ -84,7 +84,7 @@
 			<div class="memberFields">
 				<div class="left span12 inputHolder">
 					<label>Birthday<span>*</span></label>
-					<select id="birthdayMonth" class="requiredField" name="data[UserProfile][birthday][month]">
+					<select id="birthdayMonth" class="requiredField chosen-select" name="data[UserProfile][birthday][month]">
 						<option value="">Select Month</option>
 						<option value="01">January</option>
 						<option value="02">February</option>
@@ -100,14 +100,14 @@
 						<option value="12">December</option>
 					</select>
 					-
-					<select class="requiredField" id="birthdayDay" name="data[UserProfile][birthday][day]">
+					<select class="requiredField chosen-select" id="birthdayDay" name="data[UserProfile][birthday][day]">
 						<option value="">Select Day</option>
 						<?php  for($i=1; $i<=31; $i++) { ?>
 							<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
 						<?php } ?>
 					</select>
 					-
-					<select class="requiredField" id="birthdayYear" name="data[UserProfile][birthday][year]">
+					<select class="requiredField chosen-select" id="birthdayYear" name="data[UserProfile][birthday][year]">
 						<option value="">Select Year</option>
 						<?php  for($y=1900; $y<=2014; $y++) { ?>
 							<option value="<?php echo $y; ?>"><?php echo $y; ?></option>
@@ -296,7 +296,7 @@
 		width: 100%;
 	}
 	
-	#UserParentId_chosen {
+	.chosen-container {
 		width: 220px !important;
 	}
 </style>
