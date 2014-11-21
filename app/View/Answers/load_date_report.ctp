@@ -108,8 +108,8 @@
 	?>
 	
 	<a class="btn btn-success" href="/admin/users">Back to User List</a>
-	<a class="btn btn-warning" target="_blank" href="/answers/report_print/<?php echo $completion_time; ?>/<?php echo $user_id; ?>?mode=1">Print Graph and Summary</a>
-	<a class="btn btn-primary" target="_blank" href="/answers/report_print/<?php echo $completion_time; ?>/<?php echo $user_id; ?>?mode=2">Print Full Report</a>
+	<a class="btn btn-warning" target="_blank" href="/answers/report_print/<?php echo $completion_time; ?>/<?php echo $user_id; ?>/<?php echo $performed_check_id; ?>?mode=1">Print Graph and Summary</a>
+	<a class="btn btn-primary" target="_blank" href="/answers/report_print/<?php echo $completion_time; ?>/<?php echo $user_id; ?>/<?php echo $performed_check_id; ?>?mode=2">Print Full Report</a>
 	<br /><br />
 	
 	<div>		
@@ -138,8 +138,6 @@
 						} else {
 							$display = false;
 						}
-					} else {
-						$display = false;
 					}
 				?>
 				

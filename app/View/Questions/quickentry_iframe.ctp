@@ -10,6 +10,15 @@
 	
 	<form style="margin: 0;" class="left span12" method="POST" action="/questions/quickentry_nutrient_check" id="quickEntryForm">
 		
+		<?php
+			$factors = explode(",", $_GET['factors']);
+			foreach($factors as $factor) {
+				?>
+					<input type="hidden" name="data[SelectedFactor][factor_id][]" value="<?php echo $factor; ?>">
+				<?php
+			}
+		?>
+		
 		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 			<div class="left span12" id="quickEntryHolder">
 				<label style="float: left; margin-right: 20px; padding-top: 10px; color: #000;">Perform As:</label>

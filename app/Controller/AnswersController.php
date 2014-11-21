@@ -216,6 +216,8 @@ class AnswersController extends AppController {
 		$this->layout = "public_dashboard";
 		$this->loadModel('BaseNutrient');
 		$this->loadModel('SelectedFactor');
+		$this->loadModel('Prescription');
+		
 		// $user_id = $this->Session->read('Auth.User.id');
 		
 		// $factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
@@ -226,6 +228,11 @@ class AnswersController extends AppController {
 		$previous_factor = 0;
 		$current_factor = 0;
 		$inc = 0;
+			
+		$base_nutrients = array();
+		if(!empty($selected_factors)) {
+			$base_nutrients = $this->Prescription->find('list', array('fields' => array('id', 'base_nutrient_id'),'conditions' => array('factor_id' => $selected_factors)));
+		}
 		
 		$temp_answer = $this->Session->read('temp_answers');
 		
@@ -236,6 +243,7 @@ class AnswersController extends AppController {
 			$this->Answer->unbindModelAll();
 			$answers = $this->Answer->find('all', array('order' => array('Answer.factor_id ASC'), 'conditions' => array('Answer.user_id' => $user_id, 'Answer.completion_time' => $completion_time)));
 		}
+		
 		
 		foreach($answers as $key => $answer) {
 			$question_id = $answer['Answer']['question_id'];
@@ -249,12 +257,13 @@ class AnswersController extends AppController {
 				$factor_id = $answer['FactorsQuestion']['factor_id'];
 				$inc++;
 				
-				if(!empty($selected_factors)) {
+				if($selected_factors) {
 					if(in_array($factor_id, $selected_factors)) {
 						$reports_per_factor[$factor_id][$inc] = $answer;
 					}
+					
 				} else {
-					$reports_per_factor[$factor_id." - asdf"][$inc] = $answer;
+					$reports_per_factor[$factor_id][$inc] = $answer;
 				}
 			}
 		}
@@ -271,7 +280,11 @@ class AnswersController extends AppController {
 			)
 		);
 		
-		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		if(!empty($base_nutrients)) {
+			$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1, 'Prescription.base_nutrient_id' => $base_nutrients)));
+		} else {
+			$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		}
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		
@@ -282,6 +295,7 @@ class AnswersController extends AppController {
 				$grouped_prescriptions[$prescription['Prescription']['factor_id']][$key] = $prescription;
 			}
 		}
+
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		
@@ -304,20 +318,30 @@ class AnswersController extends AppController {
 		$this->set('grouped_prescriptions', $grouped_prescriptions);
 		$this->set('reports_per_factor', $reports_per_factor);
 		
+		$this->set("base_nutrients", $base_nutrients);
 		$this->set("completion_time", $completion_time);
 		$this->set("user_info", $user_info);
 		$this->set("user_id", $user_id);
+		$this->set("performed_check_id", $performed_check_id);
 	}
 	
 	###################################################### REPORT PER DATE FUNCTION HERE ##################################################
 	
-	public function report_print($completion_time, $user_id) {
+	public function report_print($completion_time, $user_id, $performed_check_id) {
 		$this->layout = "ajax_plus_scripts";
 		$this->loadModel('UserProfile');
 		$this->loadModel('BaseNutrient');
+		$this->loadModel('SelectedFactor');
+		$this->loadModel('Prescription');
 		
+		$selected_factors = $this->SelectedFactor->find('list', array('conditions' => array('performed_check_id' => $performed_check_id), 'fields' => array('id', 'factor_id')));
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
 		$user_info = $this->Answer->User->findById($user_id);
+		
+		$base_nutrients = array();
+		if(!empty($selected_factors)) {
+			$base_nutrients = $this->Prescription->find('list', array('fields' => array('id', 'base_nutrient_id'),'conditions' => array('factor_id' => $selected_factors)));
+		}
 		
 		$reports_per_factor = array();
 		$previous_factor = 0;
@@ -341,12 +365,19 @@ class AnswersController extends AppController {
 			$associations = $this->FactorsQuestion->find('all', array('conditions' => array('question_id' => $question_id)));
 			
 			foreach($associations as $association) {
-				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				
+				$answer['FactorsQuestion'] = $association['FactorsQuestion'];
 				$factor_id = $answer['FactorsQuestion']['factor_id'];
 				$inc++;
 				
-				$reports_per_factor[$factor_id][$inc] = $answer;
+				if($selected_factors) {
+					if(in_array($factor_id, $selected_factors)) {
+						$reports_per_factor[$factor_id][$inc] = $answer;
+					}
+					
+				} else {
+					$reports_per_factor[$factor_id][$inc] = $answer;
+				}
 			}
 		}
 		
@@ -362,7 +393,11 @@ class AnswersController extends AppController {
 			)
 		);
 		
-		$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		if(!empty($base_nutrients)) {
+			$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1, 'Prescription.base_nutrient_id' => $base_nutrients)));
+		} else {
+			$prescriptions = $this->Answer->Question->Factor->Prescription->find('all', array('conditions' => array('Prescription.status' => 1)));
+		}
 		
 		/* ----------------------------------------------------------------- SCRIPT TO GROUP PRESCRIPTION BY FACTOR ------------------------------------------------------------- */
 		
@@ -391,6 +426,7 @@ class AnswersController extends AppController {
 		$base_nutrient = $this->BaseNutrient->find('all', array('fields' => array('id', 'base_nutrient_formula', 'nutrient_group', 'maximum_dosage', 'order'), 'order' => 'nutrient_group ASC'));
 		$this->set('base_nutrient', $base_nutrient);
 		
+		$this->set('selected_factors', $selected_factors);
 		$this->set('factor_type_grouping', $factor_type_grouping);
 		$this->set('factor_types', $factor_types);
 		$this->set('factors', $factors);

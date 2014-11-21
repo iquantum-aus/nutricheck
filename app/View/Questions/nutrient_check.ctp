@@ -187,7 +187,7 @@
 							<input name="data[PerformedCheck][url]" type="hidden" value="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" />
 							
 							<?php foreach($selected_factors as $selected_factor) { ?>
-								<input type="text" value="<?php echo $selected_factor; ?>" name="data[SelectedFactor][factor_id][]" />
+								<input type="hidden" value="<?php echo $selected_factor; ?>" name="data[SelectedFactor][factor_id][]" />
 							<?php } ?>
 							
 							<div class="full_question">

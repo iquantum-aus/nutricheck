@@ -246,6 +246,7 @@ class QuestionsController extends AppController {
 	public function quickentry_nutrient_check() {
 		
 		$this->loadModel('PerformedCheck');
+		$this->loadModel('SelectedFactor');
 		$answers = $this->request->data;
 		
 		if(isset($_REQUEST['source']) && $_REQUEST['source'] == "system") {			
@@ -280,6 +281,17 @@ class QuestionsController extends AppController {
 
 		$this->PerformedCheck->create();
 		$this->PerformedCheck->save($performed_check_data);		
+		
+		$performed_check_id = $this->PerformedCheck->id;
+		
+		foreach($this->request->data['SelectedFactor']['factor_id'] as $selected_factor) {
+			$selected_factor_instance = array();
+			$selected_factor_instance['SelectedFactor']['factor_id'] = $selected_factor;
+			$selected_factor_instance['SelectedFactor']['performed_check_id'] = $performed_check_id;
+			
+			$this->SelectedFactor->create();
+			$this->SelectedFactor->save($selected_factor_instance);
+		}
 		
 		
 		if(isset($_REQUEST['source']) && $_REQUEST['source'] == "system") {
@@ -646,27 +658,24 @@ class QuestionsController extends AppController {
 				
 				
 				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
+					
 					foreach($logs_existence as $log_existence) {
 						$this->PerformedCheck->delete($log_existence['PerformedCheck']['id']);
 					}
 					
-					/* $performed_completion_log = array();
-					$performed_completion_log['PerformedCheck']['date'] = 
+					$date = date('Y-m-d');
+					$performed_completion_log = array();
+					$performed_completion_log['PerformedCheck']['date'] = $date;
 					$performed_completion_log['PerformedCheck']['isComplete'] = 1;
 					$performed_completion_log['PerformedCheck']['user_id'] = $return_user_id;
-					$performed_completion_log['PerformedCheck']['url'] = $this->request->data['PerformedCheck']['url'];
+					$performed_completion_log['PerformedCheck']['url'] = $url;
 					$performed_completion_log['PerformedCheck']['completion_time'] = $completion_time;
 					
 					$this->PerformedCheck->create();
-					$this->PerformedCheck->save($performed_completion_log); */
+					$this->PerformedCheck->save($performed_completion_log);
 					
-					$date = date('Y-m-d');
-					$datetime = date("Y-m-d H:i:s");
-					$url = $this->request->data['PerformedCheck']['url'];
-					$sql_query = "INSERT INTO `performed_checks` (date, isComplete, user_id, url, completion_time, created, modified, status) VALUES ('$date', 1, $return_user_id, '$url', $completion_time, '$datetime', '$datetime', 1)";
-					$this->PerformedCheck->query($sql_query);
+					$performed_check_id = $this->PerformedCheck->id;
 					
-					$performed_check_id = $this->PerformedCheck->getLastInsertId();
 					foreach($this->request->data['SelectedFactor']['factor_id'] as $selected_factor) {
 						$selected_factor_instance = array();
 						$selected_factor_instance['SelectedFactor']['factor_id'] = $selected_factor;
@@ -674,7 +683,7 @@ class QuestionsController extends AppController {
 						
 						$this->SelectedFactor->create();
 						$this->SelectedFactor->save($selected_factor_instance);
-					}					
+					}
 					
 				/* -------------------------------------------------------------------------- SAVING OF PERFORMED CHECKS UPON COMPLETION ---------------------------------------------------------------*/
 				
