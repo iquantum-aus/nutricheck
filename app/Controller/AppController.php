@@ -112,6 +112,26 @@ class AppController extends Controller {
 		
 		return $pharmacists_name;
 	}
+
+	public function user_type($user_type) {
+        $userTypes = $this->User->find('list', array('conditions' => array('group_id' => $user_type), 'fields' => array('id', 'id')));
+		$this->User->UserProfile->unbindModelAll();
+		
+		$userTypes_name = array();
+		foreach($userTypes as $userType_id => $userType) {
+			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $userType), 'fields' => array('company', 'first_name', 'last_name')));
+			
+			if(!empty($user_profile)) {
+				if(!empty($user_profile['UserProfile']['company'])) {
+					$userTypes_name[$userType_id] = $user_profile['UserProfile']['company'];
+				} else {
+					$userTypes_name[$pharmacist_id] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['first_name'];
+				}
+			}
+		}
+		
+		return $userTypes_name;
+	}
 	
 	public function randomNumber($length) {
 		$result = '';

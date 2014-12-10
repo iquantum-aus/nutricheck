@@ -415,6 +415,17 @@ class UsersController extends AclManagementAppController {
 			if($this->request->data['User']['group_id'] == 2) {
 				$username = $this->request->data['UserProfile']['company'].$suffix;
 				$this->request->data['User']['username'] = $username;
+			
+			} else if($this->request->data['User']['group_id'] == 4) {
+				$username = $this->request->data['UserProfile']['company-client'].$suffix;
+				$this->request->data['User']['username'] = $username;
+				$this->request->data['UserProfile']['company'] = $this->request->data['UserProfile']['company-client'];
+			
+			} else if($this->request->data['User']['group_id'] == 5) {
+				$username = $this->request->data['UserProfile']['company-group'].$suffix;
+				$this->request->data['User']['username'] = $username;
+				$this->request->data['UserProfile']['company'] = $this->request->data['UserProfile']['company-group'];
+			
 			} else {
 				$this->request->data['User']['username'] = $username;
 			}
@@ -528,9 +539,12 @@ class UsersController extends AclManagementAppController {
 			}
         }
 		
-		$pharmacists = $this->pharmacists();		
+		$pharmacists = $this->pharmacists();
+		$client_groups = $this->user_type(4);
+		$group_affiliations = $this->user_type(5);
+
         $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
-        $this->set(compact('groups', 'pharmacists'));
+        $this->set(compact('groups', 'pharmacists', 'client_groups', 'group_affiliations'));
     }
 
     /**
@@ -599,6 +613,14 @@ class UsersController extends AclManagementAppController {
 			if(count($user_existence) > 0) {
 				$this->Session->setFlash(__('The email submitted already exist'), 'alert/error');
 			} else {
+				
+				if($this->request->data['User']['group_id'] == 4) {
+					$this->request->data['UserProfile']['company'] = $this->request->data['UserProfile']['company-client'];
+				} else if($this->request->data['User']['group_id'] == 5) {
+					$this->request->data['UserProfile']['company'] = $this->request->data['UserProfile']['company-group'];
+				}
+				
+
 				if ($this->User->save($this->request->data)) {
 				
 					$this->request->data['UserProfile']['user_id'] = $this->request->data['User']['id'];
@@ -629,8 +651,11 @@ class UsersController extends AclManagementAppController {
 		}
 		
 		$pharmacists = $this->pharmacists();
+		$client_groups = $this->user_type(4);
+		$group_affiliations = $this->user_type(5);
+
         $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
-        $this->set(compact('groups', 'pharmacists'));
+        $this->set(compact('groups', 'pharmacists', 'client_groups', 'group_affiliations'));
     }
 
     /**

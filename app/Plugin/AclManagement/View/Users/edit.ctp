@@ -153,6 +153,20 @@
 		</div>
 		
 		<div id="formFieldsHolder">
+
+			<div class="clientGroupFields" style="display: none;">
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
+				</div>
+
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.group_affiliation_id', array('required' => 'false', 'label' => 'Group Affiliation', 'empty' => 'Select Group Affiliation', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Group Affiliation', 'options' => $group_affiliations)); ?>
+				</div>
+			</div>
+			
+			<div class="groupAffiliationFields" style="display: none;">
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-group', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
+				</div>
+			</div>
+
 			<div class="memberFields">
 				
 				<div class="left span12 inputHolder">
@@ -161,6 +175,16 @@
 							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist', 'class' => 'chosen-select'));
 						}
 					?>
+				</div>
+				
+				<div class="clientFields">				
+					<div class="left span12 inputHolder">
+						<?php
+							if($user_info['group_id'] == 1) {
+								echo $this->Form->input('client_group_id', array('options' => $clientGroups, 'div' => false, 'empty' => 'Select CLient Group', 'label' => 'Client Group', 'class' => 'chosen-select'));
+							}
+						?>
+					</div>
 				</div>
 				
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => 'false', 'label' => 'Firstname<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
@@ -263,10 +287,12 @@
 				</div>
 			</div>
 
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('label' => 'Zip Code<span>*</span>', 'class' => 'numberOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('label' => 'Suburb<span>*</span>', 'class' => 'textOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
-			<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('label' => 'Address<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
-			
+			<div class="generalFields">
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.zip', array('label' => 'Zip Code<span>*</span>', 'class' => 'numberOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Zip Code')); ?></div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.suburb', array('label' => 'Suburb<span>*</span>', 'class' => 'textOnly requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Suburb')); ?></div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.address', array('label' => 'Address<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Address')); ?></div>
+			</div>
+
 			<br /><br />
 			<div class="left span12 inputHolder">
 				<?php echo $this->Form->input('User.username', array('class' => 'requiredField', 'div' => false, 'placeholder' => 'Username')); ?>
@@ -329,11 +355,29 @@
 				 */
 				 
 				if(group_id == 2) {
+					$('.clientGroupFields').hide();
+					$('.groupAffiliationFields').hide();
 					$('.memberFields').hide();
 					$('.clientFields').show();
-				} else {
+					$('.generalFields').show();
+				} else if(group_id == 3) {
+					$('.clientGroupFields').hide();
+					$('.groupAffiliationFields').hide();
 					$('.clientFields').hide();
 					$('.memberFields').show();
+					$('.generalFields').show();
+				} else if(group_id == 4) {
+					$('.clientGroupFields').show();
+					$('.groupAffiliationFields').hide();
+					$('.clientFields').hide();
+					$('.memberFields').hide();
+					$('.generalFields').hide();
+				} else if(group_id == 5) {
+					$('.clientGroupFields').hide();
+					$('.groupAffiliationFields').show();
+					$('.clientFields').hide();
+					$('.memberFields').hide();
+					$('.generalFields').hide();
 				}
 			} else {
 				$('#formFieldsHolder').find("*").prop("disabled", true);
