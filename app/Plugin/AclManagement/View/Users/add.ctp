@@ -39,10 +39,9 @@
 		<div id="formFieldsHolder">
 		
 			<div class="clientGroupFields" style="display: none;">
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name')); ?>
-				</div>
-
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.group_affiliation_id', array('required' => 'false', 'label' => 'Group Affiliation', 'empty' => 'Select Group Affiliation', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Group Affiliation', 'options' => $group_affiliations)); ?>
+				</div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name')); ?>
 				</div>
 			</div>
 			

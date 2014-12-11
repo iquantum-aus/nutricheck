@@ -155,10 +155,10 @@
 		<div id="formFieldsHolder">
 
 			<div class="clientGroupFields" style="display: none;">
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.group_affiliation_id', array('required' => 'false', 'label' => 'Group Affiliation', 'empty' => 'Select Group Affiliation', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Group Affiliation', 'options' => $group_affiliations)); ?>
 				</div>
 
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.group_affiliation_id', array('required' => 'false', 'label' => 'Group Affiliation', 'empty' => 'Select Group Affiliation', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Group Affiliation', 'options' => $group_affiliations)); ?>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
 				</div>
 			</div>
 			
@@ -177,20 +177,15 @@
 					?>
 				</div>
 				
-				<div class="clientFields">				
-					<div class="left span12 inputHolder">
-						<?php
-							if($user_info['group_id'] == 1) {
-								echo $this->Form->input('client_group_id', array('options' => $clientGroups, 'div' => false, 'empty' => 'Select CLient Group', 'label' => 'Client Group', 'class' => 'chosen-select'));
-							}
-						?>
-					</div>
-				</div>
-				
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.first_name', array('required' => 'false', 'label' => 'Firstname<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Firstname')); ?></div>
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.last_name', array('label' => 'Lastname<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Lastname')); ?></div>
 			</div>
 			
+			<div class="clientFields">
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.client_group_id', array('required' => 'false', 'label' => 'Client Group', 'empty' => 'Select Client Group', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Client Group', 'options' => $client_groups)); ?>
+				</div>
+			</div>
+
 			<div class="memberFields">
 				<div class="left span12 inputHolder">
 					<label>Gender<span>*</span></label>
@@ -327,6 +322,34 @@
 <script>
 	$(document).ready( function () {
 		
+		var group_id = <?php echo $this->data['User']['group_id'] ?>;
+
+		if(group_id == 2) {
+			$('.clientGroupFields').hide();
+			$('.groupAffiliationFields').hide();
+			$('.memberFields').hide();
+			$('.clientFields').show();
+			$('.generalFields').show();
+		} else if(group_id == 3) {
+			$('.clientGroupFields').hide();
+			$('.groupAffiliationFields').hide();
+			$('.clientFields').hide();
+			$('.memberFields').show();
+			$('.generalFields').show();
+		} else if(group_id == 4) {
+			$('.clientGroupFields').show();
+			$('.groupAffiliationFields').hide();
+			$('.clientFields').hide();
+			$('.memberFields').hide();
+			$('.generalFields').hide();
+		} else if(group_id == 5) {
+			$('.clientGroupFields').hide();
+			$('.groupAffiliationFields').show();
+			$('.clientFields').hide();
+			$('.memberFields').hide();
+			$('.generalFields').hide();
+		}
+
 		var current_time = "<?php echo time(); ?>";
 		$('#UserPassword').strength({
 			strengthClass: 'strength',
