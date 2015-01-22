@@ -103,7 +103,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			
 			var minimum_height = $('#content').height();
 			minimum_height = minimum_height+65;
-			//$('#sb-site').css('min-height', minimum_height);
+			$('#sb-site').css('min-height', minimum_height);
 			
 		});
 
