@@ -33,7 +33,7 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 0);
+	Configure::write('debug', 2);
 
 /**
  * Configure the Error handler used to handle errors for your application. By default
@@ -346,9 +346,9 @@
 $engine = 'File';
 
 // In development mode, caches should expire quickly.
-$duration = '+999 days';
+$duration = '+2 seconds';
 if (Configure::read('debug') > 0) {
-	$duration = '+10 seconds';
+	$duration = '+2 seconds';
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.

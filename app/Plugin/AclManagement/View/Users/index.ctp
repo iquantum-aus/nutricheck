@@ -2,11 +2,23 @@
 
 <div class="users index">
     
-	<form method="POST" style="width: 50%;" action="/admin/users">
+	<form method="POST" style="width: 50%;" action="/admin/users<?php if(!empty($_GET['mode'])) { echo "/?mode=".$_GET['mode']; } ?>">
 		<input placeholder = "Enter Search Here" type="text" name="data[User][value]" style="width: 50%; float: left; clear: none;" value="<?php echo $search_value; ?>">
 		<input type="submit" value="SEARCH" class="btn btn-success" name="data[User][search]" style="float: left; clear: none; margin-left: 10px;">
 		<input type="submit" value="RESET" name="data[User][reset]" class="btn btn-danger" style="float: left; clear: none; margin-left: 5px;">
 	</form>
+	
+	<?php 
+		if($group_id == 5) {
+			?>
+				<div class="left full">
+					<a class="list_toggle" href="?mode=client_group">List Client Groups</a>
+					<a class="list_toggle" href="?mode=client">List Clients</a>
+					<a class="list_toggle" href="?mode=member">List Members</a>
+				</div>
+			<?php
+		}
+	?>
 	
 	<table class="table">
     <tr>

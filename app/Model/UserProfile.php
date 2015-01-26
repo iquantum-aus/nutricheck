@@ -12,8 +12,8 @@ class UserProfile extends AppModel {
  *
  * @var array
  */
-	public $validate = array(
-/* 		'first_name' => array(
+/* 	public $validate = array(
+		'first_name' => array(
 			'notEmpty' => array(
 				'rule' => array('notEmpty'),
 				//'message' => 'Your custom message here',
@@ -32,8 +32,8 @@ class UserProfile extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		) */
-	);
+		)
+	); */
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -51,7 +51,7 @@ class UserProfile extends AppModel {
 			'order' => ''
 		)
 	);
-	
+
 	function unbindModelAll($to_all = true) { 
 		$unbind = array(); 
 		foreach ($this->belongsTo as $model=>$info) 
