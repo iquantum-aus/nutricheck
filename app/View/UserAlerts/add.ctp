@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add User Alert'); ?></legend>
 		<?php
-			echo $this->Form->input('user_id', array('value' => $id, 'type' => 'hidden'));
+			echo $this->Form->input('user_id', array('selected' => $id));
 			echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text'));
 		?>
 		<input type="submit" class="btn btn-danger">

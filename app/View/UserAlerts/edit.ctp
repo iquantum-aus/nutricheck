@@ -4,7 +4,7 @@
 		<legend><?php echo __('Add User Alert'); ?></legend>
 		<?php
 			echo $this->Form->input('id');
-			echo $this->Form->input('user_id', array('type' => 'hidden'));
+			echo $this->Form->input('user_id');
 			echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text'));
 		?>
 		<input type="submit" class="btn btn-danger">

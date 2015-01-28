@@ -19,7 +19,7 @@ class UsersController extends AclManagementAppController {
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		if(empty($user_id)) {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register', 'get_clients', 'get_client_groups');
 		} else {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy');
 		}
@@ -332,7 +332,7 @@ class UsersController extends AclManagementAppController {
 						$and_condition = array('User.client_group_id' => $flatten_client_groups);
 						
 					} else {
-						$flatten_clients = $this->get_clients($user_info['id']);
+						$flatten_clients = $this->get_clients($user_info['id'], null);
 						$and_condition = array('User.parent_id' => $flatten_clients);
 					}
 					
@@ -362,7 +362,7 @@ class UsersController extends AclManagementAppController {
 					if($_GET['mode'] == "client") {
 						$and_condition = array('User.client_group_id' => $user_info['id']);
 					} else {
-						$flatten_clients = $this->get_clients($user_info['id']);
+						$flatten_clients = $this->get_clients($user_info['id'], null);
 						$and_condition = array('User.parent_id' => $flatten_clients);
 					}
 					
@@ -449,7 +449,7 @@ class UsersController extends AclManagementAppController {
 					$condition = array('User.client_group_id' => $flatten_client_groups);
 					
 				} else {
-					$flatten_clients = $this->get_clients($user_info['id']);
+					$flatten_clients = $this->get_clients($user_info['id'], null);
 					$condition = array('User.parent_id' => $flatten_clients);
 				}
 			}
@@ -460,7 +460,7 @@ class UsersController extends AclManagementAppController {
 				if($_GET['mode'] == "client") {
 					$condition = array('User.client_group_id' => $user_info['id']);
 				} else {
-					$flatten_clients = $this->get_clients($user_info['id']);					
+					$flatten_clients = $this->get_clients($user_info['id'], null);					
 					$condition = array('User.parent_id' => $flatten_clients);
 				}
 			}
@@ -484,7 +484,7 @@ class UsersController extends AclManagementAppController {
 		// if group_affiliation
 		if($user_group_id == 5) {
 			// pulling of all client_groups under group_affiliation - currently logged in
-			$this->User->unbindModelAll();
+			// $this->User->unbindModelAll();
 			$client_groups = $this->User->find('all', 
 				array(
 					'fields' => array('id'), 
