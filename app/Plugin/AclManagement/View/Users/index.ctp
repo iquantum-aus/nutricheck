@@ -9,10 +9,10 @@
 	</form>
 	
 	<?php 
-		if($group_id == 5) {
+		if($group_id == 5 || $group_id == 4) {
 			?>
 				<div class="left full">
-					<a class="list_toggle" href="?mode=client_group">List Client Groups</a>
+					<?php if($group_id == 5) { ?><a class="list_toggle" href="?mode=client_group">List Client Groups</a><?php } ?>
 					<a class="list_toggle" href="?mode=client">List Clients</a>
 					<a class="list_toggle" href="?mode=member">List Members</a>
 				</div>
@@ -106,6 +106,7 @@
 					  <?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id']), array('class'=>'btn')); ?>
 					  
 					<?php if($user['User']['group_id'] == 3) { ?>
+						<?php echo $this->Html->link(__('Alert'), array('plugin' => '', 'controller' => 'user_alerts', 'action' => 'add', $user['User']['id']), array('class' => 'btn')); ?>
 						<?php echo $this->Html->link(__('Report'), array('plugin' => '', 'controller' => 'users', 'action' => 'nutricheck_activity', $user['User']['id']), array('class' => 'btn')); ?>
 					<?php } ?>
 					  

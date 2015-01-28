@@ -460,7 +460,7 @@ class UsersController extends AclManagementAppController {
 				if($_GET['mode'] == "client") {
 					$condition = array('User.client_group_id' => $user_info['id']);
 				} else {
-					$flatten_clients = $this->get_clients($user_info['id']);
+					$flatten_clients = $this->get_clients($user_info['id']);					
 					$condition = array('User.parent_id' => $flatten_clients);
 				}
 			}
@@ -479,33 +479,54 @@ class UsersController extends AclManagementAppController {
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
 	function get_clients($id) {
-		// pulling of all client_groups under group_affiliation - currently logged in
-		$this->User->unbindModelAll();
-		$client_groups = $this->User->find('all', 
-			array(
-				'fields' => array('id'), 
-				'conditions' => array('User.group_affiliation_id' => $id)
-			)
-		);
+		$user_group_id = $this->Session->read('Auth.User.group_id');
 		
-		$flatten_client_groups = array();
-		foreach($client_groups as $key => $client_group) {
-			$flatten_client_groups[$key] = $client_group['User']['id'];
+		// if group_affiliation
+		if($user_group_id == 5) {
+			// pulling of all client_groups under group_affiliation - currently logged in
+			$this->User->unbindModelAll();
+			$client_groups = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.group_affiliation_id' => $id)
+				)
+			);
+			
+			$flatten_client_groups = array();
+			foreach($client_groups as $key => $client_group) {
+				$flatten_client_groups[$key] = $client_group['User']['id'];
+			}
+			
+			// pulling of clients under 					
+			$clients = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.client_group_id' => $flatten_client_groups)
+				)
+			);
+			
+			$flatten_clients = array();
+			foreach($clients as $key => $client) {
+				$flatten_clients[$key] = $client['User']['id'];
+			}
 		}
 		
-		// pulling of clients under 					
-		$clients = $this->User->find('all', 
-			array(
-				'fields' => array('id'), 
-				'conditions' => array('User.client_group_id' => $flatten_client_groups)
-			)
-		);
-		
-		$flatten_clients = array();
-		foreach($clients as $key => $client) {
-			$flatten_clients[$key] = $client['User']['id'];
-		}
-		
+		// if client groups
+		if($user_group_id == 4) {
+			// pulling of clients under 					
+			$clients = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.client_group_id' => $id)
+				)
+			);
+			
+			$flatten_clients = array();
+			foreach($clients as $key => $client) {
+				$flatten_clients[$key] = $client['User']['id'];
+			}
+		}	
+			
 		return $flatten_clients;
 	}	
 	
