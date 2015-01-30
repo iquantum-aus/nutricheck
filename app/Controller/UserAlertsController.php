@@ -38,7 +38,6 @@ class UserAlertsController extends AppController {
 			
 			$user_ids = $this->UserAlert->User->find('list', array('conditions' => $condition, 'fields' => array('User.id', 'User.id')));
 		}
-			
 		
 		$this->layout = "public_dashboard";
 		$this->UserAlert->recursive = 0;
@@ -74,18 +73,62 @@ class UserAlertsController extends AppController {
  * @return void
  */
 	public function add($id) {
+		$user_info = $this->Session->read('Auth.User');
+		$this->layout = "public_dashboard";
+		$this->UserAlert->recursive = 0;
+		
 		$this->layout = "public_dashboard";
 		if ($this->request->is('post')) {
-			$this->UserAlert->create();
-			if ($this->UserAlert->save($this->request->data)) {
-				$this->Session->setFlash(__('The user alert has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+			
+			$existence = $this->UserAlert->find('count', array('conditions' => array('UserAlert.status' => 1, 'UserAlert.user_id' => $this->request->data['UserAlert']['user_id'], 'UserAlert.alert_date' => $this->request->data['UserAlert']['alert_date'])));
+			
+			if($existence == 0) {
+				$this->UserAlert->create();
+				if ($this->UserAlert->save($this->request->data)) {
+					$this->Session->setFlash(__('The user alert has been saved.'));
+					return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('The user alert could not be saved. Please, try again.'));
+				}
 			} else {
-				$this->Session->setFlash(__('The user alert could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The user alert already exists. This operation is not allowed.'));
 			}
 		}
 		
-		$users = $this->UserAlert->User->find('list', array('fields' => array('User.id', 'User.email'), 'conditions' => array('User.email <>' => "")));		
+		if($user_info['group_id'] != 1) {
+			if($user_info['group_id'] == 4 || $user_info['group_id'] == 5) {			
+				$flatten_clients = $this->requestAction('/acl_management/users/get_clients', array('pass' => array($user_info['id'])));					
+				$condition = array('User.parent_id' => $flatten_clients);
+			} else {
+				$condition = array('User.parent_id' => $user_info['id']);
+			}
+			
+			$user_ids = $this->UserAlert->User->find('list', array('conditions' => $condition, 'fields' => array('User.id', 'User.id')));
+		}
+		
+		
+		
+		if($user_info['group_id'] != 1) {
+			$users = $this->UserAlert->User->find('list',
+				array(
+					'fields' => array('User.id', 'User.email'), 
+					'conditions' => array(
+						'User.email <>' => "",
+						'User.id' => $user_ids
+					)
+				)
+			);
+		} else {
+			$users = $this->UserAlert->User->find('list',
+				array(
+					'fields' => array('User.id', 'User.email'), 
+					'conditions' => array(
+						'User.email <>' => ""
+					)
+				)
+			);
+		}
+		
 		$this->set(compact('users'));
 		$this->set("id", $id);
 	}
@@ -99,6 +142,8 @@ class UserAlertsController extends AppController {
  */
 	public function edit($id = null) {
 		$this->layout = "public_dashboard";
+		$user_info = $this->Session->read('Auth.User');
+		
 		if (!$this->UserAlert->exists($id)) {
 			throw new NotFoundException(__('Invalid user alert'));
 		}
@@ -113,7 +158,40 @@ class UserAlertsController extends AppController {
 			$options = array('conditions' => array('UserAlert.' . $this->UserAlert->primaryKey => $id));
 			$this->request->data = $this->UserAlert->find('first', $options);
 		}
-		$users = $this->UserAlert->User->find('list', array('fields' => array('User.id', 'User.email'), 'conditions' => array('User.email <>' => "")));		
+		
+		
+		if($user_info['group_id'] != 1) {
+			if($user_info['group_id'] == 4 || $user_info['group_id'] == 5) {			
+				$flatten_clients = $this->requestAction('/acl_management/users/get_clients', array('pass' => array($user_info['id'])));					
+				$condition = array('User.parent_id' => $flatten_clients);
+			} else {
+				$condition = array('User.parent_id' => $user_info['id']);
+			}
+			
+			$user_ids = $this->UserAlert->User->find('list', array('conditions' => $condition, 'fields' => array('User.id', 'User.id')));
+		}
+		
+		if($user_info['group_id'] != 1) {
+			$users = $this->UserAlert->User->find('list',
+				array(
+					'fields' => array('User.id', 'User.email'), 
+					'conditions' => array(
+						'User.email <>' => "",
+						'User.id' => $user_ids
+					)
+				)
+			);
+		} else {
+			$users = $this->UserAlert->User->find('list',
+				array(
+					'fields' => array('User.id', 'User.email'), 
+					'conditions' => array(
+						'User.email <>' => ""
+					)
+				)
+			);
+		}
+		
 		$this->set(compact('users'));
 	}
 

@@ -21,9 +21,33 @@
 </div>
 
 <script>
-	$(function() {
+	$(document).ready( function () {
+		var current_date = "<?php echo date('Y-m-d'); ?>";
+		
 		$( "#datepicker" ).datepicker({
-			format: 'yyyy-mm-dd'
+			format: 'yyyy-mm-dd',
+			autoclose: true
+		}).on('changeDate', function (ev) {
+			$(this).datepicker('hide');
+			var selected_date = $( "#datepicker" ).val();
+			
+			if(selected_date < current_date) {
+				alert('Selecting previous dates are not allowed');
+				$( "#datepicker" ).css('border', "1px solid red");
+				return false;
+			} else {
+				$( "#datepicker" ).css('border', "1px solid #ccc");
+				return true;
+			}
+		});
+		
+		$('form').submit( function () {
+			var selected_date = $( "#datepicker" ).val();
+			if(selected_date < current_date) {
+				return false;
+			} else {
+				return true;
+			}
 		});
 	});
 </script>
