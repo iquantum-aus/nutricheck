@@ -104,6 +104,14 @@ class User extends AclManagementAppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		
+		'UserAlert' => array(
+			'className' => 'UserAlert',
+			'foreignKey' => 'user_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 

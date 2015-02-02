@@ -113,7 +113,7 @@
 ?>
 
 <?php
-	if($user_info['group_id'] == 1) {
+	if($user_info['group_id'] == 1 || $user_info['group_id'] == 5 || $user_info['group_id'] == 4) {
 		?>
 			<style>
 				<?php if($this->request->data['User']['group_id'] == 2) { ?>
@@ -155,7 +155,12 @@
 		<div id="formFieldsHolder">
 
 			<div class="clientGroupFields" style="display: none;">
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.group_affiliation_id', array('required' => 'false', 'label' => 'Group Affiliation', 'empty' => 'Select Group Affiliation', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Group Affiliation', 'options' => $group_affiliations)); ?>
+				<div class="left span12 inputHolder">
+					<?php if($user_info['group_id'] == 5) { ?>
+						<?php echo $this->Form->input('User.group_affiliation_id', array('value' => $user_info['id'], 'type' => 'hidden')); ?>
+					<?php } else { ?>
+						<?php echo $this->Form->input('User.group_affiliation_id', array('required' => 'false', 'label' => 'Group Affiliation', 'empty' => 'Select Group Affiliation', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Group Affiliation', 'options' => $group_affiliations)); ?>
+					<?php } ?>
 				</div>
 
 				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
@@ -182,7 +187,12 @@
 			</div>
 			
 			<div class="clientFields">
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('User.client_group_id', array('required' => 'false', 'label' => 'Client Group', 'empty' => 'Select Client Group', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Client Group', 'options' => $client_groups)); ?>
+				<div class="left span12 inputHolder">
+					<?php if($user_info['group_id'] == 4) { ?>
+						<?php echo $this->Form->input('User.client_group_id', array('value' => $user_info['id'], 'type' => 'hidden')); ?>
+					<?php } else { ?>
+						<?php echo $this->Form->input('User.client_group_id', array('required' => 'false', 'label' => 'Client Group', 'empty' => 'Select Client Group', 'class' => 'chosen-select', 'div' => false, 'placeholder' => 'Select Client Group', 'options' => $client_groups)); ?>
+					<?php } ?>
 				</div>
 			</div>
 
@@ -207,7 +217,7 @@
 				</div>
 			</div>
 			
-			<?php if($user_info['group_id'] == 1) { ?>
+			<?php if($user_info['group_id'] == 1 || $user_info['group_id'] == 5 || $user_info['group_id'] == 4) { ?>
 				<div class="clientFields">
 					<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company', array('label' => 'Company<span>*</span>', 'class' => 'requiredField', 'type' => 'text', 'div' => false, 'placeholder' => 'Company', 'label' => 'Company')); ?></div>
 				</div>

@@ -19,7 +19,7 @@ class UsersController extends AclManagementAppController {
 		$user_id = $this->Session->read('Auth.User.id');
 		
 		if(empty($user_id)) {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register', 'get_clients', 'get_client_groups');
 		} else {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy');
 		}
@@ -55,11 +55,9 @@ class UsersController extends AclManagementAppController {
 //        exit;
 //    }
 
-    /**
-     * login method
-     *
-     * @return void
-     */
+
+   /* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+   
 	public function privacy_policy() {
 		$this->layout = "public_dashboard";
 		$behalfUserId = $this->Session->read('behalfUserId');
@@ -108,6 +106,9 @@ class UsersController extends AclManagementAppController {
 		$this->set("patient_info", $patient_info);
 		$this->set("pharmacist_info", $phamacist_info);
 	}
+	
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
 	public function login() {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
@@ -271,21 +272,19 @@ class UsersController extends AclManagementAppController {
 			}
 		}
 	}
-    /**
-     * logout method
-     *
-     * @return void
-     */
+	
+	
+    /* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     function logout() {
 		$this->Session->destroy();
         $this->Session->setFlash('Good-Bye', 'alert/success');
         $this->redirect($this->Auth->logout());
     }
-    /**
-     * index method
-     *
-     * @return void
-     */
+    
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function index() {
         $user_info = $this->Session->read('Auth.User');
 		
@@ -312,7 +311,6 @@ class UsersController extends AclManagementAppController {
 			}
 		}
 		
-		
 		/* ----------------------------------------------------------------------------------------- PAGINATION WITH SEARCH VALUE ------------------------------------------------------------------------*/
 		
 		$search_value = $this->Session->read('User.search');
@@ -320,25 +318,106 @@ class UsersController extends AclManagementAppController {
 		if(!empty($search_value)) {
 			
 			if($user_info['group_id'] != 1) {
-				$this->paginate = array(
-					'conditions' => array(
-						'or' => array (
-							'User.email LIKE "%'.$search_value.'%"',
-							'User.username LIKE "%'.$search_value.'%"',
-							'UserProfile.first_name LIKE "%'.$search_value.'%"',
-							'UserProfile.last_name LIKE "%'.$search_value.'%"',
-							'UserProfile.address LIKE "%'.$search_value.'%"',
-							'UserProfile.suburb LIKE "%'.$search_value.'%"',
-							'UserProfile.company LIKE "%'.$search_value.'%"',
-							'UserProfile.nationality LIKE "%'.$search_value.'%"',
-							'UserProfile.zip LIKE "%'.$search_value.'%"',
-							'UserProfile.gender LIKE "%'.$search_value.'%"'
-						),
-						'and' => array('User.parent_id' => $user_info['id'])
-					), 
-					'order' => array('User.first_name' => 'ASC'),
-					'limit' => 10
-				);
+				
+				if($user_info['group_id'] == 5) {
+					
+					if($_GET['mode'] == "client_group") {
+						
+						$and_condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
+						
+					} else if($_GET['mode'] == "client") {
+						
+						$flatten_client_groups = $this->get_client_groups($user_info['id']);					
+						
+						if($flatten_client_groups) {
+							$and_condition = array('User.client_group_id' => $flatten_client_groups);
+						} else {
+							$and_condition = array('User.client_group_id' => 0);
+						}
+						
+					} else {
+						$flatten_clients = $this->get_clients($user_info['id'], null);
+						
+						if($flatten_clients) {
+							$and_condition = array('User.parent_id' => $flatten_clients);
+						} else {
+							$and_condition = array('User.parent_id' => 0);
+						}
+					}
+					
+					$this->paginate = array(
+						'conditions' => array(
+							'or' => array (
+								'User.email LIKE "%'.$search_value.'%"',
+								'User.username LIKE "%'.$search_value.'%"',
+								'UserProfile.first_name LIKE "%'.$search_value.'%"',
+								'UserProfile.last_name LIKE "%'.$search_value.'%"',
+								'UserProfile.address LIKE "%'.$search_value.'%"',
+								'UserProfile.suburb LIKE "%'.$search_value.'%"',
+								'UserProfile.company LIKE "%'.$search_value.'%"',
+								'UserProfile.nationality LIKE "%'.$search_value.'%"',
+								'UserProfile.zip LIKE "%'.$search_value.'%"',
+								'UserProfile.gender LIKE "%'.$search_value.'%"'
+							),
+							'and' => $and_condition
+						), 
+						'order' => array('User.first_name' => 'ASC'),
+						'limit' => 10
+					);
+					
+				} else if($user_info['group_id'] == 4) {
+					
+					
+					if($_GET['mode'] == "client") {
+						$and_condition = array('User.client_group_id' => $user_info['id']);
+					} else {
+						$flatten_clients = $this->get_clients($user_info['id'], null);
+						$and_condition = array('User.parent_id' => $flatten_clients);
+					}
+					
+					$this->paginate = array(
+						'conditions' => array(
+							'or' => array (
+								'User.email LIKE "%'.$search_value.'%"',
+								'User.username LIKE "%'.$search_value.'%"',
+								'UserProfile.first_name LIKE "%'.$search_value.'%"',
+								'UserProfile.last_name LIKE "%'.$search_value.'%"',
+								'UserProfile.address LIKE "%'.$search_value.'%"',
+								'UserProfile.suburb LIKE "%'.$search_value.'%"',
+								'UserProfile.company LIKE "%'.$search_value.'%"',
+								'UserProfile.nationality LIKE "%'.$search_value.'%"',
+								'UserProfile.zip LIKE "%'.$search_value.'%"',
+								'UserProfile.gender LIKE "%'.$search_value.'%"'
+							),
+							'and' => $and_condition
+						), 
+						'order' => array('User.first_name' => 'ASC'),
+						'limit' => 10
+					);
+					
+				} else {
+					
+					$this->paginate = array(
+						'conditions' => array(
+							'or' => array (
+								'User.email LIKE "%'.$search_value.'%"',
+								'User.username LIKE "%'.$search_value.'%"',
+								'UserProfile.first_name LIKE "%'.$search_value.'%"',
+								'UserProfile.last_name LIKE "%'.$search_value.'%"',
+								'UserProfile.address LIKE "%'.$search_value.'%"',
+								'UserProfile.suburb LIKE "%'.$search_value.'%"',
+								'UserProfile.company LIKE "%'.$search_value.'%"',
+								'UserProfile.nationality LIKE "%'.$search_value.'%"',
+								'UserProfile.zip LIKE "%'.$search_value.'%"',
+								'UserProfile.gender LIKE "%'.$search_value.'%"'
+							),
+							'and' => array('User.parent_id' => $user_info['id'])
+						), 
+						'order' => array('User.first_name' => 'ASC'),
+						'limit' => 10
+					);
+				}
+				
 			} else {
 				$this->paginate = array(
 					'conditions' => array(
@@ -361,9 +440,51 @@ class UsersController extends AclManagementAppController {
 			}
 		
 		/* ------------------------------------------------------------------------------------------- DEFAULT PAGINATION HERE ----------------------------------------------------------------------------------*/
+		
 		} else {		
 			if($user_info['group_id'] != 1) {
 				$condition = array('User.parent_id' => $user_info['id']);
+			}
+			
+			if($user_info['group_id'] == 5) {
+				
+				if($_GET['mode'] == "client_group") {
+					
+					$condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
+					
+				} else if($_GET['mode'] == "client") {
+					
+					$flatten_client_groups = $this->get_client_groups($user_info['id']);					
+					
+					if($flatten_client_groups) {
+						$condition = array('User.client_group_id' => $flatten_client_groups);
+					} else {
+						$condition = array('User.client_group_id' => 0);
+					}
+				} else {
+					$flatten_clients = $this->get_clients($user_info['id'], null);
+					if($flatten_clients) {
+						$condition = array('User.parent_id' => $flatten_clients);
+					} else {
+						$condition = array('User.parent_id' => 0);
+					}
+				}
+			}
+			
+			
+			if($user_info['group_id'] == 4) {
+				
+				if($_GET['mode'] == "client") {
+					$condition = array('User.client_group_id' => $user_info['id']);
+				} else {
+					$flatten_clients = $this->get_clients($user_info['id'], null);					
+					
+					if($flatten_clients) {
+						$condition = array('User.parent_id' => $flatten_clients);
+					} else {
+						$condition = array('User.parent_id' => 0);
+					}
+				}
 			}
 			
 			$this->paginate = array(
@@ -375,13 +496,100 @@ class UsersController extends AclManagementAppController {
         $this->set('search_value', $search_value);
         $this->set('users', $users);
     }
+	
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
+	function get_clients($id) {
+		$user_group_id = $this->Session->read('Auth.User.group_id');
+		
+		// if group_affiliation
+		if($user_group_id == 5) {
+			// pulling of all client_groups under group_affiliation - currently logged in
+			$this->User->unbindModelAll();
+			$client_groups = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.group_affiliation_id' => $id)
+				)
+			);
+			
+			$flatten_client_groups = array();
+			foreach($client_groups as $key => $client_group) {
+				$flatten_client_groups[$key] = $client_group['User']['id'];
+			}
+			
+			
+			if($flatten_client_groups) {
+				// pulling of clients under 					
+				$clients = $this->User->find('all', 
+					array(
+						'fields' => array('id'), 
+						'conditions' => array('User.client_group_id' => $flatten_client_groups)
+					)
+				);
+				
+				$flatten_clients = array();
+				foreach($clients as $key => $client) {
+					$flatten_clients[$key] = $client['User']['id'];
+				}
+			} else {
+				$flatten_clients = array();
+			}
+		}
+		
+		// if client groups
+		if($user_group_id == 4) {
+			// pulling of clients under 					
+			$clients = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.client_group_id' => $id)
+				)
+			);
+			
+			if($clients) {
+				$flatten_clients = array();
+				foreach($clients as $key => $client) {
+					$flatten_clients[$key] = $client['User']['id'];
+				}
+			} else {
+				$flatten_clients = array();
+			}
+		}	
+			
+		return $flatten_clients;
+	}	
+	
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
+	function get_client_groups($id) {
+		// pulling of all client_groups under group_affiliation - currently logged in
+		$this->User->unbindModelAll();
+		$client_groups = $this->User->find('all', 
+			array(
+				'fields' => array('id'), 
+				'conditions' => array('User.group_affiliation_id' => $id)
+			)
+		);
+		
+		
+		if($client_groups) {
+			$flatten_client_groups = array();
+			foreach($client_groups as $key => $client_group) {
+				$flatten_client_groups[$key] = $client_group['User']['id'];
+			}
+		} else {
+			$flatten_client_groups = array();
+		}
+		
+		return $flatten_client_groups;
+	}
 
-    /**
-     * view method
-     *
-     * @param string $id
-     * @return void
-     */
+
+    /* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function view($id = null) {
         $this->User->id = $id;
         if (!$this->User->exists()) {
@@ -390,14 +598,13 @@ class UsersController extends AclManagementAppController {
         $this->set('user', $this->User->read(null, $id));
     }
 
-    /**
-     * add method
-     *
-     * @return void
-     */
+	
+    /* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
    public function add() {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		$this->layout = "public_dashboard";
+		$message = "";
 		
 		$user_info = $this->Session->read('Auth.User');
 		if ($this->request->is('post')) {
@@ -448,7 +655,7 @@ class UsersController extends AclManagementAppController {
 			} else {
 				$this->loadModel('AclManagement.User');
 				
-				if($user_info['group_id'] != 1)  {
+				if($user_info['group_id'] != 1 && $user_info['group_id'] != 4 && $user_info['group_id'] != 5 && $user_info['group_id'] != 2)  {
 					$this->request->data['User']['status'] = 0;
 					$this->request->data['User']['group_id'] = 3;
 				}
@@ -512,11 +719,7 @@ class UsersController extends AclManagementAppController {
 							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
 							$mail->Body    = $message; 
 							
-							if($mail->Send()) {
-								// nothing to do here...
-							} else {
-								return $mail->ErrorInfo; 
-							}
+							$mail->Send();
 						}
 					}
 					
@@ -542,18 +745,24 @@ class UsersController extends AclManagementAppController {
 		$pharmacists = $this->pharmacists();
 		$client_groups = $this->user_type(4);
 		$group_affiliations = $this->user_type(5);
-
-        $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
+		
+		if($user_info['group_id'] != 1) {
+			if($user_info['group_id'] == 5) {
+				$groups = $this->User->Group->find('list', array('conditions' => array('id !=' => array('1', '5'))));
+			}
+			
+			if($user_info['group_id'] == 4) {
+				$groups = $this->User->Group->find('list', array('conditions' => array('id !=' => array('1', '4', '5'))));
+			}
+		} else {
+			$groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
+		}
+		
+        $this->set("user_info", $user_info);
         $this->set(compact('groups', 'pharmacists', 'client_groups', 'group_affiliations'));
     }
 
-    /**
-     * edit method
-     *
-     * @param string $id
-     * @return void
-     */
-	 
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	 
 	public function is_authorized_action($id = null) {
 		
@@ -579,9 +788,13 @@ class UsersController extends AclManagementAppController {
 			return true;
 		}
 	}
-	 
+
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function edit($id = null) {
 		
+		$user_info = $this->Session->read('Auth.User');
 		if(!$this->is_authorized_action($id)) {
 			$this->Session->setFlash(__("You're not authorized to update that patient"), 'alert/error');
 			$this->redirect(array('action' => 'index'));
@@ -654,16 +867,25 @@ class UsersController extends AclManagementAppController {
 		$client_groups = $this->user_type(4);
 		$group_affiliations = $this->user_type(5);
 
-        $groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
+		if($user_info['group_id'] != 1) {
+			if($user_info['group_id'] == 5) {
+				$groups = $this->User->Group->find('list', array('conditions' => array('id !=' => array('1', '5'))));
+			}
+			
+			if($user_info['group_id'] == 4) {
+				$groups = $this->User->Group->find('list', array('conditions' => array('id !=' => array('1', '4', '5'))));
+			}
+		} else {
+			$groups = $this->User->Group->find('list', array('conditions' => array('id !=' => 1)));
+		}
+		
         $this->set(compact('groups', 'pharmacists', 'client_groups', 'group_affiliations'));
+		$this->set('user_info', $user_info);
     }
 
-    /**
-     * delete method
-     *
-     * @param string $id
-     * @return void
-     */
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function delete($id = null) {
         if (!$this->request->is('post')) {
             throw new MethodNotAllowedException();
@@ -680,11 +902,9 @@ class UsersController extends AclManagementAppController {
         $this->redirect(array('action' => 'index'));
     }
 
-    /**
-     *  Active/Inactive User
-     *
-     * @param <int> $user_id
-     */
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function toggle($user_id, $status) {
         $this->layout = "ajax";
         $status = ($status) ? 0 : 1;
@@ -763,11 +983,9 @@ class UsersController extends AclManagementAppController {
 		}
     }
 
-    /**
-     * register method
-     *
-     * @return void
-     */
+
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function register() {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
         if ($this->request->is('post')) {
@@ -854,10 +1072,9 @@ class UsersController extends AclManagementAppController {
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
     }
-    /**
-    * confirm register
-    * @return void
-    */
+
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function confirm_register($ident=null, $activate=null) {//echo $ident.'  '.$activate;
         $return = $this->User->confirmRegister($ident, $activate);
         if ($return) {
@@ -867,10 +1084,10 @@ class UsersController extends AclManagementAppController {
             $this->Session->setFlash(__('Something went wrong. Please, check your information.'), 'alert/error');
         }
     }
-    /**
-    * forgot password
-    * @return void
-    */
+    
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function forgot_password() {
         if ($this->request->is('post')) {
             //$this->autoRender = false;
@@ -883,10 +1100,10 @@ class UsersController extends AclManagementAppController {
             }
         }
     }
-    /**
-    * active password
-    * @return void
-    */
+    
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function activate_password($ident=null, $activate=null, $expiredTime) {//echo $ident.'  '.$activate;
         $nowTime = strtotime(date('Y-m-d H:i'));
         if(empty($expiredTime) || $nowTime > $expiredTime){
@@ -920,11 +1137,9 @@ class UsersController extends AclManagementAppController {
         $this->set(compact('ident', 'activate'));
     }
 
-    /**
-     * edit profile method
-     *
-     * @return void
-     */
+	
+    /* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function edit_profile() {
 		
 		$hash = "";
@@ -1047,10 +1262,8 @@ class UsersController extends AclManagementAppController {
     }
 	
 	
-	/**
-    * confirm register
-    * @return void
-    */
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
     public function confirm_email_update($id=null, $email=null, $expiredTime=null) {
         $nowTime = strtotime(date('Y-m-d H:i'));
         if(empty($expiredTime) || $nowTime > $expiredTime){
@@ -1119,6 +1332,9 @@ class UsersController extends AclManagementAppController {
 		$this->set('behalfUserId', $selected_user['User']['hash_value']);
 	}
 	
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
 	public function nutricheck_activity($user_id = null) {
 		$this->layout = 'public_dashboard';
 		$this->loadModel('PerformedCheck');
@@ -1157,6 +1373,7 @@ class UsersController extends AclManagementAppController {
 		$this->set('user_info', $user_info);
 		$this->set('user_id', $user_id);
 	}
+	
 	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
 	
@@ -1204,6 +1421,7 @@ class UsersController extends AclManagementAppController {
 		exit();
 	}
 	
+	
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
 	
 	public function check_email_existence() {
@@ -1212,6 +1430,9 @@ class UsersController extends AclManagementAppController {
 		echo $checkExistEmail;
 		exit();
 	}
+	
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
 	public function delete_report($user_id, $completion_time) {
 		

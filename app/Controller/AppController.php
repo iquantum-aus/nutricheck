@@ -94,7 +94,61 @@ class AppController extends Controller {
 	}
 	
 	public function pharmacists() {
-        $pharmacists = $this->User->find('list', array('conditions' => array('group_id' => '2'), 'fields' => array('id', 'id')));
+        $user_group_id = $this->Session->read('Auth.User.group_id');
+        $user_id = $this->Session->read('Auth.User.id');
+		
+		// if group_affiliation
+		if($user_group_id == 5) {
+			// pulling of all client_groups under group_affiliation - currently logged in
+			$this->User->unbindModelAll();
+			$client_groups = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.group_affiliation_id' => $user_id)
+				)
+			);
+			
+			$flatten_client_groups = array();
+			foreach($client_groups as $key => $client_group) {
+				$flatten_client_groups[$key] = $client_group['User']['id'];
+			}
+			
+			// pulling of clients under 					
+			$clients = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.client_group_id' => $flatten_client_groups)
+				)
+			);
+			
+			$flatten_clients = array();
+			foreach($clients as $key => $client) {
+				$flatten_clients[$key] = $client['User']['id'];
+			}
+		}
+		
+		// if client groups
+		if($user_group_id == 4) {
+			// pulling of clients under 					
+			$clients = $this->User->find('all', 
+				array(
+					'fields' => array('id'), 
+					'conditions' => array('User.client_group_id' => $user_id)
+				)
+			);
+			
+			$flatten_clients = array();
+			foreach($clients as $key => $client) {
+				$flatten_clients[$key] = $client['User']['id'];
+			}
+		}
+		
+		if($user_group_id == 5 || $user_group_id == 4) {
+			$pharmacists = $this->User->find('list', array('conditions' => array('group_id' => '2', 'id' => $flatten_clients), 'fields' => array('id', 'id')));
+		} else {
+			$pharmacists = $this->User->find('list', array('conditions' => array('group_id' => '2'), 'fields' => array('id', 'id')));
+		}
+		
 		$this->User->UserProfile->unbindModelAll();
 		
 		$pharmacists_name = array();
@@ -114,7 +168,17 @@ class AppController extends Controller {
 	}
 
 	public function user_type($user_type) {
-        $userTypes = $this->User->find('list', array('conditions' => array('group_id' => $user_type), 'fields' => array('id', 'id')));
+        $user_group_id = $this->Session->read('Auth.User.group_id');
+        $user_id = $this->Session->read('Auth.User.id');
+		
+		$userTypes = $this->User->find('list', array('conditions' => array('group_id' => $user_type), 'fields' => array('id', 'id')));
+		
+		if($user_group_id != 1) {
+			if($user_type == 4) {
+				$userTypes = $this->User->find('list', array('conditions' => array('group_id' => $user_type, 'group_affiliation_id' => $user_id), 'fields' => array('id', 'id')));
+			}
+		}
+		
 		$this->User->UserProfile->unbindModelAll();
 		
 		$userTypes_name = array();
