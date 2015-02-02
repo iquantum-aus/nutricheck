@@ -2284,6 +2284,12 @@ CUSTOM CHOSEN DROPDOWN and FORM ELEMENTS
 .chosen-drop{
 	background-color:#fbf9f8 !important;
 }
+
+.list_toggle {
+	float: left;
+	margin: 20px 20px 20px 0px;
+}
+
 @media (max-width: 800px) {
 
 }

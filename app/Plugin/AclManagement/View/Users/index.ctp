@@ -12,9 +12,15 @@
 		if($group_id == 5 || $group_id == 4) {
 			?>
 				<div class="left full">
+<<<<<<< HEAD
 					<?php if($group_id == 5) { ?><a class="list_toggle <?php if($_GET['mode'] == "client_group") { echo "active-link"; } ?>" href="?mode=client_group">List Client Groups</a><?php } ?>
 					<a class="list_toggle <?php if($_GET['mode'] == "client") { echo "active-link"; } ?>" href="?mode=client">List Clients</a>
 					<a class="list_toggle <?php if($_GET['mode'] == "members" || !isset($_GET['mode'])) { echo "active-link"; } ?>" href="?mode=member">List Members</a>
+=======
+					<?php if($group_id == 5) { ?><a class="list_toggle" href="?mode=client_group">List Client Groups</a><?php } ?>
+					<a class="list_toggle" href="?mode=client">List Clients</a>
+					<a class="list_toggle" href="?mode=member">List Members</a>
+>>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 				</div>
 			<?php
 		}
@@ -106,7 +112,11 @@
 					  <?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id']), array('class'=>'btn')); ?>
 					  
 					<?php if($user['User']['group_id'] == 3) { ?>
+<<<<<<< HEAD
 						<?php echo $this->Html->link(__('Alert'), array('plugin' => '', 'controller' => 'user_alerts', 'action' => 'alert_list', $user['User']['id']), array('class' => 'btn')); ?>
+=======
+						<?php echo $this->Html->link(__('Alert'), array('plugin' => '', 'controller' => 'user_alerts', 'action' => 'add', $user['User']['id']), array('class' => 'btn')); ?>
+>>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 						<?php echo $this->Html->link(__('Report'), array('plugin' => '', 'controller' => 'users', 'action' => 'nutricheck_activity', $user['User']['id']), array('class' => 'btn')); ?>
 					<?php } ?>
 					  
