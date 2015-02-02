@@ -207,12 +207,15 @@ class UserAlertsController extends AppController {
 			throw new NotFoundException(__('Invalid user alert'));
 		}
 		$this->request->onlyAllow('post', 'delete');
+		
+		$user_alert_data = $this->UserAlert->find();
+
 		if ($this->UserAlert->delete()) {
 			$this->Session->setFlash(__('The user alert has been deleted.'));
+			return $this->redirect(array('action' => 'alert_list', $user_alert_data['User']['id']));
 		} else {
 			$this->Session->setFlash(__('The user alert could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
 	}
 	
 	public function pull_schedule() {

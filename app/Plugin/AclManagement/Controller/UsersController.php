@@ -323,16 +323,11 @@ class UsersController extends AclManagementAppController {
 					
 					if($_GET['mode'] == "client_group") {
 						
-<<<<<<< HEAD
 						$and_condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
-=======
-						$and_condition = array('User.group_affiliation_id' => $user_info['id']);
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 						
 					} else if($_GET['mode'] == "client") {
 						
 						$flatten_client_groups = $this->get_client_groups($user_info['id']);					
-<<<<<<< HEAD
 						
 						if($flatten_client_groups) {
 							$and_condition = array('User.client_group_id' => $flatten_client_groups);
@@ -348,13 +343,6 @@ class UsersController extends AclManagementAppController {
 						} else {
 							$and_condition = array('User.parent_id' => 0);
 						}
-=======
-						$and_condition = array('User.client_group_id' => $flatten_client_groups);
-						
-					} else {
-						$flatten_clients = $this->get_clients($user_info['id'], null);
-						$and_condition = array('User.parent_id' => $flatten_clients);
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 					}
 					
 					$this->paginate = array(
@@ -462,16 +450,11 @@ class UsersController extends AclManagementAppController {
 				
 				if($_GET['mode'] == "client_group") {
 					
-<<<<<<< HEAD
 					$condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
-=======
-					$condition = array('User.group_affiliation_id' => $user_info['id']);
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 					
 				} else if($_GET['mode'] == "client") {
 					
 					$flatten_client_groups = $this->get_client_groups($user_info['id']);					
-<<<<<<< HEAD
 					
 					if($flatten_client_groups) {
 						$condition = array('User.client_group_id' => $flatten_client_groups);
@@ -485,13 +468,6 @@ class UsersController extends AclManagementAppController {
 					} else {
 						$condition = array('User.parent_id' => 0);
 					}
-=======
-					$condition = array('User.client_group_id' => $flatten_client_groups);
-					
-				} else {
-					$flatten_clients = $this->get_clients($user_info['id'], null);
-					$condition = array('User.parent_id' => $flatten_clients);
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 				}
 			}
 			
@@ -502,16 +478,12 @@ class UsersController extends AclManagementAppController {
 					$condition = array('User.client_group_id' => $user_info['id']);
 				} else {
 					$flatten_clients = $this->get_clients($user_info['id'], null);					
-<<<<<<< HEAD
 					
 					if($flatten_clients) {
 						$condition = array('User.parent_id' => $flatten_clients);
 					} else {
 						$condition = array('User.parent_id' => 0);
 					}
-=======
-					$condition = array('User.parent_id' => $flatten_clients);
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 				}
 			}
 			
@@ -534,11 +506,7 @@ class UsersController extends AclManagementAppController {
 		// if group_affiliation
 		if($user_group_id == 5) {
 			// pulling of all client_groups under group_affiliation - currently logged in
-<<<<<<< HEAD
 			$this->User->unbindModelAll();
-=======
-			// $this->User->unbindModelAll();
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 			$client_groups = $this->User->find('all', 
 				array(
 					'fields' => array('id'), 
@@ -551,7 +519,6 @@ class UsersController extends AclManagementAppController {
 				$flatten_client_groups[$key] = $client_group['User']['id'];
 			}
 			
-<<<<<<< HEAD
 			
 			if($flatten_client_groups) {
 				// pulling of clients under 					
@@ -568,19 +535,6 @@ class UsersController extends AclManagementAppController {
 				}
 			} else {
 				$flatten_clients = array();
-=======
-			// pulling of clients under 					
-			$clients = $this->User->find('all', 
-				array(
-					'fields' => array('id'), 
-					'conditions' => array('User.client_group_id' => $flatten_client_groups)
-				)
-			);
-			
-			$flatten_clients = array();
-			foreach($clients as $key => $client) {
-				$flatten_clients[$key] = $client['User']['id'];
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 			}
 		}
 		
@@ -594,7 +548,6 @@ class UsersController extends AclManagementAppController {
 				)
 			);
 			
-<<<<<<< HEAD
 			if($clients) {
 				$flatten_clients = array();
 				foreach($clients as $key => $client) {
@@ -602,11 +555,6 @@ class UsersController extends AclManagementAppController {
 				}
 			} else {
 				$flatten_clients = array();
-=======
-			$flatten_clients = array();
-			foreach($clients as $key => $client) {
-				$flatten_clients[$key] = $client['User']['id'];
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 			}
 		}	
 			
@@ -627,7 +575,6 @@ class UsersController extends AclManagementAppController {
 		);
 		
 		
-<<<<<<< HEAD
 		if($client_groups) {
 			$flatten_client_groups = array();
 			foreach($client_groups as $key => $client_group) {
@@ -635,11 +582,6 @@ class UsersController extends AclManagementAppController {
 			}
 		} else {
 			$flatten_client_groups = array();
-=======
-		$flatten_client_groups = array();
-		foreach($client_groups as $key => $client_group) {
-			$flatten_client_groups[$key] = $client_group['User']['id'];
->>>>>>> f18ca3729075ee10c123aae81ddd2cbd171ea351
 		}
 		
 		return $flatten_client_groups;
@@ -1363,7 +1305,50 @@ class UsersController extends AclManagementAppController {
 		$this->loadModel('PerformedCheck');
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
+
+
+
+
+		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST YEAR ##########################################
+
+		$previous_year_toggle = false;
 		
+		$today_m = date('m');
+		$today_d = date('d');
+		$today_y = date('Y');
+			
+		$date_current = mktime(0, 0, 0, $today_m, $today_d, $today_y); 
+		$week_current = (int)date('W', $date_current);
+
+		$previous_week = $week_current - 1;
+
+		// to handle previous year's last week - if will not do this, then it will return 1970-01-01
+		if($previous_week == 0) {
+			$previous_week = 53;
+			$previous_year_toggle = true;
+		}
+
+		# added 0 for week numbers less than 10 to compute correctly
+		if($previous_week < 10) {
+			$previous_week = "0".$previous_week;
+		}
+		
+		// 0, 6 = Sunday, Saturday
+		$start_day_of_the_prev_week = strtotime($today_y."-W".$previous_week."-0");
+		$end_day_of_the_prev_week = strtotime($today_y."-W".$previous_week."-6");
+
+		if($previous_year_toggle) {
+			$start_day_of_the_prev_week = strtotime($start_day_of_the_prev_week." -1 year");
+			$end_day_of_the_prev_week = strtotime($end_day_of_the_prev_week." -1 year");
+		}
+
+		$this->PerformedCheck->unbindModelAll();
+		$completed_last_week = $this->PerformedCheck->find('count', array('fields' => array('PerformedCheck.*'), 'order' => array('PerformedCheck.created' => 'DESC'), 'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $start_day_of_the_prev_week, 'PerformedCheck.completion_time <=' => $end_day_of_the_prev_week)));
+
+		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST YEAR ##########################################
+
+
+
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$selected_user = $this->User->findById($behalfUserId);
 		

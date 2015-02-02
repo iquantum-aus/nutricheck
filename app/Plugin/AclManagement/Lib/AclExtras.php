@@ -211,6 +211,7 @@ class AclExtras{
 	public function _checkMethods($className, $controllerName, $node, $pluginPath = false) {
 		$baseMethods = get_class_methods('Controller');
 		$actions = get_class_methods($className);
+
 		$methods = array_diff($actions, $baseMethods);
 		foreach ($methods as $action) {
 			if (strpos($action, '_', 0) === 0) {
