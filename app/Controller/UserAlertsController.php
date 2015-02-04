@@ -1,18 +1,9 @@
 <?php
 App::uses('AppController', 'Controller');
-/**
- * UserAlerts Controller
- *
- * @property UserAlert $UserAlert
- * @property PaginatorComponent $Paginator
- */
+
 class UserAlertsController extends AppController {
 
-/**
- * Components
- *
- * @var array
- */
+
 	public $components = array('Paginator');
 	
 	function beforeFilter() {
@@ -20,11 +11,10 @@ class UserAlertsController extends AppController {
 		$this->Auth->allow('nutricheck_alert_sender', 'pull_schedule');
     }
 
-/**
- * index method
- *
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	public function index() {
 		$user_info = $this->Session->read('Auth.User');
 		
@@ -51,13 +41,10 @@ class UserAlertsController extends AppController {
 		$this->set('userAlerts', $user_alerts);
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	public function view($id = null) {
 		$this->layout = "public_dashboard";
 		if (!$this->UserAlert->exists($id)) {
@@ -67,11 +54,10 @@ class UserAlertsController extends AppController {
 		$this->set('userAlert', $this->UserAlert->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */	
+	
+	
 	public function add($id) {
 		$user_info = $this->Session->read('Auth.User');
 		$this->layout = "public_dashboard";
@@ -133,13 +119,10 @@ class UserAlertsController extends AppController {
 		$this->set("id", $id);
 	}
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+
 	public function edit($id = null) {
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
@@ -148,11 +131,26 @@ class UserAlertsController extends AppController {
 			throw new NotFoundException(__('Invalid user alert'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			if ($this->UserAlert->save($this->request->data)) {
-				$this->Session->setFlash(__('The user alert has been saved.'));
-				return $this->redirect(array('action' => 'alert_list', $this->request->data['UserAlert']['user_id']));
+			
+			$original_data = $this->UserAlert->findById($this->request->data['UserAlert']['id']);
+			$original_alert_date = $original_data['UserAlert']['alert_date'];
+			
+			if(strtotime($original_alert_date) == strtotime($this->request->data['UserAlert']['alert_date'])) {
+				$existence = 0;
 			} else {
-				$this->Session->setFlash(__('The user alert could not be saved. Please, try again.'));
+				$existence = $this->UserAlert->find('count', array('conditions' => array('UserAlert.status' => 0, 'UserAlert.user_id' => $this->request->data['UserAlert']['user_id'], 'UserAlert.alert_date' => $this->request->data['UserAlert']['alert_date'])));
+			}
+			
+			if($existence > 0) {
+				$this->Session->setFlash(__('The user alert already exists. This operation is not allowed.'));
+			} else {
+				if ($this->UserAlert->save($this->request->data)) {
+					$this->Session->setFlash(__('The user alert has been saved.'));
+					return $this->redirect(array('action' => 'alert_list', $this->request->data['UserAlert']['user_id']));
+				} else {
+					$this->Session->setFlash(__('The user alert could not be saved. Please, try again.'));
+					return $this->redirect(array('action' => 'alert_list', $this->request->data['UserAlert']['user_id']));
+				}				
 			}
 		} else {
 			$options = array('conditions' => array('UserAlert.' . $this->UserAlert->primaryKey => $id));
@@ -194,13 +192,10 @@ class UserAlertsController extends AppController {
 		$this->set(compact('users'));
 	}
 
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	public function delete($id = null) {
 		$this->UserAlert->id = $id;
 		if (!$this->UserAlert->exists()) {
@@ -243,7 +238,10 @@ class UserAlertsController extends AppController {
 		exit();
 	}
 	
+	
+	
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
 	
 	public function nutricheck_alert_sender($user_id, $alert_id) {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
@@ -281,11 +279,9 @@ class UserAlertsController extends AppController {
 		}
 	}
 	
-	/**
- * index method
- *
- * @return void
- */
+	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
+	
+	
 	public function alert_list($id) {
 		$user_info = $this->Session->read('Auth.User');
 		

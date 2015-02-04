@@ -38,10 +38,14 @@ class UserPermissionsController extends AclManagementAppController {
     public function sync(){
         $this->layout = 'ajax';
 
-        Configure::write('debug', 1);
-
+        // Configure::write('debug', 2);
+		ini_set('display_errors',1);
+		ini_set('display_startup_errors',1);
+		error_reporting(-1);
+		
         App::uses('AclExtras', 'AclManagement.Lib');
-        $acl = new AclExtras();
+		
+		$acl = new AclExtras();
         $acl->aco_sync();
 
         $permissions = ClassRegistry::init('Permission');

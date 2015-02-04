@@ -554,6 +554,7 @@ class UsersController extends AclManagementAppController {
 			
 			// if not admin then unauthorized
 			if($user_info['group_id'] != 1) {
+				
 				return false;
 			
 			//admin is always authorized
@@ -567,6 +568,9 @@ class UsersController extends AclManagementAppController {
 	}
 	 
     public function edit($id = null) {
+		
+		$this->find_parent($id);
+		exit();
 		
 		if(!$this->is_authorized_action($id)) {
 			$this->Session->setFlash(__("You're not authorized to update that patient"), 'alert/error');
@@ -1189,13 +1193,26 @@ class UsersController extends AclManagementAppController {
 	}
 	
 	public function delete_report($user_id, $completion_time) {
-		
 		$performed_check_data = $this->User->PerformedCheck->deleteAll(array('PerformedCheck.user_id' => $user_id, 'PerformedCheck.completion_time' => $completion_time));
 		$answer_data = $this->User->Answer->deleteAll(array('Answer.user_id' => $user_id, 'Answer.completion_time' => $completion_time));
 		
 		$this->Session->setFlash('You have successfully deleted the report', 'alert/success');
 		$redirection = "http://".$_SERVER['SERVER_NAME']."/users/nutricheck_activity/".$user_id;
         $this->redirect($redirection);
+	}
+
+	public function find_parent($child_id) {
+		$user_group = $this->Session->read('Auth.User.group_id');
+		
+		$child_information = $this->User->findById($child_id);
+		
+		$this->var_debug($child_information);
+		exit();
+		
+		if($user_group == 5) {
+			$this->User->unbindModelAll();
+			$this->User->find('all', array('conditions' => array('User.parent_id' => )));
+		}
 	}
 }
 ?>

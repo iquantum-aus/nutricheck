@@ -69,6 +69,6 @@
 	<ul>
 		<li><?php echo $this->Html->link(__('List User Alerts'), array('action' => 'alert_list', $userAlert['User']['id']), array('class' => 'btn')); ?> </li>
 		<li><?php echo $this->Html->link(__('New User Alert'), array('action' => 'add', $userAlert['User']['id']), array('class' => 'btn')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index'), array('class' => 'btn')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Users'), array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'index'), array('class' => 'btn')); ?> </li>
 	</ul>
 </div>

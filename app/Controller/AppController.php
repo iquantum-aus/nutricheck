@@ -59,7 +59,6 @@ class AppController extends Controller {
 		$today = date('Y-m-d')." 00:00:00.000000";
 		$tomorrow = date("Y-m-d", strtotime($today." + 1 day"))." 00:00:00.000000";
 		
-		
 		if(isset($user_info['id']) && !empty($user_info['id'])) {
 			if($user_info['group_id'] == 3) {
 				$page_access_log = array();
@@ -75,8 +74,6 @@ class AppController extends Controller {
 				$this->PageAccessFlag->save($page_access_log);
 			}
 		}
-		 
-		
 		
 		// $this->Auth->allow();//must comment after generate action
  

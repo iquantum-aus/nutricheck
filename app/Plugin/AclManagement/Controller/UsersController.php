@@ -668,6 +668,7 @@ class UsersController extends AclManagementAppController {
 				$to_hash = time();
 				$this->request->data['User']['hash_value'] = $this->Auth->password($to_hash);
 				
+				// default password if the create and answer was pressed
 				if(isset($this->request->data['create_and_answer'])) {
 					$this->request->data['User']['password'] = "nutriPass";
 				}
@@ -679,8 +680,8 @@ class UsersController extends AclManagementAppController {
 					
 					if(!isset($this->request->data['create_and_answer'])) {
 						
+						// if the member email is present then will send it to his/her email address - else it will be sent over to the pharmacists email address
 						if(empty($this->request->data['User']['email'])) {
-							
 							if($this->Session->read('Auth.User.group_id') == 2) {
 								$to = $this->Session->read('Auth.User.email');
 							} else {
@@ -695,6 +696,7 @@ class UsersController extends AclManagementAppController {
 						
 						if(!empty($email)) {
 							
+							// alerting the created user about the creation of his/her account - only if email address exists
 							$mail = new PHPMailer(); 
 							$mail->IsSMTP(); // we are going to use SMTP
 							$mail->IsHTML(true);
@@ -726,6 +728,7 @@ class UsersController extends AclManagementAppController {
 					$user_id = $this->User->id;
 					$this->request->data['UserProfile']['user_id'] = $user_id;
 					
+					// saving user profile side by side with user creation
 					$this->User->UserProfile->create();
 					$this->User->UserProfile->save($this->request->data);
 					
@@ -793,6 +796,8 @@ class UsersController extends AclManagementAppController {
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
     public function edit($id = null) {
+		
+		$this->get_parent($id);
 		
 		$user_info = $this->Session->read('Auth.User');
 		if(!$this->is_authorized_action($id)) {
@@ -1307,9 +1312,9 @@ class UsersController extends AclManagementAppController {
 		$user_info = $this->Session->read('Auth.User');
 
 
-
-
-		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST YEAR ##########################################
+		
+		
+		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST WEEK ##########################################
 
 		$previous_year_toggle = false;
 		
@@ -1341,14 +1346,110 @@ class UsersController extends AclManagementAppController {
 			$start_day_of_the_prev_week = strtotime($start_day_of_the_prev_week." -1 year");
 			$end_day_of_the_prev_week = strtotime($end_day_of_the_prev_week." -1 year");
 		}
-
+		
+		$first_day = $start_day_of_the_prev_week;
+		$second_day = strtotime(date('Y-m-d', $start_day_of_the_prev_week)." +2 day");
+		$third_day = strtotime(date('Y-m-d', $start_day_of_the_prev_week)." +3 day");
+		$fourth_day = strtotime(date('Y-m-d', $start_day_of_the_prev_week)." +4 day");
+		$fifth_day = strtotime(date('Y-m-d', $start_day_of_the_prev_week)." +5 day");
+		$sixth_day = strtotime(date('Y-m-d', $start_day_of_the_prev_week)." +6 day");
+		$seventh_day = $end_day_of_the_prev_week;
+		$eight_day = strtotime(date('Y-m-d', $end_day_of_the_prev_week)." +1 day");
+	
+		$report_stats_last_week = array();
+	
 		$this->PerformedCheck->unbindModelAll();
-		$completed_last_week = $this->PerformedCheck->find('count', array('fields' => array('PerformedCheck.*'), 'order' => array('PerformedCheck.created' => 'DESC'), 'conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $start_day_of_the_prev_week, 'PerformedCheck.completion_time <=' => $end_day_of_the_prev_week)));
+		$report_stats_last_week[0] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $eight_day)));
+		$report_stats_last_week[1] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $second_day)));
+		$report_stats_last_week[2] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $second_day, 'PerformedCheck.completion_time <' => $third_day)));
+		$report_stats_last_week[3] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $third_day, 'PerformedCheck.completion_time <' => $fourth_day)));
+		$report_stats_last_week[4] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fourth_day, 'PerformedCheck.completion_time <' => $fifth_day)));
+		$report_stats_last_week[5] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fifth_day, 'PerformedCheck.completion_time <' => $sixth_day)));
+		$report_stats_last_week[6] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $sixth_day, 'PerformedCheck.completion_time <' => $seventh_day)));
+		$report_stats_last_week[7] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $seventh_day, 'PerformedCheck.completion_time <' => $eight_day)));
+		
+		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST WEEK ##########################################
+		
+		
+		
+		
+		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST 30 DAYS ##########################################
+		
+		$current_day = date('Y-m-d');
+		$tomorrow = strtotime(date('Y-m-d'), " +1 day");
+		$date = new DateTime($current_day);
+		$date->sub(new DateInterval('P30D'));
+		$thirty_days_ago = strtotime($date->format('Y-m-d'));
+		
+		$thr_first_day = $thirty_days_ago;
+		$thr_second_day = strtotime(date('Y-m-d', $thirty_days_ago)." +2 day");
+		$thr_third_day = strtotime(date('Y-m-d', $thirty_days_ago)." +3 day");
+		$thr_fourth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +4 day");
+		$thr_fifth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +5 day");
+		$thr_sixth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +6 day");
+		$thr_seventh_day = strtotime(date('Y-m-d', $thirty_days_ago)." +7 day");
+		$thr_eight_day = strtotime(date('Y-m-d', $thirty_days_ago)." +8 day");
+		$thr_nineth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +9 day");
+		$thr_tenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +10 day");
+		$thr_eleventh_day = strtotime(date('Y-m-d', $thirty_days_ago)." +11 day");
+		$thr_twelfth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +12 day");
+		$thr_thirteenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +13 day");
+		$thr_fourteenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +14 day");
+		$thr_fifteenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +15 day");
+		$thr_sixteenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +16 day");
+		$thr_seventeenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +17 day");
+		$thr_eighteenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +18 day");
+		$thr_nineteenth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +19 day");
+		$thr_twentieth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +20 day");
+		$thr_twenty_first_day = strtotime(date('Y-m-d', $thirty_days_ago)." +21 day");
+		$thr_twenty_second_day = strtotime(date('Y-m-d', $thirty_days_ago)." +22 day");
+		$thr_twenty_third_day = strtotime(date('Y-m-d', $thirty_days_ago)." +23 day");
+		$thr_twenty_fourth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +24 day");
+		$thr_twenty_fifth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +25 day");
+		$thr_twenty_sixth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +26 day");
+		$thr_twenty_seventh_day = strtotime(date('Y-m-d', $thirty_days_ago)." +27 day");
+		$thr_twenty_eight_day = strtotime(date('Y-m-d', $thirty_days_ago)." +28 day");
+		$thr_twenty_nineth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +29 day");
+		$thr_thirtieth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +30 day");
+		$thr_thirty_first_day = strtotime(date('Y-m-d', $thirty_days_ago)." +31 day");
+		
+		$report_stats_last_thirty_days[0] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
+		$report_stats_last_thirty_days[1] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_second_day)));
+		$report_stats_last_thirty_days[2] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_second_day, 'PerformedCheck.completion_time <' => $thr_third_day)));
+		$report_stats_last_thirty_days[3] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_third_day, 'PerformedCheck.completion_time <' => $thr_fourth_day)));
+		$report_stats_last_thirty_days[4] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourth_day, 'PerformedCheck.completion_time <' => $thr_fifth_day)));
+		$report_stats_last_thirty_days[5] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifth_day, 'PerformedCheck.completion_time <' => $thr_sixth_day)));
+		$report_stats_last_thirty_days[6] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixth_day, 'PerformedCheck.completion_time <' => $thr_seventh_day)));
+		$report_stats_last_thirty_days[7] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventh_day, 'PerformedCheck.completion_time <' => $thr_eight_day)));
+		$report_stats_last_thirty_days[8] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eight_day, 'PerformedCheck.completion_time <' => $thr_nineth_day)));
+		$report_stats_last_thirty_days[9] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineth_day, 'PerformedCheck.completion_time <' => $thr_tenth_day)));
+		$report_stats_last_thirty_days[10] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_tenth_day, 'PerformedCheck.completion_time <' => $thr_eleventh_day)));
+		$report_stats_last_thirty_days[11] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eleventh_day, 'PerformedCheck.completion_time <' => $thr_twelfth_day)));
+		$report_stats_last_thirty_days[12] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twelfth_day, 'PerformedCheck.completion_time <' => $thr_thirteenth_day)));
+		$report_stats_last_thirty_days[13] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirteenth_day, 'PerformedCheck.completion_time <' => $thr_fourteenth_day)));
+		$report_stats_last_thirty_days[14] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourteenth_day, 'PerformedCheck.completion_time <' => $thr_fifteenth_day)));
+		$report_stats_last_thirty_days[15] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifteenth_day, 'PerformedCheck.completion_time <' => $thr_sixteenth_day)));
+		$report_stats_last_thirty_days[16] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixteenth_day, 'PerformedCheck.completion_time <' => $thr_seventeenth_day)));
+		$report_stats_last_thirty_days[17] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventeenth_day, 'PerformedCheck.completion_time <' => $thr_eighteenth_day)));
+		$report_stats_last_thirty_days[18] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eighteenth_day, 'PerformedCheck.completion_time <' => $thr_nineteenth_day)));
+		$report_stats_last_thirty_days[19] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineteenth_day, 'PerformedCheck.completion_time <' => $thr_twentieth_day)));
+		$report_stats_last_thirty_days[20] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twentieth_day, 'PerformedCheck.completion_time <' => $thr_twenty_first_day)));
+		$report_stats_last_thirty_days[21] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_first_day, 'PerformedCheck.completion_time <' => $thr_twenty_second_day)));
+		$report_stats_last_thirty_days[22] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_second_day, 'PerformedCheck.completion_time <' => $thr_twenty_third_day)));
+		$report_stats_last_thirty_days[23] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_third_day, 'PerformedCheck.completion_time <' => $thr_twenty_fourth_day)));
+		$report_stats_last_thirty_days[24] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fourth_day, 'PerformedCheck.completion_time <' => $thr_twenty_fifth_day)));
+		$report_stats_last_thirty_days[25] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fifth_day, 'PerformedCheck.completion_time <' => $thr_twenty_sixth_day)));
+		$report_stats_last_thirty_days[26] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_sixth_day, 'PerformedCheck.completion_time <' => $thr_twenty_seventh_day)));
+		$report_stats_last_thirty_days[27] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_seventh_day, 'PerformedCheck.completion_time <' => $thr_twenty_eight_day)));
+		$report_stats_last_thirty_days[28] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_eight_day, 'PerformedCheck.completion_time <' => $thr_twenty_nineth_day)));
+		$report_stats_last_thirty_days[29] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_nineth_day, 'PerformedCheck.completion_time <' => $thr_thirtieth_day)));
+		$report_stats_last_thirty_days[30] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirtieth_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
+	
+	
+		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST 30 DAYS ##########################################
 
-		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST YEAR ##########################################
-
-
-
+		
+		
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$selected_user = $this->User->findById($behalfUserId);
 		
@@ -1474,6 +1575,44 @@ class UsersController extends AclManagementAppController {
 		exit();
 	}
 	
+	public function manual_insert() {
+		$this->loadModel('AclManagement.User');
+		$users = array(
+			array('id' => '477','group_id' => '0','parent_id' => '407','client_group_id' => NULL,'group_affiliation_id' => NULL,'hash_value' => '1af18200b8f238b0657adbbaed38714a7ba91d63','ip_address' => NULL,'username' => 'CharlesWalter2317','name' => NULL,'password' => '0f3fccc1d0b0523647184b0baebcc8808694fcf9','email' => '','avatar' => NULL,'language' => NULL,'timezone' => NULL,'key' => NULL,'can_answer' => '1','last_alerted' => NULL,'confirmed_PrivacyPolicy' => '1','isDeactivated' => '0','status' => '1','created' => '2015-02-03 02:52:37','modified' => '2015-02-03 02:52:44','last_login' => '0000-00-00 00:00:00')
+		);
+		
+		foreach($users as $user) {	
+			$to_insert = array();
+			$to_insert['User']['id'] = $user['id'];
+			$to_insert['User']['group_id'] = $user['group_id'];
+			$to_insert['User']['parent_id'] = $user['parent_id'];
+			$to_insert['User']['client_group_id'] = $user['client_group_id'];
+			$to_insert['User']['group_affiliation_id'] = $user['group_affiliation_id'];
+			$to_insert['User']['hash_value'] = $user['hash_value'];
+			$to_insert['User']['ip_address'] = $user['ip_address'];
+			$to_insert['User']['username'] = $user['username'];
+			$to_insert['User']['name'] = $user['name'];
+			$to_insert['User']['password'] = $user['password'];
+			$to_insert['User']['email'] = $user['email'];
+			$to_insert['User']['avatar'] = $user['avatar'];
+			$to_insert['User']['language'] = $user['language'];
+			$to_insert['User']['timezone'] = $user['timezone'];
+			$to_insert['User']['key'] = $user['key'];
+			$to_insert['User']['can_answer'] = $user['can_answer'];
+			$to_insert['User']['last_alerted'] = $user['last_alerted'];
+			$to_insert['User']['confirmed_PrivacyPolicy'] = $user['confirmed_PrivacyPolicy'];
+			$to_insert['User']['isDeactivated'] = $user['isDeactivated'];
+			$to_insert['User']['status'] = $user['status'];
+			$to_insert['User']['created'] = $user['created'];
+			$to_insert['User']['modified'] = $user['modified'];
+			$to_insert['User']['last_login'] = $user['last_login'];
+			
+			$this->User->create();
+			$this->User->save($to_insert);
+		}
+			
+		exit();
+	}
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
@@ -1485,6 +1624,31 @@ class UsersController extends AclManagementAppController {
 		$this->Session->setFlash('You have successfully deleted the report', 'alert/success');
 		$redirection = "http://".$_SERVER['SERVER_NAME']."/users/nutricheck_activity/".$user_id;
         $this->redirect($redirection);
+	}
+	
+	public function get_parent($child_id) {
+		$this->User->unbindModelAll();
+		$group_id = $this->Session->read('Auth.User.group_id');
+		$child_information = $this->User->findById($child_id);
+		
+		// Client
+		if($child_information['User']['group_id'] == 2 && $group_id == 5) {}
+		
+		// Member
+		if($child_information['User']['group_id'] == 3 && $group_id == 5) {}
+		
+		// Client Group
+		if($child_information['User']['group_id'] == 4 && $group_id == 5) {}
+		
+		
+		// Client
+		if($child_information['User']['group_id'] == 2 && $group_id == 4) {}
+		
+		// Member
+		if($child_information['User']['group_id'] == 3 && $group_id == 4) {}
+		
+		$this->var_debug($child_information);
+		exit();
 	}
 }
 ?>
