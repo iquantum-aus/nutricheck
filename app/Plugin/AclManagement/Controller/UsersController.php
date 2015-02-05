@@ -1310,9 +1310,20 @@ class UsersController extends AclManagementAppController {
 		$this->loadModel('PerformedCheck');
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
-
-
 		
+		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$members = array();
+		
+		if($group_id == 2) {
+			$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $user_id)));
+		} else {
+			if($group_id == 4 || $group_id == 4) {
+				$clients = $this->get_clients($user_id);
+				$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $clients)));
+			}
+		}
 		
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST WEEK ##########################################
 
@@ -1359,28 +1370,72 @@ class UsersController extends AclManagementAppController {
 		$report_stats_last_week = array();
 	
 		$this->PerformedCheck->unbindModelAll();
-		$report_stats_last_week[0] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $eight_day)));
-		$report_stats_last_week[1] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $second_day)));
-		$report_stats_last_week[2] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $second_day, 'PerformedCheck.completion_time <' => $third_day)));
-		$report_stats_last_week[3] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $third_day, 'PerformedCheck.completion_time <' => $fourth_day)));
-		$report_stats_last_week[4] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fourth_day, 'PerformedCheck.completion_time <' => $fifth_day)));
-		$report_stats_last_week[5] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fifth_day, 'PerformedCheck.completion_time <' => $sixth_day)));
-		$report_stats_last_week[6] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $sixth_day, 'PerformedCheck.completion_time <' => $seventh_day)));
-		$report_stats_last_week[7] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $seventh_day, 'PerformedCheck.completion_time <' => $eight_day)));
+		$total_report_stats_last_week = 0;
+		
+		if($group_id == 1) {
+			$total_report_stats_last_week = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $eight_day)));
+
+			$report_stats_last_week[1]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $second_day)));
+			$report_stats_last_week[1]['percentage'] = ($report_stats_last_week[1]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[2]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $second_day, 'PerformedCheck.completion_time <' => $third_day)));
+			$report_stats_last_week[2]['percentage'] = ($report_stats_last_week[2]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[3]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $third_day, 'PerformedCheck.completion_time <' => $fourth_day)));
+			$report_stats_last_week[3]['percentage'] = ($report_stats_last_week[3]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[4]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fourth_day, 'PerformedCheck.completion_time <' => $fifth_day)));
+			$report_stats_last_week[4]['percentage'] = ($report_stats_last_week[4]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[5]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fifth_day, 'PerformedCheck.completion_time <' => $sixth_day)));
+			$report_stats_last_week[5]['percentage'] = ($report_stats_last_week[5]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[6]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $sixth_day, 'PerformedCheck.completion_time <' => $seventh_day)));
+			$report_stats_last_week[6]['percentage'] = ($report_stats_last_week[6]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[7]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $seventh_day, 'PerformedCheck.completion_time <' => $eight_day)));
+			$report_stats_last_week[7]['percentage'] = ($report_stats_last_week[7]['count']/$total_report_stats_last_week) * 100;
+		
+		} else {
+			
+			$total_report_stats_last_week = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $eight_day)));
+
+			$report_stats_last_week[1]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $second_day)));
+			$report_stats_last_week[1]['percentage'] = ($report_stats_last_week[1]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[2]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $second_day, 'PerformedCheck.completion_time <' => $third_day)));
+			$report_stats_last_week[2]['percentage'] = ($report_stats_last_week[2]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[3]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $third_day, 'PerformedCheck.completion_time <' => $fourth_day)));
+			$report_stats_last_week[3]['percentage'] = ($report_stats_last_week[3]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[4]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fourth_day, 'PerformedCheck.completion_time <' => $fifth_day)));
+			$report_stats_last_week[4]['percentage'] = ($report_stats_last_week[4]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[5]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $fifth_day, 'PerformedCheck.completion_time <' => $sixth_day)));
+			$report_stats_last_week[5]['percentage'] = ($report_stats_last_week[5]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[6]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $sixth_day, 'PerformedCheck.completion_time <' => $seventh_day)));
+			$report_stats_last_week[6]['percentage'] = ($report_stats_last_week[6]['count']/$total_report_stats_last_week) * 100;
+
+			$report_stats_last_week[7]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $seventh_day, 'PerformedCheck.completion_time <' => $eight_day)));
+			$report_stats_last_week[7]['percentage'] = ($report_stats_last_week[7]['count']/$total_report_stats_last_week) * 100;
+		}
+		
 		
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST WEEK ##########################################
-		
-		
-		
-		
+
+
+
+
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST 30 DAYS ##########################################
-		
+
 		$current_day = date('Y-m-d');
 		$tomorrow = strtotime(date('Y-m-d'), " +1 day");
 		$date = new DateTime($current_day);
 		$date->sub(new DateInterval('P30D'));
 		$thirty_days_ago = strtotime($date->format('Y-m-d'));
-		
+
 		$thr_first_day = $thirty_days_ago;
 		$thr_second_day = strtotime(date('Y-m-d', $thirty_days_ago)." +2 day");
 		$thr_third_day = strtotime(date('Y-m-d', $thirty_days_ago)." +3 day");
@@ -1412,40 +1467,197 @@ class UsersController extends AclManagementAppController {
 		$thr_twenty_nineth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +29 day");
 		$thr_thirtieth_day = strtotime(date('Y-m-d', $thirty_days_ago)." +30 day");
 		$thr_thirty_first_day = strtotime(date('Y-m-d', $thirty_days_ago)." +31 day");
+
+		$total_report_stats_last_thirty_days = 0;
 		
-		$report_stats_last_thirty_days[0] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
-		$report_stats_last_thirty_days[1] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_second_day)));
-		$report_stats_last_thirty_days[2] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_second_day, 'PerformedCheck.completion_time <' => $thr_third_day)));
-		$report_stats_last_thirty_days[3] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_third_day, 'PerformedCheck.completion_time <' => $thr_fourth_day)));
-		$report_stats_last_thirty_days[4] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourth_day, 'PerformedCheck.completion_time <' => $thr_fifth_day)));
-		$report_stats_last_thirty_days[5] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifth_day, 'PerformedCheck.completion_time <' => $thr_sixth_day)));
-		$report_stats_last_thirty_days[6] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixth_day, 'PerformedCheck.completion_time <' => $thr_seventh_day)));
-		$report_stats_last_thirty_days[7] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventh_day, 'PerformedCheck.completion_time <' => $thr_eight_day)));
-		$report_stats_last_thirty_days[8] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eight_day, 'PerformedCheck.completion_time <' => $thr_nineth_day)));
-		$report_stats_last_thirty_days[9] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineth_day, 'PerformedCheck.completion_time <' => $thr_tenth_day)));
-		$report_stats_last_thirty_days[10] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_tenth_day, 'PerformedCheck.completion_time <' => $thr_eleventh_day)));
-		$report_stats_last_thirty_days[11] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eleventh_day, 'PerformedCheck.completion_time <' => $thr_twelfth_day)));
-		$report_stats_last_thirty_days[12] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twelfth_day, 'PerformedCheck.completion_time <' => $thr_thirteenth_day)));
-		$report_stats_last_thirty_days[13] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirteenth_day, 'PerformedCheck.completion_time <' => $thr_fourteenth_day)));
-		$report_stats_last_thirty_days[14] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourteenth_day, 'PerformedCheck.completion_time <' => $thr_fifteenth_day)));
-		$report_stats_last_thirty_days[15] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifteenth_day, 'PerformedCheck.completion_time <' => $thr_sixteenth_day)));
-		$report_stats_last_thirty_days[16] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixteenth_day, 'PerformedCheck.completion_time <' => $thr_seventeenth_day)));
-		$report_stats_last_thirty_days[17] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventeenth_day, 'PerformedCheck.completion_time <' => $thr_eighteenth_day)));
-		$report_stats_last_thirty_days[18] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eighteenth_day, 'PerformedCheck.completion_time <' => $thr_nineteenth_day)));
-		$report_stats_last_thirty_days[19] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineteenth_day, 'PerformedCheck.completion_time <' => $thr_twentieth_day)));
-		$report_stats_last_thirty_days[20] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twentieth_day, 'PerformedCheck.completion_time <' => $thr_twenty_first_day)));
-		$report_stats_last_thirty_days[21] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_first_day, 'PerformedCheck.completion_time <' => $thr_twenty_second_day)));
-		$report_stats_last_thirty_days[22] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_second_day, 'PerformedCheck.completion_time <' => $thr_twenty_third_day)));
-		$report_stats_last_thirty_days[23] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_third_day, 'PerformedCheck.completion_time <' => $thr_twenty_fourth_day)));
-		$report_stats_last_thirty_days[24] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fourth_day, 'PerformedCheck.completion_time <' => $thr_twenty_fifth_day)));
-		$report_stats_last_thirty_days[25] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fifth_day, 'PerformedCheck.completion_time <' => $thr_twenty_sixth_day)));
-		$report_stats_last_thirty_days[26] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_sixth_day, 'PerformedCheck.completion_time <' => $thr_twenty_seventh_day)));
-		$report_stats_last_thirty_days[27] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_seventh_day, 'PerformedCheck.completion_time <' => $thr_twenty_eight_day)));
-		$report_stats_last_thirty_days[28] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_eight_day, 'PerformedCheck.completion_time <' => $thr_twenty_nineth_day)));
-		$report_stats_last_thirty_days[29] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_nineth_day, 'PerformedCheck.completion_time <' => $thr_thirtieth_day)));
-		$report_stats_last_thirty_days[30] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirtieth_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
-	
-	
+		if($group_id == 1) {
+			$total_report_stats_last_thirty_days = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
+
+			$report_stats_last_thirty_days[1]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_second_day)));
+			$report_stats_last_thirty_days[1]['percentage'] = ($report_stats_last_thirty_days[1]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[2]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_second_day, 'PerformedCheck.completion_time <' => $thr_third_day)));
+			$report_stats_last_thirty_days[2]['percentage'] = ($report_stats_last_thirty_days[2]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[3]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_third_day, 'PerformedCheck.completion_time <' => $thr_fourth_day)));
+			$report_stats_last_thirty_days[3]['percentage'] = ($report_stats_last_thirty_days[3]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[4]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourth_day, 'PerformedCheck.completion_time <' => $thr_fifth_day)));
+			$report_stats_last_thirty_days[4]['percentage'] = ($report_stats_last_thirty_days[4]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[5]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifth_day, 'PerformedCheck.completion_time <' => $thr_sixth_day)));
+			$report_stats_last_thirty_days[5]['percentage'] = ($report_stats_last_thirty_days[5]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[6]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixth_day, 'PerformedCheck.completion_time <' => $thr_seventh_day)));
+			$report_stats_last_thirty_days[6]['percentage'] = ($report_stats_last_thirty_days[6]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[7]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventh_day, 'PerformedCheck.completion_time <' => $thr_eight_day)));
+			$report_stats_last_thirty_days[7]['percentage'] = ($report_stats_last_thirty_days[7]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[8]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eight_day, 'PerformedCheck.completion_time <' => $thr_nineth_day)));
+			$report_stats_last_thirty_days[8]['percentage'] = ($report_stats_last_thirty_days[8]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[9]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineth_day, 'PerformedCheck.completion_time <' => $thr_tenth_day)));
+			$report_stats_last_thirty_days[9]['percentage'] = ($report_stats_last_thirty_days[9]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[10]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_tenth_day, 'PerformedCheck.completion_time <' => $thr_eleventh_day)));
+			$report_stats_last_thirty_days[10]['percentage'] = ($report_stats_last_thirty_days[10]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[11]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eleventh_day, 'PerformedCheck.completion_time <' => $thr_twelfth_day)));
+			$report_stats_last_thirty_days[11]['percentage'] = ($report_stats_last_thirty_days[11]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[12]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twelfth_day, 'PerformedCheck.completion_time <' => $thr_thirteenth_day)));		
+			$report_stats_last_thirty_days[12]['percentage'] = ($report_stats_last_thirty_days[12]['count']/$total_report_stats_last_thirty_days) * 100;		
+
+			$report_stats_last_thirty_days[13]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirteenth_day, 'PerformedCheck.completion_time <' => $thr_fourteenth_day)));
+			$report_stats_last_thirty_days[13]['percentage'] = ($report_stats_last_thirty_days[12]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[14]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourteenth_day, 'PerformedCheck.completion_time <' => $thr_fifteenth_day)));
+			$report_stats_last_thirty_days[14]['percentage'] = ($report_stats_last_thirty_days[14]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[15]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifteenth_day, 'PerformedCheck.completion_time <' => $thr_sixteenth_day)));
+			$report_stats_last_thirty_days[15]['percentage'] = ($report_stats_last_thirty_days[15]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[16]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixteenth_day, 'PerformedCheck.completion_time <' => $thr_seventeenth_day)));
+			$report_stats_last_thirty_days[16]['percentage'] = ($report_stats_last_thirty_days[16]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[17]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventeenth_day, 'PerformedCheck.completion_time <' => $thr_eighteenth_day)));
+			$report_stats_last_thirty_days[17]['percentage'] = ($report_stats_last_thirty_days[17]['count']/$total_report_stats_last_thirty_days) * 100;		
+
+			$report_stats_last_thirty_days[18]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eighteenth_day, 'PerformedCheck.completion_time <' => $thr_nineteenth_day)));
+			$report_stats_last_thirty_days[18]['percentage'] = ($report_stats_last_thirty_days[18]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[19]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineteenth_day, 'PerformedCheck.completion_time <' => $thr_twentieth_day)));
+			$report_stats_last_thirty_days[19]['percentage'] = ($report_stats_last_thirty_days[19]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[20]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twentieth_day, 'PerformedCheck.completion_time <' => $thr_twenty_first_day)));
+			$report_stats_last_thirty_days[20]['percentage'] = ($report_stats_last_thirty_days[20]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[21]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_first_day, 'PerformedCheck.completion_time <' => $thr_twenty_second_day)));
+			$report_stats_last_thirty_days[21]['percentage'] = ($report_stats_last_thirty_days[21]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[22]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_second_day, 'PerformedCheck.completion_time <' => $thr_twenty_third_day)));
+			$report_stats_last_thirty_days[22]['percentage'] = ($report_stats_last_thirty_days[22]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[23]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_third_day, 'PerformedCheck.completion_time <' => $thr_twenty_fourth_day)));
+			$report_stats_last_thirty_days[23]['percentage'] = ($report_stats_last_thirty_days[23]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[24]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fourth_day, 'PerformedCheck.completion_time <' => $thr_twenty_fifth_day)));
+			$report_stats_last_thirty_days[24]['percentage'] = ($report_stats_last_thirty_days[24]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[25]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fifth_day, 'PerformedCheck.completion_time <' => $thr_twenty_sixth_day)));
+			$report_stats_last_thirty_days[25]['percentage'] = ($report_stats_last_thirty_days[25]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[26]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_sixth_day, 'PerformedCheck.completion_time <' => $thr_twenty_seventh_day)));
+			$report_stats_last_thirty_days[26]['percentage'] = ($report_stats_last_thirty_days[26]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[27]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_seventh_day, 'PerformedCheck.completion_time <' => $thr_twenty_eight_day)));
+			$report_stats_last_thirty_days[27]['percentage'] = ($report_stats_last_thirty_days[27]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[28]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_eight_day, 'PerformedCheck.completion_time <' => $thr_twenty_nineth_day)));
+			$report_stats_last_thirty_days[28]['percentage'] = ($report_stats_last_thirty_days[28]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[29]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_nineth_day, 'PerformedCheck.completion_time <' => $thr_thirtieth_day)));
+			$report_stats_last_thirty_days[29]['percentage'] = ($report_stats_last_thirty_days[29]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[30]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirtieth_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
+			$report_stats_last_thirty_days[30]['percentage'] = ($report_stats_last_thirty_days[30]['count']/$total_report_stats_last_thirty_days) * 100;
+		
+		} else {
+			
+			$total_report_stats_last_thirty_days = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
+
+			$report_stats_last_thirty_days[1]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_second_day)));
+			$report_stats_last_thirty_days[1]['percentage'] = ($report_stats_last_thirty_days[1]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[2]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_second_day, 'PerformedCheck.completion_time <' => $thr_third_day)));
+			$report_stats_last_thirty_days[2]['percentage'] = ($report_stats_last_thirty_days[2]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[3]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_third_day, 'PerformedCheck.completion_time <' => $thr_fourth_day)));
+			$report_stats_last_thirty_days[3]['percentage'] = ($report_stats_last_thirty_days[3]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[4]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourth_day, 'PerformedCheck.completion_time <' => $thr_fifth_day)));
+			$report_stats_last_thirty_days[4]['percentage'] = ($report_stats_last_thirty_days[4]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[5]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifth_day, 'PerformedCheck.completion_time <' => $thr_sixth_day)));
+			$report_stats_last_thirty_days[5]['percentage'] = ($report_stats_last_thirty_days[5]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[6]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixth_day, 'PerformedCheck.completion_time <' => $thr_seventh_day)));
+			$report_stats_last_thirty_days[6]['percentage'] = ($report_stats_last_thirty_days[6]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[7]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventh_day, 'PerformedCheck.completion_time <' => $thr_eight_day)));
+			$report_stats_last_thirty_days[7]['percentage'] = ($report_stats_last_thirty_days[7]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[8]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eight_day, 'PerformedCheck.completion_time <' => $thr_nineth_day)));
+			$report_stats_last_thirty_days[8]['percentage'] = ($report_stats_last_thirty_days[8]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[9]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineth_day, 'PerformedCheck.completion_time <' => $thr_tenth_day)));
+			$report_stats_last_thirty_days[9]['percentage'] = ($report_stats_last_thirty_days[9]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[10]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_tenth_day, 'PerformedCheck.completion_time <' => $thr_eleventh_day)));
+			$report_stats_last_thirty_days[10]['percentage'] = ($report_stats_last_thirty_days[10]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[11]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eleventh_day, 'PerformedCheck.completion_time <' => $thr_twelfth_day)));
+			$report_stats_last_thirty_days[11]['percentage'] = ($report_stats_last_thirty_days[11]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[12]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twelfth_day, 'PerformedCheck.completion_time <' => $thr_thirteenth_day)));		
+			$report_stats_last_thirty_days[12]['percentage'] = ($report_stats_last_thirty_days[12]['count']/$total_report_stats_last_thirty_days) * 100;		
+
+			$report_stats_last_thirty_days[13]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirteenth_day, 'PerformedCheck.completion_time <' => $thr_fourteenth_day)));
+			$report_stats_last_thirty_days[13]['percentage'] = ($report_stats_last_thirty_days[12]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[14]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fourteenth_day, 'PerformedCheck.completion_time <' => $thr_fifteenth_day)));
+			$report_stats_last_thirty_days[14]['percentage'] = ($report_stats_last_thirty_days[14]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[15]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_fifteenth_day, 'PerformedCheck.completion_time <' => $thr_sixteenth_day)));
+			$report_stats_last_thirty_days[15]['percentage'] = ($report_stats_last_thirty_days[15]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[16]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_sixteenth_day, 'PerformedCheck.completion_time <' => $thr_seventeenth_day)));
+			$report_stats_last_thirty_days[16]['percentage'] = ($report_stats_last_thirty_days[16]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[17]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_seventeenth_day, 'PerformedCheck.completion_time <' => $thr_eighteenth_day)));
+			$report_stats_last_thirty_days[17]['percentage'] = ($report_stats_last_thirty_days[17]['count']/$total_report_stats_last_thirty_days) * 100;		
+
+			$report_stats_last_thirty_days[18]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_eighteenth_day, 'PerformedCheck.completion_time <' => $thr_nineteenth_day)));
+			$report_stats_last_thirty_days[18]['percentage'] = ($report_stats_last_thirty_days[18]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[19]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_nineteenth_day, 'PerformedCheck.completion_time <' => $thr_twentieth_day)));
+			$report_stats_last_thirty_days[19]['percentage'] = ($report_stats_last_thirty_days[19]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[20]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twentieth_day, 'PerformedCheck.completion_time <' => $thr_twenty_first_day)));
+			$report_stats_last_thirty_days[20]['percentage'] = ($report_stats_last_thirty_days[20]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[21]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_first_day, 'PerformedCheck.completion_time <' => $thr_twenty_second_day)));
+			$report_stats_last_thirty_days[21]['percentage'] = ($report_stats_last_thirty_days[21]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[22]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_second_day, 'PerformedCheck.completion_time <' => $thr_twenty_third_day)));
+			$report_stats_last_thirty_days[22]['percentage'] = ($report_stats_last_thirty_days[22]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[23]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_third_day, 'PerformedCheck.completion_time <' => $thr_twenty_fourth_day)));
+			$report_stats_last_thirty_days[23]['percentage'] = ($report_stats_last_thirty_days[23]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[24]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fourth_day, 'PerformedCheck.completion_time <' => $thr_twenty_fifth_day)));
+			$report_stats_last_thirty_days[24]['percentage'] = ($report_stats_last_thirty_days[24]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[25]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_fifth_day, 'PerformedCheck.completion_time <' => $thr_twenty_sixth_day)));
+			$report_stats_last_thirty_days[25]['percentage'] = ($report_stats_last_thirty_days[25]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[26]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_sixth_day, 'PerformedCheck.completion_time <' => $thr_twenty_seventh_day)));
+			$report_stats_last_thirty_days[26]['percentage'] = ($report_stats_last_thirty_days[26]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[27]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_seventh_day, 'PerformedCheck.completion_time <' => $thr_twenty_eight_day)));
+			$report_stats_last_thirty_days[27]['percentage'] = ($report_stats_last_thirty_days[27]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[28]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_eight_day, 'PerformedCheck.completion_time <' => $thr_twenty_nineth_day)));
+			$report_stats_last_thirty_days[28]['percentage'] = ($report_stats_last_thirty_days[28]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[29]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twenty_nineth_day, 'PerformedCheck.completion_time <' => $thr_thirtieth_day)));
+			$report_stats_last_thirty_days[29]['percentage'] = ($report_stats_last_thirty_days[29]['count']/$total_report_stats_last_thirty_days) * 100;
+
+			$report_stats_last_thirty_days[30]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.user_id' => $members, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirtieth_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
+			$report_stats_last_thirty_days[30]['percentage'] = ($report_stats_last_thirty_days[30]['count']/$total_report_stats_last_thirty_days) * 100;
+		}
+		
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST 30 DAYS ##########################################
 
 		
@@ -1474,6 +1686,11 @@ class UsersController extends AclManagementAppController {
 		$this->set('factor_list', $factor_list);
 		$this->set('user_list', $user_list);
 		$this->set('behalfUserId', $selected_user['User']['hash_value']);
+		
+		$this->set('report_stats_last_week', $report_stats_last_week);
+		$this->set('total_report_stats_last_week', $total_report_stats_last_week);
+		$this->set('report_stats_last_thirty_days', $report_stats_last_thirty_days);
+		$this->set('total_report_stats_last_thirty_days', $total_report_stats_last_thirty_days);
 	}
 	
 	

@@ -1,3 +1,38 @@
+<style>
+	.left {
+		float: left;	
+	}
+	
+	.full { width: 100%; }
+	
+	.grid-holder, .grid-values { float: left; width: 100%; border: 1px solid #999; box-sizing: border-box; }
+	.level-grids { float: left; width: 100%; height: 10%; border-bottom: 1px solid #999; box-sizing: border-box; }
+	.level-grids:last-child { border-bottom: none; }
+	
+	.grid-rows { border-right: 1px solid #999; width: 14.28571428571429%; position: relative; height: 100%; box-sizing: border-box; text-align: center; }
+	.grid-rows:last-child { border-right: none; }
+	
+	.report-holder {
+		position:relative;
+		float:left;
+		width:100%;
+		margin:0 0 30px 0;
+		padding:0;
+		background:white;
+	}
+	
+	.graph_items {
+		padding: 3px;
+		margin: auto;
+		position: absolute;
+		bottom: 0;
+		width: 50%;
+		background: #ccc;
+		height: 14.285714285714%;
+		left: 18%;
+	}
+</style>
+
 <div id="mainContentWrapper" class="mainContentWrapper left full">
 <?php if(!empty($videos)) { ?>
 		<?php foreach($videos as $video) { ?>
@@ -14,7 +49,8 @@
 			</div>
 		<?php } ?>
 	<?php } ?>
-<div style="position:relative;float:left;width:100%;margin:0 0 30px 0;padding:0;background:white;" class="round5">
+
+	
 <div style="position:relative;padding:30px;">
 	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
 		<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
@@ -53,11 +89,26 @@
 		</div>
 	<?php } else { ?>
 		<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
-<iframe width="700" height="420" src="//www.youtube.com/embed/BjwVkqrQTqs?rel=0" frameborder="0" allowfullscreen></iframe>
+			<iframe width="700" height="420" src="//www.youtube.com/embed/BjwVkqrQTqs?rel=0" frameborder="0" allowfullscreen></iframe>
 		</div>
 	<?php } ?>
 	
 	<?php echo $this->element('module_panel'); ?>
+	
+	<div class="left full">
+		<h3 class="left span12" style="text-align: center">Last Week's NutriCheck (Total: <?php echo $total_report_stats_last_week; ?>)</h3>
+		<div class="left span12" style="border: 1px solid #ccc; padding-bottom: 25px;">
+			<div id='awesome-graph' class='graph' style='width: 100%; height: 200px;'></div>
+		</div>
+		
+		<div class="left span4" style="height: 40px;"></div>
+		
+		<h3 class="left span12" style="text-align: center">Last 30 Day's NutriCheck (Total: <?php echo $total_report_stats_last_thirty_days; ?>)</h3>
+		<div class="left span12" style="border: 1px solid #ccc; padding-bottom: 25px;">
+			<div id='awesome-graph2' class='graph' style='width: 100%; height: 200px;'></div>
+		</div>
+	</div>
+	
 	</div>
 </div>
 	<?php
@@ -65,74 +116,73 @@
 	?>
 	<div style="position:relative;float:left;width:100%;margin:0;padding:0;">
 	
-	<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
-		<p style="text-align:center;" class="iconholder"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall">What is nutricheck</div>				
-		<div class="textBelowcontent">
-<p>NutriCheck is an online program designed to assist healthcare practitioners assess their patient’s internal metabolic and nutritional health, improve patient health outcomes and build healthier communities.</p>
-			<p>NutriCheck performs a detailed analysis of patient symptoms that reflect common metabolic and nutrient dysfunctions that promote chronic illness.</p>
-			<p>NutriCheck correlates defined indicators of nutrient disturbance with clinical symptomatology, to provide the practitioner with a wide-ranging assessment of what is wrong and what nutrients are required to help fix the patient’s health problems.</p>
-</div>
-	</div>
-	
-	<div style="min-height: 374px; width:20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
-		<p style="text-align:center;" class="iconholder"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall">Benefits</div>				
-		<div class="textBelowcontent">
-			
-			<p>NutriCheck assists you to more meaningfully assess and manage your patient’s nutritional health status.</p>
-			
-			<ul>
-				<li>Discuss and explore the dietary and nutrient needs that are specific to them, to build optimal health.</li>
-				<li>monitor their progress back to health on a regular basis</li>
-				<li>Develop progressive relationships with your patients about their health status</li>
-				<li>Enhance your health care practice revenue stream.</li>
-			</ul>
+		<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">What is nutricheck</div>				
+			<div class="textBelowcontent">
+				<p>NutriCheck is an online program designed to assist healthcare practitioners assess their patient’s internal metabolic and nutritional health, improve patient health outcomes and build healthier communities.</p>
+				<p>NutriCheck performs a detailed analysis of patient symptoms that reflect common metabolic and nutrient dysfunctions that promote chronic illness.</p>
+				<p>NutriCheck correlates defined indicators of nutrient disturbance with clinical symptomatology, to provide the practitioner with a wide-ranging assessment of what is wrong and what nutrients are required to help fix the patient’s health problems.</p>
+			</div>
 		</div>
-	</div>
-	
-	<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
-		<p style="text-align:center;" class="iconholder"><img src="/img/medicine2.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall">HELP & FAQ</div>				
-		<div class="textBelowcontent">				
-		Need help, or need to talk to us about something?<br><br>
-		Please check out the FAQ or contact the NutriCheck team on<br>Tel: 617 3279 8137<br>or<br>Email: <a href="mailto:info@nutricheck.com.au">info@nutricheck.com.au</a>, and we will do our best to help you! 
+		
+		<div style="min-height: 374px; width:20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/tick.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">Benefits</div>				
+			<div class="textBelowcontent">
+				
+				<p>NutriCheck assists you to more meaningfully assess and manage your patient’s nutritional health status.</p>
+				
+				<ul>
+					<li>Discuss and explore the dietary and nutrient needs that are specific to them, to build optimal health.</li>
+					<li>monitor their progress back to health on a regular basis</li>
+					<li>Develop progressive relationships with your patients about their health status</li>
+					<li>Enhance your health care practice revenue stream.</li>
+				</ul>
+			</div>
 		</div>
-	</div>
-
-	<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
-	<div style="min-height: 374px; width: 25%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
-		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall">Tutorial Videos</div>				
-		<div class="textBelowcontent">		
-		<p>		
-			<ul>
-				<li><a href="https://vimeo.com/107670858" target="_blank">Completing a quick entry</a></li>
-				<li><a href="https://vimeo.com/107668581" target="_blank">Viewing reports</a></li>
-				<li><a href="https://vimeo.com/107668576" target="_blank">Adding a member and completing a NutriCheck.</a></li>
-			</ul>
-		</p>
+		
+		<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/medicine2.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">HELP & FAQ</div>				
+			<div class="textBelowcontent">				
+			Need help, or need to talk to us about something?<br><br>
+			Please check out the FAQ or contact the NutriCheck team on<br>Tel: 617 3279 8137<br>or<br>Email: <a href="mailto:info@nutricheck.com.au">info@nutricheck.com.au</a>, and we will do our best to help you! 
+			</div>
 		</div>
-	</div>
-	<?php } else if($this->Session->read('Auth.User.group_id') == 1) { ?>
-	<div style="min-height: 374px; width: 25%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
-		<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
-		<div class="textBelowsmall">Tutorial Videos</div>				
-		<div class="textBelowcontent">		
-		<p>		
-			<ul>
-				<li><a href="https://vimeo.com/107668582" target="_blank">Admin adding a pharmacy</a></li>
-			</ul>
-		</p>
+		
+		<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+		<div style="min-height: 374px; width: 25%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">Tutorial Videos</div>				
+			<div class="textBelowcontent">		
+			<p>		
+				<ul>
+					<li><a href="https://vimeo.com/107670858" target="_blank">Completing a quick entry</a></li>
+					<li><a href="https://vimeo.com/107668581" target="_blank">Viewing reports</a></li>
+					<li><a href="https://vimeo.com/107668576" target="_blank">Adding a member and completing a NutriCheck.</a></li>
+				</ul>
+			</p>
+			</div>
 		</div>
+		<?php } else if($this->Session->read('Auth.User.group_id') == 1) { ?>
+		<div style="min-height: 374px; width: 25%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
+			<p style="text-align:center;" class="iconholder"><img src="/img/training.png" style="<?php echo $iconstyle; ?>"></p>
+			<div class="textBelowsmall">Tutorial Videos</div>				
+			<div class="textBelowcontent">		
+			<p>		
+				<ul>
+					<li><a href="https://vimeo.com/107668582" target="_blank">Admin adding a pharmacy</a></li>
+				</ul>
+			</p>
+			</div>
+		</div>
+		<?php } else { ?>
+		<div style="min-height: 0; width: 30%;margin:0 0 40px 0;" class="dashboardbox mason">
+				<img src="../../img/happypeople.jpg" class="round5" style="width:100%;height:100%;">
+		</div>
+		<?php } ?>
 	</div>
-	<?php } else { ?>
-	<div style="min-height: 0; width: 30%;margin:0 0 40px 0;" class="dashboardbox mason">
-			<img src="../../img/happypeople.jpg" class="round5" style="width:100%;height:100%;">
-	</div>
-	<?php } ?>
-	</div>
-	
 </div>
 
 <div class="hidden">
@@ -189,6 +239,30 @@ Talk to us on the NutriCheck website.
 
 <script>
 	$(document).ready(function() {
+		
+		jQuery('#awesome-graph').tufteBar({
+          data: [
+			<?php foreach($report_stats_last_week as $key => $daily_report) { ?>		
+				[<?php echo round($daily_report['percentage']); ?>, {label: '<?php echo "Day: ".$key."<br />Tot: ".$daily_report['count']; ?>'}],
+			<?php } ?>
+          ],
+          barWidth: 0.8,
+          barLabel:  function(index) { return this[0] + '%' },
+          axisLabel: function(index) { return this[1].label },
+          color:     function(index) { return ['#E57536', '#82293B'][index % 2] }
+        });
+		
+		jQuery('#awesome-graph2').tufteBar({
+          data: [
+			<?php foreach($report_stats_last_thirty_days as $key => $thr_daily_report) { ?>		
+				[<?php echo round($thr_daily_report['percentage']); ?>, {label: '<?php echo "Day: ".$key."<br />Tot: ".$thr_daily_report['count']; ?>'}],
+			<?php } ?>
+          ],
+          barWidth: 0.8,
+          barLabel:  function(index) { return this[0] + '%' },
+          axisLabel: function(index) { return this[1].label },
+          color:     function(index) { return ['#E57536', '#82293B'][index % 2] }
+        });
 		
 		<?php if(!empty($behalfUserId)) { ?>
 			$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value=<?php echo $behalfUserId; ?>");

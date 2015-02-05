@@ -43,6 +43,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		
 		echo $this->Html->css('bootstrap.min');
 		echo $this->Html->css('bootstrap-responsive.min');
+		echo $this->Html->css('tufte-graph');
 		// docs.css is only for this exapmple, remove for app dev
 		echo $this->Html->css('backend');
 		echo $this->Html->css('slidebars.min');
@@ -52,6 +53,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->css('jquery.fancybox');
 		echo $this->Html->css('jquery-ui-1.10.4.min');
 		echo $this->Html->css('datepicker');
+		echo $this->Html->css('tufte-graph');
 		
 		if (($IE6 == 1) || ($IE7 == 1) || ($IE8 == 1) || ($IE9 == 1)) {
 			// do nothing
@@ -137,6 +139,9 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('jquery-ui-1.10.4.min');
 		echo $this->Html->script('ckeditor/ckeditor');
 		echo $this->Html->script('bootstrap-datepicker');
+		echo $this->Html->script('raphael');
+		echo $this->Html->script('jquery.enumerable');
+		echo $this->Html->script('jquery.tufte-graph');
 		
 		if (($IE6 == 1) || ($IE7 == 1) || ($IE8 == 1) || ($IE9 == 1)) {
 			// do nothing
