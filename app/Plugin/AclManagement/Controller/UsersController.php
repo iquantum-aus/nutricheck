@@ -796,13 +796,19 @@ class UsersController extends AclManagementAppController {
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
     public function edit($id = null) {
-		
-		$this->get_parent($id);
-		
+		$group_id = $this->Session->read('Auth.User.id');
 		$user_info = $this->Session->read('Auth.User');
-		if(!$this->is_authorized_action($id)) {
-			$this->Session->setFlash(__("You're not authorized to update that patient"), 'alert/error');
-			$this->redirect(array('action' => 'index'));
+		
+		if($group_id != 1 && $group_id != 2) {
+			if(!$this->is_authorized_parent($id)) {
+				$this->Session->setFlash(__("You're not authorized to update that user"), 'alert/error');
+				$this->redirect(array('action' => 'index'));
+			}
+		} else {			
+			if(!$this->is_authorized_action($id)) {
+				$this->Session->setFlash(__("You're not authorized to update that user"), 'alert/error');
+				$this->redirect(array('action' => 'index'));
+			}
 		}
 		
 		$this->User->id = $id;
@@ -1843,29 +1849,65 @@ class UsersController extends AclManagementAppController {
         $this->redirect($redirection);
 	}
 	
-	public function get_parent($child_id) {
+	public function is_authorized_parent($child_id) {
 		$this->User->unbindModelAll();
 		$group_id = $this->Session->read('Auth.User.group_id');
+		$user_id = $this->Session->read('Auth.User.id');
 		$child_information = $this->User->findById($child_id);
 		
 		// Client
-		if($child_information['User']['group_id'] == 2 && $group_id == 5) {}
+		if($child_information['User']['group_id'] == 2 && $group_id == 5) {
+			$client_group = $child_information['User']['client_group_id'];
+			$client_group_info = $this->User->findById($client_group);
+			if($client_group_info['User']['group_affiliation_id'] == $user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		
 		// Member
-		if($child_information['User']['group_id'] == 3 && $group_id == 5) {}
+		if($child_information['User']['group_id'] == 3 && $group_id == 5) {
+			$client = $child_information['User']['parent_id'];
+			$client_info = $this->User->findById($client);
+			$client_group = $client_info['User']['client_group_id'];
+			$client_group_info = $this->User->findById($client_group);
+			if($client_group_info['User']['group_affiliation_id'] == $user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		
 		// Client Group
-		if($child_information['User']['group_id'] == 4 && $group_id == 5) {}
+		if($child_information['User']['group_id'] == 4 && $group_id == 5) {			
+			if($child_information['User']['group_affiliation_id'] == $user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		
 		
 		// Client
-		if($child_information['User']['group_id'] == 2 && $group_id == 4) {}
+		if($child_information['User']['group_id'] == 2 && $group_id == 4) {
+			if($child_information['User']['client_group_id'] == $user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		
 		// Member
-		if($child_information['User']['group_id'] == 3 && $group_id == 4) {}
-		
-		$this->var_debug($child_information);
-		exit();
+		if($child_information['User']['group_id'] == 3 && $group_id == 4) {
+			$client = $child_information['User']['parent_id'];
+			$client_info = $this->User->findById($client);
+			if($client_info['User']['client_group_id'] == $user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 }
 ?>

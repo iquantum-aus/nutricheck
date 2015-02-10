@@ -14,7 +14,7 @@
 				<div class="left full">
 					<?php if($group_id == 5) { ?><a class="list_toggle <?php if($_GET['mode'] == "client_group") { echo "active-link"; } ?>" href="?mode=client_group">List Client Groups</a><?php } ?>
 					<a class="list_toggle <?php if($_GET['mode'] == "client") { echo "active-link"; } ?>" href="?mode=client">List Clients</a>
-					<a class="list_toggle <?php if($_GET['mode'] == "members" || !isset($_GET['mode'])) { echo "active-link"; } ?>" href="?mode=member">List Members</a>
+					<a class="list_toggle <?php if($_GET['mode'] == "member" || !isset($_GET['mode'])) { echo "active-link"; } ?>" href="?mode=member">List Members</a>
 				</div>
 			<?php
 		}

@@ -97,9 +97,8 @@ class UserAlertsController extends AppController {
 		if($user_info['group_id'] != 1) {
 			$users = $this->UserAlert->User->find('list',
 				array(
-					'fields' => array('User.id', 'User.email'), 
+					'fields' => array('User.id', 'User.id'), 
 					'conditions' => array(
-						'User.email <>' => "",
 						'User.id' => $user_ids
 					)
 				)
@@ -107,15 +106,14 @@ class UserAlertsController extends AppController {
 		} else {
 			$users = $this->UserAlert->User->find('list',
 				array(
-					'fields' => array('User.id', 'User.email'), 
-					'conditions' => array(
-						'User.email <>' => ""
-					)
+					'fields' => array('User.id', 'User.id'), 
 				)
 			);
 		}
+			
+		$user_profiles = $this->UserAlert->User->UserProfile->find('all', array('fields' => array('UserProfile.user_id', 'UserProfile.first_name', 'UserProfile.last_name', 'User.email'), 'conditions' => array('UserProfile.user_id' => $users)));
 		
-		$this->set(compact('users'));
+		$this->set(compact('users', 'user_profiles'));
 		$this->set("id", $id);
 	}
 
@@ -171,9 +169,8 @@ class UserAlertsController extends AppController {
 		if($user_info['group_id'] != 1) {
 			$users = $this->UserAlert->User->find('list',
 				array(
-					'fields' => array('User.id', 'User.email'), 
+					'fields' => array('User.id', 'User.id'), 
 					'conditions' => array(
-						'User.email <>' => "",
 						'User.id' => $user_ids
 					)
 				)
@@ -181,15 +178,16 @@ class UserAlertsController extends AppController {
 		} else {
 			$users = $this->UserAlert->User->find('list',
 				array(
-					'fields' => array('User.id', 'User.email'), 
+					'fields' => array('User.id', 'User.id'), 
 					'conditions' => array(
-						'User.email <>' => ""
 					)
 				)
 			);
 		}
 		
-		$this->set(compact('users'));
+		$user_profiles = $this->UserAlert->User->UserProfile->find('all', array('fields' => array('UserProfile.user_id', 'UserProfile.first_name', 'UserProfile.last_name', 'User.email'), 'conditions' => array('UserProfile.user_id' => $users)));
+		
+		$this->set(compact('users', 'user_profiles'));
 	}
 
 	
@@ -249,6 +247,17 @@ class UserAlertsController extends AppController {
 		$this->UserAlert->User->unbindModelAll();
 		$user_info = $this->UserAlert->User->findById($user_id);
 		$email = $user_info['User']['email'];
+		
+		$this->UserAlert->User->unbindModelAll();
+		$parent_id = $user_info['User']['parent_id'];
+		$parent_info = $this->UserAlert->User->findById($parent_id);
+		
+		$this->var_debug($parent_info);
+		
+		// if the member email is present then will send it to his/her email address - else it will be sent over to the pharmacists email address
+		if(empty($email)) {
+			$email = $parent_info['User']['email'];
+		}
 		
 		$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value."&invitation=true";
 		

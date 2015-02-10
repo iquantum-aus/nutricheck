@@ -2,11 +2,23 @@
 <?php echo $this->Form->create('UserAlert'); ?>
 	<fieldset>
 		<legend><?php echo __('Edit User Alert'); ?></legend>
-		<?php
-			echo $this->Form->input('id');
-			echo $this->Form->input('user_id');
-			echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text'));
-		?>
+		<?php echo $this->Form->input('id'); ?>
+				
+		<select name="data[UserAlert][user_id]" id="UserAlertUserId">
+			<option value=">">Select A User</option>
+			<?php $selected = false; ?>
+			<?php foreach($user_profiles as $user_profile) { ?>
+				<?php if($user_profile['UserProfile']['user_id'] == $this->request->data['UserAlert']['user_id']) { $selected = true; } else { $selected = false; } ?>
+				
+				<?php if(empty($user_profile['UserProfile']['first_name']) && empty($user_profile['UserProfile']['last_name'])) { ?>
+					<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['User']['email']; ?></option>
+				<?php } else { ?>
+					<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name']; ?></option>
+				<?php } ?>
+			<?php } ?>
+		</select>
+				
+		<?php echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text')); ?>
 		<input type="submit" class="btn btn-danger">
 	</fieldset>
 <?php echo $this->Form->end(); ?>

@@ -2290,6 +2290,8 @@ CUSTOM CHOSEN DROPDOWN and FORM ELEMENTS
 	margin: 20px 20px 20px 0px;
 }
 
+.active-link { font-weight: bold; text-decoration: underline; }
+
 @media (max-width: 800px) {
 
 }
