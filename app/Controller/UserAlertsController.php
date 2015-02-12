@@ -252,14 +252,16 @@ class UserAlertsController extends AppController {
 		$parent_id = $user_info['User']['parent_id'];
 		$parent_info = $this->UserAlert->User->findById($parent_id);
 		
-		$this->var_debug($parent_info);
-		
 		// if the member email is present then will send it to his/her email address - else it will be sent over to the pharmacists email address
 		if(empty($email)) {
 			$email = $parent_info['User']['email'];
 		}
 		
-		$url = "http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value."&invitation=true";
+		$hash_value = $user_info['User']['hash_value'];
+		$url = "<a href=http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value."&invitation=true>here</a>";
+		
+		$alert_info = $this->UserAlert->findById($alert_id);
+		$alert_info['UserAlert']['message'] = str_replace("&#60;here&#62;", $url, $alert_info['UserAlert']['message']);
 		
 		$mail = new PHPMailer();
 		$mail->IsSMTP(); // we are going to use SMTP
@@ -284,7 +286,7 @@ class UserAlertsController extends AppController {
 		$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test"; 
 		
 		if($mail->Send()) {
-			echo "1";
+			return true;
 		}
 	}
 	

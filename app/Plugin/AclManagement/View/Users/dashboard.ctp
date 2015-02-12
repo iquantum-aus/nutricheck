@@ -5,11 +5,11 @@
 	
 	.full { width: 100%; }
 	
-	.grid-holder, .grid-values { float: left; width: 100%; border: 1px solid #999; box-sizing: border-box; }
+	.grid-holder, .grid-values { float: left; width: 100%; box-sizing: border-box; }
 	.level-grids { float: left; width: 100%; height: 10%; border-bottom: 1px solid #999; box-sizing: border-box; }
 	.level-grids:last-child { border-bottom: none; }
 	
-	.grid-rows { border-right: 1px solid #999; width: 14.28571428571429%; position: relative; height: 100%; box-sizing: border-box; text-align: center; }
+	.grid-rows { width: 14.28571428571429%; position: relative; height: 100%; box-sizing: border-box; text-align: center; }
 	.grid-rows:last-child { border-right: none; }
 	
 	.report-holder {
@@ -27,7 +27,7 @@
 		position: absolute;
 		bottom: 0;
 		width: 50%;
-		background: #ccc;
+		background: #dedede;
 		height: 14.285714285714%;
 		left: 18%;
 	}
@@ -95,17 +95,19 @@
 	
 	<?php echo $this->element('module_panel'); ?>
 	
-	<div class="left full">
-		<h3 class="left span12" style="text-align: center">Last Week's NutriCheck (Total: <?php echo $total_report_stats_last_week; ?>)</h3>
-		<div class="left span12" style="border: 1px solid #ccc; padding-bottom: 25px;">
-			<div id='awesome-graph' class='graph' style='width: 100%; height: 200px;'></div>
+	<div class="left span12" style="border-bottom: 1px solid #dedede; padding-bottom: 5px;">
+		<div class="left span3" style="padding: 20px; box-sizing: border-box;">
+			<h3 class="left span12 textBelowsmall" style="font-size: 15px; text-align: center">Last Week's NutriCheck (Total: <?php echo $total_report_stats_last_week; ?>)</h3>
+			<div class="left span12">
+				<div id='awesome-graph' class='graph' style='width: 100%; height: 200px;'></div>
+			</div>
 		</div>
 		
-		<div class="left span4" style="height: 40px;"></div>
-		
-		<h3 class="left span12" style="text-align: center">Last 30 Day's NutriCheck (Total: <?php echo $total_report_stats_last_thirty_days; ?>)</h3>
-		<div class="left span12" style="border: 1px solid #ccc; padding-bottom: 25px;">
-			<div id='awesome-graph2' class='graph' style='width: 100%; height: 200px;'></div>
+		<div class="right span9" style="padding: 20px;  border-left: 1px solid #dedede; box-sizing: border-box;">
+			<h3 class="left span12 textBelowsmall" style="font-size: 15px; text-align: center;">Last 30 Day's NutriCheck (Total: <?php echo $total_report_stats_last_thirty_days; ?>)</h3>
+			<div class="left span12">
+				<div id='awesome-graph2' class='graph' style='width: 100%; height: 200px;'></div>
+			</div>
 		</div>
 	</div>
 	
@@ -114,7 +116,7 @@
 	<?php
 		$iconstyle = ''; //''"margin:10px auto 10px auto;max-width:175px;";
 	?>
-	<div style="position:relative;float:left;width:100%;margin:0;padding:0;">
+	<div style="position:relative;float:left;width:100%;margin:0;padding:30px;">
 	
 		<div style="min-height: 374px; width: 20%;margin:0 3.33% 40px 0;" class="dashboardboxsmall mason">
 			<p style="text-align:center;" class="iconholder"><img src="/img/answer.png" style="<?php echo $iconstyle; ?>"></p>
@@ -190,49 +192,35 @@
 	<div id="aboutNutricheck" style="width: 500px;">
 		Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
 	</div>
+	
 	<div id="faqNutricheck" style="width: 700px;">
-<h2>NutriCheck FAQ</h2>
+		<h2>NutriCheck FAQ</h2>
 
-<div class="textBelowsmall">What is NutriCheck?</div>
-<p>
-	NutriCheck is a support tool designed to help practitioners and pharmacists understand their patients’ probable nutrient status and common metabolic disturbances that affect health. 
-</p>
-<div class="textBelowsmall">What do the results tell you?</div>
-<p>
-The results will provide you with your patient’s probable nutrient needs, what they’re getting enough of, and what they’re missing out on. This information can help you make better decisions about their diet and nutritional supplement purchases.
-</p>
+		<div class="textBelowsmall">What is NutriCheck?</div>
 
-<div class="textBelowsmall">Can a patient complete NutriCheck without a Pharmacist or Doctor?</div>
-<p>
-	No. NutriCheck recommends patients seek the advice of a Pharmacist, Doctor or healthcare practitioner. We know that these professionals can provide patients with more information about the importance of nutrition, a good diet and nutritional supplements, if required. 
-</p>
+		<p>NutriCheck is a support tool designed to help practitioners and pharmacists understand their patients’ probable nutrient status and common metabolic disturbances that affect health.</p>
+		<div class="textBelowsmall">What do the results tell you?</div>
+		<p>The results will provide you with your patient’s probable nutrient needs, what they’re getting enough of, and what they’re missing out on. This information can help you make better decisions about their diet and nutritional supplement purchases.</p>
 
-<div class="textBelowsmall">Can I charge patients to complete NutriCheck?</div>
-<p>
-Yes you can. Good nutrition is a key to good health and nutrition is an issue that affects every patient. NutriCheck can provide your practice with an additional revenue stream for the Nutrition consultations you provide. 
-</p>
+		<div class="textBelowsmall">Can a patient complete NutriCheck without a Pharmacist or Doctor?</div>
+		<p>No. NutriCheck recommends patients seek the advice of a Pharmacist, Doctor or healthcare practitioner. We know that these professionals can provide patients with more information about the importance of nutrition, a good diet and nutritional supplements, if required.</p>
 
-<div class="textBelowsmall">Who invented NutriCheck?</div>
-<p>
-	NutriCheck was invented by Dr. Melvyn A Sydney-Smith KGSJ.  MBBS. PhD. MHMS(prov). Grad Dip Clin Nutrit. Mast Pract NLP. Grad Dip Gestalt Ther. Grad Cert Hypnosis. FACNEM.
-</p>
+		<div class="textBelowsmall">Can I charge patients to complete NutriCheck?</div>
+		<p>Yes you can. Good nutrition is a key to good health and nutrition is an issue that affects every patient. NutriCheck can provide your practice with an additional revenue stream for the Nutrition consultations you provide.</p>
 
-<p>
-	In addition to patient care in private practice, Mel is a respected Medical Educator, being extensively involved for thirty years in both Undergraduate and Postgraduate Medical Nutrition Education in Australia, China and Asia. He was a Visiting Professor at the Open International University for Complementary Medicine and, in 1992, was inducted into the Knights of Malta (Asia) for his contribution to Graduate Medical Education in China and Asia. 
-</p>
+		<div class="textBelowsmall">Who invented NutriCheck?</div>
+		<p>NutriCheck was invented by Dr. Melvyn A Sydney-Smith KGSJ.  MBBS. PhD. MHMS(prov). Grad Dip Clin Nutrit. Mast Pract NLP. Grad Dip Gestalt Ther. Grad Cert Hypnosis. FACNEM.</p>
 
-<p>
-	Mel is an Adjunct Associate Professor (Nutrition Medicine) at Southern Cross University (NSW) and was Adjunct Professor (Nutrition Medicine) at RMIT University (Melbourne), where he authored, coordinated and taught the Master of Nutrition Medicine degree program. 
-Mel continues to write for and present at national and international medical seminars, whilst continuing in clinical practice in Doolandella, Brisbane.
-</p>
+		<p>In addition to patient care in private practice, Mel is a respected Medical Educator, being extensively involved for thirty years in both Undergraduate and Postgraduate Medical Nutrition Education in Australia, China and Asia. He was a Visiting Professor at the Open International University for Complementary Medicine and, in 1992, was inducted into the Knights of Malta (Asia) for his contribution to Graduate Medical Education in China and Asia.</p>
 
-<div class="textBelowsmall">How do I find out more?</div>
-<p>
-Talk to us on the NutriCheck website.
-</p>
-<p>URL: www.nutricheck.com.au</p>
-<p>Email: info@nutricheck.com.au</p>
-<p>Tel: 617 3279 8137</p>
+		<p>Mel is an Adjunct Associate Professor (Nutrition Medicine) at Southern Cross University (NSW) and was Adjunct Professor (Nutrition Medicine) at RMIT University (Melbourne), where he authored, coordinated and taught the Master of Nutrition Medicine degree program.</p>
+		<p>Mel continues to write for and present at national and international medical seminars, whilst continuing in clinical practice in Doolandella, Brisbane.</p>
+
+		<div class="textBelowsmall">How do I find out more?</div>
+		<p>Talk to us on the NutriCheck website.</p>
+		<p>URL: www.nutricheck.com.au</p>
+		<p>Email: info@nutricheck.com.au</p>
+		<p>Tel: 617 3279 8137</p>
 	</div>
 
 </div>
@@ -243,25 +231,25 @@ Talk to us on the NutriCheck website.
 		jQuery('#awesome-graph').tufteBar({
           data: [
 			<?php foreach($report_stats_last_week as $key => $daily_report) { ?>		
-				[<?php echo round($daily_report['percentage']); ?>, {label: '<?php echo "Day: ".$key."<br />Tot: ".$daily_report['count']; ?>'}],
+				[<?php echo round($daily_report['count']); ?>, {label: '<?php echo $daily_report['date']; ?>'}],
 			<?php } ?>
           ],
           barWidth: 0.8,
-          barLabel:  function(index) { return this[0] + '%' },
+          barLabel:  function(index) { return this[0] + '' },
           axisLabel: function(index) { return this[1].label },
-          color:     function(index) { return ['#E57536', '#82293B'][index % 2] }
+          color:     function(index) { return ['#2498C8', '#7BAC00', '#dedede'][index % 2] }
         });
 		
 		jQuery('#awesome-graph2').tufteBar({
           data: [
 			<?php foreach($report_stats_last_thirty_days as $key => $thr_daily_report) { ?>		
-				[<?php echo round($thr_daily_report['percentage']); ?>, {label: '<?php echo "Day: ".$key."<br />Tot: ".$thr_daily_report['count']; ?>'}],
+				[<?php echo round($thr_daily_report['count']); ?>, {label: '<?php echo $thr_daily_report['date']; ?>'}],
 			<?php } ?>
           ],
           barWidth: 0.8,
-          barLabel:  function(index) { return this[0] + '%' },
+          barLabel:  function(index) { return this[0] + '' },
           axisLabel: function(index) { return this[1].label },
-          color:     function(index) { return ['#E57536', '#82293B'][index % 2] }
+          color:     function(index) { return ['#2498C8', '#7BAC00', '#dedede'][index % 2] }
         });
 		
 		<?php if(!empty($behalfUserId)) { ?>

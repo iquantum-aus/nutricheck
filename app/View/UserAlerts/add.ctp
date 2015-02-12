@@ -14,6 +14,11 @@
 			<?php } ?>
 		</select>
 		
+		<div class="input text">
+			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform Nutricheck click &#60;here&#62; to perform test")); ?>
+			<small><strong>Note:</strong> <i>Do not change/replace the tag <strong>"&#60;here&#62;"</strong> since it's a constant value that will be replaced by the system</i></small>
+		</div>
+		
 		<?php echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text')); ?>
 		<input type="submit" class="btn btn-danger">
 	</fieldset>
