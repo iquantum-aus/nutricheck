@@ -323,25 +323,37 @@ class UsersController extends AclManagementAppController {
 					
 					if($_GET['mode'] == "client_group") {
 						
-						$and_condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$and_condition = array('User.group_affiliation_id' => $_GET['parent_id'], 'User.group_id' => 4);
+						} else {	
+							$and_condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
+						}
 						
 					} else if($_GET['mode'] == "client") {
 						
 						$flatten_client_groups = $this->get_client_groups($user_info['id']);					
 						
-						if($flatten_client_groups) {
-							$and_condition = array('User.client_group_id' => $flatten_client_groups);
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$and_condition = array('User.client_group_id' => $_GET['parent_id']);
 						} else {
-							$and_condition = array('User.client_group_id' => 0);
+							if($flatten_client_groups) {
+								$and_condition = array('User.client_group_id' => $flatten_client_groups);
+							} else {
+								$and_condition = array('User.client_group_id' => 0);
+							}
 						}
 						
 					} else {
 						$flatten_clients = $this->get_clients($user_info['id'], null);
 						
-						if($flatten_clients) {
-							$and_condition = array('User.parent_id' => $flatten_clients);
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$and_condition = array('User.parent_id' => $_GET['parent_id']);
 						} else {
-							$and_condition = array('User.parent_id' => 0);
+							if($flatten_clients) {
+								$and_condition = array('User.parent_id' => $flatten_clients);
+							} else {
+								$and_condition = array('User.parent_id' => 0);
+							}
 						}
 					}
 					
@@ -367,12 +379,17 @@ class UsersController extends AclManagementAppController {
 					
 				} else if($user_info['group_id'] == 4) {
 					
-					
-					if($_GET['mode'] == "client") {
-						$and_condition = array('User.client_group_id' => $user_info['id']);
+					if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+						if($_GET['mode'] == "client") {
+							$and_condition = array('User.client_group_id' => $_GET['parent_id']);
+						}
 					} else {
-						$flatten_clients = $this->get_clients($user_info['id'], null);
-						$and_condition = array('User.parent_id' => $flatten_clients);
+						if($_GET['mode'] == "client") {
+							$and_condition = array('User.client_group_id' => $user_info['id']);
+						} else {
+							$flatten_clients = $this->get_clients($user_info['id'], null);
+							$and_condition = array('User.parent_id' => $flatten_clients);
+						}
 					}
 					
 					$this->paginate = array(
@@ -419,6 +436,22 @@ class UsersController extends AclManagementAppController {
 				}
 				
 			} else {
+				if($user_info['group_id'] == 1) {
+					if($_GET['mode'] == "client_group") {
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$and_condition = array('User.group_affiliation_id' => $_GET['parent_id'], 'User.group_id' => 4);
+						}
+					} else if($_GET['mode'] == "client") {
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$and_condition = array('User.client_group_id' => $_GET['parent_id']);
+						}
+					} else {
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$and_condition = array('User.parent_id' => $_GET['parent_id']);
+						}
+					}
+				}
+				
 				$this->paginate = array(
 					'conditions' => array(
 						'or' => array (
@@ -432,7 +465,8 @@ class UsersController extends AclManagementAppController {
 							'UserProfile.nationality LIKE "%'.$search_value.'%"',
 							'UserProfile.zip LIKE "%'.$search_value.'%"',
 							'UserProfile.gender LIKE "%'.$search_value.'%"'
-						)
+						),
+						'and' => $and_condition
 					), 
 					'order' => array('User.first_name' => 'ASC'),
 					'limit' => 10
@@ -443,30 +477,62 @@ class UsersController extends AclManagementAppController {
 		
 		} else {		
 			if($user_info['group_id'] != 1) {
-				$condition = array('User.parent_id' => $user_info['id']);
+				if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+					$condition = array('User.parent_id' => $_GET['parent_id']);
+				} else {
+					$condition = array('User.parent_id' => $user_info['id']);
+				}
+			} else {
+				if($user_info['group_id'] == 1) {
+					if($_GET['mode'] == "client_group") {
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$condition = array('User.group_affiliation_id' => $_GET['parent_id'], 'User.group_id' => 4);
+						}
+					} else if($_GET['mode'] == "client") {
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$condition = array('User.client_group_id' => $_GET['parent_id']);
+						}
+					} else {
+						if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+							$condition = array('User.parent_id' => $_GET['parent_id']);
+						}
+					}
+				}
 			}
 			
 			if($user_info['group_id'] == 5) {
 				
 				if($_GET['mode'] == "client_group") {
 					
-					$condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
+					if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+						$condition = array('User.group_affiliation_id' => $_GET['parent_id'], 'User.group_id' => 4);
+					} else {
+						$condition = array('User.group_affiliation_id' => $user_info['id'], 'User.group_id' => 4);
+					}
 					
 				} else if($_GET['mode'] == "client") {
 					
 					$flatten_client_groups = $this->get_client_groups($user_info['id']);					
 					
-					if($flatten_client_groups) {
-						$condition = array('User.client_group_id' => $flatten_client_groups);
+					if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+						$condition = array('User.client_group_id' => $_GET['parent_id']);
 					} else {
-						$condition = array('User.client_group_id' => 0);
+						if($flatten_client_groups) {
+							$condition = array('User.client_group_id' => $flatten_client_groups);
+						} else {
+							$condition = array('User.client_group_id' => 0);
+						}
 					}
 				} else {
 					$flatten_clients = $this->get_clients($user_info['id'], null);
-					if($flatten_clients) {
-						$condition = array('User.parent_id' => $flatten_clients);
+					if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+						$condition = array('User.parent_id' => $_GET['parent_id']);
 					} else {
-						$condition = array('User.parent_id' => 0);
+						if($flatten_clients) {
+							$condition = array('User.parent_id' => $flatten_clients);
+						} else {
+							$condition = array('User.parent_id' => 0);
+						}
 					}
 				}
 			}
@@ -475,14 +541,22 @@ class UsersController extends AclManagementAppController {
 			if($user_info['group_id'] == 4) {
 				
 				if($_GET['mode'] == "client") {
-					$condition = array('User.client_group_id' => $user_info['id']);
-				} else {
-					$flatten_clients = $this->get_clients($user_info['id'], null);					
-					
-					if($flatten_clients) {
-						$condition = array('User.parent_id' => $flatten_clients);
+					if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+						$condition = array('User.client_group_id' => $_GET['parent_id']);
 					} else {
-						$condition = array('User.parent_id' => 0);
+						$condition = array('User.client_group_id' => $user_info['id']);
+					}
+				} else {
+					if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+						$condition = array('User.parent_id' => $_GET['parent_id']);
+					} else {
+						$flatten_clients = $this->get_clients($user_info['id'], null);
+						
+						if($flatten_clients) {
+							$condition = array('User.parent_id' => $flatten_clients);
+						} else {
+							$condition = array('User.parent_id' => 0);
+						}
 					}
 				}
 			}
@@ -1538,7 +1612,7 @@ class UsersController extends AclManagementAppController {
 
 			$report_stats_last_thirty_days[12]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_twelfth_day, 'PerformedCheck.completion_time <' => $thr_thirteenth_day)));		
 			$report_stats_last_thirty_days[12]['percentage'] = ($report_stats_last_thirty_days[12]['count']/$total_report_stats_last_thirty_days) * 100;
-			$report_stats_last_thirty_days[12]['date'] = date("d/m", $thr_twelfthday);
+			$report_stats_last_thirty_days[12]['date'] = date("d/m", $thr_twelfth_day);
 
 			$report_stats_last_thirty_days[13]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_thirteenth_day, 'PerformedCheck.completion_time <' => $thr_fourteenth_day)));
 			$report_stats_last_thirty_days[13]['percentage'] = ($report_stats_last_thirty_days[12]['count']/$total_report_stats_last_thirty_days) * 100;

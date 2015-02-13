@@ -2,7 +2,7 @@
 
 <div class="users index">
     
-	<form method="POST" style="width: 50%;" action="/admin/users<?php if(!empty($_GET['mode'])) { echo "/?mode=".$_GET['mode']; } ?>">
+	<form method="POST" style="width: 50%;" action="/admin/users<?php if(!empty($_GET['mode'])) { echo "/?mode=".$_GET['mode']."&parent_id=".$_GET['parent_id']; } ?>">
 		<input placeholder = "Enter Search Here" type="text" name="data[User][value]" style="width: 50%; float: left; clear: none;" value="<?php echo $search_value; ?>">
 		<input type="submit" value="SEARCH" class="btn btn-success" name="data[User][search]" style="float: left; clear: none; margin-left: 10px;">
 		<input type="submit" value="RESET" name="data[User][reset]" class="btn btn-danger" style="float: left; clear: none; margin-left: 5px;">
@@ -23,16 +23,27 @@
 	<table class="table">
     <tr>
         <th class="header"><?php echo $this->Paginator->sort('id');?></th>
-        <th class="header">Name</th>
+        
+		<?php if(!isset($_GET['mode']) || ($_GET['mode'] != "client_group" && $_GET['mode'] != "client")) { ?>
+			<th class="header">Name</th>
+		<?php } ?>
+		
         <th class="header"><?php echo $this->Paginator->sort('email');?></th>
-        <th class="header">Company</th>
+        
+		<?php if(!isset($_GET['mode']) || $_GET['mode'] == "client_group" || $_GET['mode'] == "client") { ?>
+			<th class="header">Company</th>
+		<?php } ?>
         
 		<?php if($group_id == 1) { ?>
 			<th class="header"><?php echo $this->Paginator->sort('group_id');?></th>
 		<?php } ?>
         
 		<th class="header"><?php echo $this->Paginator->sort('created');?></th>
-        <th class="header" style="text-align:center;"><?php echo $this->Paginator->sort('can_answer');?></th>
+        
+		<?php if(!isset($_GET['mode']) || ($_GET['mode'] != "client_group" && $_GET['mode'] != "client")) { ?>
+			<th class="header" style="text-align:center;"><?php echo $this->Paginator->sort('can_answer');?></th>
+		<?php } ?>
+		
         <th class="header" style="text-align:center;"><?php echo $this->Paginator->sort('status');?></th>
         <th class="header center" style="text-align:center;"><?php echo __('Actions');?></th>
     </tr>
@@ -41,50 +52,67 @@
     foreach ($users as $user) { ?>
 		<tr>
 				<td><?php echo h($user['User']['id']); ?></td>
-				<td>
-					<?php 
-						if($user['User']['group_id'] == 3) {
-							echo $user['UserProfile']['first_name']." ".$user['UserProfile']['last_name']; 
-						}
-					?>
-				</td>
+				
+				<?php if(!isset($_GET['mode']) || ($_GET['mode'] != "client_group" && $_GET['mode'] != "client")) { ?>
+					<td>
+						<?php 
+							if($user['User']['group_id'] == 3) {
+								echo $user['UserProfile']['first_name']." ".$user['UserProfile']['last_name']; 
+							}
+						?>
+					</td>
+				<?php } ?>
+				
 				<td><?php echo h($user['User']['email']); ?></td>
 				
-				<td>
-					<?php 
-						if($user['User']['group_id'] == 2) {
-							if(!empty($user['UserProfile']['company'])) {
-								echo h($user['UserProfile']['company']); 
-							} else {
-								echo "N/A";
+				<?php if(!isset($_GET['mode']) || $_GET['mode'] == "client_group" || $_GET['mode'] == "client") { ?>
+					<td>
+						<?php 
+							if($user['User']['group_id'] == 2 || $user['User']['group_id'] == 4 || $user['User']['group_id'] == 5) {
+								
+								// /admin/users?mode=client_group
+								// /admin/users?mode=client
+								
+								$base_link = "";
+								if($user['User']['group_id'] == 2) { $base_link = "/admin/users?mode=member&parent_id=".$user['User']['id']; }
+								if($user['User']['group_id'] == 4) { $base_link = "/admin/users?mode=client&parent_id=".$user['User']['id']; }
+								if($user['User']['group_id'] == 5) { $base_link = "/admin/users?mode=client_group&parent_id=".$user['User']['id']; }
+								
+								if(!empty($user['UserProfile']['company'])) {
+									echo "<a href=".$base_link.">".$user['UserProfile']['company']."</a>";
+								} else {
+									echo "N/A";
+								}
 							}
-						}
-					?>
-				</td>
+						?>
+					</td>
+				<?php } ?>
 				
 				<?php if($group_id == 1) { ?>
 					<td><?php echo h($user['Group']['name']); ?></td>
 				<?php } ?>
 				
 				<td><?php echo h($user['User']['created']); ?></td>
-			
-				<td style="text-align:center;">
-					<?php
-						if($user['User']['group_id'] == 3) {
-							$adminRoleName = array('admin', 'administrator');
-							if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin
-								echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
-							}else{
-								echo '<span style="cursor: pointer">';
-								echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['can_answer']) . '.png',
-									array('onclick' => 'published.toggle("can_answer-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
-										  'id' => 'can_answer-'.$user['User']['id']
-										));
-								echo '</span>';
+				
+				<?php if(!isset($_GET['mode']) || ($_GET['mode'] != "client_group" && $_GET['mode'] != "client")) { ?>
+					<td style="text-align:center;">
+						<?php
+							if($user['User']['group_id'] == 3) {
+								$adminRoleName = array('admin', 'administrator');
+								if(in_array(strtolower($user['Group']['name']), $adminRoleName)){//Admin
+									echo $this->Html->image('/acl_management/img/icons/tick_disabled.png');
+								}else{
+									echo '<span style="cursor: pointer">';
+									echo $this->Html->image('/acl_management/img/icons/allow-' . intval($user['User']['can_answer']) . '.png',
+										array('onclick' => 'published.toggle("can_answer-'.$user['User']['id'].'", "'.$this->Html->url('/acl_management/users/toggle_can_answer/').$user['User']['id'].'/'.intval($user['User']['can_answer']).'");',
+											  'id' => 'can_answer-'.$user['User']['id']
+											));
+									echo '</span>';
+								}
 							}
-						}
-					?>
-				</td>				
+						?>
+					</td>
+				<?php } ?>
 				
 				<td style="text-align:center;">
 					<?php

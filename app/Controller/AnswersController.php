@@ -224,6 +224,15 @@ class AnswersController extends AppController {
 		$user_info = $this->Answer->User->findById($user_id);
 		
 		$selected_factors = $this->SelectedFactor->find('list', array('conditions' => array('performed_check_id' => $performed_check_id), 'fields' => array('id', 'factor_id')));
+		
+		/* ---------------------------------------- this is for the purpose of blocking a null/zero value being returned when searching for a selected factor ---------------------------------*/
+			$selected_factor_string = "";
+			if(count($selected_factors) == 1) {
+				$selected_factor_string = implode('', $selected_factors);
+				if($selected_factor_string == "0" || $selected_factor_string == "") { $selected_factors = array(); }
+			}
+		/* ---------------------------------------- this is for the purpose of blocking a null/zero value being returned when searching for a selected factor ---------------------------------*/
+		
 		$reports_per_factor = array();
 		$previous_factor = 0;
 		$current_factor = 0;

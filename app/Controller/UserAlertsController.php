@@ -68,6 +68,8 @@ class UserAlertsController extends AppController {
 			
 			$existence = $this->UserAlert->find('count', array('conditions' => array('UserAlert.status' => 1, 'UserAlert.user_id' => $this->request->data['UserAlert']['user_id'], 'UserAlert.alert_date' => $this->request->data['UserAlert']['alert_date'])));
 			
+			$this->request->data['UserAlert']['message'] = str_replace("<here>", '&#60;here&#62;', $this->request->data['UserAlert']['message']);
+			
 			if($existence == 0) {
 				$this->UserAlert->create();
 				if ($this->UserAlert->save($this->request->data)) {
@@ -129,18 +131,20 @@ class UserAlertsController extends AppController {
 			throw new NotFoundException(__('Invalid user alert'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			
+		
+			$this->request->data['UserAlert']['message'] = str_replace("<here>", '&#60;here&#62;', $this->request->data['UserAlert']['message']);
 			$original_data = $this->UserAlert->findById($this->request->data['UserAlert']['id']);
 			$original_alert_date = $original_data['UserAlert']['alert_date'];
 			
 			if(strtotime($original_alert_date) == strtotime($this->request->data['UserAlert']['alert_date'])) {
 				$existence = 0;
 			} else {
-				$existence = $this->UserAlert->find('count', array('conditions' => array('UserAlert.status' => 0, 'UserAlert.user_id' => $this->request->data['UserAlert']['user_id'], 'UserAlert.alert_date' => $this->request->data['UserAlert']['alert_date'])));
+				$existence = $this->UserAlert->find('count', array('conditions' => array('UserAlert.status' => 1, 'UserAlert.user_id' => $this->request->data['UserAlert']['user_id'], 'UserAlert.alert_date' => $this->request->data['UserAlert']['alert_date'])));
 			}
 			
 			if($existence > 0) {
 				$this->Session->setFlash(__('The user alert already exists. This operation is not allowed.'));
+				return $this->redirect(array('action' => 'alert_list', $this->request->data['UserAlert']['user_id']));
 			} else {
 				if ($this->UserAlert->save($this->request->data)) {
 					$this->Session->setFlash(__('The user alert has been saved.'));
@@ -241,8 +245,9 @@ class UserAlertsController extends AppController {
 	/* -------------------------------------------------------------------------------------------- SECTION SEPARATOR -------------------------------------------------------------------------------------- */
 	
 	
-	public function nutricheck_alert_sender($user_id, $alert_id) {
+	function nutricheck_alert_sender($user_id, $alert_id) {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
+		$this->layout = "ajax";
 		
 		$this->UserAlert->User->unbindModelAll();
 		$user_info = $this->UserAlert->User->findById($user_id);
@@ -283,10 +288,10 @@ class UserAlertsController extends AppController {
 		$mail->IsHTML(true);  // set email format to HTML 
 		
 		$mail->Subject = "Nutricheck Invitation";
-		$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test"; 
+		$mail->Body    = $alert_info['UserAlert']['message'];
 		
 		if($mail->Send()) {
-			return true;
+			echo "1";
 		}
 	}
 	

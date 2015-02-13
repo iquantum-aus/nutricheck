@@ -19,6 +19,9 @@
 		</select>
 		
 		<div class="input text">
+			<?php
+				$this->request->data['UserAlert']['message'] = html_entity_decode($this->request->data['UserAlert']['message']);
+			?>
 			<?php echo $this->Form->input('message', array('div' => false)); ?>
 			<small><strong>Note:</strong> <i>Do not change/replace the tag <strong>"&#60;here&#62;"</strong> since it's a constant value that will be replaced by the system</i></small>
 		</div>

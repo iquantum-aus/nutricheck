@@ -5,17 +5,21 @@
 		
 		<select name="data[UserAlert][user_id]" id="UserAlertUserId">
 			<option value=">">Select A User</option>
+			<?php $selected = false; ?>
+			
 			<?php foreach($user_profiles as $user_profile) { ?>
+				<?php if($user_profile['UserProfile']['user_id'] == $id) { $selected = true; } else { $selected = false; } ?>
+				
 				<?php if(empty($user_profile['UserProfile']['first_name']) && empty($user_profile['UserProfile']['last_name'])) { ?>
-					<option value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['User']['email']; ?></option>
+					<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['User']['email']; ?></option>
 				<?php } else { ?>
-					<option value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name']; ?></option>
+					<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name']; ?></option>
 				<?php } ?>
 			<?php } ?>
 		</select>
 		
 		<div class="input text">
-			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform Nutricheck click &#60;here&#62; to perform test")); ?>
+			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform Nutricheck click <here> to perform test")); ?>
 			<small><strong>Note:</strong> <i>Do not change/replace the tag <strong>"&#60;here&#62;"</strong> since it's a constant value that will be replaced by the system</i></small>
 		</div>
 		
