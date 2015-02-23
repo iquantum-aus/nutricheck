@@ -10,6 +10,12 @@ Router::connect('/users/edit_profile', array('plugin' => 'acl_management', 'cont
 Router::connect('/users/forgot_password', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'forgot_password'));
 Router::connect('/users/activate_password/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'activate_password'));
 //login
+
+// custom
+Router::connect('/users/get_performedChecks_dateConstraints/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_performedChecks_dateConstraints'));
+Router::connect('/users/get_draftChecks_dateConstraints/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_draftChecks_dateConstraints'));
+Router::connect('/users/get_scheduledChecks_dateConstraints/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_scheduledChecks_dateConstraints'));
+
 Router::connect('/users/login', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'login'));
 Router::connect('/admin/users/login', array('admin'=>true, 'plugin' => 'acl_management', 'controller' => 'users', 'action' => 'login'));
 

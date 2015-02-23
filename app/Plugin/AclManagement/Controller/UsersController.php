@@ -21,7 +21,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register', 'get_clients', 'get_client_groups');
 		} else {
-			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy');
+			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy', 'get_performedChecks_dateConstraints', 'get_draftChecks_dateConstraints', 'get_scheduledChecks_dateConstraints');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -32,29 +32,7 @@ class UsersController extends AclManagementAppController {
             )
         )), false);
     }
-    /**
-     * Temp acl init db
-     */
-//    function initDB() {
-//        $this->autoRender = false;
-//
-//        $group = $this->User->Group;
-//        //Allow admins to everything
-//        $group->id = 1;
-//        $this->Acl->allow($group, 'controllers');
-//
-//        //allow managers to posts and widgets
-//        $group->id = 2;
-//        $this->Acl->deny($group, 'controllers');
-//        //$this->Acl->allow($group, 'controllers/Posts'); //allow all action of controller posts
-//        $this->Acl->allow($group, 'controllers/Posts/add');
-//        $this->Acl->deny($group, 'controllers/Posts/edit');
-//
-//        //we add an exit to avoid an ugly "missing views" error message
-//        echo "all done";
-//        exit;
-//    }
-
+    
 
    /* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
    
@@ -566,6 +544,11 @@ class UsersController extends AclManagementAppController {
 			);
 		}
 		
+		if(isset($_GET['parent_id']) && !empty($_GET['parent_id'])) {
+			$parent_info = $this->User->findById($_GET['parent_id']);
+			$this->set('parent_info', $parent_info);
+		}
+		
 		$users = $this->paginate($condition);
         $this->set('search_value', $search_value);
         $this->set('users', $users);
@@ -635,6 +618,159 @@ class UsersController extends AclManagementAppController {
 		return $flatten_clients;
 	}	
 	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
+	function get_scheduledChecks_dateConstraints($month = false) {
+		$this->loadModel('UserAlert');
+		
+		$post = $_POST;
+		
+		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$total_month_days = date("t");
+		$first_day_if_the_month = date('Y-m-1');
+		$last_day_if_the_month = date('Y-m')."-".$total_month_days;
+		
+		if($group_id != 1) {
+			$members = $this->get_members($user_id);
+		}
+		
+		if($month) {
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($first_day_if_the_month), 'PerformedCheck.alert_date <=' => strtotime($last_day_if_the_month), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($first_day_if_the_month), 'PerformedCheck.alert_date <=' => strtotime($last_day_if_the_month))));
+				}
+				return $performed_checks;
+			} else {
+				return "0";
+			}
+		} else {		
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($post['start_date']), 'PerformedCheck.alert_date <=' => strtotime($post['end_date']), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($post['start_date']), 'PerformedCheck.alert_date <=' => strtotime($post['end_date']))));
+				}
+				echo $performed_checks;
+			} else {
+				echo "0";
+			}
+		}
+		
+		exit();
+	}
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
+	function get_draftChecks_dateConstraints($month = false) {
+		$this->loadModel('PerformedCheck');
+		
+		$post = $_POST;
+		
+		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$total_month_days = date("t");
+		$first_day_if_the_month = date('Y-m-1');
+		$last_day_if_the_month = date('Y-m')."-".$total_month_days;
+		
+		if($group_id != 1) {
+			$members = $this->get_members($user_id);
+		}
+		
+		if($month) {
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($first_day_if_the_month), 'PerformedCheck.created <=' => strtotime($last_day_if_the_month), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($first_day_if_the_month), 'PerformedCheck.created <=' => strtotime($last_day_if_the_month))));
+				}
+				return $performed_checks;
+			} else {
+				return "0";
+			}
+		} else {
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($post['start_date']), 'PerformedCheck.created <=' => strtotime($post['end_date']), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($post['start_date']), 'PerformedCheck.created <=' => strtotime($post['end_date']))));
+				}
+				echo $performed_checks;
+			} else {
+				echo "0";
+			}
+		}
+		exit();
+
+	}
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
+	function get_performedChecks_dateConstraints($month = false) {
+		$this->loadModel('PerformedCheck');
+		
+		$post = $_POST;
+		
+		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
+		
+		$total_month_days = date("t");
+		$first_day_if_the_month = date('Y-m-1');
+		$last_day_if_the_month = date('Y-m')."-".$total_month_days;
+		
+		if($group_id != 1) {
+			$members = $this->get_members($user_id);
+		}
+		
+		if($month) {
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month))));
+				}
+				return $performed_checks;
+			} else {
+				return "0";
+			}
+		} else {
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($post['start_date']), 'PerformedCheck.completion_time <=' => strtotime($post['end_date']), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($post['start_date']), 'PerformedCheck.completion_time <=' => strtotime($post['end_date']))));
+				}
+				echo $performed_checks;
+			} else {
+				echo "0";
+			}
+		}
+		
+		exit();
+	}
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
+	function get_members($id) {
+		$user_id = $this->Session->read('Auth.User.id');
+		
+		$flatten_clients = $this->get_clients($user_id);
+		
+		$this->User->unbindModelAll();
+		$condition = array('User.parent_id' => $flatten_clients);
+		$members = $this->User->find('all', array('fields' => array('id', 'id'), 'conditions' => $condition));
+		
+		$flatten_members = array();
+		foreach($members as $member_key => $member) {
+			$flatten_members[$member_key] = $member['User']['id'];
+		}
+		
+		return $flatten_members;
+	}
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
@@ -839,33 +975,6 @@ class UsersController extends AclManagementAppController {
         $this->set(compact('groups', 'pharmacists', 'client_groups', 'group_affiliations'));
     }
 
-	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
-	 
-	public function is_authorized_action($id = null) {
-		
-		// currently loggedin client/admin
-		$user_info = $this->Session->read('Auth.User');
-		
-		//currently being edit user
-		$user_data = $this->User->findById($id);
-		
-		// if not authorized then check the group the user belongs
-		if($user_info['id'] != $user_data['User']['parent_id']) {
-			
-			// if not admin then unauthorized
-			if($user_info['group_id'] != 1) {
-				return false;
-			
-			//admin is always authorized
-			} else {
-				return true;
-			}
-		} else {
-			// authorizes by default
-			return true;
-		}
-	}
-
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
@@ -873,13 +982,8 @@ class UsersController extends AclManagementAppController {
 		$group_id = $this->Session->read('Auth.User.id');
 		$user_info = $this->Session->read('Auth.User');
 		
-		if($group_id != 1 && $group_id != 2) {
+		if($group_id != 1) {
 			if(!$this->is_authorized_parent($id)) {
-				$this->Session->setFlash(__("You're not authorized to update that user"), 'alert/error');
-				$this->redirect(array('action' => 'index'));
-			}
-		} else {			
-			if(!$this->is_authorized_action($id)) {
 				$this->Session->setFlash(__("You're not authorized to update that user"), 'alert/error');
 				$this->redirect(array('action' => 'index'));
 			}
@@ -1287,31 +1391,6 @@ class UsersController extends AclManagementAppController {
             }
 			
             if ($this->User->validates()) {
-               
-			   //check email change
-				/*  if($this->request->data['User']['email'] != $this->Session->read('Auth.User.email')) {
-                    
-					$this->Session->write('Auth.User.needverify_email', $this->request->data['User']['email']);
-                    $id = $this->Session->read('Auth.User.id');
-                    $email = base64_encode($this->request->data['User']['email']);
-                    $expiredTime = strtotime(date('Y-m-d H:i', strtotime('+24 hours')));
-                    $comfirm_link = Router::url("/acl_management/users/confirm_email_update/$id/$email/$expiredTime", true);
-                    $cake_email = new CakeEmail();
-                    $cake_email->from(array('no-reply@example.com' => 'Please Do Not Reply'));
-                    $cake_email->to($this->request->data['User']['email']);
-                    $cake_email->subject(''.__('Email Address Update'));
-                    $cake_email->viewVars(array('comfirm_link'=>$comfirm_link, 'old_email'=> $this->Session->read('Auth.User.email'), 'new_email'=>$this->request->data['User']['email']));
-                    $cake_email->emailFormat('html');
-                    $cake_email->template('AclManagement.email_address_update');
-                    $cake_email->send();
-
-                    unset($this->request->data['User']['email']);
-                } */
-				
-                // $this->request->data['User']['id'] = $this->Session->read('Auth.User.id');
-				
-				// $this->var_debug($this->request->data);
-				// exit();
 				
                 if($this->User->save($this->request->data)) {
 					if(empty($this->request->data['UserProfile']['id'])) {
@@ -1392,7 +1471,7 @@ class UsersController extends AclManagementAppController {
 		$user_info = $this->Session->read('Auth.User');
 		
 		$user_id = $this->Session->read('Auth.User.id');
-		$group_id = $this->Session->read('Auth.User.group_id');
+		$group_id = $this->Session->read('Auth.User.group_id'); 
 		
 		$members = array();
 		
@@ -1836,6 +1915,15 @@ class UsersController extends AclManagementAppController {
 			}
 		}
 		
+		$performedChecks_dateConstraints = $this->get_performedChecks_dateConstraints(true);
+		$draftChecks_dateConstraints = $this->get_draftChecks_dateConstraints(true);
+		$scheduledChecks_dateConstraints = $this->get_scheduledChecks_dateConstraints(true);
+		
+		$this->set('performedChecks_dateConstraints', $performedChecks_dateConstraints);
+		$this->set('draftChecks_dateConstraints', $draftChecks_dateConstraints);
+		$this->set('scheduledChecks_dateConstraints', $scheduledChecks_dateConstraints);
+		
+		$this->set('members', $members);
 		$this->set('factor_list', $factor_list);
 		$this->set('user_list', $user_list);
 		$this->set('behalfUserId', $selected_user['User']['hash_value']);
@@ -1888,9 +1976,9 @@ class UsersController extends AclManagementAppController {
 		$this->set('user_id', $user_id);
 	}
 	
-	
+		
 	/* ------------------------------------------------------------------------------------------ ALL ACTION BEING PROCESSED FROM AN IFRAME ----------------------------------------------------------------------------*/
-	
+		
 	public function remote_register() {
 		$this->layout = "ajax";
 		if ($this->request->is('post')) {
@@ -1945,6 +2033,8 @@ class UsersController extends AclManagementAppController {
 		exit();
 	}
 	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
 	public function manual_insert() {
 		$this->loadModel('AclManagement.User');
 		$users = array(
@@ -1995,6 +2085,8 @@ class UsersController extends AclManagementAppController {
 		$redirection = "http://".$_SERVER['SERVER_NAME']."/users/nutricheck_activity/".$user_id;
         $this->redirect($redirection);
 	}
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
 	public function is_authorized_parent($child_id) {
 		$this->User->unbindModelAll();
@@ -2050,6 +2142,16 @@ class UsersController extends AclManagementAppController {
 			$client = $child_information['User']['parent_id'];
 			$client_info = $this->User->findById($client);
 			if($client_info['User']['client_group_id'] == $user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		// If client is editing a member
+		if($child_information['User']['group_id'] == 3 && $group_id == 2) {
+		
+			if($child_information['User']['parent_id'] == $user_id) {
 				return true;
 			} else {
 				return false;

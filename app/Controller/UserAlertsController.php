@@ -115,6 +115,8 @@ class UserAlertsController extends AppController {
 			
 		$user_profiles = $this->UserAlert->User->UserProfile->find('all', array('fields' => array('UserProfile.user_id', 'UserProfile.first_name', 'UserProfile.last_name', 'User.email'), 'conditions' => array('UserProfile.user_id' => $users)));
 		
+		$alertee = $this->UserAlert->User->findById($id);
+		$this->set("alertee", $alertee);
 		$this->set(compact('users', 'user_profiles'));
 		$this->set("id", $id);
 	}
@@ -191,6 +193,9 @@ class UserAlertsController extends AppController {
 		
 		$user_profiles = $this->UserAlert->User->UserProfile->find('all', array('fields' => array('UserProfile.user_id', 'UserProfile.first_name', 'UserProfile.last_name', 'User.email'), 'conditions' => array('UserProfile.user_id' => $users)));
 		
+		$alertee = $this->UserAlert->User->findById($id);
+		$this->set("alertee", $alertee);
+		$this->set("id", $id);
 		$this->set(compact('users', 'user_profiles'));
 	}
 

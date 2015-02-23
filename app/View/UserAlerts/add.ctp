@@ -3,20 +3,24 @@
 	<fieldset>
 		<legend><?php echo __('Add User Alert'); ?></legend>
 		
-		<select name="data[UserAlert][user_id]" id="UserAlertUserId">
-			<option value=">">Select A User</option>
-			<?php $selected = false; ?>
-			
-			<?php foreach($user_profiles as $user_profile) { ?>
-				<?php if($user_profile['UserProfile']['user_id'] == $id) { $selected = true; } else { $selected = false; } ?>
+		<?php if($this->Session->read('Auth.User.group_id') == 1) { ?>
+			<select name="data[UserAlert][user_id]" id="UserAlertUserId">
+				<option value=">">Select A User</option>
+				<?php $selected = false; ?>
 				
-				<?php if(empty($user_profile['UserProfile']['first_name']) && empty($user_profile['UserProfile']['last_name'])) { ?>
-					<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['User']['email']; ?></option>
-				<?php } else { ?>
-					<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name']; ?></option>
+				<?php foreach($user_profiles as $user_profile) { ?>
+					<?php if($user_profile['UserProfile']['user_id'] == $id) { $selected = true; } else { $selected = false; } ?>
+					
+					<?php if(empty($user_profile['UserProfile']['first_name']) && empty($user_profile['UserProfile']['last_name'])) { ?>
+						<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['User']['email']; ?></option>
+					<?php } else { ?>
+						<option <?php if($selected) { echo "selected=selected"; } ?> value="<?php echo $user_profile['UserProfile']['user_id']; ?>"><?php echo $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name']; ?></option>
+					<?php } ?>
 				<?php } ?>
-			<?php } ?>
-		</select>
+			</select>
+		<?php } else { ?>
+			<input type="hidden" name="data[UserAlert][user_id]" value="<?php echo $id; ?>">
+		<?php } ?>
 		
 		<div class="input text">
 			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform Nutricheck click <here> to perform test")); ?>
@@ -24,6 +28,13 @@
 		</div>
 		
 		<?php echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text')); ?>
+		
+		<?php if(empty($alertee['User']['email'])) { ?>
+			<small style="color: red;">Please be informed that this patient doesn't have an email address.<br /><strong>The email alert will be sent to the corresponding pharmacist.</strong></small>
+			<br />
+			<br />
+		<?php } ?>
+		
 		<input type="submit" class="btn btn-danger">
 	</fieldset>
 <?php echo $this->Form->end(); ?>

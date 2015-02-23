@@ -20,6 +20,28 @@
 		}
 	?>
 	
+	<?php
+		if(isset($parent_info)) {
+			
+			$user_level = "";
+			switch($parent_info['User']['group_id']) {
+				case 2:
+				$user_level = "Client";
+				break;
+				
+				case 4:
+				$user_level = "Client Group";
+				break;
+				
+				case 5:
+				$user_level = "Group Affliation";
+				break;
+			}
+			
+			echo "<br /><h3>Filtering by: ".$user_level." - ".$parent_info['UserProfile']['company']."</h3>";
+		}
+	?>
+	
 	<table class="table">
     <tr>
         <th class="header"><?php echo $this->Paginator->sort('id');?></th>

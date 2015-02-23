@@ -347,6 +347,14 @@ class AnswersController extends AppController {
 		$factors = $this->Answer->Question->Factor->find('list', array('conditions' => array('Factor.status' => 0)));
 		$user_info = $this->Answer->User->findById($user_id);
 		
+		/* ---------------------------------------- this is for the purpose of blocking a null/zero value being returned when searching for a selected factor ---------------------------------*/
+			$selected_factor_string = "";
+			if(count($selected_factors) == 1) {
+				$selected_factor_string = implode('', $selected_factors);
+				if($selected_factor_string == "0" || $selected_factor_string == "") { $selected_factors = array(); }
+			}
+		/* ---------------------------------------- this is for the purpose of blocking a null/zero value being returned when searching for a selected factor ---------------------------------*/
+		
 		$base_nutrients = array();
 		if(!empty($selected_factors)) {
 			$base_nutrients = $this->Prescription->find('list', array('fields' => array('id', 'base_nutrient_id'),'conditions' => array('factor_id' => $selected_factors)));

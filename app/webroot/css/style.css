@@ -1434,6 +1434,18 @@ table.questionModules:first-child {
 	height: 34px;
 }
 
+.tri-widget {
+	
+}
+
+.dashboard-widget {
+	width: 90%;
+	padding: 0px 5%;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.date_selector { font-size: 12px !important; }
 
 /* ----------------------------------------------------------- BOOTSTRAP ---------------------------------------------------------------- */
 

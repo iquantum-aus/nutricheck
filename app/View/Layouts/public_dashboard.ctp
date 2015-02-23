@@ -134,6 +134,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->script('slidebars.min');
 		echo $this->Html->script('masonry.pkgd.min');
 		echo $this->Html->script('Chart.min');
+		echo $this->Html->script('jquery.form.min');
 		echo $this->Html->script('chosen.jquery.min');
 		echo $this->Html->script('jquery.fancybox');
 		echo $this->Html->script('jquery-ui-1.10.4.min');
