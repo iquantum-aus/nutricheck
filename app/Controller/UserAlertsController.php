@@ -225,7 +225,7 @@ class UserAlertsController extends AppController {
 		echo $current_date;
 		$alert_list = $this->UserAlert->find('all', 
 			array(
-				'conditions' => array('UserAlert.alert_date' => $current_date, 'UserAlert.status' => 1, 'User.email <>' => ""),
+				'conditions' => array('UserAlert.alert_date' => $current_date, 'UserAlert.status' => 1),
 				'fields' => array('User.id', 'UserAlert.id')
 			)
 		);

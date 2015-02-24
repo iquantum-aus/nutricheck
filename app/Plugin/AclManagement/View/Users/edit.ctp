@@ -144,8 +144,8 @@
 		
 		<div class="left span12 inputHolder">
 			<?php	
-				if($user_info['group_id'] == 1) {
-					echo $this->Form->input('group_id', array('label' => 'Group<span>*</span>', 'class' => 'requiredField chosen-select', 'div' => false, 'empty' => 'Select Group'));
+				if($user_info['group_id'] == 1 || $user_info['group_id'] == 5 || $user_info['group_id'] == 4) {
+					echo $this->Form->input('group_id', array('label' => 'Group<span>*</span>', 'class' => 'requiredField chosen-select', 'div' => false, 'empty' => 'Select Group', 'class' => 'chosen-select'));
 				} else {
 					echo $this->Form->input('parent_id', array('type' => 'hidden', 'value' => $user_info['id']));
 				}
@@ -163,20 +163,18 @@
 					<?php } ?>
 				</div>
 
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
-				</div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-client', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?></div>
 			</div>
 			
 			<div class="groupAffiliationFields" style="display: none;">
-				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-group', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?>
-				</div>
+				<div class="left span12 inputHolder"><?php echo $this->Form->input('UserProfile.company-group', array('required' => 'false', 'label' => 'Name<span>*</span>', 'class' => 'textOnly requiredField', 'div' => false, 'placeholder' => 'Name', 'value' => $this->data['UserProfile']['company'])); ?></div>
 			</div>
 
 			<div class="memberFields">
 				
 				<div class="left span12 inputHolder">
 					<?php
-						if($user_info['group_id'] == 1) {
+						if($user_info['group_id'] == 1 || $user_info['group_id'] == 5 || $user_info['group_id'] == 4) {
 							echo $this->Form->input('parent_id', array('options' => $pharmacists, 'div' => false, 'empty' => 'Select Pharmacist', 'label' => 'Pharmacist', 'class' => 'chosen-select'));
 						}
 					?>
@@ -543,4 +541,3 @@
 		width: 220px !important;
 	}
 </style>
-

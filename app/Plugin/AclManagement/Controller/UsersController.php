@@ -1051,8 +1051,10 @@ class UsersController extends AclManagementAppController {
 			
 			$user_existence = array();
 			if($email != $old_email) {					
-				$this->User->unbindModelAll();
-				$user_existence = $this->User->findAllByEmail($email);
+				if(!empty($email)) {
+					$this->User->unbindModelAll();
+					$user_existence = $this->User->findAllByEmail($email);
+				}
 			}
 			
 			if(count($user_existence) > 0) {
