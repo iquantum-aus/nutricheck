@@ -637,26 +637,36 @@ class UsersController extends AclManagementAppController {
 		}
 		
 		if($month) {
-			if(!empty($members)) {
+			if(!empty($members)) {				
 				if($group_id != 1) {
-					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($first_day_if_the_month), 'PerformedCheck.alert_date <=' => strtotime($last_day_if_the_month), 'PerformedCheck.user_id' => $members)));
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $first_day_if_the_month, 'UserAlert.alert_date <=' => $last_day_if_the_month, 'UserAlert.user_id' => $members)));
 				} else {
-					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($first_day_if_the_month), 'PerformedCheck.alert_date <=' => strtotime($last_day_if_the_month))));
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $first_day_if_the_month, 'UserAlert.alert_date <=' => $last_day_if_the_month)));
 				}
-				return $performed_checks;
+				return $scheduled_checks;
 			} else {
-				return "0";
+				if($group_id == 1) {
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $first_day_if_the_month, 'UserAlert.alert_date <=' => $last_day_if_the_month)));
+					return $scheduled_checks;
+				} else {
+					return "0";
+				}
 			}
 		} else {		
 			if(!empty($members)) {
 				if($group_id != 1) {
-					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($post['start_date']), 'PerformedCheck.alert_date <=' => strtotime($post['end_date']), 'PerformedCheck.user_id' => $members)));
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $post['start_date'], 'UserAlert.alert_date <=' => $post['end_date'], 'UserAlert.user_id' => $members)));
 				} else {
-					$scheduled_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.alert_date >=' => strtotime($post['start_date']), 'PerformedCheck.alert_date <=' => strtotime($post['end_date']))));
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $post['start_date'], 'UserAlert.alert_date <=' => $post['end_date'])));
 				}
-				echo $performed_checks;
+				echo $scheduled_checks;
 			} else {
-				echo "0";
+				if($group_id == 1) {
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $post['start_date'], 'UserAlert.alert_date <=' => $post['end_date'])));
+					echo $scheduled_checks;
+				} else {
+					echo "0";
+				}
 			}
 		}
 		
@@ -684,24 +694,35 @@ class UsersController extends AclManagementAppController {
 		if($month) {
 			if(!empty($members)) {
 				if($group_id != 1) {
-					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($first_day_if_the_month), 'PerformedCheck.created <=' => strtotime($last_day_if_the_month), 'PerformedCheck.user_id' => $members)));
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $first_day_if_the_month, 'PerformedCheck.date <=' => $last_day_if_the_month, 'PerformedCheck.user_id' => $members)));
 				} else {
-					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($first_day_if_the_month), 'PerformedCheck.created <=' => strtotime($last_day_if_the_month))));
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $first_day_if_the_month, 'PerformedCheck.date <=' => $last_day_if_the_month)));
 				}
 				return $performed_checks;
 			} else {
-				return "0";
+				if($group_id == 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $first_day_if_the_month, 'PerformedCheck.date <=' => $last_day_if_the_month)));
+					
+					return $performed_checks;
+				} else {
+					return "0";
+				}
 			}
 		} else {
 			if(!empty($members)) {
 				if($group_id != 1) {
-					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($post['start_date']), 'PerformedCheck.created <=' => strtotime($post['end_date']), 'PerformedCheck.user_id' => $members)));
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $post['start_date'], 'PerformedCheck.date <=' => $post['end_date'], 'PerformedCheck.user_id' => $members)));
 				} else {
-					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.created >=' => strtotime($post['start_date']), 'PerformedCheck.created <=' => strtotime($post['end_date']))));
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $post['start_date'], 'PerformedCheck.date <=' => $post['end_date'])));
 				}
 				echo $performed_checks;
 			} else {
-				echo "0";
+				if($group_id == 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $post['start_date'], 'PerformedCheck.date <=' => $post['end_date'])));
+					echo $performed_checks;
+				} else {
+					echo "0";
+				}
 			}
 		}
 		exit();
@@ -726,16 +747,26 @@ class UsersController extends AclManagementAppController {
 			$members = $this->get_members($user_id);
 		}
 		
+		$first_day_if_the_month = date('Y-m-1');
+		$last_day_if_the_month = date('Y-m')."-".$total_month_days;
+		
 		if($month) {
-			if(!empty($members)) {
+			if(!empty($members)) {				
 				if($group_id != 1) {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month), 'PerformedCheck.user_id' => $members)));
 				} else {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month))));
 				}
+				
 				return $performed_checks;
 			} else {
-				return "0";
+				
+				if($group_id == 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month))));
+					return $performed_checks;
+				} else {
+					return "0";
+				}
 			}
 		} else {
 			if(!empty($members)) {
@@ -746,7 +777,12 @@ class UsersController extends AclManagementAppController {
 				}
 				echo $performed_checks;
 			} else {
-				echo "0";
+				if($group_id == 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($post['start_date']), 'PerformedCheck.completion_time <=' => strtotime($post['end_date']))));
+					echo $performed_checks;
+				} else {
+					echo "0";
+				}
 			}
 		}
 		
@@ -757,11 +793,18 @@ class UsersController extends AclManagementAppController {
 	
 	function get_members($id) {
 		$user_id = $this->Session->read('Auth.User.id');
+		$group_id = $this->Session->read('Auth.User.group_id');
 		
-		$flatten_clients = $this->get_clients($user_id);
 		
 		$this->User->unbindModelAll();
-		$condition = array('User.parent_id' => $flatten_clients);
+		
+		if($group_id != 2) {
+			$flatten_clients = $this->get_clients($user_id);
+			$condition = array('User.parent_id' => $flatten_clients);
+		} else {
+			$condition = array('User.parent_id' => $user_id);
+		}
+		
 		$members = $this->User->find('all', array('fields' => array('id', 'id'), 'conditions' => $condition));
 		
 		$flatten_members = array();
@@ -1021,7 +1064,6 @@ class UsersController extends AclManagementAppController {
 				} else if($this->request->data['User']['group_id'] == 5) {
 					$this->request->data['UserProfile']['company'] = $this->request->data['UserProfile']['company-group'];
 				}
-				
 
 				if ($this->User->save($this->request->data)) {
 				
