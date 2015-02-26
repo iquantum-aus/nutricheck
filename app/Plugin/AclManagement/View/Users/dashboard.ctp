@@ -95,113 +95,104 @@
 			
 			<?php echo $this->element('module_panel'); ?>
 			
-			<div class="left span12" style="border-bottom: 1px solid #dedede; padding-bottom: 5px;">
-				<div class="left span3" style="padding: 20px; box-sizing: border-box;">
-					<h3 class="left span12 textBelowsmall" style="font-size: 15px; text-align: center">Last Week's NutriCheck (Total: <?php echo $total_report_stats_last_week; ?>)</h3>
-					<div class="left span12">
-						<div id='awesome-graph' class='graph' style='width: 100%; height: 200px;'></div>
-					</div>
-				</div>
-				
-				<div class="right span9" style="padding: 20px;  border-left: 1px solid #dedede; box-sizing: border-box;">
-					<h3 class="left span12 textBelowsmall" style="font-size: 15px; text-align: center;">Last 30 Day's NutriCheck (Total: <?php echo $total_report_stats_last_thirty_days; ?>)</h3>
-					<div class="left span12">
-						<div id='awesome-graph2' class='graph' style='width: 100%; height: 200px;'></div>
-					</div>
-				</div>
-			</div>		
-			
-			<div class="left span12 full" style="margin-top: 30px;">
-				<div id="nutriCheckCompleted_dateConstraints" class="tri-widget left span4">
-					<div class="left dashboard-widget">
-						<h3>Completed Nutrichecks</h3>
-						
+			<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>				
+				<div class="left span12" style="border-bottom: 1px solid #dedede; padding-bottom: 5px;">
+					<div class="left span3" style="padding: 20px; box-sizing: border-box;">
+						<h3 class="left span12 textBelowsmall" style="font-size: 15px; text-align: center">Last Week's NutriCheck (Total: <?php echo $total_report_stats_last_week; ?>)</h3>
 						<div class="left span12">
-							<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_performedChecks_dateConstraints" id="get_performedChecks_dateConstraints">
-								<div class="input text span12 left">
-									<div class="span6 left">
-										<label for="datepicker">Start Date</label>
-										<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-									</div>
-									
-									<div class="span6 left">
-										<label for="datepicker">End Date</label>
-										<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-									</div>
-									
-									<center>
-										<input type="submit" class="btn btn-primary" value="Submit">
-									</center>
-								</div>								
-							</form>
+							<div id='awesome-graph' class='graph' style='width: 100%; height: 200px;'></div>
 						</div>
-						
-						<center>
-							<h2 id="get_performedChecks_dateConstraints">Current Month's Total: <?php echo $performedChecks_dateConstraints; ?></h2>
-						</center>
 					</div>
-				</div>
-				
-				<div id="nutriCheck_tobeCompleted" class="left span4 tri-widget">
-					<div class="dashboard-widget left" style="margin: 0% 5%;">
-						<h3>Draft Nutrichecks</h3>
-						
+					
+					<div class="right span9" style="padding: 20px;  border-left: 1px solid #dedede; box-sizing: border-box;">
+						<h3 class="left span12 textBelowsmall" style="font-size: 15px; text-align: center;">Last 30 Day's NutriCheck (Total: <?php echo $total_report_stats_last_thirty_days; ?>)</h3>
 						<div class="left span12">
-							<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_draftChecks_dateConstraints" id="get_draftChecks_dateConstraints">
-								<div class="input text span12 left">
-									<div class="span6 left">
-										<label for="datepicker">Start Date</label>
-										<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-									</div>
-									
-									<div class="span6 left">
-										<label for="datepicker">End Date</label>
-										<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-									</div>
-									
-									<center>
-										<input type="submit" class="btn btn-primary" value="Submit">
-									</center>
-								</div>								
-							</form>
+							<div id='awesome-graph2' class='graph' style='width: 100%; height: 200px;'></div>
 						</div>
-						
-						<center>
-							<h2 id="get_draftChecks_dateConstraints">Current Month's Total: <?php echo $draftChecks_dateConstraints; ?></h2>
-						</center>
 					</div>
-				</div>
+				</div>		
 				
-				<div id="nutriCheck_scheduled" class="left span4 tri-widget">
-					<div class="right dashboard-widget">
-						<h3>Scheduled Nutrichecks</h3>
-						
-						<div class="left span12">
-							<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_scheduledChecks_dateConstraints" id="get_scheduledChecks_dateConstraints">
-								<div class="input text span12 left">
-									<div class="span6 left">
-										<label for="datepicker">Start Date</label>
-										<input required name="start_date" class="datepicker date_selector" type="text" class="" placeholder="Click to select date">
-									</div>
-									
-									<div class="span6 left">
-										<label for="datepicker">End Date</label>
-										<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-									</div>
-									
-									<center>
-										<input type="submit" class="btn btn-primary" value="Submit">
-									</center>
-								</div>								
-							</form>
+				<div class="left span12 full" style="margin-top: 30px;">
+					<div id="nutriCheckCompleted_dateConstraints" class="tri-widget left span4">
+						<div class="left dashboard-widget">
+							<h3>Completed Nutrichecks</h3>
+							<div class="left span12">
+								<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_performedChecks_dateConstraints" id="get_performedChecks_dateConstraints">
+									<div class="input text span12 left">
+										<div class="span6 left">
+											<label for="datepicker">Start Date</label>
+											<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+										</div>	
+										<div class="span6 left">
+											<label for="datepicker">End Date</label>
+											<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+										</div>
+										
+										<center>
+											<input type="submit" class="btn btn-primary" value="Submit">
+										</center>
+									</div>								
+								</form>
+							</div>
+							<center>
+								<h2 id="get_performedChecks_dateConstraints">Current Month's Total: <?php echo $performedChecks_dateConstraints; ?></h2>
+							</center>
 						</div>
-						
-						<center>
-							<h2 id="get_scheduledChecks_dateConstraints">Current Month's Total: <?php echo $scheduledChecks_dateConstraints; ?></h2>
-						</center>
+					</div>
+					
+					<div id="nutriCheck_tobeCompleted" class="left span4 tri-widget">
+						<div class="dashboard-widget left" style="margin: 0% 5%;">
+							<h3>Draft Nutrichecks</h3>
+							<div class="left span12">
+								<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_draftChecks_dateConstraints" id="get_draftChecks_dateConstraints">
+									<div class="input text span12 left">
+										<div class="span6 left">
+											<label for="datepicker">Start Date</label>
+											<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+										</div>
+										<div class="span6 left">
+											<label for="datepicker">End Date</label>
+											<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+										</div>
+										<center>
+											<input type="submit" class="btn btn-primary" value="Submit">
+										</center>
+									</div>								
+								</form>
+							</div>
+							<center>
+								<h2 id="get_draftChecks_dateConstraints">Current Month's Total: <?php echo $draftChecks_dateConstraints; ?></h2>
+							</center>
+						</div>
+					</div>
+					
+					<div id="nutriCheck_scheduled" class="left span4 tri-widget">
+						<div class="right dashboard-widget">
+							<h3>Scheduled Nutrichecks</h3>
+							<div class="left span12">
+								<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_scheduledChecks_dateConstraints" id="get_scheduledChecks_dateConstraints">
+									<div class="input text span12 left">
+										<div class="span6 left">
+											<label for="datepicker">Start Date</label>
+											<input required name="start_date" class="datepicker date_selector" type="text" class="" placeholder="Click to select date">
+										</div>
+										<div class="span6 left">
+											<label for="datepicker">End Date</label>
+											<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+										</div>
+										<center>
+											<input type="submit" class="btn btn-primary" value="Submit">
+										</center>
+									</div>								
+								</form>
+							</div>
+							<center>
+								<h2 id="get_scheduledChecks_dateConstraints">Current Month's Total: <?php echo $scheduledChecks_dateConstraints; ?></h2>
+							</center>
+						</div>
 					</div>
 				</div>
-			</div>
+			<?php } ?>
 		</div>
 	</div>
 

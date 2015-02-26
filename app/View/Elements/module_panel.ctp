@@ -10,7 +10,7 @@
 - start + print
 */
 ?>
-	<?php if($this->Session->read('Auth.User.group_id') != 1) { ?>
+	<?php if($this->Session->read('Auth.User.group_id') != 1 && $this->Session->read('Auth.User.group_id') != 4 && $this->Session->read('Auth.User.group_id') != 5) { ?>
 		<a href="/questions/nutrient_check" id="startNutricheck" class="dashbutton-big dashred">
 			<div><img src="/img/button_icon_start.png" /></div>
 			<span>START NUTRICHECK</span>

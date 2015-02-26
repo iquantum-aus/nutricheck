@@ -434,12 +434,11 @@ class QuestionsController extends AppController {
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 				$performed_check_data['PerformedCheck']['user_id'] = $behalfUserId;
-				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId, 'url' => $full_url)));
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $behalfUserId)));
 			} else {
 				$performed_check_data['PerformedCheck']['user_id'] = $user_info['id'];
-				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'], 'url' => $full_url)));
+				$log_existence = $this->PerformedCheck->find('all', array('conditions' => array('isComplete' => 0, 'user_id' => $user_info['id'])));
 			}
-			
 			
 			if(($user_info['group_id'] == 2) && !empty($behalfUserId)) {
 				// will only log instance of user id if the client is performing in behalf of a patient
