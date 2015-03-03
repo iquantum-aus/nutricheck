@@ -37,92 +37,93 @@
 		<div style="position:relative;padding:30px;">
 			
 			<?php if($this->Session->read('Auth.User.group_id') != 1) { ?>
-				<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
-					<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
-						
-						<div role="tabpanel">
-							<!-- Nav tabs -->
-							<ul class="nav nav-tabs" role="tablist">
-								<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Main Panel</a></li>
-								<li role="presentation"><a href="#video" aria-controls="profile" role="tab" data-toggle="tab">View the Video</a></li>
-							</ul>
+				<?php if(!(($this->Session->read('Auth.User.group_id') == 4 || $this->Session->read('Auth.User.group_id') == 5) && empty($group_video['Video']['video_link']))) { ?>
+					<?php if($this->Session->read('Auth.User.group_id') == 2) { ?>
+						<div style="min-height: 374px; margin:0 3% 40px 0;" class="dashboardbox video">
+							
+							<div role="tabpanel">
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Main Panel</a></li>
+									<li role="presentation"><a href="#video" aria-controls="profile" role="tab" data-toggle="tab">View the Video</a></li>
+								</ul>
 
-							<!-- Tab panes -->
-							<div class="tab-content">
-								<div role="tabpanel" class="tab-pane active" id="home">
-									<form method="POST" style="margin: 0;" id="linkSending">			
-										<div class="left span12" style="padding: 20px 20px 20px 20px;">
-											<h1 style="color: #64584c;margin:0;padding:0;font-weight:normal;">Welcome!</h1>
-											<h4 style="color: #c6bdb4;margin:0;padding:0 0 10px 0;font-weight:normal;border-bottom:1px solid #00b97b;">Let's get started and on our way to better health.</h4>
-											
-											<div class="left span6 moduleSearchHolder" style="margin-top:40px;">
-												<h4 style="color: #64584c;">Who are we checking today?</h4>						
-												<div class="moduleInputs">
-													<div class="left full moduleInputHolder">								
-														<?php echo $this->Form->input('User.id', array('style' => "width: 70%; float: left;", 'options' => $user_list, 'empty' => 'Select Patient', 'selected' => $behalfUserId, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
-													</div>							
-													<div class="left full moduleInputHolder">
-														<?php echo $this->Form->input('Factor.id', array('style' => "width: 70%; float: left;", 'multiple' => true,  'options' => $factor_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane active" id="home">
+										<form method="POST" style="margin: 0;" id="linkSending">			
+											<div class="left span12" style="padding: 20px 20px 20px 20px;">
+												<h1 style="color: #64584c;margin:0;padding:0;font-weight:normal;">Welcome!</h1>
+												<h4 style="color: #c6bdb4;margin:0;padding:0 0 10px 0;font-weight:normal;border-bottom:1px solid #00b97b;">Let's get started and on our way to better health.</h4>
+												
+												<div class="left span6 moduleSearchHolder" style="margin-top:40px;">
+													<h4 style="color: #64584c;">Who are we checking today?</h4>						
+													<div class="moduleInputs">
+														<div class="left full moduleInputHolder">								
+															<?php echo $this->Form->input('User.id', array('style' => "width: 70%; float: left;", 'options' => $user_list, 'empty' => 'Select Patient', 'selected' => $behalfUserId, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+														</div>							
+														<div class="left full moduleInputHolder">
+															<?php echo $this->Form->input('Factor.id', array('style' => "width: 70%; float: left;", 'multiple' => true,  'options' => $factor_list, 'label' => false, 'div' => false, 'class' => 'chosen-select')); ?>
+														</div>
+													</div>						
+													<div id="controlsHolder">
+														<input type="hidden" id="selectedUser" value="<?php echo $behalfUserId; ?>">
+														<input type="hidden" id="selectedFactor">
 													</div>
-												</div>						
-												<div id="controlsHolder">
-													<input type="hidden" id="selectedUser" value="<?php echo $behalfUserId; ?>">
-													<input type="hidden" id="selectedFactor">
+												</div>
+												<div class="linewithor left span1">
+													<div>or</div>
+												</div>
+												<div class="left span5" style="padding: 73px 30px 30px 30px;">
+													<a href="/admin/users/add" class="dashbutton-big dashgreen">
+													<div><img src="/img/button_icon_user.png" /></div>
+													<span>NEW CUSTOMER</span>
+													</a>
 												</div>
 											</div>
-											<div class="linewithor left span1">
-												<div>or</div>
-											</div>
-											<div class="left span5" style="padding: 73px 30px 30px 30px;">
-												<a href="/admin/users/add" class="dashbutton-big dashgreen">
-												<div><img src="/img/button_icon_user.png" /></div>
-												<span>NEW CUSTOMER</span>
-												</a>
-											</div>
+										</form>
+									</div>
+									<div role="tabpanel" class="tab-pane" id="video">
+										<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
+											<?php if(!empty($group_video)) { ?>
+												<?php
+													$newWidth = "700";
+													$newHeight = "420";
+													$content = preg_replace(
+														array('/width="\d+"/i', '/height="\d+"/i'),
+														array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
+														$group_video['Video']['video_link']
+													);							
+													echo $content;
+												?>
+											<?php } ?>
 										</div>
-									</form>
-								</div>
-								<div role="tabpanel" class="tab-pane" id="video">
-									<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
-										<?php if(!empty($group_video)) { ?>
-											<?php
-												$newWidth = "700";
-												$newHeight = "420";
-												$content = preg_replace(
-													array('/width="\d+"/i', '/height="\d+"/i'),
-													array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
-													$group_video['Video']['video_link']
-												);							
-												echo $content;
-											?>
-										<?php } ?>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				<?php } else { ?>
-					<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
-						<?php if(!empty($group_video)) { ?>
-							<?php
-								$newWidth = "700";
-								$newHeight = "420";
-								$content = preg_replace(
-									array('/width="\d+"/i', '/height="\d+"/i'),
-									array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
-									$group_video['Video']['video_link']
-								);							
-								echo $content;
-							?>
-						<?php } ?>
-					</div>
+					<?php } else { ?>
+						<div style="min-height: 374px; width: 70%;margin:0 3% 40px 0;" class="dashboardbox video">
+							<?php if(!empty($group_video)) { ?>
+								<?php
+									$newWidth = "700";
+									$newHeight = "420";
+									$content = preg_replace(
+										array('/width="\d+"/i', '/height="\d+"/i'),
+										array(sprintf('width="%d"', $newWidth), sprintf('height="%d"', $newHeight)),
+										$group_video['Video']['video_link']
+									);							
+									echo $content;
+								?>
+							<?php } ?>
+						</div>
+					<?php } ?>
+					
+					<?php echo $this->element('module_panel'); ?>
 				<?php } ?>
-				
-				<?php echo $this->element('module_panel'); ?>
 			<?php } ?>
 			
 			<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>				
-				
 				<?php if($total_report_stats_last_week > 0 || $total_report_stats_last_thirty_days > 0) { ?>
 					<div class="left span12" style="border-bottom: 1px solid #dedede; padding-bottom: 5px;">
 						<div class="left span3" style="padding: 20px; box-sizing: border-box;">

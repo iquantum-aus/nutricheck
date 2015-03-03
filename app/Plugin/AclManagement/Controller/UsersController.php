@@ -856,16 +856,17 @@ class UsersController extends AclManagementAppController {
 	
    public function add() {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
+		$this->loadModel('User');
 		$this->layout = "public_dashboard";
 		$message = "";
-		
 		$user_info = $this->Session->read('Auth.User');
-		$user_data_info = $this->Question->User->findById($user_id);
 		
-		$company = $user_data_info['UserProfile']['company'];
-		$source_email = $user_data_info['UserProfile']['company'];
 		
 		if ($this->request->is('post')) {
+			
+			$user_data_info = $this->User->findById($user_info['id']);
+			$company = $user_data_info['UserProfile']['company'];
+			$source_email = $user_data_info['User']['email'];
 			
 			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
 			$age = round(abs(time() - strtotime($birthday))/31536000);
@@ -974,11 +975,11 @@ class UsersController extends AclManagementAppController {
 
 							$mail->IsHTML(true);  // set email format to HTML 
 							
-							$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company"<br />Email: ".$email;
+							$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company."<br />Email: ".$source_email;
 							$mail->Subject = "You've been added to the system";
 							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
 							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password.$sender_details;
-							$mail->Body    = $message; 
+							$mail->Body    = $message;
 							
 							$mail->Send();
 						}

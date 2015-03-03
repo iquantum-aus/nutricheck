@@ -183,7 +183,7 @@ class PerformedChecksController extends AppController {
 				$per_user_hours_difference =  floor($per_user_difference/(60*60));
 				$per_user_minutes_difference =  floor($per_user_difference/60);
 			
-				// if in the last of alerted, script will check whether the usre has been alerted before and will check if the previous alert was 7 days ago
+				// if in the list of alerted, script will check whether the user has been alerted before and will check if the previous alert was 7 days ago
 				// if($per_user_days_difference < 7 && !empty($user_info['User']['last_alerted'])) {
 					// $send_alert = false;
 				// };
