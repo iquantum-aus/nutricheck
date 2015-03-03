@@ -860,6 +860,11 @@ class UsersController extends AclManagementAppController {
 		$message = "";
 		
 		$user_info = $this->Session->read('Auth.User');
+		$user_data_info = $this->Question->User->findById($user_id);
+		
+		$company = $user_data_info['UserProfile']['company'];
+		$source_email = $user_data_info['UserProfile']['company'];
+		
 		if ($this->request->is('post')) {
 			
 			$birthday = $this->request->data['UserProfile']['birthday']['year']."-".$this->request->data['UserProfile']['birthday']['month']."-".$this->request->data['UserProfile']['birthday']['day'];
@@ -959,9 +964,9 @@ class UsersController extends AclManagementAppController {
 							$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 							$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-							$mail->From = 'NutriCheck Info <info@nutricheck.com.au>'; 
+							$mail->From = "Nutricheck Info <noreply@nutricheck.com.au>";
 							// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-							// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+							$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
 							$mail->AddAddress($email, $email);
 							
 							$mail->CharSet  = 'UTF-8'; 
@@ -969,9 +974,10 @@ class UsersController extends AclManagementAppController {
 
 							$mail->IsHTML(true);  // set email format to HTML 
 							
+							$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company"<br />Email: ".$email;
 							$mail->Subject = "You've been added to the system";
 							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
-							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password;
+							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password.$sender_details;
 							$mail->Body    = $message; 
 							
 							$mail->Send();
@@ -1510,6 +1516,7 @@ class UsersController extends AclManagementAppController {
 	
 	public function dashboard() {
 		$this->loadModel('Factor');
+		$this->loadModel('Video');
 		$this->loadModel('PerformedCheck');
 		$this->layout = "public_dashboard";
 		$user_info = $this->Session->read('Auth.User');
@@ -1939,8 +1946,6 @@ class UsersController extends AclManagementAppController {
 		
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST 30 DAYS ##########################################
 
-		
-		
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$selected_user = $this->User->findById($behalfUserId);
 		
@@ -1962,6 +1967,8 @@ class UsersController extends AclManagementAppController {
 			}
 		}
 		
+		$group_video = $this->Video->findByGroupId($group_id);
+		
 		$performedChecks_dateConstraints = $this->get_performedChecks_dateConstraints(true);
 		$draftChecks_dateConstraints = $this->get_draftChecks_dateConstraints(true);
 		$scheduledChecks_dateConstraints = $this->get_scheduledChecks_dateConstraints(true);
@@ -1970,6 +1977,7 @@ class UsersController extends AclManagementAppController {
 		$this->set('draftChecks_dateConstraints', $draftChecks_dateConstraints);
 		$this->set('scheduledChecks_dateConstraints', $scheduledChecks_dateConstraints);
 		
+		$this->set('group_video', $group_video);
 		$this->set('members', $members);
 		$this->set('factor_list', $factor_list);
 		$this->set('user_list', $user_list);

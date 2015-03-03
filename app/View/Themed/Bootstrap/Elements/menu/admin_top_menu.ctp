@@ -142,11 +142,7 @@
 						</li>
 						
 						<li class="menu">
-							<a class="sb-toggle-submenu">Videos<div class="active-sidebar-menu"></div><span class="sb-caret"></span></a>
-							<ul class="sb-submenu">
-								<li><a href="/videos">List Videos</a></li>
-								<li><a href="/videos/add">Create Videos</a></li>
-							</ul>
+							<a class="sb-toggle-submenu" href="/videos">Videos</a>
 						</li>
 					<?php } ?>
 					

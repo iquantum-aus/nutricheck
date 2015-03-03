@@ -1,5 +1,5 @@
 <div class="videos index">
-	<h2><?php echo __('Videos'); ?> <small> - <?php echo $this->Html->link(__('Create New'), array('action' => 'add')); ?></small></h2>
+	<h2><?php echo __('Videos'); ?></h2>
 	
 	<div class="left" style="width: 100%;">
 		<form method="POST" id="GroupSelect" class="left full" action="/videos/index/">
@@ -13,25 +13,23 @@
 	
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('group_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('video_link'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+		<th><?php echo $this->Paginator->sort('group_id'); ?></th>
+		<th><?php echo $this->Paginator->sort('video_link'); ?></th>
+		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($videos as $video): ?>
-	<tr>
-		<td width="5%"><?php echo h($video['Video']['id']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($video['Group']['name'], array('controller' => 'groups', 'action' => 'view', $video['Group']['id'])); ?>
-		</td>
-		<td><?php echo h($video['Video']['video_link']); ?>&nbsp;</td>
-		<td width="20%">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $video['Video']['id']), array('class' => 'btn btn-primary')); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $video['Video']['id']), array('class' => 'btn btn-warning')); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $video['Video']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $video['Video']['id'])); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
+		<tr>
+			<td>
+				<?php echo $this->Html->link($video['Group']['name'], array('controller' => 'groups', 'action' => 'view', $video['Group']['id'])); ?>
+			</td>
+			<td><?php echo h($video['Video']['video_link']); ?>&nbsp;</td>
+			<td width="20%">
+				<?php echo $this->Html->link(__('View'), array('action' => 'view', $video['Video']['id']), array('class' => 'btn btn-primary')); ?>
+				<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $video['Video']['id']), array('class' => 'btn btn-warning')); ?>
+				<?php // echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $video['Video']['id']), array('class' => 'btn btn-danger'), __('Are you sure you want to delete # %s?', $video['Video']['id'])); ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
 	</table>
 	<p>
 	<?php

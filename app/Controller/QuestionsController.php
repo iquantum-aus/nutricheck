@@ -592,7 +592,7 @@ class QuestionsController extends AppController {
 
 						$mail->From = "NutirCheck Info <info@nutricheck.com.au>";
 						// $mail->FromName = "nomail@nutricheck.com.au"; 
-						// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+						$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@iquantum.com.au"); 
 						$mail->AddAddress($email, $email);
 						
 						$mail->CharSet  = 'UTF-8'; 
@@ -1080,6 +1080,12 @@ class QuestionsController extends AppController {
 	public function nutricheckSender() {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		
+		$user_id = $this->Session->read('Auth.User.id');
+		$user_info = $this->Question->User->findById($user_id);
+		
+		$company = $user_info['UserProfile']['company'];
+		$source_email = $user_info['UserProfile']['company'];
+		
 		if($this->request->is('post')) {
 			$hash_value = $_POST['hash_value'];
 			$selected_factors = $_POST['factors'];
@@ -1103,9 +1109,9 @@ class QuestionsController extends AppController {
 			$mail->Password = "eB67Z9BR9JWLCUCjsNstjg";
 			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "Nutricheck Info <info@nutricheck.com.au>";
+			$mail->From = "Nutricheck Info <noreply@nutricheck.com.au>";
 			// $mail->FromName = "nomail@nutricheck.com.au";
-			// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au");
+			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 
@@ -1113,8 +1119,10 @@ class QuestionsController extends AppController {
 
 			$mail->IsHTML(true);  // set email format to HTML 
 			
+			$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company"<br />Email: ".$email;
+			
 			$mail->Subject = "Nutricheck Invitation";
-			$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test"; 
+			$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test".$sender_details;
 			
 			if($mail->Send()) {
 				echo "1";

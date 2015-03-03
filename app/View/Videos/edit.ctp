@@ -8,7 +8,7 @@
 		echo $this->Form->input('video_link');
 	?>
 	</fieldset>
-	<input type="submit" value="SUBIMT" class="btn btn-success">
+	<input type="submit" value="SUBMIT" class="btn btn-success">
 <?php echo $this->Form->end(); ?>
 </div>
 
