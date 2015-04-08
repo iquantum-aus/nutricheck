@@ -151,7 +151,7 @@ class UsersController extends AclManagementAppController {
 						$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-						$mail->From = 'NutriCheck Info <info@nutricheck.com.au>'; 
+						$mail->From = 'NutriCheck Info <noreply@nutricheck.com.au>'; 
 						// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
 						// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 						$mail->AddAddress($to, $to);
@@ -1197,9 +1197,9 @@ class UsersController extends AclManagementAppController {
 			$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-			$mail->From = 'NutriCheck Info <info@nutricheck.com.au>'; 
+			$mail->From = 'NutriCheck Info <noreply@nutricheck.com.au>'; 
 			// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-			// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+			$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@nutricheck.com.au"); 
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 
@@ -1258,7 +1258,7 @@ class UsersController extends AclManagementAppController {
 				$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 				$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 				
-				$mail->From = 'NutriCheck Info <info@nutricheck.com.au>'; 
+				$mail->From = 'NutriCheck Info <noreply@nutricheck.com.au>'; 
 				// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
 				// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 				$mail->AddAddress($email, $email);

@@ -590,7 +590,7 @@ class QuestionsController extends AppController {
 						$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
 						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-						$mail->From = "NutirCheck Info <info@nutricheck.com.au>";
+						$mail->From = "NutirCheck Info <noreply@nutricheck.com.au>";
 						// $mail->FromName = "nomail@nutricheck.com.au"; 
 						$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@iquantum.com.au"); 
 						$mail->AddAddress($email, $email);
@@ -1084,7 +1084,7 @@ class QuestionsController extends AppController {
 		$user_info = $this->Question->User->findById($user_id);
 		
 		$company = $user_info['UserProfile']['company'];
-		$source_email = $user_info['UserProfile']['company'];
+		$source_email = $user_info['User']['email'];
 		
 		if($this->request->is('post')) {
 			$hash_value = $_POST['hash_value'];
@@ -1119,7 +1119,7 @@ class QuestionsController extends AppController {
 
 			$mail->IsHTML(true);  // set email format to HTML 
 			
-			$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company"<br />Email: ".$email;
+			$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company."<br />Email: ".$source_email;
 			
 			$mail->Subject = "Nutricheck Invitation";
 			$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test".$sender_details;
