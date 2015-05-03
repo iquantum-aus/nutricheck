@@ -1,3 +1,30 @@
+<style>
+	.sb-submenu {
+		position: absolute;
+		width: 200px;
+		border-radius: 5px;
+		background-color: #f3f3f3;
+		box-shadow: 0px 1px 5px #999;
+		margin-top: 20px;
+	}
+	
+	.sb-submenu li {
+		float: left;
+		width: 100%;
+		margin: 0;
+	}
+	
+	.sb-submenu li a {
+		float: left;
+		width: 100%;
+		padding: 5px;
+	}
+	
+	.sb-submenu li a:hover {
+		background: #eee;
+	}
+</style>
+
 <?php $group_id = $this->Session->read('Auth.User.group_id'); ?>
 
 <?php
@@ -5,30 +32,66 @@
 	$current_page = $this->params['action'];
 ?>
 
+<?php 
+	/* --------------------------------- PULLING AND GENERATING OF VIEW AS SELECTION ------------------------------------ */
+	
+		$view_selections = $this->requestAction('users/get_view_selection/');
+		
+		$view_selection_list = array();
+		$increment = 0;
+		foreach($view_selections as $group_key => $view_selection) {	
+			
+			$suffix = "";
+			switch($group_key) {
+				
+				case 'group_affiliations':
+					$suffix = "Group Affiliation";
+					break;
+				
+				case 'client_groups':
+					$suffix = "Client Group";
+					break;
+				
+				case 'clients':
+					$suffix = "Client";
+					break;
+				
+			}
+			
+			foreach($view_selection as $user_key => $user_entry) {
+				
+				if(!empty($user_entry['UserProfile']['first_name']) || !empty($user_entry['UserProfile']['last_name']) || !empty($user_entry['User']['email'])) {
+				
+					if(!empty($user_entry['UserProfile']['first_name']) && !empty($user_entry['UserProfile']['last_name'])) {
+						$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['first_name']." ".$user_entry['UserProfile']['last_name']." - ".$suffix;
+					} else {
+						$view_selection_list[$user_entry['User']['id']] = $user_entry['User']['email']." - ".$suffix;
+					}
+					
+					$increment++;
+				}
+			}
+		}
+		
+	/* --------------------------------- PULLING AND GENERATING OF VIEW AS SELECTION ------------------------------------ */
+?>
+
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			
 			<div id="headerScript">
-				<!--Welcome <strong><?php //echo $strip_name; ?></strong>-->
 				<a href="/users/dashboard"><img src="/img/nutricheck-logo.png" style="max-height:80px;"></a>
 			</div>
 			
 			<button type="button" style="position: relative;" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<!--<span style="color:black;position:absolute;left:-50px;top:4px;">MENU</span>-->
 				<span>MENU</span>
 				<div style="float:right;max-width:40px;margin-top:3px;">
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				</div>
-			</button>			
-			
-			<!--<div class="sb-toggle-left navbar-left">
-				<div class="navicon-line"></div>
-				<div class="navicon-line"></div>
-				<div class="navicon-line"></div>
-			</div>-->
+			</button>
 			
 			<?php
 				$user_info = $this->Session->read('Auth');
@@ -53,11 +116,20 @@
 					All li items must be float right
 				*/
 				?>
+				
 				<ul class="nav small">
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
 					<li class="menu"><?php echo $this->Html->link('Contact', '#');?></li>
 					<li class="menu"><a href="#faqContent" class="fancybox">FAQ</a></li>
 					<li class="menu bolda special" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
+					<li class="menu">
+						<span style="color:#777; margin-top: 14px; float:left; font-weight: bold;">View As:</span>&nbsp;
+						
+						<form method="POST" action="/users/dashboard" id="SelectViewAs">
+							<?php echo $this->Form->input('User.user_view', array('style' => 'margin-top: 8px;', 'options' => $view_selection_list, 'label' => false, 'div' => false)); ?>
+							<a href="" class="btn btn-danger right">RESET</a>
+						</form>
+					</li>
 				</ul>
 				
 				<ul class="nav secondary-nav big">
@@ -125,10 +197,6 @@
 								<li><a href="/questions">List Questions</a></li>
 								<li><a href="/questions/add">New Question</a></li>
 								<li><a href="/FactorsQuestions">Associate Questions</a></li>
-								<!-- 
-									<li><a href="/questions/nutrient_check">NutriCheck</a></li>
-									<li><a href="/questions/nutrient_check/factors">Question by Disturbance</a></li>
-								-->
 							</ul>
 						</li>
 					
@@ -212,33 +280,6 @@
 	</div>
 </div>
 
-<style>
-	.sb-submenu {
-		position: absolute;
-		width: 200px;
-		border-radius: 5px;
-		background-color: #f3f3f3;
-		box-shadow: 0px 1px 5px #999;
-		margin-top: 20px;
-	}
-	
-	.sb-submenu li {
-		float: left;
-		width: 100%;
-		margin: 0;
-	}
-	
-	.sb-submenu li a {
-		float: left;
-		width: 100%;
-		padding: 5px;
-	}
-	
-	.sb-submenu li a:hover {
-		background: #eee;
-	}
-</style>
-
 <script>
 	var curzoom = 1;
 	function ZoomPage(upordown){
@@ -317,6 +358,10 @@
 		SetMobileMenu();
 		$(window).resize( function () {
 			SetMobileMenu();
+		});
+		
+		$('#UserUserView').change( function () {
+			$('#SelectViewAs').submit();
 		});
 	});
 	
