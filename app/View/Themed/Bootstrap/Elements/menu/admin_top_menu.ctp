@@ -36,6 +36,7 @@
 	/* --------------------------------- PULLING AND GENERATING OF VIEW AS SELECTION ------------------------------------ */
 	
 		$view_selections = $this->requestAction('users/get_view_selection/');
+		$user_view_id = $this->Session->read('User.user_view_id');
 		
 		$view_selection_list = array();
 		$increment = 0;
@@ -126,8 +127,8 @@
 						<span style="color:#777; margin-top: 14px; float:left; font-weight: bold;">View As:</span>&nbsp;
 						
 						<form method="POST" action="/users/dashboard" id="SelectViewAs">
-							<?php echo $this->Form->input('User.user_view', array('style' => 'margin-top: 8px;', 'options' => $view_selection_list, 'label' => false, 'div' => false)); ?>
-							<a href="" class="btn btn-danger right">RESET</a>
+							<?php echo $this->Form->input('User.user_view', array('empty' => 'Select User', 'style' => 'margin-top: 8px;', 'selected' => $user_view_id, 'options' => $view_selection_list, 'label' => false, 'div' => false)); ?>
+							<a href="../users/reset_view_as" class="btn btn-danger right">RESET</a>
 						</form>
 					</li>
 				</ul>

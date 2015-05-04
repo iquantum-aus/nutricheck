@@ -10,6 +10,7 @@ Router::connect('/users/edit_profile', array('plugin' => 'acl_management', 'cont
 Router::connect('/users/forgot_password', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'forgot_password'));
 Router::connect('/users/activate_password/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'activate_password'));
 Router::connect('/users/get_view_selection/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_view_selection'));
+Router::connect('/users/reset_view_as/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'reset_view_as'));
 //login
 
 // custom
