@@ -475,6 +475,8 @@ class QuestionsController extends AppController {
 		if($this->request->is('post')) {
 			
 			$completion_time = time();
+			
+			// if the submission was triggered by selecting factors
 			if(isset($this->request->data['Factors']['submit'])) {
 				
 				$behalfUserId = $this->Session->read('behalfUserId');
@@ -516,7 +518,8 @@ class QuestionsController extends AppController {
 						'limit' => -1
 					);
 				}
-				
+			
+			// triggered by selecting  user to answer nutricheck in behalf of him/her
 			} else if(isset($this->request->data['User']['id'])) {				
 				
 				$this->Session->write('behalfUserId', $this->request->data['User']['id']);
@@ -540,7 +543,8 @@ class QuestionsController extends AppController {
 				$behalfUserId = $this->Session->read('behalfUserId');
 				$performingUser = $this->Question->User->findById($behalfUserId);
 				$this->set('user_id', $behalfUserId);
-				
+			
+			// the basic submission of the questionnaire
 			} else {
 				
 				$return_user_id = "";
@@ -557,6 +561,8 @@ class QuestionsController extends AppController {
 				
 				foreach($answers as $answer) {					
 					$answer['Answer']['completion_time'] = $completion_time;
+					
+					// if answering in belah of user is active
 					if(!empty($behalfUserId)) {
 						$answer['Answer']['user_id'] = $behalfUserId;
 					}
@@ -573,6 +579,8 @@ class QuestionsController extends AppController {
 				// to remove the session when the create and answer button is clicked when creating a user
 				$this->Session->delete('isCreateAnswer');
 				
+				
+				// if the user who is currently answering (or being amswered in behalf of) is a member, then will be reactivated right after - and the pharmacist that owns the member will receive an email about the activity of the patient
 				if($user_info['group_id'] == 3) {
 					
 					$parent_id = $user_info['parent_id'];
@@ -581,32 +589,31 @@ class QuestionsController extends AppController {
 					
 					/* ------------------------------------------------------ Emailing the pharmacist if ever a patient performed nutricheck ------------------------------------------------- */
 						
-						$mail = new PHPMailer(); 
-						$mail->IsSMTP(); // we are going to use SMTP
-						$mail->IsHTML(true);
-						$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
-						$mail->SMTPAuth = true;                               // Enable SMTP authentication
-						$mail->Username = "greg@iquantum.com.au"; 
-						$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
-						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+						if($email) {
+							$mail = new PHPMailer(); 
+							$mail->IsSMTP(); // we are going to use SMTP
+							$mail->IsHTML(true);
+							$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+							$mail->SMTPAuth = true;                               // Enable SMTP authentication
+							$mail->Port = 587;     
+							$mail->Username = "greg@iquantum.com.au";
+							$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
+							$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-						$mail->From = "NutirCheck Info <noreply@nutricheck.com.au>";
-						// $mail->FromName = "nomail@nutricheck.com.au"; 
-						$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@iquantum.com.au"); 
-						$mail->AddAddress($email, $email);
-						
-						$mail->CharSet  = 'UTF-8'; 
-						$mail->WordWrap = 50;  // set word wrap to 50 characters
+							$mail->From = "NutirCheck Info <noreply@nutricheck.com.au>";
+							// $mail->FromName = "nomail@nutricheck.com.au"; 
+							$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@iquantum.com.au"); 
+							$mail->AddAddress($email, $email);
+							
+							$mail->CharSet  = 'UTF-8'; 
+							$mail->WordWrap = 50;  // set word wrap to 50 characters
 
-						$mail->IsHTML(true);  // set email format to HTML 
-						
-						$mail->Subject = "A patient just performed NutriCheck";
-						$mail->Body    = "The user with email address ".$user_info['email']." that has the ID# ".$user_info['id']." performed nutricheck."; 
-						
-						if($mail->Send()) {
-							// return true;
-						} else {
-							return $mail->ErrorInfo; 
+							$mail->IsHTML(true);  // set email format to HTML 
+							
+							$mail->Subject = "A patient just performed NutriCheck";
+							$mail->Body    = "The user with email address ".$user_info['email']." that has the ID# ".$user_info['id']." performed nutricheck."; 
+							
+							$mail->Send();
 						}
 						
 					/* ------------------------------------------------------ Emailing the pharmacist if ever a patient performed nutricheck ------------------------------------------------- */
@@ -614,7 +621,6 @@ class QuestionsController extends AppController {
 					// to disallow user from answering again, not unless reactivated by the pharmacist
 					$this->deactivate_user_answer($behalfUserId);
 				}
-
 						
 				// ---------------------------------- means if the current user is a pharmacist - client ------------------------------ //
 				
@@ -697,7 +703,6 @@ class QuestionsController extends AppController {
 					$this->deactivate_user_answer();
 					$this->redirect(array('controller' => 'answers', 'action' => 'report?answered=true&status=saved&source=remote'));
 				}
-				
 				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			}
 		}
@@ -1105,8 +1110,9 @@ class QuestionsController extends AppController {
 			$mail->IsHTML(true);
 			$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
 			$mail->SMTPAuth = true; // Enable SMTP authentication
+			$mail->Port = 587;     
 			$mail->Username = "greg@iquantum.com.au";
-			$mail->Password = "eB67Z9BR9JWLCUCjsNstjg";
+			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
 			$mail->From = "Nutricheck Info <noreply@nutricheck.com.au>";

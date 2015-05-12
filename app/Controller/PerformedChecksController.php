@@ -217,8 +217,9 @@ class PerformedChecksController extends AppController {
 		$mail->IsHTML(true);
 		$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
 		$mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$mail->Username = "greg@iquantum.com.au"; 
-		$mail->Password = "eB67Z9BR9JWLCUCjsNstjg"; 
+		$mail->Port = 587;     
+		$mail->Username = "greg@iquantum.com.au";
+		$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
 		$mail->From = "Nutricheck Info <noreply@iquantum.com.au>"; 

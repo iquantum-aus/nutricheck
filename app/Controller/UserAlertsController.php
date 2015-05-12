@@ -273,30 +273,35 @@ class UserAlertsController extends AppController {
 		$alert_info = $this->UserAlert->findById($alert_id);
 		$alert_info['UserAlert']['message'] = str_replace("&#60;here&#62;", $url, $alert_info['UserAlert']['message']);
 		
-		$mail = new PHPMailer();
-		$mail->IsSMTP(); // we are going to use SMTP
-		$mail->IsHTML(true);
-		$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
-		$mail->SMTPAuth = true; // Enable SMTP authentication
-		$mail->Username = "greg@iquantum.com.au";
-		$mail->Password = "eB67Z9BR9JWLCUCjsNstjg";
-		$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
+		if($email) {
+			$mail = new PHPMailer();
+			$mail->IsSMTP(); // we are going to use SMTP
+			$mail->IsHTML(true);
+			$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+			$mail->SMTPAuth = true; // Enable SMTP authentication
+			$mail->Port = 587;     
+			$mail->Username = "greg@iquantum.com.au";
+			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
+			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-		$mail->From = "Nutricheck Info <noreply@iquantum.com.au>"; 
-		// $mail->FromName = "nomail@nutricheck.com.au"; 
-		$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
-		$mail->AddAddress($email, $email);
-		
-		$mail->CharSet  = 'UTF-8'; 
-		$mail->WordWrap = 50;  // set word wrap to 50 characters
+			$mail->From = "Nutricheck Info <noreply@iquantum.com.au>"; 
+			// $mail->FromName = "nomail@nutricheck.com.au"; 
+			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
+			$mail->AddAddress($email, $email);
+			
+			$mail->CharSet  = 'UTF-8'; 
+			$mail->WordWrap = 50;  // set word wrap to 50 characters
 
-		$mail->IsHTML(true);  // set email format to HTML 
-		
-		$mail->Subject = "Nutricheck Invitation";
-		$mail->Body    = $alert_info['UserAlert']['message'];
-		
-		if($mail->Send()) {
-			echo "1";
+			$mail->IsHTML(true);  // set email format to HTML 
+			
+			$mail->Subject = "Nutricheck Invitation";
+			$mail->Body    = $alert_info['UserAlert']['message'];
+			
+			if($mail->Send()) {
+				echo "1";
+			} else {
+				echo $mail->ErrorInfo;
+			}
 		}
 	}
 	

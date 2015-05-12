@@ -164,30 +164,14 @@ class AppController extends Controller {
 		return $pharmacists_name;
 	}
 
-	public function user_type($user_type) {
-        $user_group_id = $this->Session->read('Auth.User.group_id');
-        $user_id = $this->Session->read('Auth.User.id');
-		
-		$userTypes = $this->User->find('list', array('conditions' => array('group_id' => $user_type), 'fields' => array('id', 'id')));
-		
-		if($user_group_id != 1) {
-			if($user_type == 4) {
-				$userTypes = $this->User->find('list', array('conditions' => array('group_id' => $user_type, 'group_affiliation_id' => $user_id), 'fields' => array('id', 'id')));
-			}
-		}
-		
-		$this->User->UserProfile->unbindModelAll();
+	public function user_type($user_types) {
 		
 		$userTypes_name = array();
-		foreach($userTypes as $userType_id => $userType) {
-			$user_profile = $this->User->UserProfile->find('first', array('conditions' => array('user_id' => $userType), 'fields' => array('company', 'first_name', 'last_name')));
-			
-			if(!empty($user_profile)) {
-				if(!empty($user_profile['UserProfile']['company'])) {
-					$userTypes_name[$userType_id] = $user_profile['UserProfile']['company'];
-				} else {
-					$userTypes_name[$pharmacist_id] = $user_profile['UserProfile']['first_name']." ".$user_profile['UserProfile']['first_name'];
-				}
+		foreach($user_types as $user_type) {			
+			if(!empty($user_type['UserProfile']['company'])) {
+				$userTypes_name[$user_type['User']['id']] = $user_type['UserProfile']['company'];
+			} else {
+				$userTypes_name[$user_type['User']['id']] = $user_type['UserProfile']['first_name']." ".$user_profile['UserProfile']['last_name'];
 			}
 		}
 		

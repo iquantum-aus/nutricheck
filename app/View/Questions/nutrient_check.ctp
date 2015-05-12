@@ -54,16 +54,6 @@
 				
 				<div style="margin: 0;" class="span12 left sectionTitle">Questions</div>
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				<?php if($iscreateAnswer == 1) { ?>
 					<div class="quickentry_question">
 						<p>&nbsp;</p>
@@ -111,54 +101,24 @@
 						</form>
 					</div>
 				<?php } ?>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				
 
-				<div class="full_question">
-					<?php if(!$method) { ?>
-						<div class="span9" style="border-right: 1px solid #ccc; padding-right: 35px;">
-					<?php } else { ?>
-						<div>
-					<?php } ?>
+		<div class="full_question">
+			<?php if(!$method) { ?>
+				<div class="span9" style="border-right: 1px solid #ccc; padding-right: 35px;">
+			<?php } else { ?>
+				<div>
+			<?php } ?>
 					
-						<?php
-							$raw_questions = $questions;
-							$raw_count = count($raw_questions);
-							$question_data = array_chunk($questions, 23);
-							$question_data_count = count($question_data);
-							$pcount = 0;
-							$ptotal = count($question_data);
-							$button_width = 100/$question_data_count;
-						?>
+				<?php
+					$raw_questions = $questions;
+					$raw_count = count($raw_questions);
+					$question_data = array_chunk($questions, 23);
+					$question_data_count = count($question_data);
+					$pcount = 0;
+					$ptotal = count($question_data);
+					$button_width = 100/$question_data_count;
+				?>
 						
 						<div class="left full" style="margin-top: 20px; margin-bottom: 10px;">
 							<?php for($binc = 0; $binc < $question_data_count; $binc++) { ?>	
@@ -217,6 +177,7 @@
 													}
 												?>
 													
+													<!-- Instances of radio buttons and their labels + holders -->
 													<tr class="rankHolder" style="width:100%;<?php echo $setstyle; ?>" id="q<?php echo h($question['Question']['id']); ?>">
 														<td style="width: 15%; text-align: center; font-weight: bold;"><span class="blue"><?php echo h($question['Question']['id']); ?></span></td>
 														<td style="width: 53%;"><p><?php echo h($question['Question']['question']); ?></p></td>
@@ -229,6 +190,8 @@
 																}
 																
 																?>
+																	
+																	<!-- RADIO BUTTONS -->
 																	<td style="width:8%;" class="actions">
 																		<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][question_id]" class="AnswerQuestionId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $question['Question']['id']; ?>">
 																		<input type="hidden" name="data[<?php echo $question['Question']['id']; ?>][Answer][user_id]" class="AnswerUserId" id="AnswerQuestionId<?php echo $question['Question']['id']; ?>" value="<?php echo $user_id; ?>">
@@ -241,28 +204,24 @@
 													</tr>
 													
 												<?php } ?>
+												
+												<!-- Navigation on each page that will appear while answering the questions - DYNAMIC BEHAVIOUR -->
 												<tr>
 													<td colspan="6" style="min-height:40px;line-height:40px;font-weight: bold;color: #555555;text-align:left;">
-														<?php /*
-															Page <?php echo $pcount; ?> of <?php echo $ptotal; ?>
-																<span style="float:right;min-height:40px;line-height:40px;margin-top:4px;" id="nextprev">
-															*/ ?>
-															
-															<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
-															<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
-															
-															<?php if ($pcount!=$ptotal) { ?>
+														<a href="#" id="paginatorPrev" class="left paginatorPrev btn btn-primary <?php if ($pcount==1){ echo 'disabled'; } ?>">< PREV</a>
+														<a style="margin-left: 15px;" href="/users/dashboard">Save & Exit</a>
+														
+														<?php if ($pcount!=$ptotal) { ?>
 															<a href="#" id="paginatorNext" class="right paginatorNext btn btn-primary">NEXT ></a>
+														<?php } ?>
+														
+														<?php if ($pcount==$ptotal) { ?>
+															<?php if($iscreateAnswer == 1) { ?>
+																<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
+															<?php } else { ?>
+																<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
 															<?php } ?>
-															
-															<?php if ($pcount==$ptotal) { ?>
-																<?php if($iscreateAnswer == 1) { ?>
-																	<input type="button" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
-																<?php } else { ?>
-																	<input type="submit" value="SUBMIT" class="right btn btn-danger save-answer" style="margin-top: -30px;">
-																<?php } ?>
-															<?php } ?>
-														</span>
+														<?php } ?>
 													</td>								
 												</tr>
 											</tbody>
@@ -278,27 +237,20 @@
 							<input type="hidden" id="remoteLink" name="data[TempAnswer][remoteLink]">
 						</form>
 						
-						<div class="full_question">				
+						<!-- Navigation for pages -->
+						<div class="full_question">
 							<div class="<?php if(count($raw_questions) <= 10) { echo "hidden"; } ?>" id="array_paginator">
 								<form id="paginator_form" style="display:none;">
 									<input id="currentPaginatorstate" type="hidden" value="0">
 									
-									<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary disabled">PREV</a>
-										
-										<?php 
-											/* for($i=0; $i<$question_data_count; $i++) {
-												?>
-													<input name="pageSelected" id="pageSelection_<?php echo $i; ?>" class="paginatorSelector" type="radio" value="<?php echo $i; ?>">
-												<?php
-											} */
-										?>
-									
+									<a href="#" id="paginatorPrev" class="paginatorPrev paginatorButton btn btn-primary disabled">PREV</a>									
 									<a href="#" id="paginatorNext" class="paginatorNext paginatorButton btn btn-primary">NEXT</a>
 								</form>
 							</div>
 						</div>
 					</div>
 					
+					<!-- Page header statuses -->
 					<?php if(!$method) { ?>
 						<div class="span3 left" style="padding-left: 25px; margin-top: 75px; font-weight: bold; line-height: 25px; font-size: 15px; color: #999; font-style:italic;">
 							<div class="activeProgressMessage progressMessage span12">Welcome to your NutriCheck Assessment, Thank you for taking this important step to better well being. Be sure to answer every question, it will take approximately 5-10 minutes</div>
@@ -310,11 +262,11 @@
 					<?php } ?>
 					
 				</div>
-				
-			<?php } else { ?>
-				<div style="margin: 0; color: red;" class="span12 left sectionTitle">You need to select a patient before you can continue</div>		
-			<?php } ?>
 		</div>
+		
+		<?php } else { ?>
+			<div style="margin: 0; color: red;" class="span12 left sectionTitle">You need to select a patient before you can continue</div>		
+		<?php } ?>
 
 		<?php if($iscreateAnswer == 1) { ?>
 			<a href="#verifyAdminPass" class="hidden fancybox" id="verifyTrigger"></a>
@@ -345,13 +297,6 @@
 		</style>
 
 		<script>
-			function MoveNextPrev(){
-				//var geth = $('#paginator_form').html();
-				//$('#paginator_form').hide();
-				//$('#paginator_form').html('');
-				//$('.questionModules:visible #nextprev').html(geth);
-				//$('.questionModules #nextprev').html(geth);
-			}
 
 			$(document).ready(function() {
 				

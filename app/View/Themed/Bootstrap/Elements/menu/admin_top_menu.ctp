@@ -35,8 +35,11 @@
 <?php 
 	/* --------------------------------- PULLING AND GENERATING OF VIEW AS SELECTION ------------------------------------ */
 	
-		$view_selections = $this->requestAction('users/get_view_selection/');
-		$user_view_id = $this->Session->read('User.user_view_id');
+		App::import('Controller', 'Users');
+		$User = new UsersController;
+		$User->constructClasses();
+		$view_selections = $User->get_view_selection();
+		$user_view_id = $_SESSION['user_view_id'];
 		
 		$view_selection_list = array();
 		$increment = 0;
@@ -61,10 +64,14 @@
 			
 			foreach($view_selection as $user_key => $user_entry) {
 				
-				if(!empty($user_entry['UserProfile']['first_name']) || !empty($user_entry['UserProfile']['last_name']) || !empty($user_entry['User']['email'])) {
+				if(!empty($user_entry['UserProfile']['first_name']) || !empty($user_entry['UserProfile']['last_name']) || !empty($user_entry['User']['email']) || !empty($user_entry['UserProfile']['company'])) {
 				
-					if(!empty($user_entry['UserProfile']['first_name']) && !empty($user_entry['UserProfile']['last_name'])) {
-						$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['first_name']." ".$user_entry['UserProfile']['last_name']." - ".$suffix;
+					if((!empty($user_entry['UserProfile']['first_name']) && !empty($user_entry['UserProfile']['last_name'])) || !empty($user_entry['UserProfile']['company'])) {
+						if(!empty($user_entry['UserProfile']['company'])) {
+							$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['company']." - ".$suffix;
+						} else {
+							$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['first_name']." ".$user_entry['UserProfile']['last_name']." - ".$suffix;
+						}
 					} else {
 						$view_selection_list[$user_entry['User']['id']] = $user_entry['User']['email']." - ".$suffix;
 					}
@@ -122,15 +129,26 @@
 					<li class="menu"><?php echo $this->Html->link('Logout', '/users/logout');?></li>
 					<li class="menu"><?php echo $this->Html->link('Contact', '#');?></li>
 					<li class="menu"><a href="#faqContent" class="fancybox">FAQ</a></li>
-					<li class="menu bolda special" style="color:black;padding: 10px 15px 10px;">Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?></li>
-					<li class="menu">
-						<span style="color:#777; margin-top: 14px; float:left; font-weight: bold;">View As:</span>&nbsp;
-						
-						<form method="POST" action="/users/dashboard" id="SelectViewAs">
-							<?php echo $this->Form->input('User.user_view', array('empty' => 'Select User', 'style' => 'margin-top: 8px;', 'selected' => $user_view_id, 'options' => $view_selection_list, 'label' => false, 'div' => false)); ?>
-							<a href="../users/reset_view_as" class="btn btn-danger right">RESET</a>
-						</form>
+					
+					<li class="menu bolda special" style="color:black;padding: 10px 15px 10px;">
+						<?php if(!$user_view_id) { ?>
+							Welcome <?php echo $this->Html->link($strip_name, '/users/edit_profile');?>
+						<?php } else { ?>
+							Welcome <strong><?php echo $view_selection_list[$user_view_id]; ?></strong>
+						<?php } ?>
 					</li>
+					
+					<?php if($group_id != 2 || $group_id != 3) { ?>
+						<li class="menu">
+							<span style="color:#777; margin-top: 14px; float:left; font-weight: bold;">View As:</span>&nbsp;
+							
+							<form method="POST" action="/users/dashboard" id="SelectViewAs">
+								<?php echo $this->Form->input('User.user_view', array('empty' => 'Select User', 'style' => 'margin-top: 8px;', 'selected' => $user_view_id, 'options' => $view_selection_list, 'label' => false, 'div' => false)); ?>
+								<a href="../users/reset_view_as" class="btn btn-danger right">RESET</a>
+							</form>
+						</li>
+					<?php } ?>
+					
 				</ul>
 				
 				<ul class="nav secondary-nav big">

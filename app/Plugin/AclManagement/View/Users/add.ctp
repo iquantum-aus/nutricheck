@@ -271,6 +271,9 @@
 			var bday = $('#birthdayDay').val();
 			var byear = $('#birthdayYear').val();
 			
+			var group_id = $('#UserGroupId').val();
+			var pharmacist = $('#UserParentId').val();
+			
 			var birthday_date = byear+"/"+bmonth+"/"+bday;
 			var time_difference = current_time - strtotime(birthday_date);
 			
@@ -312,6 +315,14 @@
 					}
 				}
 			});
+		
+			// making the pharmacist required if the selected user group is "member"
+			if(group_id == 3 && pharmacist == "") {
+				$('#UserParentId_chosen').css('border', '1px solid red');
+				empty_field++;
+			} else {
+				$('#UserParentId_chosen').css('border', 'none');
+			}
 			
 			if(empty_field > 0) {
 				alert('There are fields that were left empty.');
@@ -324,6 +335,7 @@
 					return false;
 				}
 			}
+			
 		});
 	});
 </script>
