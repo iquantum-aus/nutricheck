@@ -11,6 +11,8 @@ Router::connect('/users/forgot_password', array('plugin' => 'acl_management', 'c
 Router::connect('/users/activate_password/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'activate_password'));
 Router::connect('/users/get_view_selection/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_view_selection'));
 Router::connect('/users/reset_view_as/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'reset_view_as'));
+Router::connect('/users/get_widget_values/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_widget_values'));
+Router::connect('/users/get_graph_values/*', array('plugin' => 'acl_management', 'controller' => 'users', 'action' => 'get_graph_values'));
 //login
 
 // custom

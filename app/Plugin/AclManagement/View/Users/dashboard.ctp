@@ -144,177 +144,245 @@
 					</div>
 				<?php } ?>
 				
-				<div class="left span12 full" style="margin-top: 30px;">
-					<div id="nutriCheckCompleted_dateConstraints" class="tri-widget left span4">
-						<div class="left dashboard-widget">
-							<h3>Completed Nutrichecks</h3>
-							<div class="left span12">
-								<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_performedChecks_dateConstraints" id="get_performedChecks_dateConstraints">
-									<div class="input text span12 left">
-										<div class="span6 left">
-											<label for="datepicker">Start Date</label>
-											<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-										</div>	
-										<div class="span6 left">
-											<label for="datepicker">End Date</label>
-											<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-										</div>
-										
-										<center>
-											<input type="submit" class="btn btn-primary" value="Submit">
-										</center>
-									</div>								
-								</form>
+				<?php if($user_view_info['User']['group_id'] == 2 || $this->Session->read('Auth.User.group_id') == 2) { ?>
+				
+					<div class="left span12">
+						<form method="post" class="ajaxForm" action="/users/get_widget_values" id="get_widget_date_constraints">
+							<div class="span12 left" style="padding: 5px 20px;">
+								<h3>Select date to view statistics</h3>
+								
+								<div class="span5 left" style="margin-right: 5%;">
+									<label style="  float: left; width: 24%; clear: none; margin: 0px; margin-right: 1%;" for="datepicker"><strong>Start Date:</strong> </label>
+									<input style="  float: left; width: 75%; clear: none; margin: 0px;" required="" name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+								</div>	
+								<div class="span5 left" style="margin-right: 1%;">
+									<label style="  float: left; width: 24%; clear: none; margin: 0px; margin-right: 1%;" for="datepicker"><strong>End Date:</strong> </label>
+									<input style="  float: left; width: 75%; clear: none; margin: 0px;" required="" name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+								</div>
+								
+								<div class="left span1">
+									<input type="submit" class="btn btn-primary" value="Submit">
+								</div>
 							</div>
-							<center>
-								<h2 id="get_performedChecks_dateConstraints">Current Month's Total: <?php echo $performedChecks_dateConstraints; ?></h2>
-							</center>
-						</div>
+						</form>
 					</div>
 					
-					<div id="nutriCheck_tobeCompleted" class="left span4 tri-widget">
-						<div class="dashboard-widget left" style="margin: 0% 5%;">
-							<h3>Draft Nutrichecks</h3>
-							<div class="left span12">
-								<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_draftChecks_dateConstraints" id="get_draftChecks_dateConstraints">
-									<div class="input text span12 left">
-										<div class="span6 left">
-											<label for="datepicker">Start Date</label>
-											<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-										</div>
-										<div class="span6 left">
-											<label for="datepicker">End Date</label>
-											<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-										</div>
-										<center>
-											<input type="submit" class="btn btn-primary" value="Submit">
-										</center>
-									</div>								
-								</form>
-							</div>
-							<center>
-								<h2 id="get_draftChecks_dateConstraints">Current Month's Total: <?php echo $draftChecks_dateConstraints; ?></h2>
-							</center>
-						</div>
-					</div>
+				<?php } ?>
+				
+				<div class="left span12 full" style="margin-top: 30px; padding-bottom: 50px; border-bottom: 1px solid #ccc;">
 					
-					<div id="nutriCheck_scheduled" class="left span4 tri-widget">
-						<div class="right dashboard-widget">
-							<h3>Scheduled Nutrichecks</h3>
-							<div class="left span12">
-								<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_scheduledChecks_dateConstraints" id="get_scheduledChecks_dateConstraints">
-									<div class="input text span12 left">
-										<div class="span6 left">
-											<label for="datepicker">Start Date</label>
-											<input required name="start_date" class="datepicker date_selector" type="text" class="" placeholder="Click to select date">
-										</div>
-										<div class="span6 left">
-											<label for="datepicker">End Date</label>
-											<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
-										</div>
-										<center>
-											<input type="submit" class="btn btn-primary" value="Submit">
-										</center>
-									</div>								
-								</form>
-							</div>
-							<center>
-								<h2 id="get_scheduledChecks_dateConstraints">Current Month's Total: <?php echo $scheduledChecks_dateConstraints; ?></h2>
-							</center>
-						</div>
-					</div>
+					<?php if($user_view_info['User']['group_id'] == 2 || $this->Session->read('Auth.User.group_id') == 2) { ?>
 					
-					<?php if($user_view_info['User']['group_id'] == 4 ||$user_view_info['User']['group_id'] == 5) { ?>
+						<div id="nutriCheckCompleted_dateConstraints" class="tri-widget left span4">
+							<div class="left dashboard-widget">
+								<center><h3>Completed Nutrichecks</h3></center>
+								
+								<?php /*
+									<div class="left span12">
+										<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_performedChecks_dateConstraints" id="get_performedChecks_dateConstraints">
+											<div class="input text span12 left">
+												<div class="span6 left">
+													<label for="datepicker">Start Date</label>
+													<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+												</div>	
+												<div class="span6 left">
+													<label for="datepicker">End Date</label>
+													<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+												</div>
+												
+												<center>
+													<input type="submit" class="btn btn-primary" value="Submit">
+												</center>
+											</div>								
+										</form>
+									</div>
+								*/ ?>
+								
+								<center>
+									<h2 id="get_performedChecks_dateConstraints">Current Month's Total: <?php echo $performedChecks_dateConstraints; ?></h2>
+								</center>
+							</div>
+						</div>
+						
+						<div id="nutriCheck_tobeCompleted" class="left span4 tri-widget">
+							<div class="dashboard-widget left" style="margin: 0% 5%;">
+								<center><h3>Draft Nutrichecks</h3></center>
+								
+								<?php /*
+								<div class="left span12">
+									<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_draftChecks_dateConstraints" id="get_draftChecks_dateConstraints">
+										<div class="input text span12 left">
+											<div class="span6 left">
+												<label for="datepicker">Start Date</label>
+												<input required name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+											</div>
+											<div class="span6 left">
+												<label for="datepicker">End Date</label>
+												<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+											</div>
+											<center>
+												<input type="submit" class="btn btn-primary" value="Submit">
+											</center>
+										</div>								
+									</form>
+								</div>
+								*/ ?>
+								
+								<center>
+									<h2 id="get_draftChecks_dateConstraints">Current Month's Total: <?php echo $draftChecks_dateConstraints; ?></h2>
+								</center>
+							</div>
+						</div>
+						
+						<div id="nutriCheck_scheduled" class="left span4 tri-widget">
+							<div class="right dashboard-widget">
+								<center><h3>Scheduled Nutrichecks</h3></center>
+								
+								<?php /*
+								<div class="left span12">
+									<form method="post" style="margin: 0px;" class="left span12 ajaxForm" action="/users/get_scheduledChecks_dateConstraints" id="get_scheduledChecks_dateConstraints">
+										<div class="input text span12 left">
+											<div class="span6 left">
+												<label for="datepicker">Start Date</label>
+												<input required name="start_date" class="datepicker date_selector" type="text" class="" placeholder="Click to select date">
+											</div>
+											<div class="span6 left">
+												<label for="datepicker">End Date</label>
+												<input required name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+											</div>
+											<center>
+												<input type="submit" class="btn btn-primary" value="Submit">
+											</center>
+										</div>								
+									</form>
+								</div>
+								*/ ?>
+								
+								<center>
+									<h2 id="get_scheduledChecks_dateConstraints">Current Month's Total: <?php echo $scheduledChecks_dateConstraints; ?></h2>
+								</center>
+							</div>
+						</div>
+					
+					<?php } ?>
+					
+					<?php if($user_view_info['User']['group_id'] == 4 || $user_view_info['User']['group_id'] == 5 || $this->Session->read('Auth.User.group_id') == 4 || $this->Session->read('Auth.User.group_id') == 5) { ?>
+						
+						<div class="left span12">
+							<form method="post" action="/users/get_graph_values" id="get_graph_date_constraints">
+								<div class="span12 left" style="padding: 5px 20px;">
+									<h3>Select date to view statistics</h3>
+									
+									<div class="span5 left" style="margin-right: 5%;">
+										<label style="  float: left; width: 24%; clear: none; margin: 0px; margin-right: 1%;" for="datepicker"><strong>Start Date:</strong> </label>
+										<input style="  float: left; width: 75%; clear: none; margin: 0px;" required="" name="start_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+									</div>	
+									<div class="span5 left" style="margin-right: 1%;">
+										<label style="  float: left; width: 24%; clear: none; margin: 0px; margin-right: 1%;" for="datepicker"><strong>End Date:</strong> </label>
+										<input style="  float: left; width: 75%; clear: none; margin: 0px;" required="" name="end_date" class="datepicker date_selector" type="text" placeholder="Click to select date">
+									</div>
+									
+									<div class="left span1">
+										<input type="submit" class="btn btn-primary" value="Submit">
+									</div>
+								</div>
+							</form>
+						</div>
 						
 						<p>&nbsp;</p>
 						
-						<!-- Nav tabs -->
-						<ul class="nav nav-tabs">
-							<li class="active"><a href="#tableGraph" data-toggle="tab">Table Graph</a></li>
-							<li><a href="#pieGraph" data-toggle="tab">Pie Graph</a></li>
-						</ul>
-					
-						<!-- Tab panes -->
-						<div class="tab-content">
-							<div class="tab-pane active" id="tableGraph">
-								
-								<table class="table table-striped">
+						<div id="graphTableHolder">
+							<!-- Nav tabs -->
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#tableGraph" data-toggle="tab">Table Graph</a></li>
+								<li><a href="#pieGraph" data-toggle="tab">Pie Graph</a></li>
+							</ul>
+						
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div class="tab-pane active" id="tableGraph">
 									
-									<tr>
-										<th>Client Name</th>
-										<th style="text-align: center;">Number of Members</th>
-										<th style="text-align: center;">Number of Completed Nutrichecks</th>
-										<th style="text-align: center;">Draft Nutrichecks</th>
-										<th style="text-align: center;">Scheduled Nutrichecks</th>
-									</tr>
-									
-									<?php
-										foreach($clients_data as $client_data_key => $client_data) {
-											?>
-												
-												<tr>
-													<td>
-														<?php 
-															$client_name = (!empty($client_data['client_info'][0]['UserProfile']['company']) ? $client_data['client_info'][0]['UserProfile']['company'] : $client_data['client_info'][0]['User']['email']);
-															echo $client_name;
-														?>
-													</td>
-													<td style="text-align: center;"><?php echo $client_data['members']; ?></td>
-													<td style="text-align: center;"><?php echo $client_data['completed_nutricheck']; ?></td>
-													<td style="text-align: center;"><?php echo $client_data['draft_nutricheck']; ?></td>
-													<td style="text-align: center;"><?php echo $client_data['scheduled_nutricheck']; ?></td>
-												</tr>
+									<div id="graphValueHolder">
+										<table class="table table-striped">
+											
+											<tr>
+												<th>Client Name</th>
+												<th style="text-align: center;">Number of Members</th>
+												<th style="text-align: center;">Number of Completed Nutrichecks</th>
+												<th style="text-align: center;">Draft Nutrichecks</th>
+												<th style="text-align: center;">Scheduled Nutrichecks</th>
+											</tr>
+											
+											
 											<?php
-										}
-									?>
-								</table>
-							</div>
-							<div class="tab-pane" id="pieGraph">
-								
-								<h3>Legend</h3>
-								
-								<div class="left span12">
-									<div class="left span12">
-										<div style="background: #F7464A;" class="color-legend"></div>
-										<span class="color-legend-label">Member Count</span>
-									</div>
-									
-									<div class="left span12">
-										<div style="background: #46BFBD;" class="color-legend"></div>
-										<span class="color-legend-label">Completed Nutricheck</span>
-									</div>
-									
-									<div class="left span12">
-										<div style="background: #FDB45C;" class="color-legend"></div>
-										<span class="color-legend-label">Draft Nutricheck</span>
-									</div>
-									
-									<div class="left span12">
-										<div style="background: #949FB1;" class="color-legend"></div>
-										<span class="color-legend-label">Schedule Nutricheck</span>
-									</div>
-								</div>
-								
-								<div id="canvas-holder">
-									<?php
-										foreach($clients_data as $client_data_key => $client_data) {
-											?>
-												<div class="clientPieHolder left span3">
-													<center>
-														<span class="left span12">
-															<strong>
+												foreach($clients_data as $client_data_key => $client_data) {
+													?>
+														
+														<tr>
+															<td>
 																<?php 
 																	$client_name = (!empty($client_data['client_info'][0]['UserProfile']['company']) ? $client_data['client_info'][0]['UserProfile']['company'] : $client_data['client_info'][0]['User']['email']);
 																	echo $client_name;
 																?>
-															</strong>
-														</span>
-														<canvas style="float:none;" id="chart-area-<?php echo $client_data_key; ?>" width="150" height="150"></canvas>
-													</center>
-												</div>
-											<?php
-										}
-									?>
+															</td>
+															<td style="text-align: center;"><?php echo $client_data['members']; ?></td>
+															<td style="text-align: center;"><?php echo $client_data['completed_nutricheck']; ?></td>
+															<td style="text-align: center;"><?php echo $client_data['draft_nutricheck']; ?></td>
+															<td style="text-align: center;"><?php echo $client_data['scheduled_nutricheck']; ?></td>
+														</tr>
+													<?php
+												}
+											?>
+										</table>
+									</div>
+								</div>
+								<div class="tab-pane" id="pieGraph">
+									
+									<h3>Legend</h3>
+									
+									<div class="left span12">
+										<div class="left span12">
+											<div style="background: #F7464A;" class="color-legend"></div>
+											<span class="color-legend-label">Member Count</span>
+										</div>
+										
+										<div class="left span12">
+											<div style="background: #46BFBD;" class="color-legend"></div>
+											<span class="color-legend-label">Completed Nutricheck</span>
+										</div>
+										
+										<div class="left span12">
+											<div style="background: #FDB45C;" class="color-legend"></div>
+											<span class="color-legend-label">Draft Nutricheck</span>
+										</div>
+										
+										<div class="left span12">
+											<div style="background: #949FB1;" class="color-legend"></div>
+											<span class="color-legend-label">Schedule Nutricheck</span>
+										</div>
+									</div>
+									
+									<div id="canvas-holder">
+										<?php
+											foreach($clients_data as $client_data_key => $client_data) {
+												?>
+													<div class="clientPieHolder left span3">
+														<center>
+															<span class="left span12">
+																<strong>
+																	<?php 
+																		$client_name = (!empty($client_data['client_info'][0]['UserProfile']['company']) ? $client_data['client_info'][0]['UserProfile']['company'] : $client_data['client_info'][0]['User']['email']);
+																		echo $client_name;
+																	?>
+																</strong>
+															</span>
+															<canvas style="float:none;" id="chart-area-<?php echo $client_data_key; ?>" width="150" height="150"></canvas>
+														</center>
+													</div>
+												<?php
+											}
+										?>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -436,8 +504,6 @@
 		</div>
 	</div>
 	
-	<input type="hidden" id="selected_widget">
-	
 <script>
 	$(document).ready(function() {
 		
@@ -483,17 +549,93 @@
 		
 		$('#myTab a:last').tab('show');
 		
-		$('.ajaxForm').click( function () {
-			var id = $(this).attr('id');
-			$('#selected_widget').val(id);
-		});
-		
 		// bind form using 'ajaxForm' 
 		$('.ajaxForm').ajaxForm({
-			complete: function (xhr, textStatus) {				
-				var selected_widget = $('#selected_widget').val();
-				$('h2#'+selected_widget).html("Total: "+xhr.responseText);
+			complete: function (xhr, textStatus) {
+				
+				var return_data = xhr.responseText;
+				return_data = $.parseJSON(return_data);				
+				
+				$('#get_performedChecks_dateConstraints').html("Current Month's Total: "+return_data.performed_checks);
+				$('#get_draftChecks_dateConstraints').html("Current Month's Total: "+return_data.draft_checks);
+				$('#get_scheduledChecks_dateConstraints').html("Current Month's Total: "+return_data.scheduled_checks);
 			}
+		});
+		
+		$('#get_graph_date_constraints').submit( function () {
+			
+			$('.pace').removeClass('pace-inactive').addClass('pace-active');
+			
+			$.ajax({
+				async:true,
+				data:$(this).serialize(),
+				dataType:'html',
+				success:function (data, textStatus) {
+					
+					return_data = $.parseJSON(data);
+					$('#canvas-holder').html('');
+					
+					var table_string = "<table class='table table-striped'><tr><th>Client Name</th><th style='text-align: center;'>Number of Members</th><th style='text-align: center;'>Number of Completed Nutrichecks</th><th style='text-align: center;'>Draft Nutrichecks</th><th style='text-align: center;'>Scheduled Nutrichecks</th></tr>";
+					
+					for (i in return_data) {
+						
+						if(return_data[i].client_info.UserProfile.company == "") {
+							var client_name = return_data[i].client_info.User.email;
+						} else {
+							var client_name = return_data[i].client_info.UserProfile.company;
+						}
+					  
+						table_string += "<tr><td>"+client_name+"</td><td style='text-align: center;'>"+return_data[i].members+"</td><td style='text-align: center;'>"+return_data[i].completed_nutricheck+"</td><td style='text-align: center;'>"+return_data[i].draft_nutricheck+"</td><td style='text-align: center;'>"+return_data[i].scheduled_nutricheck+"</td></tr>";
+						
+						
+						pie_graph = "<div class='clientPieHolder left span3'><center><span class='left span12'><strong>"+client_name+"</strong></span><canvas style='float:none;' id='chart-area-"+i+"' width='150' height='150'></canvas></center></div>";
+						
+						$('#canvas-holder').append(pie_graph);
+						
+						var total_population = return_data[i].members + return_data[i].completed_nutricheck + return_data[i].draft_nutricheck + return_data[i].scheduled_nutricheck;
+				
+						var pieData = [
+							{
+								value: (return_data[i].members/total_population) * 100,
+								color:"#F7464A",
+								highlight: "#FF5A5E",
+								label: "Red"
+							},
+							{
+								value: (return_data[i].completed_nutricheck/total_population) * 100,
+								color: "#46BFBD",
+								highlight: "#5AD3D1",
+								label: "Green"
+							},
+							{
+								value: (return_data[i].draft_nutricheck/total_population) * 100,
+								color: "#FDB45C",
+								highlight: "#FFC870",
+								label: "Yellow"
+							},
+							{
+								value: (return_data[i].scheduled_nutricheck/total_population) * 100,
+								color: "#949FB1",
+								highlight: "#A8B3C5",
+								label: "Grey"
+							}
+						];
+
+						var ctx = document.getElementById("chart-area-"+i).getContext("2d");
+						window.myPie = new Chart(ctx).Pie(pieData);
+					}
+					
+					table_string += "</table>";
+					$('#graphValueHolder').html(table_string);
+					
+					$('.pace').removeClass('pace-active').addClass('pace-inactive');
+					
+				},
+				type:'post',
+				url:"<?php echo $this->html->url('/', true); ?>users/get_graph_values"
+			});
+			
+			return false;
 		});
 		
 		$('.datepicker').datepicker({

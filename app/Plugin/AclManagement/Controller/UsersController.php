@@ -20,7 +20,7 @@ class UsersController extends AclManagementAppController {
 		if(empty($user_id)) {
 			$this->Auth->allow('login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'remote_register', 'get_clients', 'get_client_groups');
 		} else {
-			$this->Auth->allow('reset_view_as', 'get_view_selection', 'login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy', 'get_performedChecks_dateConstraints', 'get_draftChecks_dateConstraints', 'get_scheduledChecks_dateConstraints');
+			$this->Auth->allow('get_graph_values', 'get_widget_values', 'reset_view_as', 'get_view_selection', 'login', 'logout', 'forgot_password', 'register', 'activate_password', 'confirm_register', 'confirm_email_update', 'edit_profile', 'toggle_can_answer', 'toggle', 'is_authorized_action', 'dashboard', 'nutricheck_activity', 'check_email_existence', 'delete_report', 'privacy_policy', 'get_performedChecks_dateConstraints', 'get_draftChecks_dateConstraints', 'get_scheduledChecks_dateConstraints');
 		}
 
         $this->User->bindModel(array('belongsTo'=>array(
@@ -567,7 +567,7 @@ class UsersController extends AclManagementAppController {
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
-	function get_scheduledChecks_dateConstraints($month = false, $param_user_id = null) {
+	function get_scheduledChecks_dateConstraints($month = false, $param_user_id = null, $start_date = null, $end_date = null) {
 		$this->loadModel('UserAlert');
 		
 		$post = $_POST;
@@ -583,12 +583,12 @@ class UsersController extends AclManagementAppController {
 		$last_day_if_the_month = date('Y-m')."-".$total_month_days;
 		
 		if($group_id != 1) {
-			$members = $this->get_members($session_user_id, false, true);
+			$members = $this->get_members($user_id, false, true);
 		}
 		
 		// if "view as" is set
 		$user_view_info = array();
-		if($user_view_id) {
+		if($user_view_id && !$param_user_id) {
 			$this->User->unbindModelAll();
 			$user_view_info = $this->User->findById($user_view_id);
 			if($user_view_info['User']['group_id'] != 1) {
@@ -597,24 +597,59 @@ class UsersController extends AclManagementAppController {
 			
 			$group_id = $user_view_info['User']['group_id'];
 			$user_id = $user_view_info['User']['id'];
+		} else {
+			if(isset($param_user_id)) {
+				$this->User->unbindModelAll();
+				$user_info = $this->User->findById($param_user_id);
+				if($user_info['User']['group_id'] != 1) {
+					$members = $this->get_members($param_user_id, false, true);
+				}
+				
+				$group_id = $user_info['User']['group_id'];
+				$user_id = $user_info['User']['id'];
+			}
 		}
 		
 		if($month) {
 			if(!empty($members)) {				
+				
 				if($group_id != 1) {
 					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $first_day_if_the_month, 'UserAlert.alert_date <=' => $last_day_if_the_month, 'UserAlert.user_id' => $members)));
 				} else {
 					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $first_day_if_the_month, 'UserAlert.alert_date <=' => $last_day_if_the_month)));
 				}
-				return $scheduled_checks;
+				
 			} else {
 				if($group_id == 1) {
 					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $first_day_if_the_month, 'UserAlert.alert_date <=' => $last_day_if_the_month)));
-					return $scheduled_checks;
 				} else {
-					return "0";
+					$scheduled_checks = "0";
 				}
 			}
+			
+			return $scheduled_checks;
+			
+		} else if(isset($start_date) && isset($end_date)) {
+			
+			if(!empty($members)) {
+				
+				if($group_id != 1) {
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $start_date, 'UserAlert.alert_date <=' => $end_date, 'UserAlert.user_id' => $members)));
+				} else {
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $start_date, 'UserAlert.alert_date <=' => $end_date)));
+				}
+				
+			} else {
+				
+				if($group_id == 1) {
+					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $start_date, 'UserAlert.alert_date <=' => $end_date)));
+				} else {
+					$scheduled_checks = 0;
+				}
+			}
+			
+			return $scheduled_checks;
+			
 		} else {		
 			if(!empty($members)) {
 				if($group_id != 1) {
@@ -622,23 +657,21 @@ class UsersController extends AclManagementAppController {
 				} else {
 					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $post['start_date'], 'UserAlert.alert_date <=' => $post['end_date'])));
 				}
-				echo $scheduled_checks;
 			} else {
 				if($group_id == 1) {
 					$scheduled_checks = $this->UserAlert->find('count', array('conditions' => array('UserAlert.alert_date >=' => $post['start_date'], 'UserAlert.alert_date <=' => $post['end_date'])));
-					echo $scheduled_checks;
 				} else {
-					echo "0";
+					$scheduled_checks = "0";
 				}
 			}
+			
+			return $scheduled_checks;
 		}
-		
-		exit();
 	}
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
-	function get_draftChecks_dateConstraints($month = false, $param_user_id = null) {
+	function get_draftChecks_dateConstraints($month = false, $param_user_id = null, $start_date = null, $end_date = null) {
 		$this->loadModel('PerformedCheck');
 		
 		$post = $_POST;
@@ -669,9 +702,16 @@ class UsersController extends AclManagementAppController {
 			$group_id = $user_view_info['User']['group_id'];
 			$user_id = $user_view_info['User']['id'];
 		} else {
-			$user_id = $param_user_id;
-			$user_info = $this->User->findById($user_id);
-			$group_id = $user_info['User']['group_id'];
+			if(isset($param_user_id)) {
+				$user_id = $param_user_id;
+				$user_info = $this->User->findById($user_id);
+				
+				if($user_info['User']['group_id'] != 1) {
+					$members = $this->get_members($user_id, false, true);
+				}
+				
+				$group_id = $user_info['User']['group_id'];
+			}
 		}
 		
 		if($month) {
@@ -681,16 +721,34 @@ class UsersController extends AclManagementAppController {
 				} else {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $first_day_if_the_month, 'PerformedCheck.date <=' => $last_day_if_the_month)));
 				}
-				return $performed_checks;
 			} else {
 				if($group_id == 1) {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $first_day_if_the_month, 'PerformedCheck.date <=' => $last_day_if_the_month)));
-					
-					return $performed_checks;
 				} else {
-					return "0";
+					$performed_checks = "0";
 				}
 			}
+			
+			return $performed_checks;
+			
+		} else if(isset($start_date) && isset($end_date)) {
+			
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $start_date, 'PerformedCheck.date <=' => $end_date, 'PerformedCheck.user_id' => $members)));
+				} else {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $start_date, 'PerformedCheck.date <=' => $end_date)));
+				}
+			} else {
+				if($group_id == 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $start_date, 'PerformedCheck.date <=' => $end_date)));
+				} else {
+					$performed_checks = "0";
+				}
+			}
+			
+			return $performed_checks;
+			
 		} else {
 			if(!empty($members)) {
 				if($group_id != 1) {
@@ -698,24 +756,24 @@ class UsersController extends AclManagementAppController {
 				} else {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $post['start_date'], 'PerformedCheck.date <=' => $post['end_date'])));
 				}
-				echo $performed_checks;
+				
 			} else {
 				if($group_id == 1) {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 0, 'PerformedCheck.status' => 1, 'PerformedCheck.date >=' => $post['start_date'], 'PerformedCheck.date <=' => $post['end_date'])));
 					echo $performed_checks;
 				} else {
-					echo "0";
+					$performed_checks = 0;
 				}
 			}
+			
+			return $performed_checks;
 		}
-		exit();
-
 	}
 	
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
-	function get_performedChecks_dateConstraints($month = false, $param_user_id = null) {
+	function get_performedChecks_dateConstraints($month = false, $param_user_id = null, $start_date = null, $end_date = null) {
 		$this->loadModel('PerformedCheck');
 		
 		$post = $_POST;
@@ -755,7 +813,9 @@ class UsersController extends AclManagementAppController {
 				$members = $this->get_members($user_view_id, false, true);
 			}
 		} else {
-			$members = $this->get_members($param_user_id, false, true);
+			if(isset($param_user_id)) {
+				$members = $this->get_members($param_user_id, false, true);
+			}
 		}
 		
 		$first_day_if_the_month = date('Y-m-1');
@@ -770,16 +830,36 @@ class UsersController extends AclManagementAppController {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month))));
 				}
 				
-				return $performed_checks;
 			} else {
 				
 				if($group_id == 1) {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($first_day_if_the_month), 'PerformedCheck.completion_time <=' => strtotime($last_day_if_the_month))));
-					return $performed_checks;
 				} else {
-					return "0";
+					$performed_checks = 0;
 				}
 			}
+			
+			return $performed_checks;
+			
+		} else if(isset($start_date) && isset($end_date)) {
+			
+			if(!empty($members)) {
+				if($group_id != 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($start_date), 'PerformedCheck.completion_time <=' => strtotime($end_date), 'PerformedCheck.user_id' => $members)));
+				} else {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($start_date), 'PerformedCheck.completion_time <=' => strtotime($end_date))));
+				}
+			
+			} else {
+				if($group_id == 1) {
+					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($post['start_date']), 'PerformedCheck.completion_time <=' => strtotime($post['end_date']))));
+				} else {
+					$performed_checks = 0;
+				}
+			}
+			
+			return $performed_checks;
+			
 		} else {
 			if(!empty($members)) {
 				if($group_id != 1) {
@@ -787,18 +867,18 @@ class UsersController extends AclManagementAppController {
 				} else {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($post['start_date']), 'PerformedCheck.completion_time <=' => strtotime($post['end_date']))));
 				}
-				echo $performed_checks;
+			
 			} else {
 				if($group_id == 1) {
 					$performed_checks = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.status' => 1, 'PerformedCheck.completion_time >=' => strtotime($post['start_date']), 'PerformedCheck.completion_time <=' => strtotime($post['end_date']))));
 					echo $performed_checks;
 				} else {
-					echo "0";
+					$performed_checks = 0;
 				}
 			}
+			
+			return $performed_checks;
 		}
-		
-		exit();
 	}
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
@@ -932,11 +1012,12 @@ class UsersController extends AclManagementAppController {
 			
 			
 			if($flatten_client_groups) {
-				// pulling of clients under 					
+				// pulling of clients under
+				$this->User->unbindModelAll();
 				$clients = $this->User->find('all', 
 					array(
 						'fields' => array('id'), 
-						'conditions' => array('User.client_group_id' => $flatten_client_groups)
+						'conditions' => array('User.client_group_id' => $flatten_client_groups, 'User.group_id' => 2, 'User.status' => 1)
 					)
 				);
 				
@@ -951,11 +1032,13 @@ class UsersController extends AclManagementAppController {
 		
 		// if client groups
 		if($group_id == 4) {
+			
 			// pulling of clients under 					
+			$this->User->unbindModelAll();
 			$clients = $this->User->find('all', 
 				array(
 					'fields' => array('id'), 
-					'conditions' => array('User.client_group_id' => $id)
+					'conditions' => array('User.client_group_id' => $id, 'User.group_id' => 2, 'User.status' => 1)
 				)
 			);
 			
@@ -967,13 +1050,13 @@ class UsersController extends AclManagementAppController {
 			} else {
 				$flatten_clients = array();
 			}
-		}	
+		}
 		
 		if($group_id == 1) {
 			$clients = $this->User->find('all', 
 				array(
 					'fields' => array('id'), 
-					'conditions' => array('User.group_id' => 2)
+					'conditions' => array('User.group_id' => 2, 'User.status' => 1)
 				)
 			);
 			
@@ -1022,9 +1105,9 @@ class UsersController extends AclManagementAppController {
 		
 		if($group_id != 2) {
 			$flatten_clients = $this->get_clients($user_id, false, true);
-			$condition = array('User.parent_id' => $flatten_clients);
+			$condition = array('User.parent_id' => $flatten_clients, 'User.status' => 1);
 		} else {
-			$condition = array('User.parent_id' => $user_id);
+			$condition = array('User.parent_id' => $user_id, 'User.status' => 1);
 		}
 		
 		$this->User->unbindModelAll();
@@ -1726,6 +1809,7 @@ class UsersController extends AclManagementAppController {
 	##############################################################################################################################################
 	
 	public function dashboard() {
+		
 		ob_start();
 		$this->loadModel('Factor');
 		$this->loadModel('UserProfile');
@@ -1761,10 +1845,12 @@ class UsersController extends AclManagementAppController {
 			}
 		}
 		
-		if($user_view_id) {
+		if(($user_view_id && $group_id == 4 && $group_id == 5) || $group_id == 1) {
+			
 			if($user_view_info['User']['group_id'] == 2) {
 				$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $user_view_id)));
 			} else {
+				
 				if($user_view_info['User']['group_id'] == 4 || $user_view_info['User']['group_id'] == 5) {
 					$clients = $this->get_clients($user_view_id, false, true);
 					$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $clients)));
@@ -1772,12 +1858,26 @@ class UsersController extends AclManagementAppController {
 					$clients_data = array();
 					foreach($clients as $client) {
 						$clients_data[$client]['client_info'] = $this->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $client), 'fields' => array('UserProfile.company', 'User.email')));
-						$clients_data[$client]['completed_nutricheck'] = $this->get_performedChecks_dateConstraints(true, $client);
-						$clients_data[$client]['draft_nutricheck'] = $this->get_draftChecks_dateConstraints(true, $client);
-						$clients_data[$client]['scheduled_nutricheck'] = $this->get_scheduledChecks_dateConstraints(true, $client);
+						$clients_data[$client]['completed_nutricheck'] = $this->get_performedChecks_dateConstraints(true, $client, null, null);
+						$clients_data[$client]['draft_nutricheck'] = $this->get_draftChecks_dateConstraints(true, $client, null);
+						$clients_data[$client]['scheduled_nutricheck'] = $this->get_scheduledChecks_dateConstraints(true, $client, null);
 						$clients_data[$client]['members'] = count($this->get_members($client, false, false));
 					}
 				}
+			}
+			
+		} else if($group_id == 4 || $group_id == 5) {
+			
+			$clients = $this->get_clients($user_id, false, true);
+			$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $clients)));
+			
+			$clients_data = array();
+			foreach($clients as $client) {
+				$clients_data[$client]['client_info'] = $this->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $client), 'fields' => array('UserProfile.company', 'User.email')));
+				$clients_data[$client]['completed_nutricheck'] = $this->get_performedChecks_dateConstraints(true, $client, null, null);
+				$clients_data[$client]['draft_nutricheck'] = $this->get_draftChecks_dateConstraints(true, $client, null, null);
+				$clients_data[$client]['scheduled_nutricheck'] = $this->get_scheduledChecks_dateConstraints(true, $client, null, null);
+				$clients_data[$client]['members'] = count($this->get_members($client, false, false));
 			}
 		}
 		
@@ -2217,13 +2317,15 @@ class UsersController extends AclManagementAppController {
 
 		$group_video = $this->Video->findByGroupId($group_id);
 		
-		$performedChecks_dateConstraints = $this->get_performedChecks_dateConstraints(true, null);
-		$draftChecks_dateConstraints = $this->get_draftChecks_dateConstraints(true, null);
-		$scheduledChecks_dateConstraints = $this->get_scheduledChecks_dateConstraints(true, null);
-		
-		$this->set('performedChecks_dateConstraints', $performedChecks_dateConstraints);
-		$this->set('draftChecks_dateConstraints', $draftChecks_dateConstraints);
-		$this->set('scheduledChecks_dateConstraints', $scheduledChecks_dateConstraints);
+		if($group_id == 2) {
+			$performedChecks_dateConstraints = $this->get_performedChecks_dateConstraints(true, null, null, null);		
+			$draftChecks_dateConstraints = $this->get_draftChecks_dateConstraints(true, null, null, null);
+			$scheduledChecks_dateConstraints = $this->get_scheduledChecks_dateConstraints(true, null, null, null);
+			
+			$this->set('performedChecks_dateConstraints', $performedChecks_dateConstraints);
+			$this->set('draftChecks_dateConstraints', $draftChecks_dateConstraints);
+			$this->set('scheduledChecks_dateConstraints', $scheduledChecks_dateConstraints);
+		}
 		
 		if(isset($clients_data)) {
 			$this->set('clients_data', $clients_data);
@@ -2473,6 +2575,53 @@ class UsersController extends AclManagementAppController {
 	
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
+	function get_graph_values() {
+		$this->loadModel('UserProfile');
+		$this->layout  = "ajax_graph";
+		
+		$user_view_id = $_SESSION['user_view_id'];
+		$clients = $this->get_clients($user_view_id, false, true);
+		
+		$clients_data = array();
+		foreach($clients as $client) {
+			
+			$client_info = $this->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $client), 'fields' => array('UserProfile.company', 'User.email')));
+			$clients_data[$client]['client_info'] = $client_info[0];
+			$clients_data[$client]['completed_nutricheck'] = $this->get_performedChecks_dateConstraints(false, $client, $_POST['start_date'], $_POST['end_date']);
+			$clients_data[$client]['draft_nutricheck'] = $this->get_draftChecks_dateConstraints(false, $client, $_POST['start_date'], $_POST['end_date']);
+			$clients_data[$client]['scheduled_nutricheck'] = $this->get_scheduledChecks_dateConstraints(false, $client, $_POST['start_date'], $_POST['end_date']);
+			$clients_data[$client]['members'] = count($this->get_members($client, false, false));
+		}
+		
+		$json_data = json_encode($clients_data);
+		echo $json_data;
+		exit();
+	}
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	function get_widget_values() {		
+		// if "view as" is set
+		$user_view_id = $_SESSION['user_view_id'];
+		
+		$user_view_info = array();
+		if($user_view_id) {
+			$this->User->unbindModelAll();
+			$user_view_info = $this->User->findById($user_view_id);
+		}
+		
+		$widget_data = array();
+		
+		$widget_data['performed_checks'] = $this->get_performedChecks_dateConstraints($month = false, $user_view_id, $_POST['start_date'], $_POST['end_date']);
+		$widget_data['draft_checks'] = $this->get_draftChecks_dateConstraints($month = false, $user_view_id, $_POST['start_date'], $_POST['end_date']);
+		$widget_data['scheduled_checks'] = $this->get_scheduledChecks_dateConstraints($month = false, $user_view_id, $_POST['start_date'], $_POST['end_date']);
+		
+		$json_data = json_encode($widget_data);
+		echo $json_data;
+		exit();
+	}
+	
+	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
+	
 	function reset_view_as() {
 		$this->Session->delete('user_view_id');
 		$this->redirect('/users/dashboard');
@@ -2497,31 +2646,25 @@ class UsersController extends AclManagementAppController {
 			$list_view_selection['client_groups'] = $client_groups;
 			$list_view_selection['clients'] = $clients;
 			
-			$this->Session->write('list_view_selection', $list_view_selection);
-			
 		//group affiliation
 		} else if($group_id == 5) {
 			
 			$client_groups = $this->get_client_groups($user_id, true, false);
-			$client_groups = $this->User->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $client_groups)));
+			$client_groups = $this->User->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $client_groups, 'User.status' => 1)));
 			
 			$clients = $this->get_clients($user_id, true, false);
-			$clients = $this->User->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $clients)));
+			$clients = $this->User->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $clients, 'User.status' => 1)));
 			
 			$list_view_selection['client_groups'] = $client_groups;
 			$list_view_selection['clients'] = $clients;
 			
-			$this->Session->write('list_view_selection', $list_view_selection);
-			
 		//client groups
 		} else if($group_id == 4) {
 			
-			$clients = $this->get_clients($user_id, true, false);
-			$clients = $this->User->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $clients)));
+			$clients = $this->get_clients($user_id, true, false);			
+			$clients = $this->User->UserProfile->find('all', array('conditions' => array('UserProfile.user_id' => $clients, 'User.status' => 1)));
 			
-			$list_view_selection['clients'] = $clients;
-			$this->Session->write('list_view_selection', $list_view_selection);
-			
+			$list_view_selection['clients'] = $clients;			
 		}
 		
 		return $list_view_selection;

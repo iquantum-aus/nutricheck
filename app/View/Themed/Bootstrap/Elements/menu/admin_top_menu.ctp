@@ -34,49 +34,51 @@
 
 <?php 
 	/* --------------------------------- PULLING AND GENERATING OF VIEW AS SELECTION ------------------------------------ */
-	
-		App::import('Controller', 'Users');
-		$User = new UsersController;
-		$User->constructClasses();
-		$view_selections = $User->get_view_selection();
-		$user_view_id = $_SESSION['user_view_id'];
 		
-		$view_selection_list = array();
-		$increment = 0;
-		foreach($view_selections as $group_key => $view_selection) {	
+		if($group_id != 2 && $group_id != 3) {
+			App::uses('UsersController', 'AclManagement.Controller');
+			$User = new UsersController;
+			$User->constructClasses();
+			$view_selections = $User->get_view_selection();
+			$user_view_id = $_SESSION['user_view_id'];
 			
-			$suffix = "";
-			switch($group_key) {
+			$view_selection_list = array();
+			$increment = 0;
+			foreach($view_selections as $group_key => $view_selection) {	
 				
-				case 'group_affiliations':
-					$suffix = "Group Affiliation";
-					break;
-				
-				case 'client_groups':
-					$suffix = "Client Group";
-					break;
-				
-				case 'clients':
-					$suffix = "Client";
-					break;
-				
-			}
-			
-			foreach($view_selection as $user_key => $user_entry) {
-				
-				if(!empty($user_entry['UserProfile']['first_name']) || !empty($user_entry['UserProfile']['last_name']) || !empty($user_entry['User']['email']) || !empty($user_entry['UserProfile']['company'])) {
-				
-					if((!empty($user_entry['UserProfile']['first_name']) && !empty($user_entry['UserProfile']['last_name'])) || !empty($user_entry['UserProfile']['company'])) {
-						if(!empty($user_entry['UserProfile']['company'])) {
-							$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['company']." - ".$suffix;
-						} else {
-							$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['first_name']." ".$user_entry['UserProfile']['last_name']." - ".$suffix;
-						}
-					} else {
-						$view_selection_list[$user_entry['User']['id']] = $user_entry['User']['email']." - ".$suffix;
-					}
+				$suffix = "";
+				switch($group_key) {
 					
-					$increment++;
+					case 'group_affiliations':
+						$suffix = "Group Affiliation";
+						break;
+					
+					case 'client_groups':
+						$suffix = "Client Group";
+						break;
+					
+					case 'clients':
+						$suffix = "Client";
+						break;
+					
+				}
+				
+				foreach($view_selection as $user_key => $user_entry) {
+					
+					if(!empty($user_entry['UserProfile']['first_name']) || !empty($user_entry['UserProfile']['last_name']) || !empty($user_entry['User']['email']) || !empty($user_entry['UserProfile']['company'])) {
+					
+						if((!empty($user_entry['UserProfile']['first_name']) && !empty($user_entry['UserProfile']['last_name'])) || !empty($user_entry['UserProfile']['company'])) {
+							if(!empty($user_entry['UserProfile']['company'])) {
+								$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['company']." - ".$suffix;
+							} else {
+								$view_selection_list[$user_entry['User']['id']] = $user_entry['UserProfile']['first_name']." ".$user_entry['UserProfile']['last_name']." - ".$suffix;
+							}
+						} else {
+							$view_selection_list[$user_entry['User']['id']] = $user_entry['User']['email']." - ".$suffix;
+						}
+						
+						$increment++;
+					}
 				}
 			}
 		}
@@ -138,13 +140,13 @@
 						<?php } ?>
 					</li>
 					
-					<?php if($group_id != 2 || $group_id != 3) { ?>
+					<?php if($group_id != 2 && $group_id != 3) { ?>
 						<li class="menu">
 							<span style="color:#777; margin-top: 14px; float:left; font-weight: bold;">View As:</span>&nbsp;
 							
 							<form method="POST" action="/users/dashboard" id="SelectViewAs">
 								<?php echo $this->Form->input('User.user_view', array('empty' => 'Select User', 'style' => 'margin-top: 8px;', 'selected' => $user_view_id, 'options' => $view_selection_list, 'label' => false, 'div' => false)); ?>
-								<a href="../users/reset_view_as" class="btn btn-danger right">RESET</a>
+								<a href="<?php echo $this->html->url('/', true); ?>users/reset_view_as" class="btn btn-danger right">RESET</a>
 							</form>
 						</li>
 					<?php } ?>
