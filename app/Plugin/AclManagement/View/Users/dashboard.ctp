@@ -392,10 +392,6 @@
 			<?php } ?>
 		</div>
 	</div>
-
-	<?php
-		$iconstyle = ''; //''"margin:10px auto 10px auto;max-width:175px;";
-	?>
 	
 	
 	<div style="position:relative;float:left;width:100%;margin:0;padding:30px;">
@@ -551,14 +547,24 @@
 		
 		// bind form using 'ajaxForm' 
 		$('.ajaxForm').ajaxForm({
+			beforeSubmit: function() {
+				$('.pace').removeClass('pace-inactive').addClass('pace-active');
+			},
 			complete: function (xhr, textStatus) {
 				
 				var return_data = xhr.responseText;
-				return_data = $.parseJSON(return_data);				
+				return_data = $.parseJSON(return_data);
 				
-				$('#get_performedChecks_dateConstraints').html("Current Month's Total: "+return_data.performed_checks);
-				$('#get_draftChecks_dateConstraints').html("Current Month's Total: "+return_data.draft_checks);
-				$('#get_scheduledChecks_dateConstraints').html("Current Month's Total: "+return_data.scheduled_checks);
+				var start_date = $('input[name=start_date]').val();
+				var end_date = $('input[name=end_date]').val();
+				
+				var loaded_date_string = start_date+" - "+end_date+" Total";
+				
+				$('#get_performedChecks_dateConstraints').html(loaded_date_string+": "+return_data.performed_checks);
+				$('#get_draftChecks_dateConstraints').html(loaded_date_string+": "+return_data.draft_checks);
+				$('#get_scheduledChecks_dateConstraints').html(loaded_date_string+": "+return_data.scheduled_checks);
+				
+				$('.pace').removeClass('pace-active').addClass('pace-inactive');
 			}
 		});
 		
@@ -632,7 +638,7 @@
 					
 				},
 				type:'post',
-				url:"<?php echo $this->html->url('/', true); ?>users/get_graph_values"
+				url:"<?php echo FULL_BASE_URL; ?>/users/get_graph_values"
 			});
 			
 			return false;

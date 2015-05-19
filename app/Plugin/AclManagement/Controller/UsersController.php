@@ -1837,23 +1837,22 @@ class UsersController extends AclManagementAppController {
 		}
 		
 		if($group_id == 2) {	
-			$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $user_id)));
+			$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('status' => 1, 'parent_id' => $user_id)));
 		} else {
 			if($group_id == 4 || $group_id == 5) {
 				$clients = $this->get_clients($user_id, false, true);
-				$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $clients)));
+				$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('status' => 1, 'parent_id' => $clients)));
 			}
 		}
 		
 		if(($user_view_id && $group_id == 4 && $group_id == 5) || $group_id == 1) {
 			
 			if($user_view_info['User']['group_id'] == 2) {
-				$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $user_view_id)));
+				$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('status' => 1, 'parent_id' => $user_view_id)));
 			} else {
-				
 				if($user_view_info['User']['group_id'] == 4 || $user_view_info['User']['group_id'] == 5) {
 					$clients = $this->get_clients($user_view_id, false, true);
-					$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('parent_id' => $clients)));
+					$members = $this->User->find('list', array('fields' => array('id', 'id'), 'conditions' => array('status' => 1, 'parent_id' => $clients)));
 				
 					$clients_data = array();
 					foreach($clients as $client) {
@@ -1929,6 +1928,7 @@ class UsersController extends AclManagementAppController {
 		$total_report_stats_last_week = 0;
 		
 		if($group_id == 1 && !$user_view_id) {
+			
 			$total_report_stats_last_week = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $eight_day)));
 
 			$report_stats_last_week[1]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1, 'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $first_day, 'PerformedCheck.completion_time <' => $second_day)));
@@ -1996,8 +1996,7 @@ class UsersController extends AclManagementAppController {
 		
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST WEEK ##########################################
 
-
-
+		
 
 		#################################################### GETTING THE NUMBER OF COMPLETED NUTRICHECK LAST 30 DAYS ##########################################
 
@@ -2042,6 +2041,7 @@ class UsersController extends AclManagementAppController {
 		$total_report_stats_last_thirty_days = 0;
 		
 		if($group_id == 1 && !$user_view_id) {
+			
 			$total_report_stats_last_thirty_days = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_thirty_first_day)));
 
 			$report_stats_last_thirty_days[1]['count'] = $this->PerformedCheck->find('count', array('conditions' => array('PerformedCheck.isComplete' => 1,'PerformedCheck.completion_time !=' => "", 'PerformedCheck.completion_time >=' => $thr_first_day, 'PerformedCheck.completion_time <' => $thr_second_day)));
@@ -2317,7 +2317,7 @@ class UsersController extends AclManagementAppController {
 
 		$group_video = $this->Video->findByGroupId($group_id);
 		
-		if($group_id == 2) {
+		if($group_id == 2 || $user_view_info['User']['group_id'] == 2) {
 			$performedChecks_dateConstraints = $this->get_performedChecks_dateConstraints(true, null, null, null);		
 			$draftChecks_dateConstraints = $this->get_draftChecks_dateConstraints(true, null, null, null);
 			$scheduledChecks_dateConstraints = $this->get_scheduledChecks_dateConstraints(true, null, null, null);
