@@ -340,12 +340,7 @@
 									
 									<h3>Legend</h3>
 									
-									<div class="left span12">
-										<div class="left span12">
-											<div style="background: #F7464A;" class="color-legend"></div>
-											<span class="color-legend-label">Member Count</span>
-										</div>
-										
+									<div class="left span12">										
 										<div class="left span12">
 											<div style="background: #46BFBD;" class="color-legend"></div>
 											<span class="color-legend-label">Completed Nutricheck</span>
@@ -506,16 +501,10 @@
 		<?php
 			foreach($clients_data as $client_data_key => $client_data) {
 				
-				$total_population = $client_data['members'] + $client_data['completed_nutricheck'] + $client_data['draft_nutricheck'] + $client_data['scheduled_nutricheck'];
+				$total_population = $client_data['completed_nutricheck'] + $client_data['draft_nutricheck'] + $client_data['scheduled_nutricheck'];
 				
 				?>
 					var pieData<?php echo $client_data_key; ?> = [
-						{
-							value: <?php echo ($client_data['members']/$total_population) * 100; ?>,
-							color:"#F7464A",
-							highlight: "#FF5A5E",
-							label: "Red"
-						},
 						{
 							value: <?php echo ($client_data['completed_nutricheck']/$total_population) * 100; ?>,
 							color: "#46BFBD",
@@ -598,15 +587,9 @@
 						
 						$('#canvas-holder').append(pie_graph);
 						
-						var total_population = return_data[i].members + return_data[i].completed_nutricheck + return_data[i].draft_nutricheck + return_data[i].scheduled_nutricheck;
+						var total_population = return_data[i].completed_nutricheck + return_data[i].draft_nutricheck + return_data[i].scheduled_nutricheck;
 				
 						var pieData = [
-							{
-								value: (return_data[i].members/total_population) * 100,
-								color:"#F7464A",
-								highlight: "#FF5A5E",
-								label: "Red"
-							},
 							{
 								value: (return_data[i].completed_nutricheck/total_population) * 100,
 								color: "#46BFBD",
