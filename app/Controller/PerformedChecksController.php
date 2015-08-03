@@ -169,7 +169,14 @@ class PerformedChecksController extends AppController {
 				);
 				
 				$user_info = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields' => array('User.*', 'UserProfile.first_name', 'UserProfile.last_name')));
-				$name = $user_info['UserProfile']['first_name']." ".$user_info['UserProfile']['last_name'];
+				
+				$name = "<strong>".$user_info['UserProfile']['first_name']."</strong>";
+				$email = $user_info['User']['email'];
+				
+				$parent_info = array();
+				$parent_info = $this->User->findById($user_info['User']['parent_id']);
+				
+				$company = "<strong>".$parent_info['UserProfile']['company']."</strong>";
 				
 				if(empty($user_info['User']['email'])) {
 					$this->User->unbindModelAll();
@@ -189,13 +196,12 @@ class PerformedChecksController extends AppController {
 				// };
 				
 				if($send_alert) {
-					$email = $user_info['User']['email'];
 					$data_modification = array();
 					$datetime = date("Y-m-d H:i:s");
 					$data_modification['User']['id'] = $user_id;
 					$data_modification['User']['last_alerted'] = $datetime;
 					
-					$result = $this->send($email, $name, $url);
+					$result = $this->send($email, $name, $url, $company);
 					if($result) {
 						$this->User->save($data_modification);
 						echo $email." = 1<br />";
@@ -208,7 +214,7 @@ class PerformedChecksController extends AppController {
 	}
 	
 	
-	function send($email, $name, $url) { 
+	function send($email, $name, $url, $company) { 
 		// endor('phpmailer'.DS.'class.phpmailer'); 
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 
@@ -222,7 +228,7 @@ class PerformedChecksController extends AppController {
 		$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 		$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-		$mail->From = "Nutricheck Info <noreply@iquantum.com.au>"; 
+		$mail->From = "Nutricheck Info <noreply@iquantum.com.au>";
 		// $mail->FromName = "nomail@nutricheck.com.au"; 
 		$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
 		$mail->AddAddress($email, $email);
@@ -233,8 +239,24 @@ class PerformedChecksController extends AppController {
 
 		$mail->IsHTML(true);  // set email format to HTML 
 		
-		$mail->Subject = "Incomplete Questionnaire";
-		$mail->Body    = "You have an incomplete NutriCheck please click <a href='".$url."'>here</a> to go back to the system and complete the check."; 
+		$mail->Subject = "NutriCheck Online Assessment";
+		$mail->Body    = "
+			You have an incomplete NutriCheck please click <a href='".$url."'>here</a> to go back to the system and complete the check.
+			
+			
+			Hi ".$name."
+ 
+			Your Practitioner ".$company." has requested you complete the online NutriCheck Assessment. 
+			 
+			NutriCheck is a Nutritional and Metabolic Assessment Program. It allows for your Practitioner to develop a specific treatment program of nutritional supplementation and dietary advice for living a healthier lifestyle.
+			 
+			To complete the online assessment, click <a href='".$url."'>here</a>.
+			 
+			Kind Regards,
+			The NutriCheck Team
+
+			
+		"; 
 
 		if($mail->Send()) {
 			return true;

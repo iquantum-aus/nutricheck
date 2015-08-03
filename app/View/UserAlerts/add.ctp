@@ -23,8 +23,8 @@
 		<?php } ?>
 		
 		<div class="input text">
-			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform Nutricheck click <here> to perform test")); ?>
-			<small><strong>Note:</strong> <i>Do not change/replace the tag <strong>"&#60;here&#62;"</strong> since it's a constant value that will be replaced by the system</i></small>
+			<?php echo $this->Form->input('message', array('div' => false, 'value' => "Hi <firstname>\n\nYour Practitioner at <company> requests that you complete an online NutriCheck re-assessment.\n\nThis will enable your Practitioner to review your results against your previous NutriCheck assessment and enable management of your ongoing lifestyle and nutritional requirements. Once completed, your Practitioner will be notified of your results.\n\nTo login please click <here>.\n\nKind Regards\nThe Nutricheck Team")); ?>
+			<small><strong>Note:</strong> <i>Do not change/replace the tag <strong>"&#60;here&#62;"</strong> since it's a constant value that will be replaced by the system.<br />The tag <strong>&#60;company&#62; and &#60;firstname&#62;</strong> is an optional value so you can remove them as you desire and everything associated to it.</i></small>
 		</div>
 		
 		<?php echo $this->Form->input('alert_date', array('id' => "datepicker", 'type' => 'text')); ?>

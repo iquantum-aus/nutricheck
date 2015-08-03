@@ -69,6 +69,8 @@ class UserAlertsController extends AppController {
 			$existence = $this->UserAlert->find('count', array('conditions' => array('UserAlert.status' => 1, 'UserAlert.user_id' => $this->request->data['UserAlert']['user_id'], 'UserAlert.alert_date' => $this->request->data['UserAlert']['alert_date'])));
 			
 			$this->request->data['UserAlert']['message'] = str_replace("<here>", '&#60;here&#62;', $this->request->data['UserAlert']['message']);
+			$this->request->data['UserAlert']['message'] = str_replace("<firstname>", '&#60;firstname&#62;', $this->request->data['UserAlert']['message']);
+			$this->request->data['UserAlert']['message'] = str_replace("<company>", '&#60;company&#62;', $this->request->data['UserAlert']['message']);
 			
 			if($existence == 0) {
 				$this->UserAlert->create();
@@ -252,13 +254,32 @@ class UserAlertsController extends AppController {
 	
 	function nutricheck_alert_sender($user_id, $alert_id) {
 		App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
+		$this->loadModel('User');
 		$this->layout = "ajax";
 		
-		$this->UserAlert->User->unbindModelAll();
-		$user_info = $this->UserAlert->User->findById($user_id);
+		// $this->UserAlert->User->unbindModelAll();
+		
+		$this->UserAlert->User->unbindModel(
+			array(
+				'hasMany' => array(
+					'Answer', 'PerformedCheck', 'UserAlert'
+				)
+			)
+		);
+		
+		$user_info = $this->User->findById($user_id);
 		$email = $user_info['User']['email'];
 		
-		$this->UserAlert->User->unbindModelAll();
+		// $this->UserAlert->User->unbindModelAll();
+		
+		$this->User->unbindModel(
+			array(
+				'hasMany' => array(
+					'Answer', 'PerformedCheck', 'UserAlert'
+				)
+			)
+		);
+		
 		$parent_id = $user_info['User']['parent_id'];
 		$parent_info = $this->UserAlert->User->findById($parent_id);
 		
@@ -268,10 +289,15 @@ class UserAlertsController extends AppController {
 		}
 		
 		$hash_value = $user_info['User']['hash_value'];
+		
 		$url = "<a href=http://".$_SERVER['SERVER_NAME']."/questions/nutrient_check?hash_value=".$hash_value."&invitation=true>here</a>";
+		$firstname = "<strong>".$user_info['UserProfile']['first_name']."</strong>";
+		$company = "<strong>".$parent_info['UserProfile']['company']."</strong>";
 		
 		$alert_info = $this->UserAlert->findById($alert_id);
 		$alert_info['UserAlert']['message'] = str_replace("&#60;here&#62;", $url, $alert_info['UserAlert']['message']);
+		$alert_info['UserAlert']['message'] = str_replace("&#60;firstname&#62;", $firstname, $alert_info['UserAlert']['message']);
+		$alert_info['UserAlert']['message'] = str_replace("&#60;company&#62;", $company, $alert_info['UserAlert']['message']);
 		
 		if($email) {
 			$mail = new PHPMailer();

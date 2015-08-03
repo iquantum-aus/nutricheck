@@ -58,7 +58,7 @@
 					async:true,
 					data: "hash_value="+selectedUser+"&factors="+selectedFactor,
 					dataType:'html',
-					success:function (data, textStatus) {
+					success:function (data, textStatus) {						
 						if(data == 1) {
 							alert('Nutricheck was succesfully sent');
 						} else {
