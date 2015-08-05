@@ -13,9 +13,9 @@
 			<tr>
 				<th>Client Name</th>
 				<th style="text-align: center;">Number of Members</th>
-				<th style="text-align: center;">Number of Completed Nutrichecks</th>
-				<th style="text-align: center;">Draft Nutrichecks</th>
-				<th style="text-align: center;">Scheduled Nutrichecks</th>
+				<th style="text-align: center;">Number of Completed NutriChecks</th>
+				<th style="text-align: center;">Draft NutriChecks</th>
+				<th style="text-align: center;">Scheduled NutriChecks</th>
 			</tr>
 			
 			<?php
@@ -51,17 +51,17 @@
 			
 			<div class="left span12">
 				<div style="background: #46BFBD;" class="color-legend"></div>
-				<span class="color-legend-label">Completed Nutricheck</span>
+				<span class="color-legend-label">Completed NutriCheck</span>
 			</div>
 			
 			<div class="left span12">
 				<div style="background: #FDB45C;" class="color-legend"></div>
-				<span class="color-legend-label">Draft Nutricheck</span>
+				<span class="color-legend-label">Draft NutriCheck</span>
 			</div>
 			
 			<div class="left span12">
 				<div style="background: #949FB1;" class="color-legend"></div>
-				<span class="color-legend-label">Schedule Nutricheck</span>
+				<span class="color-legend-label">Schedule NutriCheck</span>
 			</div>
 		</div>
 		

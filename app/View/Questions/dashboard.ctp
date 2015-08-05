@@ -88,9 +88,9 @@
 </div>
 
 <div class="hidden">
-	<a class="fancybox" href="#aboutNutricheck">Go</a>
-	<div id="aboutNutricheck" style="width: 500px;">
-		Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
+	<a class="fancybox" href="#aboutNutriCheck">Go</a>
+	<div id="aboutNutriCheck" style="width: 500px;">
+		NutriCheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as NutriCheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
 	</div>
 </div>
 
@@ -110,17 +110,17 @@
 				var selected_factor = $('#selectedFactor').val();
 				
 				if(selected_factor != "") {
-					$('#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_factor);
+					$('#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_factor);
 				}
 				
 				if(user_hash != "") {
 					if(selected_factor != "") {
-						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+user_hash+"&factors="+selected_values);
+						$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+user_hash+"&factors="+selected_values);
 					} else {
-						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+user_hash);
+						$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+user_hash);
 					}
 				} else {
-					$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
+					$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
 				}
 				
 			}
@@ -130,20 +130,20 @@
 				
 				$('#selectedUser').val(chosen_value);
 				if(chosen_value != "") {
-					$('#reportsNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
+					$('#reportsNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
 					
 					if(selected_factors == "") {
-						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?hash_value="+chosen_value);
+						$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check?hash_value="+chosen_value);
 					} else {
-						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+chosen_value+"&factors="+selected_factors);
+						$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+chosen_value+"&factors="+selected_factors);
 					}
 				} else {
-					$('#reportsNutricheck').attr("href", "#");
+					$('#reportsNutriCheck').attr("href", "#");
 					
 					if(selected_factors == "") {
-						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
+						$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
 					} else {
-						$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors");
+						$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors");
 					}
 				}
 			}

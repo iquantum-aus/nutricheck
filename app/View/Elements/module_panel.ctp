@@ -11,19 +11,19 @@
 */
 ?>
 	<?php if($this->Session->read('Auth.User.group_id') != 1 && $this->Session->read('Auth.User.group_id') != 4 && $this->Session->read('Auth.User.group_id') != 5) { ?>
-		<a href="/questions/nutrient_check" id="startNutricheck" class="dashbutton-big dashred">
+		<a href="/questions/nutrient_check" id="startNutriCheck" class="dashbutton-big dashred">
 			<div><img src="/img/button_icon_start.png" /></div>
 			<span>START NUTRICHECK</span>
 		</a>
 		
 		<?php if($this->Session->read('Auth.User.group_id') != 3) { ?>
-			<a href="" id="sendNutricheckButton" class="dashbutton-small dashgreen">
+			<a href="" id="sendNutriCheckButton" class="dashbutton-small dashgreen">
 			<div><img src="/img/button_icon_send.png" /></div>
 			<span>SEND NUTRICHECK</span>
 			</a>
 		<?php } ?>
 		
-		<a target="_blank" id="printNutricheck" href="/questions/print_question_list<?php if($this->Session->read('Auth.User.group_id') == 3) {  echo "?hash_value=".$this->Session->read('Auth.User.hash_value'); } ?>" class="dashbutton-small dashgreen">
+		<a target="_blank" id="printNutriCheck" href="/questions/print_question_list<?php if($this->Session->read('Auth.User.group_id') == 3) {  echo "?hash_value=".$this->Session->read('Auth.User.hash_value'); } ?>" class="dashbutton-small dashgreen">
 			<div><img src="/img/button_icon_print.png" /></div>
 			<span>PRINT NUTRICHECK</span>
 		</a>
@@ -34,7 +34,7 @@
 				<span>QUICK ENTRY</span>
 			</a>
 			
-			<a href="#" id="reportsNutricheck" class="dashbutton dashbutton-small dashgreen">
+			<a href="#" id="reportsNutriCheck" class="dashbutton dashbutton-small dashgreen">
 				<div><img src="/img/button_icon_report.png" /></div>
 				<span>REPORTS</span>
 			</a>
@@ -45,7 +45,7 @@
 <script>
 	$(document).ready( function () {
 		
-		$('#sendNutricheckButton').click( function () {
+		$('#sendNutriCheckButton').click( function () {
 			
 			var selectedUser = $('#selectedUser').val();
 			var selectedFactor = $('#selectedFactor').val();
@@ -60,7 +60,7 @@
 					dataType:'html',
 					success:function (data, textStatus) {						
 						if(data == 1) {
-							alert('Nutricheck was succesfully sent');
+							alert('NutriCheck was succesfully sent');
 						} else {
 							alert(data);
 						}

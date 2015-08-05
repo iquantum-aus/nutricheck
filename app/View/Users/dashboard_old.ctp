@@ -124,7 +124,7 @@
 			
 			<div style="height: 293px; width: 228px;" class="item">
 				<div class="topYellowOccupier">
-					How <span>Nutricheck</span> Works
+					How <span>NutriCheck</span> Works
 				</div>
 				
 				<div class="content">Still unsure of how to best utilize the nutricheck app?<br />Look no further...</div>
@@ -162,9 +162,9 @@
 </div>
 
 <div class="hidden">
-	<a class="fancybox" href="#aboutNutricheck">Go</a>
-	<div id="aboutNutricheck" style="width: 500px;">
-		Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
+	<a class="fancybox" href="#aboutNutriCheck">Go</a>
+	<div id="aboutNutriCheck" style="width: 500px;">
+		NutriCheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as NutriCheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
 	</div>
 </div>
 

@@ -1,5 +1,5 @@
-<?php if($this->Session->read('Auth.User.id') != "") { ?>
-	<?php if($this->Session->read('Auth.User.can_answer') == 0) { ?>
+<?php if($logged_in_user_info['User']['can_answer'] != "") { ?>
+	<?php if($logged_in_user_info['User']['can_answer'] == 0) { ?>
 		<h1 style="float: left; width: 100%; font-size: 50px; text-align: center;">You can't Answer</h1>
 	<?php } else { ?>
 		<?php 

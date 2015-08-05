@@ -353,6 +353,8 @@ class QuestionsController extends AppController {
 		$behalfUserId = $this->Session->read('behalfUserId');
 		$full_url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];		
 		
+		$logged_in_user_info = $this->Question->User->findById($user_info['id']);
+		
 		if($this->Session->read('Auth.User.group_id') == 2) {
 			$performingUser = $this->Question->User->findById($behalfUserId);
 		} else {
@@ -396,7 +398,7 @@ class QuestionsController extends AppController {
 			}
 		}
 		
-		if($user_info['can_answer'] != 1) {
+		if($logged_in_user_info['User']['can_answer'] != 1) {
 			$this->Session->setFlash(__('Please wait for the notification through email that you can answer again.'));
 			
 			if(!isset($_GET['source'])) {
@@ -675,8 +677,8 @@ class QuestionsController extends AppController {
 								$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 								$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-								$mail->From = "NutirCheck Info <noreply@nutricheck.com.au>";
-								$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@iquantum.com.au"); 
+								$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
+								$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org"); 
 								$mail->AddAddress($email, $email);
 								
 								$mail->CharSet  = 'UTF-8'; 
@@ -702,7 +704,8 @@ class QuestionsController extends AppController {
 									This patient's Assessment Report is now ready to view and can be downloaded from the NutriCheck Dashboard. To login, click <a href='".$report_url."'>here</a>
 									<br />
 									<br />
-									Kind Regards
+									Kind Regards<br />
+									The NutriCheck Team
 								"; 
 								
 								$mail->Send();
@@ -832,6 +835,7 @@ class QuestionsController extends AppController {
 		$this->set('method', $method);
 		$this->set('users_list', $formatted_user_list);
 		$this->set('questions', $questions);
+		$this->set('logged_in_user_info', $logged_in_user_info);
 		
 		if(!empty($performingUser)) {
 			if(!$performingUser['User']['confirmed_PrivacyPolicy']) {
@@ -1062,10 +1066,7 @@ class QuestionsController extends AppController {
 			}
 			
 			$subject = "Online NutriCheck Re-Assessment";
-			$mail_body = "Hi ".$first_name."<br /><br />Your Practitioner at <strong>".$company."</strong> requests that you complete an online NutriCheck re-assessment.<br /><br />This will enable your Practitioner to review your results against your previous NutriCheck assessment and enable management of your ongoing lifestyle and nutritional requirements. Onece completed, your Practitioner will be notified of your results.<br /><br />To login please <a href='".$url."'>Click Here</a><br /><br />Kind Regards<br />The Nutricheck Team";
-			
-			$this->var_debug($mail_body);
-			exit();
+			$mail_body = "Hi ".$first_name."<br /><br />Your Practitioner at <strong>".$company."</strong> requests that you complete an online NutriCheck re-assessment.<br /><br />This will enable your Practitioner to review your results against your previous NutriCheck assessment and enable management of your ongoing lifestyle and nutritional requirements.<br /><br />Once completed, your Practitioner will be notified of your results.<br /><br />To login please <a href='".$url."'>Click Here</a><br /><br />Kind Regards<br /><strong>The NutriCheck Team</strong>";
 			
 			$mail = new PHPMailer();
 			$mail->IsSMTP(); // we are going to use SMTP
@@ -1077,9 +1078,9 @@ class QuestionsController extends AppController {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "Nutricheck Info <noreply@nutricheck.com.au>";
+			$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
 			// $mail->FromName = "nomail@nutricheck.com.au";
-			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
+			$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org");
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 

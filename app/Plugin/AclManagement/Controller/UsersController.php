@@ -107,6 +107,8 @@ class UsersController extends AclManagementAppController {
 				$user_existence_id = $this->User->get_id($this->request->data['User']['username']);
 				$user_existence_info = $this->User->findById($user_existence_id);
 				
+				$user_existence_parent_info = $this->User->findById($user_existence_info['User']['id']);
+				
 				$data = array(
 					"user_id" => $user_existence_id,
 					"ip_address" => $_SERVER['REMOTE_ADDR'],
@@ -129,7 +131,19 @@ class UsersController extends AclManagementAppController {
 					// ------------------------------------- if account is valid but credentials is incorrect + when t reached the 20x allowed attemps ---------------------------------------- //
 					// $existence_performedCheckCount = $valid_maximum_attempt;
 					if($existence_performedCheckCount >= $valid_maximum_attempt) {
-						$message = "The user with the ID# ".$user_existence_id." has been deactivated due to multiple attemps to login the account";
+						$message = "
+							Hi <strong>".$user_existence_parent_info['UserProfile']['company']."</strong>
+							The following user has been deactivated due to multiple attempts to log into the account.
+							<br /><br />
+							<strong>
+								Username: ".$user_existence_info['User']['username']."<br />
+								I.D: ".$user_existence_info['User']['id']."<br />
+								Email: ".$user_existence_info['User']['email']."
+							</strong>
+							<br /><br />
+							Kind regards,
+							The NutriCheck Team
+						";
 						
 						//disabling of user
 						$user_deactivation = array();
@@ -138,7 +152,7 @@ class UsersController extends AclManagementAppController {
 						$user_deactivation['User']['id'] = $user_existence_id;
 						$this->User->save($user_deactivation);
 						
-						$to = Configure::read('Admin.email');
+						$to = $user_existence_parent_info['User']['email'];
 						$subject = 'The user has been deactivated';			
 						
 						$mail = new PHPMailer(); 
@@ -151,9 +165,7 @@ class UsersController extends AclManagementAppController {
 						$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-						$mail->From = 'NutriCheck Info <noreply@nutricheck.com.au>'; 
-						// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-						// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
+						$mail->From = 'NutriCheck Info <info@nutritionmedicine.org>';
 						$mail->AddAddress($to, $to);
 						
 						$mail->CharSet  = 'UTF-8'; 
@@ -1217,6 +1229,13 @@ class UsersController extends AclManagementAppController {
 				
 				$this->User->create();
 				if ($this->User->save($this->request->data)) {
+					$user_id = $this->User->id;
+					
+					$newlyCreated_userInfo = $this->User->findById($user_id);
+					
+					if($newlyCreated_userInfo['User']['group_id'] == 3) {
+						$newlyCreated_parentInfo = $this->User->findById($newlyCreated_userInfo['User']['parent_id']);
+					}
 					
 					if(!isset($this->request->data['create_and_answer'])) {
 						
@@ -1247,9 +1266,8 @@ class UsersController extends AclManagementAppController {
 							$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 							$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-							$mail->From = "Nutricheck Info <noreply@nutricheck.com.au>";
-							// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-							$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
+							$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
+							$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org");
 							$mail->AddAddress($email, $email);
 							
 							$mail->CharSet  = 'UTF-8'; 
@@ -1258,8 +1276,9 @@ class UsersController extends AclManagementAppController {
 							$mail->IsHTML(true);  // set email format to HTML 
 							
 							$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company."<br />Email: ".$source_email;
-							$mail->Subject = "You've been added to the system";
+							$mail->Subject = "NutriCheck Online Assessment";
 							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
+							
 							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password.$sender_details;
 							$mail->Body    = $message;
 							
@@ -1267,7 +1286,6 @@ class UsersController extends AclManagementAppController {
 						}
 					}
 					
-					$user_id = $this->User->id;
 					$this->request->data['UserProfile']['user_id'] = $user_id;
 					
 					// saving user profile side by side with user creation
@@ -1489,9 +1507,9 @@ class UsersController extends AclManagementAppController {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-			$mail->From = 'NutriCheck Info <noreply@nutricheck.com.au>'; 
+			$mail->From = 'NutriCheck Info <info@nutritionmedicine.org>'; 
 			// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-			$mail->AddReplyTo("noreply@nutricheck.com.au", "noreply@nutricheck.com.au"); 
+			$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org"); 
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 
@@ -1551,7 +1569,7 @@ class UsersController extends AclManagementAppController {
 				$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 				$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 				
-				$mail->From = 'NutriCheck Info <noreply@nutricheck.com.au>'; 
+				$mail->From = 'NutriCheck Info <info@nutritionmedicine.org>'; 
 				// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
 				// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 				$mail->AddAddress($email, $email);
@@ -1622,14 +1640,14 @@ class UsersController extends AclManagementAppController {
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
     public function forgot_password() {
+		$this->layout = "ajax";
         if ($this->request->is('post')) {
             //$this->autoRender = false;
             $email = $this->request->data["User"]["email"];
             if ($this->User->forgotPassword($email)) {
-                $this->Session->setFlash(__('Please check your email for instructions on resetting your password.'), 'alert/success');
-                $this->redirect(array('action' => 'login'));
+                $this->redirect('/users/login?forgot=success');
             } else {
-                $this->Session->setFlash(__('Your email is invalid or not registered.'), 'alert/error');
+                $this->Session->setFlash(__('Your email is invalid or not registered.'));
             }
         }
     }
@@ -1638,34 +1656,38 @@ class UsersController extends AclManagementAppController {
 	/* ----------------------------------------------------------------------------------------------------------- SECTION SEPARATOR -----------------------------------------------------------------------------------------------*/
 	
     public function activate_password($ident=null, $activate=null, $expiredTime) {//echo $ident.'  '.$activate;
-        $nowTime = strtotime(date('Y-m-d H:i'));
+        $this->layout = "ajax";
+		$nowTime = strtotime(date('Y-m-d H:i'));
         if(empty($expiredTime) || $nowTime > $expiredTime){
             $this->Session->setFlash(__('Your link had been expired.'), 'alert/error');
             $this->redirect(array('action' => 'login'));
         }
 
         if ($this->request->is('post')) {
-            if (!empty($this->request->data['User']['ident']) && !empty($this->request->data['User']['activate'])) {
-                $this->set('ident', $this->request->data['User']['ident']);
-                $this->set('activate', $this->request->data['User']['activate']);
+			if($this->request->data['User']['password'] == $this->request->data['User']['password2']) {			
+				if (!empty($this->request->data['User']['ident']) && !empty($this->request->data['User']['activate'])) {
+					$this->set('ident', $this->request->data['User']['ident']);
+					$this->set('activate', $this->request->data['User']['activate']);
 
-                $return = $this->User->activatePassword($this->request->data);
-                if ($return) {
-                    $this->User->set($this->request->data);
-                    if ($this->User->validates()) {
-                        $this->request->data['User']['id'] = $this->request->data['User']['ident'];
-                        if($this->User->saveAll($this->request->data['User'], array('validate'=>false))){
-                            $this->Session->setFlash(__('New password is saved.'), 'alert/success');
-                            $this->redirect(array('action' => 'login'));
-                        }
-                    }else{
-                        $errors = $this->User->validationErrors;
-                        $this->Session->setFlash(__('Error Occur!'), 'alert/error');
-                    }
-                } else {
-                    $this->Session->setFlash(__('Sorry password could not be saved. Please check your email and click the password reset link again.'), 'alert/error');
-                }
-            }
+					$return = $this->User->activatePassword($this->request->data);
+					if ($return) {
+						$this->User->set($this->request->data);
+						if ($this->User->validates()) {
+							$this->request->data['User']['id'] = $this->request->data['User']['ident'];
+							if($this->User->saveAll($this->request->data['User'], array('validate'=>false))){
+								$this->redirect('/users/login?change_password=success');
+							}
+						}else{
+							$errors = $this->User->validationErrors;
+							$this->Session->setFlash(__('Error Occur!'), 'alert/error');
+						}
+					} else {
+						$this->Session->setFlash('Sorry password could not be saved. Please check your email and click the password reset link again.');
+					}
+				}
+            } else {
+				$this->Session->setFlash("The passwords didn't match");
+			}
         }
         $this->set(compact('ident', 'activate'));
     }

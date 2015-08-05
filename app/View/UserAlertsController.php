@@ -260,7 +260,7 @@ class UserAlertsController extends AppController {
 		$mail->Username = "greg@iquantum.com.au";
 		$mail->Password = "z_Cb_u7etC2ZUJnziGME-w"; 'ssl' also accepted
 
-		$mail->From = "Nutricheck Info <noreply@nutricheck.com.au>";
+		$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
 		// $mail->FromName = "nomail@nutricheck.com.au";
 		// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au");
 		$mail->AddAddress($email, $email);
@@ -270,8 +270,8 @@ class UserAlertsController extends AppController {
 
 		$mail->IsHTML(true);  // set email format to HTML 
 		
-		$mail->Subject = "Nutricheck Invitation";
-		$mail->Body    = "You have been sent with an invitation to perform Nutricheck click <a href='".$url."'>here</a> to perform test"; 
+		$mail->Subject = "NutriCheck Invitation";
+		$mail->Body    = "You have been sent with an invitation to perform NutriCheck click <a href='".$url."'>here</a> to perform test"; 
 		
 		if($mail->Send()) {
 			echo "1";

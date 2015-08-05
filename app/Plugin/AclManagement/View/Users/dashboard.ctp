@@ -175,7 +175,7 @@
 					
 						<div id="nutriCheckCompleted_dateConstraints" class="tri-widget left span4">
 							<div class="left dashboard-widget">
-								<center><h3>Completed Nutrichecks</h3></center>
+								<center><h3>Completed NutriChecks</h3></center>
 								
 								<?php /*
 									<div class="left span12">
@@ -206,7 +206,7 @@
 						
 						<div id="nutriCheck_tobeCompleted" class="left span4 tri-widget">
 							<div class="dashboard-widget left" style="margin: 0% 5%;">
-								<center><h3>Draft Nutrichecks</h3></center>
+								<center><h3>Draft NutriChecks</h3></center>
 								
 								<?php /*
 								<div class="left span12">
@@ -236,7 +236,7 @@
 						
 						<div id="nutriCheck_scheduled" class="left span4 tri-widget">
 							<div class="right dashboard-widget">
-								<center><h3>Scheduled Nutrichecks</h3></center>
+								<center><h3>Scheduled NutriChecks</h3></center>
 								
 								<?php /*
 								<div class="left span12">
@@ -308,9 +308,9 @@
 											<tr>
 												<th>Client Name</th>
 												<th style="text-align: center;">Number of Members</th>
-												<th style="text-align: center;">Number of Completed Nutrichecks</th>
-												<th style="text-align: center;">Draft Nutrichecks</th>
-												<th style="text-align: center;">Scheduled Nutrichecks</th>
+												<th style="text-align: center;">Number of Completed NutriChecks</th>
+												<th style="text-align: center;">Draft NutriChecks</th>
+												<th style="text-align: center;">Scheduled NutriChecks</th>
 											</tr>
 											
 											
@@ -343,17 +343,17 @@
 									<div class="left span12">										
 										<div class="left span12">
 											<div style="background: #46BFBD;" class="color-legend"></div>
-											<span class="color-legend-label">Completed Nutricheck</span>
+											<span class="color-legend-label">Completed NutriCheck</span>
 										</div>
 										
 										<div class="left span12">
 											<div style="background: #FDB45C;" class="color-legend"></div>
-											<span class="color-legend-label">Draft Nutricheck</span>
+											<span class="color-legend-label">Draft NutriCheck</span>
 										</div>
 										
 										<div class="left span12">
 											<div style="background: #949FB1;" class="color-legend"></div>
-											<span class="color-legend-label">Schedule Nutricheck</span>
+											<span class="color-legend-label">Schedule NutriCheck</span>
 										</div>
 									</div>
 									
@@ -459,12 +459,12 @@
 	</div>
 
 	<div class="hidden">
-		<a class="fancybox" href="#aboutNutricheck">Go</a>
-		<div id="aboutNutricheck" style="width: 500px;">
-			Nutricheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as Nutricheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
+		<a class="fancybox" href="#aboutNutriCheck">Go</a>
+		<div id="aboutNutriCheck" style="width: 500px;">
+			NutriCheck is a Copyright program owned by Nimrose Pty Ltd (Inc in Qld) ACN: 10952271, trading as NutriCheck, 961 Blunder Road, Doolandella, Q. 4077 Ph: (07)3879 6555. No part of this program may be used without prior license agreement.
 		</div>
 		
-		<div id="faqNutricheck" style="width: 700px;">
+		<div id="faqNutriCheck" style="width: 700px;">
 			<h2>NutriCheck FAQ</h2>
 
 			<div class="textBelowsmall">What is NutriCheck?</div>
@@ -570,7 +570,7 @@
 					return_data = $.parseJSON(data);
 					$('#canvas-holder').html('');
 					
-					var table_string = "<table class='table table-striped'><tr><th>Client Name</th><th style='text-align: center;'>Number of Members</th><th style='text-align: center;'>Number of Completed Nutrichecks</th><th style='text-align: center;'>Draft Nutrichecks</th><th style='text-align: center;'>Scheduled Nutrichecks</th></tr>";
+					var table_string = "<table class='table table-striped'><tr><th>Client Name</th><th style='text-align: center;'>Number of Members</th><th style='text-align: center;'>Number of Completed NutriChecks</th><th style='text-align: center;'>Draft NutriChecks</th><th style='text-align: center;'>Scheduled NutriChecks</th></tr>";
 					
 					for (i in return_data) {
 						
@@ -659,10 +659,10 @@
         });
 		
 		<?php if(!empty($behalfUserId)) { ?>
-			$('#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value=<?php echo $behalfUserId; ?>");
-			$('#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value=<?php echo $behalfUserId; ?>");
+			$('#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value=<?php echo $behalfUserId; ?>");
+			$('#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value=<?php echo $behalfUserId; ?>");
 			$('#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?hash_value=<?php echo $behalfUserId; ?>");
-			$('#reportsNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value=<?php echo $behalfUserId; ?>");
+			$('#reportsNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value=<?php echo $behalfUserId; ?>");
 		<?php } ?>
 		
 		$(".moduleInputHolder .chosen-select").chosen().change( function () {
@@ -678,22 +678,22 @@
 				
 				if(selected_factor != "") {
 					if(user_hash != "") {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+user_hash+"&factors="+selected_values);
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+user_hash+"&factors="+selected_values);
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+user_hash+"&factors="+selected_values);
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+user_hash+"&factors="+selected_values);
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?hash_value="+user_hash+"&factors="+selected_values);
 					} else {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?factors="+selected_values);
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_values);
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?factors="+selected_values);
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_values);
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?factors="+selected_values);
 					}
 				} else {
 					if(user_hash != "") {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+user_hash);
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+user_hash);
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+user_hash);
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+user_hash);
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?hash_value="+user_hash);
 					} else {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list");
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check");
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list");
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe");
 					}
 				}
@@ -704,27 +704,27 @@
 				$('#selectedUser').val(chosen_value);
 				
 				if(chosen_value != "") {
-					$('#reportsNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
+					$('#reportsNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/users/nutricheck_activity/?hash_value="+chosen_value);
 					
 					if(selected_factors == "") {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+chosen_value);
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+chosen_value);
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/?hash_value="+chosen_value);
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+chosen_value);
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?hash_value="+chosen_value);
 					} else {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+chosen_value+"&factors="+selected_factors);
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+chosen_value+"&factors="+selected_factors);
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?hash_value="+chosen_value+"&factors="+selected_factors);
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?hash_value="+chosen_value+"&factors="+selected_factors);
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?hash_value="+chosen_value+"&factors="+selected_factors);
 					}
 				} else {
-					$('#reportsNutricheck').attr("href", "");
+					$('#reportsNutriCheck').attr("href", "");
 					
 					if(selected_factors == "") {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/");
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list");
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/");
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list");
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe");
 					} else {
-						$('a#startNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?factors="+selected_factors);
-						$('a#printNutricheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_factors);
+						$('a#startNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/nutrient_check/factors?factors="+selected_factors);
+						$('a#printNutriCheck').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/print_question_list?factors="+selected_factors);
 						$('a#quickEntry').attr("href", "http://<?php echo $_SERVER['SERVER_NAME']; ?>/questions/quickentry_iframe?factors="+selected_factors);
 					}
 				}

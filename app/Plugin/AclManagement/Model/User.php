@@ -279,8 +279,11 @@ class User extends AclManagementAppModel {
     }
 
     function forgotPassword($email) {
-        $user = $this->find('first', array("conditions" => array("User.email"=> $email)));
-        if ($user) {
+        App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
+		$user = $this->find('first', array("conditions" => array("User.email"=> $email)));
+        
+		
+		if ($user) {
             $id = $user['User']['id'];
             $password = $user['User']['password'];
 
@@ -289,22 +292,59 @@ class User extends AclManagementAppModel {
             $expiredTime = strtotime(date('Y-m-d H:i', strtotime('+24 hours')));
 
             $link = Router::url("/users/activate_password/$id/$activate_key/$expiredTime", true);
-            $link = "<a href='".$link."' target='_blank'>".$link."</a>";
+            $url = "<a href='".$link."' target='_blank'>".$link."</a>";
+            $firstname = $user['UserProfile']['first_name'];
+            
+			// alerting the created user about the creation of his/her account - only if email address exists
+			$mail = new PHPMailer();
+			$mail->IsSMTP(); // we are going to use SMTP
+			$mail->IsHTML(true);
+			$mail->Host = 'smtp.mandrillapp.com';  // Specify main and backup server
+			$mail->SMTPAuth = true;                               // Enable SMTP authentication
+			$mail->Port = 587;     
+			$mail->Username = "greg@iquantum.com.au";
+			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
+			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-            $message = __("Forgot your password, %s ?<br> We received a request to reset the password for your account (%s) .<br> If you want to reset your password, please click on the link below (or copy and paste the URL into your browser).
-            <br><br>%s<br><br>This link takes you to a secure page where you can change your password. <br>However, if you don’t want to reset your password, please ignore this message.
-            <br><br>Yours sincerely,<br>", $user['User']['name'], $user['User']['email'], $link);
+			$mail->From = "Nutricheck Info <info@nutritionmedicine.org>";
+			// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
+			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
+			$mail->AddAddress($email, $email);
+			
+			$mail->CharSet  = 'UTF-8'; 
+			$mail->WordWrap = 50;  // set word wrap to 50 characters
 
-            $cake_email = new CakeEmail();
-            $cake_email->from(array('no-reply@example.com' => 'Please Do Not Reply'));
-            $cake_email->to($email);
-            $cake_email->subject(''.__('Forgot Password'));
-            $cake_email->emailFormat('html');
-            $cake_email->send($message);
-
+			$mail->IsHTML(true);  // set email format to HTML 
+			
+			$mail->Subject = "Forgot Password";
+			$message = "
+				Hi ".$firstname."
+				<br /><br />
+				We have received a request to reset the password for your NutriCheck account.
+				<br /><br />
+				If you would like to reset your password, please click on the link below (or copy and paste the URL into your browser).
+				<br /><br />
+				
+				".$link."
+				
+				<br /><br />
+				This link takes you to a secure page where you can change your password.
+				<br /><br />
+				If you did not make this request, please contact your Practitioner.
+				<br /><br />
+				Kind regards
+				<br />
+				The NutriCheck Team
+			";
+			
+			$mail->Body    = $message;
+			$mail->Send();
+			
+			
+			
+			
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

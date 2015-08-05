@@ -366,7 +366,7 @@
 			<div class="left span12" style="border-top: 1px solid #ddd;">
 				<h4>NutriCheck:</h4>
 				<span>
-					Nutricheck is protected by copyright law. Unauthorized reproduction or distribution of this program, or any portion of it, may result in a breach of this copyright which will be prosecuted to the maximum extent possible of the law.
+					NutriCheck is protected by copyright law. Unauthorized reproduction or distribution of this program, or any portion of it, may result in a breach of this copyright which will be prosecuted to the maximum extent possible of the law.
 				</span>
 			</div>
 		</div>

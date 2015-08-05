@@ -23,7 +23,7 @@
 		<?php } ?>
 		
 		<div class="input text">
-			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform Nutricheck click <here> to perform test")); ?>
+			<?php echo $this->Form->input('message', array('div' => false, 'value' => "You have been sent with an invitation to perform NutriCheck click <here> to perform test")); ?>
 			<small><strong>Note:</strong> <i>Do not change/replace the tag <strong>"&#60;here&#62;"</strong> since it's a constant value that will be replaced by the system</i></small>
 		</div>
 		

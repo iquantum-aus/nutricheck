@@ -299,6 +299,8 @@ class UserAlertsController extends AppController {
 		$alert_info['UserAlert']['message'] = str_replace("&#60;firstname&#62;", $firstname, $alert_info['UserAlert']['message']);
 		$alert_info['UserAlert']['message'] = str_replace("&#60;company&#62;", $company, $alert_info['UserAlert']['message']);
 		
+		$alert_info['UserAlert']['message'] = nl2br($alert_info['UserAlert']['message']);
+		
 		if($email) {
 			$mail = new PHPMailer();
 			$mail->IsSMTP(); // we are going to use SMTP
@@ -310,7 +312,7 @@ class UserAlertsController extends AppController {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "Nutricheck Info <noreply@iquantum.com.au>"; 
+			$mail->From = "NutriCheck Info <info@nutritionmedicine.org>"; 
 			// $mail->FromName = "nomail@nutricheck.com.au"; 
 			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
 			$mail->AddAddress($email, $email);
@@ -320,7 +322,7 @@ class UserAlertsController extends AppController {
 
 			$mail->IsHTML(true);  // set email format to HTML 
 			
-			$mail->Subject = "Nutricheck Invitation";
+			$mail->Subject = "NutriCheck Invitation";
 			$mail->Body    = $alert_info['UserAlert']['message'];
 			
 			if($mail->Send()) {

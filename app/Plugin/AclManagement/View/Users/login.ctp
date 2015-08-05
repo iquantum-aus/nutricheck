@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<head>
 		
-		<title>Nutricheck</title>		
+		<title>NutriCheck</title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		
 		<?php echo $this->Html->script('jquery'); ?>
@@ -23,6 +23,24 @@
 				<div id="output">
 					<?php echo $this->Session->flash(); ?>
 					<?php echo $this->Session->flash('auth'); ?>
+					
+					<?php
+						if(isset($_GET['forgot'])) {
+							if($_GET['forgot'] == "success") {
+								?>
+									<div id="flashMessage" class="message">Please check your email for instructions on resetting your password</div>
+								<?php
+							}
+						}
+						
+						if(isset($_GET['change_password'])) {
+							if($_GET['change_password'] == "success") {
+								?>
+									<div id="flashMessage" class="message">New password is saved</div>
+								<?php
+							}
+						}
+					?>
 				</div>
 				
 				<p>
@@ -31,8 +49,8 @@
 				
 				<div class="form-box">
 					<form action="" method=""> 
-						<?php echo $this->Form->input('username', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => "Email/username")); ?>
-						<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password")); ?>
+						<?php echo $this->Form->input('username', array('type' => 'text', 'div' => false, 'label' => false, 'placeholder' => "Email/username", 'required' => true)); ?>
+						<?php echo $this->Form->input('password', array('div' => false, 'label' => false, 'placeholder' => "Password", 'required' => true)); ?>
 						<button class="btn btn-info btn-block login" type="submit">Login</button>
 						
 						<br />
