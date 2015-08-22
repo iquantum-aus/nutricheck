@@ -260,7 +260,7 @@ class UserAlertsController extends AppController {
 		$mail->Username = "greg@iquantum.com.au";
 		$mail->Password = "z_Cb_u7etC2ZUJnziGME-w"; 'ssl' also accepted
 
-		$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
+		$mail->From = "NutriCheck Info <noreply@nutritionmedicine.org>";
 		// $mail->FromName = "nomail@nutricheck.com.au";
 		// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au");
 		$mail->AddAddress($email, $email);

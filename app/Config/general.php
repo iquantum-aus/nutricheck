@@ -26,7 +26,7 @@
 				<p><strong>Use and Disclosure of your Information</strong></p>
 				<p>NutriCheck Pty Ltd will only use your personal information for the reasons we collected it.  Unless we have first obtained your consent, these reasons and the parties to whom we might disclose it will be reasonably apparent to you when we collect your information and our use and disclosure of that information will only be for our business activities.</p>
 				<p>In the case of information about you which was input by into our system by (or for) medical professionals who have access to our system, the system utilises that information only to produce a report to the medical professional.  We will not disclose that information to any other party at any time.</p>
-				<p>If we have marketed our products and services to you and you no longer wish to receive those sorts of communications from us, you should contact <strong>info@ nutricheck.com.au OR Tel: 617 3279 8137</strong> and we will ensure this is corrected.</p>
+				<p>If we have marketed our products and services to you and you no longer wish to receive those sorts of communications from us, you should contact <strong>info@nutricheck.com.au OR Tel: 617 3279 8137</strong> and we will ensure this is corrected.</p>
 				<p>Any other use or disclosure we make of your personal information will only be as required by law or permitted by the <i>Privacy Act 1988</i> (Cth).</p>
 			</li>
 			

@@ -107,7 +107,7 @@ class UsersController extends AclManagementAppController {
 				$user_existence_id = $this->User->get_id($this->request->data['User']['username']);
 				$user_existence_info = $this->User->findById($user_existence_id);
 				
-				$user_existence_parent_info = $this->User->findById($user_existence_info['User']['id']);
+				$user_existence_parent_info = $this->User->findById($user_existence_info['User']['parent_id']);
 				
 				$data = array(
 					"user_id" => $user_existence_id,
@@ -141,7 +141,7 @@ class UsersController extends AclManagementAppController {
 								Email: ".$user_existence_info['User']['email']."
 							</strong>
 							<br /><br />
-							Kind regards,
+							Kind regards,<br />
 							The NutriCheck Team
 						";
 						
@@ -165,7 +165,7 @@ class UsersController extends AclManagementAppController {
 						$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 						$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-						$mail->From = 'NutriCheck Info <info@nutritionmedicine.org>';
+						$mail->From = 'NutriCheck Info <noreply@nutritionmedicine.org>';
 						$mail->AddAddress($to, $to);
 						
 						$mail->CharSet  = 'UTF-8'; 
@@ -1232,6 +1232,7 @@ class UsersController extends AclManagementAppController {
 					$user_id = $this->User->id;
 					
 					$newlyCreated_userInfo = $this->User->findById($user_id);
+					$newlyCreated_parent_userInfo = $this->User->findById($newlyCreated_userInfo['User']['parent_id']);
 					
 					if($newlyCreated_userInfo['User']['group_id'] == 3) {
 						$newlyCreated_parentInfo = $this->User->findById($newlyCreated_userInfo['User']['parent_id']);
@@ -1266,8 +1267,8 @@ class UsersController extends AclManagementAppController {
 							$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 							$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-							$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
-							$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org");
+							$mail->From = "NutriCheck Info <noreply@nutritionmedicine.org>";
+							$mail->AddReplyTo("noreply@nutritionmedicine.org", "noreply@nutritionmedicine.org");
 							$mail->AddAddress($email, $email);
 							
 							$mail->CharSet  = 'UTF-8'; 
@@ -1275,13 +1276,24 @@ class UsersController extends AclManagementAppController {
 
 							$mail->IsHTML(true);  // set email format to HTML 
 							
-							$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company."<br />Email: ".$source_email;
 							$mail->Subject = "NutriCheck Online Assessment";
+							$sender_details = "<br /><br /><h4>Sender Details</h4><br /><strong>Company: </strong>".$company."<br />Email: ".$source_email;
 							$url = "http://".$_SERVER['SERVER_NAME']."/users/edit_profile?hash_value=".$this->request->data['User']['hash_value'];
 							
-							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password.$sender_details;
-							$mail->Body    = $message;
+							$password = $raw_password;
+							$firstname = $newlyCreated_userInfo['UserProfile']['first_name'];
 							
+							/* original message
+							$message .= "You've been added to the system. Please complete all of your information by clicking <a href=". $url .">here</a><br><br><strong>Username:</strong> ".$username."<br><strong>Password:</strong> ".$raw_password.$sender_details;
+							*/
+							
+							if($newlyCreated_userInfo['User']['group_id'] == 3) {
+								$message .= "Hi ".$firstname.",<br /><br />Your Practitioner <strong>".$newlyCreated_parent_userInfo['UserProfile']['company']."</strong> has requested you complete the online NutriCheck Assessment.<br /><br />NutriCheck is a Nutritional and Metabolic Assessment Program.  It allows for your Practitioner to develop a specific treatment program of nutritional supplementation and dietary advice for living a healthier lifestyle.<br /><br /><strong>Your Login Details<br />Username: ".$username."<br />Password: ".$password."<br /></strong><br /><br />To complete the online assessment, click <strong><a href=". $url .">here</a></strong>.<br /><br />Kind Regards,<br /><strong>".$newlyCreated_parent_userInfo['UserProfile']['company']."</strong>";
+							} else {
+								$message .= "Hi ".$firstname.",<br /><br />Your Practitioner <strong>".$company."</strong> has requested you complete the online NutriCheck Assessment.<br /><br />NutriCheck is a Nutritional and Metabolic Assessment Program.  It allows for your Practitioner to develop a specific treatment program of nutritional supplementation and dietary advice for living a healthier lifestyle.<br /><br /><strong>Your Login Details<br />Username: ".$username."<br />Password: ".$password."<br /></strong><br /><br />To complete the online assessment, click <strong><a href=". $url .">here</a></strong>.<br /><br />Kind Regards,<br /><strong>".$company."</strong>";
+							}	
+							
+							$mail->Body    = $message;
 							$mail->Send();
 						}
 					}
@@ -1479,6 +1491,8 @@ class UsersController extends AclManagementAppController {
         App::import('Vendor', 'phpmailer', array('file' => 'phpmailer/class.phpmailer.php'));
 		Configure::load('general');
 		
+		$url = "http://".$_SERVER['SERVER_NAME']."/users/login";
+		
 		$this->layout = "ajax";
         $can_answer = ($can_answer) ? 0 : 1;
         $this->set(compact('user_id', 'can_answer'));
@@ -1493,10 +1507,25 @@ class UsersController extends AclManagementAppController {
 		
 		if($can_answer == 1) {
 			$user_info = $this->User->findById($user_id);
-			$email_message = Configure::read('User.nutricheck_activated_message');
+			$parent_info = $this->User->findById($user_info['User']['parent_id']);
+			
+			$email_message = "
+				Hi <strong>".$user_info['UserProfile']['first_name']."</strong>
+				<br /><br />
+				Your Practitioner at <strong>".$parent_info['UserProfile']['company']."</strong> requests that you complete an online NutriCheck assessment.
+				<br /><br />
+				This will enable your Practitioner to review your results against your previous NutriCheck assessment and enable management of your ongoing lifestyle and nutritional requirements.
+				<br /><br />
+				Once completed, your Practitioner will be notified of your results.
+				<br /><br />
+				To login please click <strong><a href='".$url."'>here</a></strong>
+				<br /><br />
+				Kind Regards
+				<br />
+				The NutriCheck Team
+			";
 			
 			$email = $user_info['User']['email'];
-			
 			$mail = new PHPMailer(); 
 			$mail->IsSMTP(); // we are going to use SMTP
 			$mail->IsHTML(true);
@@ -1507,9 +1536,9 @@ class UsersController extends AclManagementAppController {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-			$mail->From = 'NutriCheck Info <info@nutritionmedicine.org>'; 
+			$mail->From = 'NutriCheck Info <noreply@nutritionmedicine.org>'; 
 			// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-			$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org"); 
+			$mail->AddReplyTo("noreply@nutritionmedicine.org", "noreply@nutritionmedicine.org"); 
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 
@@ -1569,7 +1598,7 @@ class UsersController extends AclManagementAppController {
 				$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 				$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 				
-				$mail->From = 'NutriCheck Info <info@nutritionmedicine.org>'; 
+				$mail->From = 'NutriCheck Info <noreply@nutritionmedicine.org>'; 
 				// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
 				// $mail->AddReplyTo("noman@iquantum.com.au", "noman@iquantum.com.au"); 
 				$mail->AddAddress($email, $email);
@@ -1700,12 +1729,13 @@ class UsersController extends AclManagementAppController {
 		$hash = "";
 		$user_id = $this->Session->read('Auth.User.id');
 		$alert_password = false;
+		$nutricheck_redirection = false;
 		
 		if(isset($_GET['hash_value'])) {
 			$hash = $_GET['hash_value'];
-			
 			if($hash != $this->Session->read('Auth.User.hash_value')) {
 				session_destroy();
+				$nutricheck_redirection = true;
 			}
 		} else {
 			// if hash vale is empty and the not logged in (you're unauthorized)
@@ -1766,7 +1796,12 @@ class UsersController extends AclManagementAppController {
 					
 					if($this->User->UserProfile->save($this->request->data)) {					
 						$this->Session->setFlash(__('Congrats! Your profile has been updated successfully'), 'alert/success');
-						$this->redirect(array('action' => 'dashboard'));
+						
+						if($nutricheck_redirection) {
+							$this->redirect(array('controller' => 'questions', 'action' => 'nutrient_check'));
+						} else {
+							$this->redirect(array('action' => 'dashboard'));
+						}
 					} else {
 						$this->Session->setFlash(__('Something wen\'t wrong'), 'alert/error');
 					}

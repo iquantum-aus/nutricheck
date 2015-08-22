@@ -677,8 +677,8 @@ class QuestionsController extends AppController {
 								$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 								$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-								$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
-								$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org"); 
+								$mail->From = "NutriCheck Info <noreply@nutritionmedicine.org>";
+								$mail->AddReplyTo("noreply@nutritionmedicine.org", "noreply@nutritionmedicine.org"); 
 								$mail->AddAddress($email, $email);
 								
 								$mail->CharSet  = 'UTF-8'; 
@@ -1078,9 +1078,9 @@ class QuestionsController extends AppController {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "NutriCheck Info <info@nutritionmedicine.org>";
+			$mail->From = "NutriCheck Info <noreply@nutritionmedicine.org>";
 			// $mail->FromName = "nomail@nutricheck.com.au";
-			$mail->AddReplyTo("info@nutritionmedicine.org", "info@nutritionmedicine.org");
+			$mail->AddReplyTo("noreply@nutritionmedicine.org", "noreply@nutritionmedicine.org");
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 

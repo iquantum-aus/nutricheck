@@ -312,9 +312,9 @@ class UserAlertsController extends AppController {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls'; // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "NutriCheck Info <info@nutritionmedicine.org>"; 
+			$mail->From = "NutriCheck Info <noreply@nutritionmedicine.org>"; 
 			// $mail->FromName = "nomail@nutricheck.com.au"; 
-			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
+			$mail->AddReplyTo("noreply@nutritionmedicine.org", "noreply@nutritionmedicine.org");
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 

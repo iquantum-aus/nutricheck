@@ -306,9 +306,9 @@ class User extends AclManagementAppModel {
 			$mail->Password = "z_Cb_u7etC2ZUJnziGME-w";
 			$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-			$mail->From = "Nutricheck Info <info@nutritionmedicine.org>";
+			$mail->From = "Nutricheck Info <noreply@nutritionmedicine.org>";
 			// $mail->FromName('info@nutricheck.com.au', 'NutriCheck Info'); 
-			$mail->AddReplyTo("noreply@iquantum.com.au", "noreply@iquantum.com.au");
+			$mail->AddReplyTo("noreply@nutritionmedicine.org", "noreply@nutritionmedicine.org");
 			$mail->AddAddress($email, $email);
 			
 			$mail->CharSet  = 'UTF-8'; 
